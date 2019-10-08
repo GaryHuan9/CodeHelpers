@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CodeHelpers.DebugHelpers;
-using Newtonsoft.Json;
-using REDO.Tiles.DataSystem;
 using UnityEngine;
 
 namespace CodeHelpers.CodeCounters
@@ -327,7 +325,7 @@ namespace CodeHelpers.CodeCounters
 
 			public static ProjectHistory CurrentHistory
 			{
-				get => _currentHistory ?? (_currentHistory = TryReadHistory());
+				get => _currentHistory ?? (_currentHistory = TryReadHistory() ?? new ProjectHistory());
 				private set => _currentHistory = value ?? throw ExceptionHelper.Invalid(nameof(value), InvalidType.isNull);
 			}
 

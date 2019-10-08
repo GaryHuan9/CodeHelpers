@@ -101,8 +101,10 @@ namespace CodeHelpers
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
+#if UNSAFE_CODE_ENABLED
 		public static unsafe int SingleToInt32Bits(float value) => *(int*)&value;
 		public static unsafe float Int32BitsToSingle(int value) => *(float*)&value;
+#endif
 
 		public const float Epsilon = 0.00001f;
 

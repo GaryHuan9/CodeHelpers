@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using CodeHelpers;
-using Newtonsoft.Json;
+﻿using UnityEngine;
 
 namespace CodeHelpers.NoiseGeneration
 {

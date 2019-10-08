@@ -1,11 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
-using CodeHelpers.DebugHelpers;
-using REDO;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Object = UnityEngine.Object;
@@ -295,8 +291,6 @@ namespace CodeHelpers.MeshHelpers
 			//Create the subMeshes array if hasn't
 			if (subMeshes == null) subMeshes = new Mesh[Mesh.subMeshCount];
 			else if (subMeshes[subMeshIndex] != null) return subMeshes[subMeshIndex];
-
-			Debug.Assert(!PlayerController.IsPlayerPresent, "Calculating sub mesh during game play");
 
 			//Get info
 			Mesh.GetVertices(verticesCache);

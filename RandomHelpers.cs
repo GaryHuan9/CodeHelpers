@@ -14,7 +14,7 @@ namespace CodeHelpers
 #region Seeds
 
 		static readonly Dictionary<SeedType, int> seeds = new Dictionary<SeedType, int>();
-		static          int                       currentThreadedSeed;
+		static int currentThreadedSeed;
 
 		/// <summary>
 		/// Sets every type of seed.
@@ -74,11 +74,11 @@ namespace CodeHelpers
 
 #endregion
 
-		static        ThreadLocal<RandomS> threadRandom;
-		public static RandomS              CurrentRandom => threadRandom.Value;
+		static ThreadLocal<RandomS> threadRandom;
+		public static RandomS CurrentRandom => threadRandom.Value;
 
-		public static double Value     => CurrentRandom.NextDouble();
-		public static float  Value1To1 => (float)Value * 2f - 1f;
+		public static double Value => CurrentRandom.NextDouble();
+		public static float Value1To1 => (float)Value * 2f - 1f;
 
 		/// <summary>
 		/// Returns a random int inside [min,max) 
@@ -118,7 +118,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static double Range(double max) => Range(0d, max);
 
-		public static float  RangeEpsilon(float  min, float  max, float  epsilon = float.Epsilon)  => Range(min + epsilon, max - epsilon);
+		public static float RangeEpsilon(float min, float max, float epsilon = float.Epsilon) => Range(min + epsilon, max - epsilon);
 		public static double RangeEpsilon(double min, double max, double epsilon = double.Epsilon) => Range(min + epsilon, max - epsilon);
 
 		/// <summary>Gets random index based on their percentage of chosen.</summary>
@@ -131,7 +131,7 @@ namespace CodeHelpers
 
 			for (int i = 0; i < percentage.Length; i++) sum += percentage[i];
 
-			int random  = Range(0, sum);
+			int random = Range(0, sum);
 			int current = 0;
 
 			for (int i = 0; i < percentage.Length; i++)
@@ -153,7 +153,7 @@ namespace CodeHelpers
 
 			for (int i = 0; i < source.Length; i++) sum += source[i].percentage;
 
-			int random  = Range(0, sum);
+			int random = Range(0, sum);
 			int current = 0;
 
 			for (int i = 0; i < source.Length; i++)
@@ -167,9 +167,9 @@ namespace CodeHelpers
 
 		public static Color GetRandomColorBetweenColors(Color color1, Color color2) => Color.Lerp(color1, color2, (float)Value);
 
-		public static T GetRandomFromCollection<T>(T[]              array) => array[Range(0, array.Length)];
-		public static T GetRandomFromCollection<T>(IList<T>         list)  => list[Range(0,  list.Count)];
-		public static T GetRandomFromCollection<T>(IReadOnlyList<T> list)  => list[Range(0,  list.Count)];
+		public static T GetRandomFromCollection<T>(T[] array) => array[Range(0, array.Length)];
+		public static T GetRandomFromCollection<T>(IList<T> list) => list[Range(0, list.Count)];
+		public static T GetRandomFromCollection<T>(IReadOnlyList<T> list) => list[Range(0, list.Count)];
 
 		/// <summary>Fast random will only work if you are sure the dictionary can be indexed like an array!</summary>
 		public static T GetRandomFromDictionary<T>(IDictionary<int, T> dictionary, bool fastRandom = false)
@@ -211,8 +211,8 @@ namespace CodeHelpers
 		[Flags]
 		public enum SeedType
 		{
-			normal   = 1,
-			noise    = 2,
+			normal = 1,
+			noise = 2,
 			threaded = 4
 			//Should be binary numbers continuing
 		}
@@ -287,10 +287,18 @@ namespace CodeHelpers
 			const int BigPrime3 = 105167;
 			const int BigPrime4 = 105407;
 
-			static int GetInt(float value) => CodeHelper.SingleToInt32Bits(value);
+			static int GetInt(float value)
+			{
+#if UNSAFE_CODE_ENABLED
+				return CodeHelper.SingleToInt32Bits(value);
+#else
+				return value.GetHashCode();
+#endif
+			}
 
+			//NOTE: The conversion from int to uint is unchecked, which means if the int value is negative, it will get warped to a large positive number
 			static float GetSource(float value) => unchecked(NoiseController.GetSource((uint)GetInt(value * BigPrime4)));
-			static float GetSource(int   value) => unchecked(NoiseController.GetSource((uint)value));
+			static float GetSource(int value) => unchecked(NoiseController.GetSource((uint)value));
 
 			/// <summary>
 			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
