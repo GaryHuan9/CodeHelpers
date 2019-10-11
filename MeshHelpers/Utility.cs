@@ -24,15 +24,5 @@ namespace CodeHelpers.MeshHelpers
 		//
 		// 	int[] result = new int[triangleCache.Count / 3]; //Triangle indices
 		// }
-
-		class VertexComparer : IEqualityComparer<Vector3>
-		{
-			public VertexComparer(float epsilon) => epsilonSquared = epsilon * epsilon;
-
-			readonly float epsilonSquared;
-
-			public bool Equals(Vector3 x, Vector3 y) => (x - y).sqrMagnitude <= epsilonSquared;
-			public int GetHashCode(Vector3 obj) => obj.GetHashCode();
-		}
 	}
 }

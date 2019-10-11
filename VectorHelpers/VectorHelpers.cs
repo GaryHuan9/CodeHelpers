@@ -28,10 +28,11 @@ namespace CodeHelpers
 		public static Vector3Int CeilEpsilon(this Vector3 vector) => new Vector3Int(Mathf.CeilToInt(vector.x - CodeHelper.Epsilon), Mathf.CeilToInt(vector.y - CodeHelper.Epsilon), Mathf.CeilToInt(vector.z - CodeHelper.Epsilon));
 
 		public static Vector3 Round(this Vector3 vector) => new Vector3(Mathf.Round(vector.x), Mathf.Round(vector.y), Mathf.Round(vector.z));
-		public static Vector3 Round(this Vector3 vector, float increment) => new Vector3(Mathf.Round(vector.x / increment) * increment, Mathf.Round(vector.y / increment) * increment, Mathf.Round(vector.z / increment) * increment);
-
-		public static Vector3Int Round(this Vector3 vector, int increment) => new Vector3Int(Mathf.RoundToInt(vector.x / increment) * increment, Mathf.RoundToInt(vector.y / increment) * increment, Mathf.RoundToInt(vector.z / increment) * increment);
 		public static Vector3Int RoundToInt(this Vector3 vector) => new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
+
+		// NOTE: TODO: The current implementation of rounding by increment will destroy the floating-point accuracy when increment is too small or too large! Fix that!
+		public static Vector3 Round(this Vector3 vector, float increment) => new Vector3(Mathf.Round(vector.x / increment) * increment, Mathf.Round(vector.y / increment) * increment, Mathf.Round(vector.z / increment) * increment);
+		public static Vector3Int Round(this Vector3 vector, int increment) => new Vector3Int(Mathf.RoundToInt(vector.x / increment) * increment, Mathf.RoundToInt(vector.y / increment) * increment, Mathf.RoundToInt(vector.z / increment) * increment);
 
 		public static Vector3 ToFloat(this Vector3Int vector) => new Vector3(vector.x, vector.y, vector.z);
 		public static Vector3Int ToInt(this Vector3 vector) => new Vector3Int((int)vector.x, (int)vector.y, (int)vector.z);
@@ -94,23 +95,6 @@ namespace CodeHelpers
 		/// Gets the index of the smallest element in this vector.
 		/// </summary>
 		public static int GetMinIndex(this Vector3Int vector) => vector.x < vector.y ? (vector.x < vector.z ? 0 : 2) : (vector.y < vector.z ? 1 : 2);
-
-		public static void ForEach(this Vector3Int vector, Action<Vector3Int> action)
-		{
-			Vector3Int absVector = vector.Abs();
-			Vector3Int direction = vector.IndividualNormalize();
-
-			for (int x = 0; x <= absVector.x; x++)
-			{
-				for (int y = 0; y <= absVector.y; y++)
-				{
-					for (int z = 0; z <= absVector.z; z++)
-					{
-						action(Vector3Int.Scale(new Vector3Int(x, y, z), direction));
-					}
-				}
-			}
-		}
 
 		public static bool LessThan(this Vector3 vector, Vector3 otherVector) => vector.x < otherVector.x && vector.y < otherVector.y && vector.z < otherVector.z;
 		public static bool GreaterThan(this Vector3 vector, Vector3 otherVector) => vector.x > otherVector.x && vector.y > otherVector.y && vector.z > otherVector.z;
@@ -227,9 +211,11 @@ namespace CodeHelpers
 		public static Vector2Int CeilEpsilon(this Vector2 vector) => new Vector2Int(Mathf.CeilToInt(vector.x - CodeHelper.Epsilon), Mathf.CeilToInt(vector.y - CodeHelper.Epsilon));
 
 		public static Vector2 Round(this Vector2 vector) => new Vector2(Mathf.Round(vector.x), Mathf.Round(vector.y));
+		public static Vector2Int RoundToInt(this Vector2 vector) => new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
+
+		// NOTE: TODO: The current implementation of rounding by increment will destroy the floating-point accuracy when increment is too small or too large! Fix that!
 		public static Vector2 Round(this Vector2 vector, float increment) => new Vector2(Mathf.Round(vector.x / increment) * increment, Mathf.Round(vector.y / increment) * increment);
 		public static Vector2Int Round(this Vector2 vector, int increment) => new Vector2Int(Mathf.RoundToInt(vector.x / increment) * increment, Mathf.RoundToInt(vector.y / increment) * increment);
-		public static Vector2Int RoundToInt(this Vector2 vector) => new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
 
 		public static Vector2 ToFloat(this Vector2Int vector) => new Vector2(vector.x, vector.y);
 		public static Vector2Int ToInt(this Vector2 vector) => new Vector2Int((int)vector.x, (int)vector.y);
@@ -321,69 +307,6 @@ namespace CodeHelpers
 		/// Gets the index of the smallest element in this vector.
 		/// </summary>
 		public static int GetMinIndex(this Vector2Int vector) => vector.x < vector.y ? 0 : 1;
-
-		public static void ForEach(this Vector2 vector, Action<float> action)
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				action(vector[i]);
-			}
-		}
-
-		public static void ForEach(this Vector2 vector, Action<float, int> action)
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				action(vector[i], i);
-			}
-		}
-
-		public static void ForEach(this Vector2Int vector, Action<int> action)
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				action(vector[i]);
-			}
-		}
-
-		public static void ForEach(this Vector2Int vector, Action<int, int> action)
-		{
-			for (int i = 0; i < 2; i++)
-			{
-				action(vector[i], i);
-			}
-		}
-
-		public static void ForEach(this Vector2Int vector, Action<Vector2Int> action)
-		{
-			Vector2Int absVector = vector.Abs();
-			Vector2Int direction = vector.IndividualNormalize();
-
-			for (int x = 0; x <= absVector.x; x++)
-			{
-				for (int y = 0; y <= absVector.y; y++)
-				{
-					action(Vector2Int.Scale(new Vector2Int(x, y), direction));
-				}
-			}
-		}
-
-		public static void ForEach(this Vector2Int vector, Action<Vector2Int, int> action)
-		{
-			int index = 0;
-
-			Vector2Int absVector = vector.Abs();
-			Vector2Int direction = vector.IndividualNormalize();
-
-			for (int x = 0; x <= absVector.x; x++)
-			{
-				for (int y = 0; y <= absVector.y; y++)
-				{
-					action(Vector2Int.Scale(new Vector2Int(x, y), direction), index);
-					index++;
-				}
-			}
-		}
 
 		public static bool LessThan(this Vector2 vector, Vector2 otherVector) => vector.x < otherVector.x && vector.y < otherVector.y;
 		public static bool GreaterThan(this Vector2 vector, Vector2 otherVector) => vector.x > otherVector.x && vector.y > otherVector.y;
