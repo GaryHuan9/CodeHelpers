@@ -662,6 +662,18 @@ namespace CodeHelpers
 			return nullable.GetValueOrDefault();
 		}
 
+		public static T GetComponent<T>(this Behaviour behaviour, ref T cache)
+		{
+			if (cache != null) return cache;
+			return cache = behaviour.GetComponent<T>();
+		}
+
+		public static T GetComponentInChildren<T>(this Behaviour behaviour, ref T cache)
+		{
+			if (cache != null) return cache;
+			return cache = behaviour.GetComponentInChildren<T>();
+		}
+
 		public static string ToMethodSignature(this MethodInfo method) =>
 			$@"{method.ReturnType.Name} {method.Name}({string.Join(", ", from parameter in method.GetParameters()
 																		 select $"{parameter.ParameterType.Name} {parameter.Name}")})";
