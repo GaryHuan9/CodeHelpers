@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace CodeHelpers
 {
-	[AddComponentMenu("CodeHelper")]
+	[AddComponentMenu("CodeHelper"), DefaultExecutionOrder(-200)]
 	public class CodeHelperMonoBehaviour : MonoBehaviour
 	{
 		void Awake()
@@ -52,7 +52,7 @@ namespace CodeHelpers
 
 		public static FramePhase FramePhase { get; private set; }
 
-		public static bool IsGamePaused  { get; private set; }
+		public static bool IsGamePaused { get; private set; }
 		public static bool IsGameQuitted { get; private set; }
 
 		void Start()
@@ -130,7 +130,7 @@ namespace CodeHelpers
 		IEnumerator EndOfFrameUpdate()
 		{
 			WaitForEndOfFrame endUpdate = new WaitForEndOfFrame();
-			WaitUntil         unPause   = new WaitUntil(() => !IsGamePaused);
+			WaitUntil unPause = new WaitUntil(() => !IsGamePaused);
 
 			while (true)
 			{
