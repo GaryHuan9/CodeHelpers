@@ -6,7 +6,7 @@ using UnityEngine;
 namespace CodeHelpers.RotationHelpers
 {
 	/// <summary>
-	/// A rotation struct that is only present in 90-degree increments.
+	/// A rotation struct that only exists in 90-degree increments.
 	/// </summary>
 	[Serializable]
 	public readonly struct LimitedRotation : IEquatable<LimitedRotation>, IComparable<LimitedRotation> //Immutable
