@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace CodeHelpers.Editable.Editor
 {
+	//NOTE: Remember to enable EditableEditor if you want the UI editor to work!
+
 	public abstract class EditableDrawer : PropertyDrawer
 	{
 		static void TryInitialize()
