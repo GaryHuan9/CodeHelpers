@@ -27,7 +27,7 @@ namespace CodeHelpers.VectorHelpers
 
 			public Enumerator GetEnumerator() => enumerator;
 
-			IEnumerator IEnumerable.                        GetEnumerator() => GetEnumerator();
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 			IEnumerator<Vector2Int> IEnumerable<Vector2Int>.GetEnumerator() => GetEnumerator();
 
 			public struct Enumerator : IEnumerator<Vector2Int>
@@ -36,7 +36,7 @@ namespace CodeHelpers.VectorHelpers
 				{
 					this.size = zeroAsOne ? Vector2Int.Max(Vector2Int.one, size.Abs()) : size.Abs();
 					direction = size.IndividualNormalize();
-					current   = -1;
+					current = -1;
 				}
 
 				readonly Vector2Int size;
@@ -45,7 +45,7 @@ namespace CodeHelpers.VectorHelpers
 				int current;
 
 				object IEnumerator.Current => Current;
-				public Vector2Int  Current => Vector2Int.Scale(new Vector2Int(current / size.y, current % size.y), direction);
+				public Vector2Int Current => Vector2Int.Scale(new Vector2Int(current / size.y, current % size.y), direction);
 
 				public bool MoveNext()
 				{
@@ -68,7 +68,7 @@ namespace CodeHelpers.VectorHelpers
 
 			public Enumerator GetEnumerator() => enumerator;
 
-			IEnumerator IEnumerable.                        GetEnumerator() => GetEnumerator();
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 			IEnumerator<Vector3Int> IEnumerable<Vector3Int>.GetEnumerator() => GetEnumerator();
 
 			public struct Enumerator : IEnumerator<Vector3Int>
@@ -77,7 +77,7 @@ namespace CodeHelpers.VectorHelpers
 				{
 					this.size = zeroAsOne ? Vector3Int.Max(Vector3Int.one, size.Abs()) : size.Abs();
 					direction = size.IndividualNormalize();
-					current   = -1;
+					current = -1;
 				}
 
 				readonly Vector3Int size;
@@ -86,7 +86,7 @@ namespace CodeHelpers.VectorHelpers
 				int current;
 
 				object IEnumerator.Current => Current;
-				public Vector3Int  Current => Vector3Int.Scale(new Vector3Int(current / (size.y * size.z), current / size.z % size.y, current % size.z), direction);
+				public Vector3Int Current => Vector3Int.Scale(new Vector3Int(current / (size.y * size.z), current / size.z % size.y, current % size.z), direction);
 
 				public bool MoveNext()
 				{

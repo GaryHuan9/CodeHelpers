@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using CodeHelpers.VectorHelpers;
 using UnityEngine;
@@ -192,9 +193,34 @@ namespace CodeHelpers
 
 		public static readonly IReadOnlyList<Direction> neighbor6Directions = Array.AsReadOnly(Enum.GetValues(typeof(Direction)).Cast<Direction>().ToArray());
 
+		/// <summary>
+		/// Neighbor faces (6)
+		/// </summary>
 		public static readonly IReadOnlyList<Vector3Int> neighbor6Positions = Array.AsReadOnly(
 			(from Direction direction in neighbor6Directions
 			 select direction.ToVector3()).ToArray()
+		);
+
+		/// <summary>
+		/// Neighbor faces (6), and edges (12)
+		/// </summary>
+		public static readonly IReadOnlyList<Vector3Int> neighbor18Positions = new ReadOnlyCollection<Vector3Int>(
+			(
+				from Vector3Int position in new Vector3Int(3, 3, 3).Loop()
+				where position != Vector3Int.one && position.sqrMagnitude % 4 != 0
+				select position - Vector3Int.one
+			).ToList()
+		);
+
+		/// <summary>
+		/// Neighbor faces (6), edges (12), and vertices (8)
+		/// </summary>
+		public static readonly IReadOnlyList<Vector3Int> neighbor26Positions = new ReadOnlyCollection<Vector3Int>(
+			(
+				from Vector3Int position in new Vector3Int(3, 3, 3).Loop()
+				where position != Vector3Int.one
+				select position - Vector3Int.one
+			).ToList()
 		);
 
 #endregion
@@ -409,18 +435,7 @@ namespace CodeHelpers
 		/// <param name="layerCount">How many layers do you want the spiral to be?</param>
 		public static IEnumerable<Vector2Int> GetSpiralPoints(Vector2Int center, int layerCount) => GetSpiralPoints(center, layerCount, Vector2Int.right);
 
-		/// <summary>
-		/// Returns an IEnumerable which will yield all the positions placed in a spiral order.
-		/// Will generate something like this (One layer):
-		///
-		///  567
-		///  4 0
-		///  321
-		///
-		/// </summary>
-		/// <returns>The spiral positions.</returns>
-		/// <param name="center">The center of the spiral.</param>
-		/// <param name="layerCount">How many layers do you want the spiral to be?</param>
+		/// <inheritdoc cref="GetSpiralPoints(Vector2Int,int)"/>
 		/// <param name="startDirection">The direction where the spiral will start.</param>
 		public static IEnumerable<Vector2Int> GetSpiralPoints(Vector2Int center, int layerCount, Vector2Int startDirection)
 		{
@@ -428,11 +443,11 @@ namespace CodeHelpers
 
 			for (int i = 0; i < 4; i++)
 			{
-				if (startDirection == Neighbor4Positions[index]) goto outBreak;
+				if (startDirection == neighbor4Positions[index]) goto outBreak;
 				index++;
 			}
 
-			throw new ArgumentException(nameof(startDirection) + " is invalid!\nIt can only be a direction inside " + nameof(Neighbor4Positions));
+			throw new ArgumentException(nameof(startDirection) + " is invalid!\nIt can only be a direction inside " + nameof(neighbor4Positions));
 
 			outBreak:
 
@@ -441,7 +456,7 @@ namespace CodeHelpers
 
 			for (int size = 1; size <= layerCount; size++)
 			{
-				direction = Neighbor4Positions[index];
+				direction = neighbor4Positions[index];
 				position += direction;
 
 				RotateDirection();
@@ -474,7 +489,7 @@ namespace CodeHelpers
 				index = (index - 1).Repeat(4);
 			}
 
-			void RotateDirection() => direction = Neighbor4Positions[(++index).Repeat(4)];
+			void RotateDirection() => direction = neighbor4Positions[(++index).Repeat(4)];
 		}
 
 		public static Vector2 Set(this Vector2 vector, int index, float value)
@@ -489,10 +504,10 @@ namespace CodeHelpers
 			return vector;
 		}
 
-		public static readonly IReadOnlyList<Vector2Int> Neighbor4Positions = Array.AsReadOnly(new Vector2Int[] {Vector2Int.right, Vector2Int.down, Vector2Int.left, Vector2Int.up});
-		public static readonly IReadOnlyList<Vector2Int> Neighbor8Positions = Array.AsReadOnly(new Vector2Int[] {Vector2Int.right, new Vector2Int(1, -1), Vector2Int.down, new Vector2Int(-1, -1), Vector2Int.left, new Vector2Int(-1, 1), Vector2Int.up, new Vector2Int(1, 1)});
-		public static readonly IReadOnlyList<Vector2Int> Corner4Positions = Array.AsReadOnly(new Vector2Int[] {new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1), new Vector2Int(1, 1)});
-		public static readonly IReadOnlyList<Vector2Int> Corner4Positions01 = Array.AsReadOnly(new Vector2Int[] {Vector2Int.zero, Vector2Int.right, Vector2Int.up, Vector2Int.one});
+		public static readonly IReadOnlyList<Vector2Int> neighbor4Positions = Array.AsReadOnly(new Vector2Int[] {Vector2Int.right, Vector2Int.down, Vector2Int.left, Vector2Int.up});
+		public static readonly IReadOnlyList<Vector2Int> neighbor8Positions = Array.AsReadOnly(new Vector2Int[] {Vector2Int.right, new Vector2Int(1, -1), Vector2Int.down, new Vector2Int(-1, -1), Vector2Int.left, new Vector2Int(-1, 1), Vector2Int.up, new Vector2Int(1, 1)});
+		public static readonly IReadOnlyList<Vector2Int> corner4Positions = Array.AsReadOnly(new Vector2Int[] {new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1), new Vector2Int(1, 1)});
+		public static readonly IReadOnlyList<Vector2Int> corner4Positions01 = Array.AsReadOnly(new Vector2Int[] {Vector2Int.zero, Vector2Int.right, Vector2Int.up, Vector2Int.one});
 
 #endregion
 
