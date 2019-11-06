@@ -6,6 +6,8 @@ namespace CodeHelpers.Collections
 {
 	/// <summary>
 	/// NOTE: After comparing, the item with the SMALLEST value will be on the top of the heap
+	/// NOTE: Please make sure the comparer/comparable ONLY returns 0 if the two sides are identical
+	/// (because 0 will be used as the method Equals in Contains)
 	/// </summary>
 	public class Heap<T> : IEnumerable<T>
 	{
@@ -15,7 +17,7 @@ namespace CodeHelpers.Collections
 		List<T> items;
 		readonly IComparer<T> comparer;
 
-		public int Count => items.Count;
+		public int Count => items?.Count ?? 0;
 
 		public void Add(T item)
 		{
@@ -54,6 +56,7 @@ namespace CodeHelpers.Collections
 
 		int GetIndex(T item)
 		{
+			if (Count == 0) return -1;
 			return Search(0);
 
 			int Search(int index)
@@ -64,10 +67,10 @@ namespace CodeHelpers.Collections
 				if (compared == 0) return index;
 				if (compared > 0) return -1;
 
-				int search1 = Search(GetChild1Index(index));
-				int search2 = Search(GetChild2Index(index));
+				int search = Search(GetChild1Index(index));
+				if (search >= 0) return search;
 
-				return search1 < 0 ? search2 : search1;
+				return Search(GetChild2Index(index));
 			}
 		}
 
