@@ -127,6 +127,7 @@ namespace CodeHelpers.Collections
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-		public List<T>.Enumerator GetEnumerator() => items.GetEnumerator();
+		static readonly List<T>.Enumerator emptyEnumerator = new List<T>().GetEnumerator();
+		public List<T>.Enumerator GetEnumerator() => items?.GetEnumerator() ?? emptyEnumerator;
 	}
 }
