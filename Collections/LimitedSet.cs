@@ -8,6 +8,7 @@ namespace CodeHelpers.Collections
 	//Optimized for enumeration, get and set
 	//Use foreach on this collection instead of for and indexing.
 	//Its enumerator is highly optimized and enumerates in ascending order.
+	//Although this collection is generic, it is only designed for reference types because of its large memory footprint
 	public class LimitedSet<T> : IDictionary<byte, T>, IReadOnlyDictionary<byte, T> where T : class
 	{
 		public LimitedSet()
@@ -31,7 +32,7 @@ namespace CodeHelpers.Collections
 			get => items[key] ?? throw new KeyNotFoundException($"Key {key} does not exist!");
 			set
 			{
-				if (value == default) Remove(key);
+				if (value == null) Remove(key);
 				else
 				{
 					if (ContainsKey(key)) Replace(key, value);
@@ -52,8 +53,7 @@ namespace CodeHelpers.Collections
 
 		public void Add(byte key, T value)
 		{
-			if (ContainsKey(key)) throw new ArgumentNullException(nameof(value), "The value/input cannot be default/null!");
-			if (value == default) throw new ArgumentNullException($"The value {value} cannot be default/null!");
+			if (value == null) throw new ArgumentNullException(nameof(value), "The value/input cannot be default/null!");
 
 			Count++;
 			Replace(key, value);
@@ -78,7 +78,7 @@ namespace CodeHelpers.Collections
 		}
 
 		public bool Contains(KeyValuePair<byte, T> item) => ContainsKey(item.Key) && this[item.Key] == item.Value;
-		public bool ContainsKey(byte key) => items[key] != default;
+		public bool ContainsKey(byte key) => items[key] != null;
 
 		public bool Remove(KeyValuePair<byte, T> item) => Remove(item.Key);
 
@@ -94,7 +94,7 @@ namespace CodeHelpers.Collections
 			Count--;
 			IncreaseVersion();
 
-			items[key] = default;
+			items[key] = null;
 			return true;
 		}
 
@@ -106,7 +106,7 @@ namespace CodeHelpers.Collections
 				return true;
 			}
 
-			value = default;
+			value = null;
 			return false;
 		}
 
