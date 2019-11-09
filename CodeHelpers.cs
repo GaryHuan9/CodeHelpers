@@ -478,10 +478,10 @@ namespace CodeHelpers
 		}
 
 		public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key) =>
-			dictionary != null && dictionary.ContainsKey(key) ? dictionary[key] : default;
+			dictionary.ContainsKey(key) ? dictionary[key] : default;
 
 		public static T TryGetValue<T>(this IReadOnlyList<T> list, int index) =>
-			list != null && list.IsIndexValid(index) ? list[index] : default;
+			list.IsIndexValid(index) ? list[index] : default;
 
 		public static void Swap<T>(this T[] array, int index1, int index2)
 		{

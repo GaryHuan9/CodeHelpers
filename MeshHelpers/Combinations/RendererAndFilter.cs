@@ -14,14 +14,14 @@ namespace CodeHelpers.MeshHelpers.Combinations
 
 		public RendererAndFilter(Component behaviour)
 		{
-			renderer = behaviour.GetComponentsInChildren<MeshRenderer>().TryGetValue(0);
-			filter = behaviour.GetComponentsInChildren<MeshFilter>().TryGetValue(0);
+			renderer = behaviour.GetComponentsInChildren<MeshRenderer>()?.TryGetValue(0);
+			filter = behaviour.GetComponentsInChildren<MeshFilter>()?.TryGetValue(0);
 		}
 
 		public RendererAndFilter(GameObject gameObject)
 		{
-			renderer = gameObject.GetComponentsInChildren<MeshRenderer>().TryGetValue(0);
-			filter = gameObject.GetComponentsInChildren<MeshFilter>().TryGetValue(0);
+			renderer = gameObject.GetComponentsInChildren<MeshRenderer>()?.TryGetValue(0);
+			filter = gameObject.GetComponentsInChildren<MeshFilter>()?.TryGetValue(0);
 		}
 
 		public MeshRenderer renderer;

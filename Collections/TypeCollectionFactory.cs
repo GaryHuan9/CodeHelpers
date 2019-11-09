@@ -7,19 +7,19 @@ namespace CodeHelpers.Collections
 {
 	/// <summary>
 	/// This is a factory class which produces classes that can replace Dictionaries mapping from a Type to some kind of T.
-	/// The class produced will greatly reduce memory since it uses an array instead of a dictionary.
+	/// The class will greatly reduce memory since it uses an array instead of a dictionary.
 	/// Also, the produced class can be inherited to further expand its feature.
 	/// </summary>
 	public class TypeCollectionFactory<TBase> where TBase : class
 	{
 		//Maps a type object to an id. This id should be from 0 to count, with no empty ids in between.
-		readonly Dictionary<Type, int> typeToId    = new Dictionary<Type, int>();
-		readonly List<Func<TBase>>     idToFactory = new List<Func<TBase>>(); //Factory for different kinds of objects
-		Type[]                         idToType;
+		readonly Dictionary<Type, int> typeToId = new Dictionary<Type, int>();
+		readonly List<Func<TBase>> idToFactory = new List<Func<TBase>>(); //Factory for different kinds of objects
+		Type[] idToType;
 
 		public bool IsFactorySealed { get; private set; }
 
-		static readonly Exception alreadySealedException        = new Exception("Factory already sealed!");
+		static readonly Exception alreadySealedException = new Exception("Factory already sealed!");
 		static readonly Exception sealBeforeCollectionException = new Exception("Need to seal the factory before getting new collection!");
 
 		void AddType(Type type)
@@ -81,9 +81,9 @@ namespace CodeHelpers.Collections
 			}
 
 			readonly TypeCollectionFactory<TBase> factory;
-			TBase[]                               typeObjects; //Initialize as null so no extra allocation
+			TBase[] typeObjects; //Initialize as null so no extra allocation
 
-			public int  Count      => factory.typeToId.Count;
+			public int Count => factory.typeToId.Count;
 			public bool IsReadOnly => false;
 
 			public TBase this[Type type]
@@ -102,8 +102,8 @@ namespace CodeHelpers.Collections
 				}
 			}
 
-			public T     GetObject<T>() where T : TBase => (T)GetObject(typeof(T));
-			public TBase GetObject(Type type)           => this[type];
+			public T GetObject<T>() where T : TBase => (T)GetObject(typeof(T));
+			public TBase GetObject(Type type) => this[type];
 
 			public void Add(Type key, TBase value)
 			{
@@ -111,8 +111,8 @@ namespace CodeHelpers.Collections
 				else throw ExceptionHelper.Invalid(nameof(key), key, "already exists!");
 			}
 
-			public void Add<T>(T                      item) where T : class, TBase => Add(item.GetType(), item);
-			public void Add(KeyValuePair<Type, TBase> item)                        => Add(item.Key,       item.Value);
+			public void Add<T>(T item) where T : class, TBase => Add(item.GetType(), item);
+			public void Add(KeyValuePair<Type, TBase> item) => Add(item.Key, item.Value);
 
 			/// <summary>
 			/// Create and assign all missing objects into the collection.
@@ -140,7 +140,7 @@ namespace CodeHelpers.Collections
 			/// </summary>
 			public T InstantiateNew<T>() where T : class, TBase
 			{
-				int id        = factory.GetId(typeof(T));
+				int id = factory.GetId(typeof(T));
 				var newObject = this[id];
 
 				if (newObject == null)
@@ -154,7 +154,7 @@ namespace CodeHelpers.Collections
 				return (T)newObject;
 			}
 
-			public bool ContainsKey(Type                   key)  => this[key] != null;
+			public bool ContainsKey(Type key) => this[key] != null;
 			public bool Contains(KeyValuePair<Type, TBase> item) => ContainsKey(item.Key);
 
 			public bool Remove(Type key)
@@ -187,7 +187,7 @@ namespace CodeHelpers.Collections
 
 			void ICollection<KeyValuePair<Type, TBase>>.CopyTo(KeyValuePair<Type, TBase>[] array, int arrayIndex) => throw new NotSupportedException();
 
-			ICollection<Type> IDictionary<Type, TBase>. Keys   => throw new NotSupportedException();
+			ICollection<Type> IDictionary<Type, TBase>.Keys => throw new NotSupportedException();
 			ICollection<TBase> IDictionary<Type, TBase>.Values => throw new NotSupportedException();
 		}
 	}
