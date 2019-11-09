@@ -20,7 +20,7 @@ namespace CodeHelpers.ThreadHelpers
 		}
 
 		static readonly ConcurrentQueue<Action> mainThreadActions = new ConcurrentQueue<Action>();
-		static          Thread                  mainThread; //Set by CodeHelperMonoBehaviour using reflection
+		static Thread mainThread; //Set by CodeHelperMonoBehaviour using reflection
 
 		public static void InvokeInMainThread(Action thisAction)
 		{
@@ -58,15 +58,19 @@ namespace CodeHelpers.ThreadHelpers
 
 		public static bool IsInMainThread => mainThread == null || Thread.CurrentThread == mainThread;
 
-		/// <summary>This returns a method that can only be executing by one thread. If it is already being executed by thread A, then if thread B tries to execute it the current executing invoked by thread A will keep going but the one invoked by B will be returned.</summary>
-		public static Action GetOneCallMethod(Action thisAction) => new OneCallMethod(thisAction).Execute;
+		/// <summary>
+		/// This returns a method that can only be executing by one thread.
+		/// If it is already being executed by thread A, then if thread B tries to execute it the current
+		/// executing invoked by thread A will keep going but the one invoked by B will be returned.
+		/// </summary>
+		public static Action GetOneCallMethod(Action action) => new OneCallMethod(action).Execute;
 
 		class OneCallMethod
 		{
 			public OneCallMethod(Action action) => this.action = action;
 
 			readonly Action action;
-			volatile bool   executing;
+			volatile bool executing;
 
 			readonly object objectLock = new object();
 

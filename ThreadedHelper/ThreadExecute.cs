@@ -6,14 +6,14 @@ using System;
 
 namespace CodeHelpers.ThreadHelpers
 {
-	public class ThreadExecute
+	public class ThreadExecute : IDisposable
 	{
 		/// <summary>Create a new instance</summary>
 		/// <param name="checkDelay">If this value is below 0, then we check it right after the executions. Otherwise we delay it by checkDelay seconds.</param>
 		public ThreadExecute(float checkDelay = -1f)
 		{
 			ExecutionThread = ThreadHelper.NewThread(ExecuteQueueingExecutions);
-			delay           = checkDelay;
+			delay = checkDelay;
 
 			CodeHelperMonoBehaviour.OnApplicationQuitMethods += ExecutionThread.Abort;
 		}
@@ -29,9 +29,9 @@ namespace CodeHelpers.ThreadHelpers
 		}
 
 		readonly ConcurrentQueue<Execution> executionQueue = new ConcurrentQueue<Execution>();
-		readonly float                      delay;
+		readonly float delay;
 
-		long       killingId    = long.MaxValue; //If this long is larger than int.MaxValue then we count it as null
+		long killingId = long.MaxValue;          //If this long is larger than int.MaxValue then we count it as null
 		const long DefaultValue = long.MaxValue; //This is the value when we are not killing any execution
 
 		void ExecuteQueueingExecutions()
@@ -99,26 +99,31 @@ namespace CodeHelpers.ThreadHelpers
 			return successful;
 		}
 
+		public void Dispose()
+		{
+			throw new NotImplementedException();
+		}
+
 		readonly struct Execution
 		{
 			public Execution(Action action)
 			{
 				this.action = action;
-				id          = 0;
-				useId       = false;
+				id = 0;
+				useId = false;
 			}
 
 			public Execution(Action action, int id)
 			{
 				this.action = action;
-				this.id     = id;
-				useId       = true;
+				this.id = id;
+				useId = true;
 			}
 
 			public readonly Action action;
 
 			public readonly bool useId;
-			public readonly int  id;
+			public readonly int id;
 		}
 	}
 }
