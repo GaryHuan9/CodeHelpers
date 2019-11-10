@@ -107,6 +107,50 @@ namespace CodeHelpers
 		public static unsafe float Int32BitsToSingle(int value) => *(float*)&value;
 #endif
 
+		/// <summary>
+		/// Format the integer to their abbreviations using metric suffixes
+		/// The returned string will always be shorter or equals to 4 characters
+		/// </summary>
+		public static string ToKiloFormatString(this int value)
+		{
+			if (value < 0) throw ExceptionHelper.Invalid(nameof(value), value, "cannot be negative.");
+
+			const int MaxLength = 4;
+
+			if (value >= 1000000000) return Format(1000000000, 'B');
+			if (value >= 1000000) return Format(1000000, 'M');
+			if (value >= 1000) return Format(1000, 'K');
+
+			return value.ToString();
+
+			string Format(int level, char suffix)
+			{
+				int integer = value / level;
+				int floating = value / (level / 1000) - integer * 1000;
+
+				var builder = new StringBuilder();
+
+				builder.Append(integer);
+				builder.Append('.');
+				builder.Append(floating.ToString("D3"));
+
+				bool hasDot = true;
+
+				while (builder.Length > MaxLength - 1) RemoveLast();
+				while (hasDot && builder[builder.Length - 1] == '0') RemoveLast();
+				while (hasDot && builder[builder.Length - 1] == '.') RemoveLast();
+
+				builder.Append(suffix);
+				return builder.ToString();
+
+				void RemoveLast()
+				{
+					if (builder[builder.Length - 1] == '.') hasDot = false;
+					builder.Remove(builder.Length - 1, 1);
+				}
+			}
+		}
+
 		public const float Epsilon = 0.00001f;
 
 #endregion

@@ -114,7 +114,7 @@ namespace CodeHelpers.VectorHelpers
 
 		/// <summary>
 		/// Gets a direction which is perpendicular to this <paramref name="direction"/>.
-		/// The result is also 2 less than input.
+		/// The returned direction is the 2d right/positive x direction if you projected the direction onto 2d (using the <see cref="Project"/> method)
 		/// </summary>
 		public static Direction Perpendicular(this Direction direction) => (Direction)((int)direction - 2).Repeat((int)EnumHelper<Direction>.EnumLength);
 

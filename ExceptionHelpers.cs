@@ -6,7 +6,7 @@ namespace CodeHelpers
 {
 	public static class ExceptionHelper
 	{
-		public static Exception NotPossible => new Exception("Not possible");
+		public static Exception NotPossible => new Exception("The impossible happened!");
 		public static Exception NotConvertible => new Exception("Not convertible");
 		public static Exception FoundNon => new Exception("Found non");
 		public static Exception PlayerObjectNotExist => new Exception("The player object does not exist");

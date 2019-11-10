@@ -15,8 +15,10 @@ namespace CodeHelpers.ThreadHelpers
 			ExecutionThread = ThreadHelper.NewThread(ExecuteQueueingExecutions);
 			delay = checkDelay;
 
-			CodeHelperMonoBehaviour.OnApplicationQuitMethods += ExecutionThread.Abort;
+			CodeHelperMonoBehaviour.OnApplicationQuitMethods += Dispose;
 		}
+
+		~ThreadExecute() => Dispose();
 
 		public Thread ExecutionThread { get; private set; }
 
@@ -30,6 +32,8 @@ namespace CodeHelpers.ThreadHelpers
 
 		readonly ConcurrentQueue<Execution> executionQueue = new ConcurrentQueue<Execution>();
 		readonly float delay;
+
+		bool disposed;
 
 		long killingId = long.MaxValue;          //If this long is larger than int.MaxValue then we count it as null
 		const long DefaultValue = long.MaxValue; //This is the value when we are not killing any execution
@@ -101,7 +105,10 @@ namespace CodeHelpers.ThreadHelpers
 
 		public void Dispose()
 		{
-			throw new NotImplementedException();
+			if (disposed) return;
+
+			ExecutionThread.Abort();
+			disposed = true;
 		}
 
 		readonly struct Execution
