@@ -113,6 +113,11 @@ namespace CodeHelpers.VectorHelpers
 		public static Direction Abs(this Direction direction) => (Direction)((int)direction / 2 * 2);
 
 		/// <summary>
+		/// Returns if the direction is a negative axis (left, down, or backward)
+		/// </summary>
+		public static bool IsNegative(this Direction direction) => (int)direction % 2 == 1;
+
+		/// <summary>
 		/// Gets a direction which is perpendicular to this <paramref name="direction"/>.
 		/// The returned direction is the 2d right/positive x direction if you projected the direction onto 2d (using the <see cref="Project"/> method)
 		/// </summary>

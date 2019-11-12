@@ -10,7 +10,7 @@ namespace CodeHelpers.ObjectPooling
 		/// </summary>
 		protected abstract int MaxPoolSize { get; }
 
-		protected Stack<T> pool = new Stack<T>();
+		protected readonly Stack<T> pool = new Stack<T>();
 
 		public T GetObject()
 		{
@@ -29,14 +29,12 @@ namespace CodeHelpers.ObjectPooling
 		/// The method that will be resetting the objects.
 		/// Invoked BEFORE each GetObject returns.
 		/// </summary>
-		protected virtual void Reset(T target) { }
+		protected abstract void Reset(T target);
 
 		public virtual void ReleaseObject(T target)
 		{
-			if (pool.Count < MaxPoolSize)
-			{
-				pool.Push(target);
-			}
+			if (pool.Count < MaxPoolSize) pool.Push(target);
+			if (target is IDisposable disposable) disposable.Dispose();
 		}
 	}
 }

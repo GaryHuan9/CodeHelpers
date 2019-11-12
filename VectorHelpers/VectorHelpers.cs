@@ -16,9 +16,6 @@ namespace CodeHelpers
 		public static Vector3 ToXZ3(this Vector2Int vector, float y) => new Vector3(vector.x, y, vector.y);
 		public static Vector3Int ToXZ3(this Vector2Int vector, int y = 0) => new Vector3Int(vector.x, y, vector.y);
 
-		public static Vector3 ToVectorWithY(this Vector3 vector, float y) => new Vector3(vector.x, y, vector.z);
-		public static Vector3Int ToVectorWithY(this Vector3Int vector, int y) => new Vector3Int(vector.x, y, vector.z);
-
 		public static void SetXZ(this ref Vector3 vector, Vector2 xz) => vector = new Vector3(xz.x, vector.y, xz.y);
 		public static void SetXZ(this ref Vector3Int vector, Vector2Int xz) => vector = new Vector3Int(xz.x, vector.y, xz.y);
 
@@ -34,6 +31,9 @@ namespace CodeHelpers
 		// NOTE: TODO: The current implementation of rounding by increment will destroy the floating-point accuracy when increment is too small or too large! Fix that!
 		public static Vector3 Round(this Vector3 vector, float increment) => new Vector3(Mathf.Round(vector.x / increment) * increment, Mathf.Round(vector.y / increment) * increment, Mathf.Round(vector.z / increment) * increment);
 		public static Vector3Int Round(this Vector3 vector, int increment) => new Vector3Int(Mathf.RoundToInt(vector.x / increment) * increment, Mathf.RoundToInt(vector.y / increment) * increment, Mathf.RoundToInt(vector.z / increment) * increment);
+
+		public static Vector3 Clamp(this Vector3 vector, Vector3 min, Vector3 max) => new Vector3(Mathf.Clamp(vector.x, min.x, max.x), Mathf.Clamp(vector.y, min.y, max.y), Mathf.Clamp(vector.z, min.z, max.z));
+		public static Vector3Int Clamp(this Vector3Int vector, Vector3Int min, Vector3Int max) => new Vector3Int(Mathf.Clamp(vector.x, min.x, max.x), Mathf.Clamp(vector.y, min.y, max.y), Mathf.Clamp(vector.z, min.z, max.z));
 
 		public static Vector3 ToFloat(this Vector3Int vector) => new Vector3(vector.x, vector.y, vector.z);
 		public static Vector3Int ToInt(this Vector3 vector) => new Vector3Int((int)vector.x, (int)vector.y, (int)vector.z);
