@@ -11,10 +11,42 @@ namespace CodeHelpers.AI
 		Node topNode;
 		Node currentNode;
 
-		public void Add(BehaviorAction<T> action, Direction addDirection)
-		{
-			Node node = new LeafNode(action);
+		public int Count { get; private set; }
 
+		public void Add<TNodeType>(TNodeType nodeType, Direction addDirection) where TNodeType : INodeType<T>
+		{
+			Node node;
+
+			switch (nodeType)
+			{
+				case Leaf<T> leaf:
+					node = new LeafNode(leaf.action);
+					break;
+
+				case Sequencer<T> sequencer:
+					node = new SequencerNode();
+					break;
+
+				case Selector<T> selector:
+					node = new SelectorNode();
+					break;
+
+				case Inverter<T> inverter:
+					node = new InverterNode();
+					break;
+
+				case Repeater<T> repeater:
+					node = new RepeaterNode();
+					break;
+
+				default: throw ExceptionHelper.Invalid(nameof(nodeType), nodeType, InvalidType.unexpected);
+			}
+
+			Add(node, addDirection);
+		}
+
+		void Add(Node node, Direction addDirection)
+		{
 			if (currentNode != null)
 			{
 				AddDirectionCheck(currentNode, addDirection);
@@ -35,11 +67,8 @@ namespace CodeHelpers.AI
 
 			currentNode = node;
 			if (topNode == null) topNode = currentNode;
-		}
 
-		public void Add(NodeType type, Direction addDirection)
-		{
-			//TODO
+			Count++;
 		}
 
 		static void AddDirectionCheck(Node origin, Direction addDirection)
@@ -65,10 +94,7 @@ namespace CodeHelpers.AI
 			throw ExceptionHelper.Invalid(nameof(addDirection), addDirection, "is an invalid 2d direction for trees!");
 		}
 
-		public BehaviorTree<T> ConstructNew()
-		{
-			throw new NotImplementedException();
-		}
+		public BehaviorTree<T> ConstructNew() => new BehaviorTree<T>(this);
 
 		abstract class Node
 		{
@@ -129,31 +155,25 @@ namespace CodeHelpers.AI
 				IndexInParent = indexInParent.Value;
 			}
 		}
+
+		public readonly struct CursorPosition : IEquatable<CursorPosition>
+		{
+			public CursorPosition(uint level, uint depth)
+			{
+				this.level = level;
+				this.depth = depth;
+			}
+
+			public readonly uint level;
+			public readonly uint depth;
+
+			public bool Equals(CursorPosition other) => other.level == level && other.depth == depth;
+			public override bool Equals(object obj) => obj is CursorPosition other && Equals(other);
+
+			public override int GetHashCode() => base.GetHashCode();
+			public override string ToString() => $"Position at level {level} and depth {depth}";
+		}
 	}
 
 	public delegate Result BehaviorAction<in T>(T context);
-
-	public enum NodeType
-	{
-		/// <summary>
-		/// Similar to AND; execute child nodes in order until the executed child returned failure
-		/// </summary>
-		sequencer,
-
-		/// <summary>
-		/// Similar to OR; execute child nodes in order until the executed child returned success
-		/// </summary>
-		selector,
-
-		/// <summary>
-		/// Similar to NOT; execute the single child node and return its result in reverse
-		/// </summary>
-		inverter,
-
-		/// <summary>
-		/// Execute all children in order repeatedly until the executed child returned failure
-		/// NOTE: This may result in infinite loops easily if the tree is not planed carefully
-		/// </summary>
-		repeator
-	}
 }

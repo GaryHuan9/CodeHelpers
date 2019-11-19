@@ -22,5 +22,81 @@ namespace CodeHelpers.AI
 
 			public override void Insert(int index, Node node) => throw new NotSupportedException();
 		}
+
+		class SequencerNode : Node
+		{
+
+			public override int MaxChildCount => throw new NotImplementedException();
+
+			public override int ChildCount => throw new NotImplementedException();
+
+			public override Node this[int index]
+			{
+				get => throw new NotImplementedException();
+				set => throw new NotImplementedException();
+			}
+
+			public override void Insert(int index, Node node)
+			{
+				throw new NotImplementedException();
+			}
+		}
+		
+		class SelectorNode : Node
+		{
+
+			public override int MaxChildCount => throw new NotImplementedException();
+
+			public override int ChildCount => throw new NotImplementedException();
+
+			public override Node this[int index]
+			{
+				get => throw new NotImplementedException();
+				set => throw new NotImplementedException();
+			}
+
+			public override void Insert(int index, Node node)
+			{
+				throw new NotImplementedException();
+			}
+		}
+		
+		class InverterNode : Node
+		{
+
+			public override int MaxChildCount => throw new NotImplementedException();
+
+			public override int ChildCount => throw new NotImplementedException();
+
+			public override Node this[int index]
+			{
+				get => throw new NotImplementedException();
+				set => throw new NotImplementedException();
+			}
+
+			public override void Insert(int index, Node node)
+			{
+				throw new NotImplementedException();
+			}
+		}
+		
+		class RepeaterNode : Node
+		{
+
+			public override int MaxChildCount => throw new NotImplementedException();
+
+			public override int ChildCount => throw new NotImplementedException();
+
+			public override Node this[int index]
+			{
+				get => throw new NotImplementedException();
+				set => throw new NotImplementedException();
+			}
+
+			public override void Insert(int index, Node node)
+			{
+				throw new NotImplementedException();
+			}
+		}
 	}
 }
