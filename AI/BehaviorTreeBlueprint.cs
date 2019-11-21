@@ -1,3 +1,5 @@
+using System;
+
 namespace CodeHelpers.AI
 {
 	public class BehaviorTreeBlueprint<T>
@@ -7,7 +9,7 @@ namespace CodeHelpers.AI
 		/// </summary>
 		public int GetDestination(int executed, Result result)
 		{
-
+            throw new NotImplementedException();
 		}
 	}
 }

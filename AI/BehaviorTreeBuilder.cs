@@ -94,7 +94,7 @@ namespace CodeHelpers.AI
 			throw ExceptionHelper.Invalid(nameof(addDirection), addDirection, "is an invalid 2d direction for trees!");
 		}
 
-		public BehaviorTree<T> ConstructNew() => new BehaviorTree<T>(this);
+		// public BehaviorTree<T> ConstructNew() => new BehaviorTree<T>(this);
 
 		abstract class Node
 		{
