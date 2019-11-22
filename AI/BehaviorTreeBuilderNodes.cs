@@ -44,7 +44,6 @@ namespace CodeHelpers.AI
 		
 		class SelectorNode : Node
 		{
-
 			public override int MaxChildCount => throw new NotImplementedException();
 
 			public override int ChildCount => throw new NotImplementedException();

@@ -6,23 +6,18 @@ namespace CodeHelpers.AI
 {
 	public class BehaviorTree<T>
 	{
-		readonly Node[] nodes;
+		public BehaviorTreeBlueprint<T> Blueprint => blueprint;
 
-		public bool IsSealed { get; private set; }
+		public T Context => context;
 
-		public void Seal()
-		{
-			if (IsSealed) throw new Exception("Behavior tree already sealed!");
-			IsSealed = true;
-		}
+		public readonly BehaviorTreeBlueprint<T> blueprint;
+		public readonly T context;
 
 		public Result Tick()
 		{
 			
 			throw new NotImplementedException();
 		}
-
-		class Node { }
 	}
 
 	public enum Result : byte
