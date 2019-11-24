@@ -84,17 +84,8 @@ namespace CodeHelpers
 		public static MinMaxInt OneToOne => new MinMaxInt(-1, 1);
 		public static MinMaxInt MinToMax => new MinMaxInt(int.MinValue, int.MaxValue);
 
-		public static IEnumerable<MinMaxInt> GetRangesFromValue(MinMaxInt[] minMaxes, float value)
-		{
-			List<MinMaxInt> result = new List<MinMaxInt>();
-
-			for (int i = 0; i < minMaxes.Length; i++)
-			{
-				if (minMaxes[i].Contains(value)) result.Add(minMaxes[i]);
-			}
-
-			return result;
-		}
+		public static List<MinMaxInt> GetRangesFromValue(IEnumerable<MinMaxInt> minMaxes, float value) =>
+			minMaxes.Where(t => t.Contains(value)).ToList();
 
 		public static MinMaxInt operator +(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min + other.min, minMax.max + other.max);
 		public static MinMaxInt operator -(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min - other.min, minMax.max - other.max);
@@ -142,10 +133,8 @@ namespace CodeHelpers
 
 			public bool MoveNext()
 			{
-				if (Current >= minMax.max) return false;
-
 				Current++;
-				return true;
+				return Current >= minMax.max;
 			}
 
 			public void Reset() => Current = minMax.min - 1;

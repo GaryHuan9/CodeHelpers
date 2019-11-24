@@ -1,34 +1,334 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using CodeHelpers.Collections;
 
 namespace CodeHelpers.AI
 {
-	public class BehaviorTreeBlueprint<T>
+	public partial class BehaviorTreeBlueprint<T> : ISealable
 	{
+		public BehaviorTreeBlueprint()
+		{
+			nodes.Add(new Root(this));
+		}
+
 		readonly List<Node> nodes = new List<Node>();
-		int firstEmptyIndex = 0; //The first index that is null in the nodes List
+		public int NodeCount => nodes.Count;
+
+		int firstEmptyIndex = 1; //The first index that is null in the nodes List
 
 		public bool IsSealed { get; private set; }
 
-		internal Node this[int index] => nodes[index];
+		internal StatusToken OriginToken => new StatusToken(0);
+		internal Root OriginNode => (Root)this[0];
 
-		/// <summary>
-		/// Returns the index of the next node to execute with the index of the node we just executed and its result
-		/// </summary>
-		public int GetDestination(int executed, Result result)
+		public Location RootLocation => new Location(0);
+
+		Node this[int index] => nodes[index];
+		Node this[Location location] => nodes[location.index];
+
+		public SealResult CanSeal(out Location location)
 		{
-			throw new NotImplementedException();
+			foreach (Node node in nodes)
+			{
+				var result = node.CanSeal();
+				if (result == SealResult.success) continue;
+
+				location = new Location(node.selfIndex);
+				return result;
+			}
+
+			location = default;
+			return SealResult.success;
 		}
 
 		public void Seal()
 		{
-			if (IsSealed) throw new Exception("Behavior tree already sealed!");
+			this.CheckSealed();
+
+			for (int i = 0; i < NodeCount; i++) nodes[i]?.Seal();
+			nodes.TrimExcess();
+
 			IsSealed = true;
 		}
 
-		internal class Node
+		/// <summary>
+		/// Returns the location of the parent of the node at <paramref name="location"/>
+		/// </summary>
+		public Location GetParent(Location location)
 		{
+			var parent = this[location].Parent;
 
+			if (parent != null) return new Location(parent.selfIndex);
+			throw new Exception("Node at location does not have a parent!");
+		}
+
+		/// <summary>
+		/// Returns a struct enumerable to enumerate through all of the Location of this node's child
+		/// </summary>
+		public ChildEnumerable GetChild(Location location) => new ChildEnumerable(this, location);
+
+		public bool Add<TNode>(Location parentLocation, TNode nodeType, out Location nodeLocation) where TNode : INodeType<T>
+		{
+			Node parent = this[parentLocation];
+
+			if (parent.ChildCount == parent.MaxChildCount)
+			{
+				nodeLocation = default;
+				return false;
+			}
+
+			Node node = GenerateNewNode(nodeType);
+
+			parent.InsertChild(parent.ChildCount, node.selfIndex);
+			nodeLocation = new Location(node.selfIndex);
+
+			return true;
+		}
+
+		public bool Add<TNode>(Location parentLocation, TNode nodeType) where TNode : INodeType<T> => Add(parentLocation, nodeType, out _);
+
+		/// <summary>
+		/// Constructs a new Node then assign it to our internal list at the correct index
+		/// </summary>
+		Node GenerateNewNode<TNode>(TNode nodeType) where TNode : INodeType<T>
+		{
+			Node node = TypeToNewNode(nodeType, firstEmptyIndex);
+
+			if (firstEmptyIndex == NodeCount)
+			{
+				nodes.Add(node);
+				firstEmptyIndex++;
+			}
+			else
+			{
+				if (nodes[firstEmptyIndex] != null) throw ExceptionHelper.Invalid(nameof(firstEmptyIndex), firstEmptyIndex, "does not point to a null index!");
+				nodes[firstEmptyIndex] = node;
+
+				while (firstEmptyIndex != NodeCount && nodes[firstEmptyIndex] != null) firstEmptyIndex++;
+			}
+
+			return node;
+		}
+
+		Node TypeToNewNode<TNode>(TNode nodeType, int index) where TNode : INodeType<T>
+		{
+			switch (nodeType)
+			{
+				case Leaf<T> leaf:           return new Leaf(this, index, leaf.action);
+				case Sequencer<T> sequencer: return new Sequencer(this, index);
+				case Selector<T> selector:   return new Selector(this, index);
+				case Inverter<T> inverter:   return new Inverter(this, index);
+				case Repeater<T> repeater:   return new Repeater(this, index);
+				case Blocker<T> blocker:     return new Blocker(this, index, blocker.chance);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(nodeType), nodeType, InvalidType.unexpected);
+		}
+
+		internal abstract class Node : ISealable
+		{
+			protected Node(BehaviorTreeBlueprint<T> blueprint, int selfIndex)
+			{
+				this.blueprint = blueprint;
+				this.selfIndex = selfIndex;
+			}
+
+			int _parentIndex = -1;
+			int _indexInParent = -1;
+
+			public int? ParentIndex => _parentIndex < 0 ? (int?)null : _parentIndex;
+			public int? IndexInParent => _indexInParent < 0 ? (int?)null : _indexInParent;
+
+			public readonly BehaviorTreeBlueprint<T> blueprint;
+			public readonly int selfIndex;
+
+			protected List<int> Children { get; private set; }
+			public bool IsSealed { get; private set; }
+
+			public abstract byte MaxChildCount { get; }
+			public virtual byte MinChildCount => 1; //The minimum number of child for this node to be successfully sealed
+
+			public byte ChildCount => (byte?)Children?.Count ?? 0;
+			public Node Parent => ParentIndex == null ? null : blueprint[ParentIndex.Value];
+
+			/// <summary>
+			/// Returns children with that local index
+			/// </summary>
+			public Node this[int index] => blueprint[Children[index]];
+
+			public SealResult CanSeal()
+			{
+				if (ParentIndex == null && !(this is Root)) return SealResult.noParent;
+				if (ChildCount < MinChildCount) return SealResult.minChildCount;
+
+				return SealResult.success;
+			}
+
+			public void Seal()
+			{
+				this.CheckSealed();
+
+				var sealResult = CanSeal();
+				if (sealResult != SealResult.success) throw new Exception(sealResult.ToErrorMessage());
+
+				if (Children?.Count == 0) Children = null;
+				else Children?.TrimExcess();
+
+				IsSealed = true;
+			}
+
+			public StatusToken Next(StatusToken from, T context)
+			{
+				this.CheckNotSealed();
+				if (from.result == Result.running) throw ExceptionHelper.Invalid(nameof(from), from, "is running, which indicates the tree should stop and cache but not try to get the next token.");
+
+				return GetNext(from, context);
+			}
+
+			/// <summary>
+			/// Should return the token that will lead us to the next node
+			/// NOTE: result passed in as token will not be running.
+			/// </summary>
+			protected abstract StatusToken GetNext(StatusToken from, T context);
+
+			void SetParent()
+			{
+				this.CheckSealed();
+
+				_parentIndex = -1;
+				_indexInParent = -1;
+			}
+
+			protected virtual void SetParent(int parentIndex, int indexInParent)
+			{
+				this.CheckSealed();
+				if (blueprint[parentIndex]?[indexInParent] != this) throw new Exception($"Invalid {nameof(parentIndex)} ({parentIndex}) or {nameof(indexInParent)} ({indexInParent})! The indices does not point to this node.");
+
+				_parentIndex = parentIndex;
+				_indexInParent = indexInParent;
+			}
+
+			public void InsertChild(int positionIndex, int childIndex)
+			{
+				this.CheckSealed();
+				if (ChildCount >= MaxChildCount) throw new Exception($"Cannot add more children because {nameof(ChildCount)} ({ChildCount}) is already equals {nameof(MaxChildCount)} ({ChildCount})!");
+
+				Children = Children ?? new List<int>(); //Create list if null
+				var child = blueprint[childIndex];
+
+				Children.Insert(positionIndex, childIndex);
+				child.SetParent(selfIndex, positionIndex);
+			}
+
+			public Node RemoveChild(int positionIndex)
+			{
+				this.CheckSealed();
+				if (Children == null || !Children.IsIndexValid(positionIndex)) throw new Exception($"No child at {nameof(positionIndex)} ({positionIndex})");
+
+				var child = this[positionIndex];
+				child.SetParent();
+
+				Children.RemoveAt(positionIndex);
+				return child;
+			}
+		}
+
+		/// <summary>
+		/// Result should be enter if you want to go down to a child
+		///
+		/// If ToChild is true, then we are going down the tree, from a parent to its child at local index of index.
+		/// If ToParent is true, then we are going up the tree, from a child back to its parent. The children's index in parent would be index.
+		/// </summary>
+		internal readonly struct StatusToken : IEquatable<StatusToken>
+		{
+			public StatusToken(byte index, Result result = Result.enter)
+			{
+				this.index = index;
+				this.result = result;
+			}
+
+			/// <summary>
+			/// Creates a return token from <paramref name="node"/> to its parent.
+			/// NOTE: <paramref name="result"/> cannot be enter
+			/// </summary>
+			public StatusToken(Node node, Result result)
+			{
+				if (result == Result.enter) throw ExceptionHelper.Invalid(nameof(result), result, "is enter, which cannot be used when creating return tokens!");
+
+				index = (byte)(node.IndexInParent ?? throw new Exception("Cannot create a return token from a node with no parent!"));
+				this.result = result;
+			}
+
+			public readonly byte index;
+			public readonly Result result;
+
+			public bool ToChild => result == Result.enter;
+			public bool ToParent => !ToChild;
+
+			public bool Equals(StatusToken other) => index == other.index && result == other.result;
+			public override bool Equals(object obj) => obj is StatusToken other && Equals(other);
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					return (index.GetHashCode() * 397) ^ (int)result;
+				}
+			}
+		}
+
+		public readonly struct Location : IEquatable<Location>
+		{
+			internal Location(int index) => this.index = index;
+
+			internal readonly int index;
+
+			public bool Equals(Location other) => index == other.index;
+			public override bool Equals(object obj) => obj is Location other && Equals(other);
+
+			public override int GetHashCode() => index;
+		}
+
+		public readonly struct ChildEnumerable : IEnumerable<Location>
+		{
+			internal ChildEnumerable(BehaviorTreeBlueprint<T> blueprint, Location parentLocation) => enumerator = new Enumerator(blueprint, parentLocation);
+
+			readonly Enumerator enumerator;
+
+			public Enumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<Location> IEnumerable<Location>.GetEnumerator() => GetEnumerator();
+
+			public struct Enumerator : IEnumerator<Location>
+			{
+				public Enumerator(BehaviorTreeBlueprint<T> blueprint, Location parentLocation)
+				{
+					this.blueprint = blueprint;
+					this.parentLocation = parentLocation;
+
+					index = -1;
+				}
+
+				readonly BehaviorTreeBlueprint<T> blueprint;
+				readonly Location parentLocation;
+
+				int index;
+
+				object IEnumerator.Current => Current;
+				public Location Current => new Location(blueprint[parentLocation][index].selfIndex);
+
+				public bool MoveNext()
+				{
+					index++;
+					return index < blueprint[parentLocation].ChildCount;
+				}
+
+				public void Reset() => index = -1;
+				public void Dispose() { }
+			}
 		}
 	}
 }
