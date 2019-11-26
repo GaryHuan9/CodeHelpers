@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace CodeHelpers.MeshHelpers.Combinations
 {
-	public readonly struct MeshAndMatrix
+	public readonly struct MeshMatrix
 	{
-		public MeshAndMatrix(Mesh mesh, Matrix4x4 matrix, byte subMeshOffset = 0)
+		public MeshMatrix(Mesh mesh, Matrix4x4 matrix, byte subMeshOffset = 0)
 		{
 			this.mesh = mesh;
 			this.matrix = matrix;

@@ -4,21 +4,21 @@ using UnityEngine;
 namespace CodeHelpers.MeshHelpers.Combinations
 {
 	[Serializable]
-	public struct RendererAndFilter
+	public struct RendererFilter
 	{
-		public RendererAndFilter(MeshRenderer renderer, MeshFilter filter)
+		public RendererFilter(MeshRenderer renderer, MeshFilter filter)
 		{
 			this.renderer = renderer;
 			this.filter = filter;
 		}
 
-		public RendererAndFilter(Component behaviour)
+		public RendererFilter(Component behaviour)
 		{
 			renderer = behaviour.GetComponentsInChildren<MeshRenderer>()?.TryGetValue(0);
 			filter = behaviour.GetComponentsInChildren<MeshFilter>()?.TryGetValue(0);
 		}
 
-		public RendererAndFilter(GameObject gameObject)
+		public RendererFilter(GameObject gameObject)
 		{
 			renderer = gameObject.GetComponentsInChildren<MeshRenderer>()?.TryGetValue(0);
 			filter = gameObject.GetComponentsInChildren<MeshFilter>()?.TryGetValue(0);
@@ -108,7 +108,7 @@ namespace CodeHelpers.MeshHelpers.Combinations
 			set => renderer.transform.localScale = value;
 		}
 
-		public void Apply(MeshAndMaterials model)
+		public void Apply(MeshMaterials model)
 		{
 			model.Materials.AssignToRenderer(renderer);
 			filter.sharedMesh = model.Mesh;

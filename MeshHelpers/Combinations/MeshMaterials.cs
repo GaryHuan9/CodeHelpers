@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace CodeHelpers.MeshHelpers.Combinations
 {
-	public struct MeshAndMaterials
+	public struct MeshMaterials
 	{
-		public MeshAndMaterials(Mesh mesh, Material material)
+		public MeshMaterials(Mesh mesh, Material material)
 		{
 			Mesh = mesh;
 			Materials = new MaterialCollection(material);
@@ -15,7 +15,7 @@ namespace CodeHelpers.MeshHelpers.Combinations
 			subMeshes = null;
 		}
 
-		public MeshAndMaterials(Mesh mesh, Material[] materials)
+		public MeshMaterials(Mesh mesh, Material[] materials)
 		{
 			Mesh = mesh;
 			Materials = materials.Length == 1 ? new MaterialCollection(materials[0]) : new MaterialCollection(materials);
@@ -23,7 +23,7 @@ namespace CodeHelpers.MeshHelpers.Combinations
 			subMeshes = null;
 		}
 
-		public MeshAndMaterials(Mesh mesh, MaterialCollection materials)
+		public MeshMaterials(Mesh mesh, MaterialCollection materials)
 		{
 			Mesh = mesh;
 			Materials = materials;
@@ -104,9 +104,9 @@ namespace CodeHelpers.MeshHelpers.Combinations
 			return subMeshes[subMeshIndex] = mesh;
 		}
 
-		public static implicit operator Mesh(MeshAndMaterials value) => value.Mesh;
-		public static implicit operator Material(MeshAndMaterials value) => value.Material;
-		public static implicit operator MaterialCollection(MeshAndMaterials value) => value.Materials;
+		public static implicit operator Mesh(MeshMaterials value) => value.Mesh;
+		public static implicit operator Material(MeshMaterials value) => value.Material;
+		public static implicit operator MaterialCollection(MeshMaterials value) => value.Materials;
 
 		public struct MaterialCollection : IReadOnlyList<Material>
 		{

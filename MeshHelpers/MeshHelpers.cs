@@ -16,7 +16,7 @@ namespace CodeHelpers.MeshHelpers
 		/// <summary>
 		/// Combines the meshes given. Contains materials.
 		/// </summary>
-		public static MeshAndMaterials CombineMeshes(IList<MeshAndMaterials> models, IList<Matrix4x4> matrices, Mesh baseMesh = null)
+		public static MeshMaterials CombineMeshes(IList<MeshMaterials> models, IList<Matrix4x4> matrices, Mesh baseMesh = null)
 		{
 			if (models.Count != matrices.Count)
 			{
@@ -32,7 +32,7 @@ namespace CodeHelpers.MeshHelpers
 
 			for (int i = 0; i < models.Count; i++)
 			{
-				MeshAndMaterials model = models[i];
+				MeshMaterials model = models[i];
 
 				//Loop through all the materials
 				for (int j = 0; j < model.Materials.Count; j++)
@@ -73,7 +73,7 @@ namespace CodeHelpers.MeshHelpers
 			baseMesh.indexFormat = vertexCount >= mesh16BitSize ? IndexFormat.UInt32 : IndexFormat.UInt16;
 			baseMesh.CombineMeshes(instances, false, false);
 
-			return new MeshAndMaterials(baseMesh, meshListDictionary.Keys.ToArray());
+			return new MeshMaterials(baseMesh, meshListDictionary.Keys.ToArray());
 		}
 
 		struct ListWithVertexCount
@@ -119,7 +119,7 @@ namespace CodeHelpers.MeshHelpers
 			return baseMesh;
 		}
 
-		public static MeshThreadedData ThreadedCombineMeshes(IEnumerable<MeshAndMatrix> meshes, bool combineUVs = true, bool combineNormals = false)
+		public static MeshThreadedData ThreadedCombineMeshes(IEnumerable<MeshMatrix> meshes, bool combineUVs = true, bool combineNormals = false)
 		{
 			var vertices = new List<Vector3>();
 			var triangles = new Dictionary<int, List<int>>();

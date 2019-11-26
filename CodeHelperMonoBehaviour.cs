@@ -24,6 +24,7 @@ namespace CodeHelpers
 		public static event Action UnityPreUpdateMethods;
 		public static event Action UnityUpdateMethods;
 		public static event Action UnityLateUpdateMethods;
+		public static event Action UnityFixedUpdateMethods;
 		public static event Action UnityEndUpdateMethods;
 
 		public static event Action UnityPostRenderMethods;
@@ -42,6 +43,11 @@ namespace CodeHelpers
 		/// NOTE: Any delegate subscribed to this will only be invoked once!
 		/// </summary>
 		public static event Action OnUnityLateUpdateMethods;
+
+		/// <summary>
+		/// NOTE: Any delegate subscribed to this will only be invoked once!
+		/// </summary>
+		public static event Action OnUnityFixedUpdateMethods;
 
 		/// <summary>
 		/// NOTE: Any delegate subscribed to this will only be invoked once!
@@ -66,7 +72,7 @@ namespace CodeHelpers
 		{
 			InputHelper.inputInfoFromKey.ForEach(thisPair => thisPair.Value.UpdateInfo());
 
-			FramePhase = FramePhase.pre;
+			FramePhase = FramePhase.Pre;
 
 			CodeHelper.invokeBeforeFrame.InvokeAll();
 
@@ -82,7 +88,7 @@ namespace CodeHelpers
 		{
 			PreUpdate();
 
-			FramePhase = FramePhase.middle;
+			FramePhase = FramePhase.Middle;
 
 			CodeHelper.invokeNextFrame.InvokeAll();
 			UnityUpdateMethods?.Invoke();
@@ -91,9 +97,19 @@ namespace CodeHelpers
 			OnUnityUpdateMethods = null;
 		}
 
+		void FixedUpdate()
+		{
+			FramePhase = FramePhase.Fixed;
+
+			UnityFixedUpdateMethods?.Invoke();
+
+			OnUnityFixedUpdateMethods?.Invoke();
+			OnUnityFixedUpdateMethods = null;
+		}
+
 		void LateUpdate()
 		{
-			FramePhase = FramePhase.late;
+			FramePhase = FramePhase.Late;
 
 			UnityLateUpdateMethods?.Invoke();
 
@@ -103,7 +119,7 @@ namespace CodeHelpers
 
 		void EndUpdate()
 		{
-			FramePhase = FramePhase.end;
+			FramePhase = FramePhase.End;
 
 			CodeHelper.invokeEndFrame.InvokeAll();
 			UnityEndUpdateMethods?.Invoke();
@@ -159,9 +175,10 @@ namespace CodeHelpers
 
 	public enum FramePhase
 	{
-		pre,
-		middle,
-		late,
-		end
+		Pre,
+		Middle,
+		Late,
+		Fixed,
+		End
 	}
 }

@@ -30,7 +30,7 @@ namespace CodeHelpers.DebugHelpers
 		/// </summary>
 		public static int InvokedPerFrame()
 		{
-			if (CodeHelperMonoBehaviour.FramePhase == FramePhase.pre) throw new Exception("This method does not work in pre frames!");
+			if (CodeHelperMonoBehaviour.FramePhase == FramePhase.Pre) throw new Exception("This method does not work in pre frames!");
 			return ++invokedPerFrame;
 		}
 
