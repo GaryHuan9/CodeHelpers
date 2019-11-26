@@ -23,19 +23,19 @@ namespace CodeHelpers.AI
 		internal StatusToken OriginToken => new StatusToken(0);
 		internal Root OriginNode => (Root)this[0];
 
-		public Location RootLocation => new Location(0);
+		public Location<T> RootLocation => new Location<T>(0);
 
 		Node this[int index] => nodes[index];
-		Node this[Location location] => nodes[location.index];
+		Node this[Location<T> location] => nodes[location.index];
 
-		public SealResult CanSeal(out Location location)
+		public SealResult CanSeal(out Location<T> location)
 		{
 			foreach (Node node in nodes)
 			{
 				var result = node.CanSeal();
 				if (result == SealResult.success) continue;
 
-				location = new Location(node.selfIndex);
+				location = new Location<T>(node.selfIndex);
 				return result;
 			}
 
@@ -56,38 +56,41 @@ namespace CodeHelpers.AI
 		/// <summary>
 		/// Returns the location of the parent of the node at <paramref name="location"/>
 		/// </summary>
-		public Location GetParent(Location location)
+		public Location<T> GetParent(Location<T> location)
 		{
 			var parent = this[location].Parent;
 
-			if (parent != null) return new Location(parent.selfIndex);
+			if (parent != null) return new Location<T>(parent.selfIndex);
 			throw new Exception("Node at location does not have a parent!");
 		}
 
 		/// <summary>
 		/// Returns a struct enumerable to enumerate through all of the Location of this node's child
 		/// </summary>
-		public ChildEnumerable GetChild(Location location) => new ChildEnumerable(this, location);
+		public ChildEnumerable GetChild(Location<T> location) => new ChildEnumerable(this, location);
 
-		public bool Add<TNode>(Location parentLocation, TNode nodeType, out Location nodeLocation) where TNode : INodeType<T>
+		public Location<T> Add<TNode>(Location<T> parentLocation, TNode nodeType, out bool success) where TNode : INodeType<T>
 		{
 			Node parent = this[parentLocation];
 
 			if (parent.ChildCount == parent.MaxChildCount)
 			{
-				nodeLocation = default;
-				return false;
+				success = false;
+				return default;
 			}
 
 			Node node = GenerateNewNode(nodeType);
-
 			parent.InsertChild(parent.ChildCount, node.selfIndex);
-			nodeLocation = new Location(node.selfIndex);
 
-			return true;
+			success = true;
+			return new Location<T>(node.selfIndex);
 		}
 
-		public bool Add<TNode>(Location parentLocation, TNode nodeType) where TNode : INodeType<T> => Add(parentLocation, nodeType, out _);
+		public bool Add<TNode>(Location<T> parentLocation, TNode nodeType) where TNode : INodeType<T>
+		{
+			Add(parentLocation, nodeType, out bool success);
+			return success;
+		}
 
 		/// <summary>
 		/// Constructs a new Node then assign it to our internal list at the correct index
@@ -279,32 +282,20 @@ namespace CodeHelpers.AI
 			}
 		}
 
-		public readonly struct Location : IEquatable<Location>
+		public readonly struct ChildEnumerable : IEnumerable<Location<T>>
 		{
-			internal Location(int index) => this.index = index;
-
-			internal readonly int index;
-
-			public bool Equals(Location other) => index == other.index;
-			public override bool Equals(object obj) => obj is Location other && Equals(other);
-
-			public override int GetHashCode() => index;
-		}
-
-		public readonly struct ChildEnumerable : IEnumerable<Location>
-		{
-			internal ChildEnumerable(BehaviorTreeBlueprint<T> blueprint, Location parentLocation) => enumerator = new Enumerator(blueprint, parentLocation);
+			internal ChildEnumerable(BehaviorTreeBlueprint<T> blueprint, Location<T> parentLocation) => enumerator = new Enumerator(blueprint, parentLocation);
 
 			readonly Enumerator enumerator;
 
 			public Enumerator GetEnumerator() => enumerator;
 
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-			IEnumerator<Location> IEnumerable<Location>.GetEnumerator() => GetEnumerator();
+			IEnumerator<Location<T>> IEnumerable<Location<T>>.GetEnumerator() => GetEnumerator();
 
-			public struct Enumerator : IEnumerator<Location>
+			public struct Enumerator : IEnumerator<Location<T>>
 			{
-				public Enumerator(BehaviorTreeBlueprint<T> blueprint, Location parentLocation)
+				public Enumerator(BehaviorTreeBlueprint<T> blueprint, Location<T> parentLocation)
 				{
 					this.blueprint = blueprint;
 					this.parentLocation = parentLocation;
@@ -313,12 +304,12 @@ namespace CodeHelpers.AI
 				}
 
 				readonly BehaviorTreeBlueprint<T> blueprint;
-				readonly Location parentLocation;
+				readonly Location<T> parentLocation;
 
 				int index;
 
 				object IEnumerator.Current => Current;
-				public Location Current => new Location(blueprint[parentLocation][index].selfIndex);
+				public Location<T> Current => new Location<T>(blueprint[parentLocation][index].selfIndex);
 
 				public bool MoveNext()
 				{
@@ -330,5 +321,69 @@ namespace CodeHelpers.AI
 				public void Dispose() { }
 			}
 		}
+	}
+
+	public readonly struct Location<T> : IEquatable<Location<T>>
+	{
+		internal Location(int index) => this.index = index;
+
+		internal readonly int index;
+
+		static BehaviorTreeBlueprint<T> GlobalBlueprint => GlobalLocationBlueprint<T>.blueprint ?? throw new Exception("You did not set a global blueprint for the Location struct so you have to specify a blueprint to use!");
+
+		/// <summary>
+		/// Returns the parent of this location using the globally set blueprint
+		/// </summary>
+		public Location<T> GetParent() => GetParent(GlobalBlueprint);
+
+		/// <summary>
+		/// Returns the parent of this location
+		/// </summary>
+		public Location<T> GetParent(BehaviorTreeBlueprint<T> blueprint) => blueprint.GetParent(this);
+
+		/// <summary>
+		/// Adds a node as a child to the globally set blueprint
+		/// </summary>
+		public Location<T> AddChild<TNode>(TNode nodeType) where TNode : INodeType<T> => AddChild(GlobalBlueprint, nodeType);
+
+		/// <summary>
+		/// Adds a node as a child to a blueprint
+		/// </summary>
+		public Location<T> AddChild<TNode>(BehaviorTreeBlueprint<T> blueprint, TNode nodeType) where TNode : INodeType<T>
+		{
+			var nextLocation = blueprint.Add(this, nodeType, out bool success);
+			if (!success) throw new Exception("Addition unsuccessful!");
+
+			return nextLocation;
+		}
+
+		/// <summary>
+		/// Adds a node as a sibling to the globally set blueprint
+		/// </summary>
+		public Location<T> AddSibling<TNode>(TNode nodeType) where TNode : INodeType<T> =>
+			AddSibling(GlobalBlueprint, nodeType);
+
+		/// <summary>
+		/// Adds a node as a sibling to a blueprint
+		/// </summary>
+		public Location<T> AddSibling<TNode>(BehaviorTreeBlueprint<T> blueprint, TNode nodeType) where TNode : INodeType<T> =>
+			GetParent(blueprint).AddChild(blueprint, nodeType);
+
+		public bool Equals(Location<T> other) => index == other.index;
+		public override bool Equals(object obj) => obj is Location<T> other && Equals(other);
+
+		public override int GetHashCode() => index;
+	}
+
+	/// <summary>
+	/// Use a using statement with this struct to set a global blueprint the Location struct is going to use inside that using statement
+	/// </summary>
+	public readonly struct GlobalLocationBlueprint<T> : IDisposable
+	{
+		public GlobalLocationBlueprint(BehaviorTreeBlueprint<T> globalBlueprint) => blueprint = globalBlueprint;
+
+		internal static BehaviorTreeBlueprint<T> blueprint;
+
+		public void Dispose() => blueprint = null;
 	}
 }

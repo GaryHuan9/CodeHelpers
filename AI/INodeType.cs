@@ -30,7 +30,12 @@ namespace CodeHelpers.AI
 	/// Execute all children in order repeatedly until the executed child returned failure.
 	/// NOTE: This may easily result in infinite loops if the tree is not defined carefully
 	/// </summary>
-	public readonly struct Repeater<T> : INodeType<T> { }
+	public readonly struct Repeater<T> : INodeType<T>
+	{
+		public Repeater(int amount) => this.amount = amount;
+
+		public readonly int amount;
+	}
 
 	/// <summary>
 	/// Only execute child if a number randomly generated between 0 to 1 is lower than chance.
