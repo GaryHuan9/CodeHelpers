@@ -69,7 +69,7 @@ namespace CodeHelpers.AI
 		/// </summary>
 		public ChildEnumerable GetChild(Location<T> location) => new ChildEnumerable(this, location);
 
-		public Location<T> Add<TNode>(Location<T> parentLocation, TNode nodeType, out bool success) where TNode : INodeType<T>
+		public Location<T> Add<TNode>(Location<T> parentLocation, TNode nodeType, out bool success) where TNode : INodeType
 		{
 			Node parent = this[parentLocation];
 
@@ -86,7 +86,7 @@ namespace CodeHelpers.AI
 			return new Location<T>(node.selfIndex);
 		}
 
-		public bool Add<TNode>(Location<T> parentLocation, TNode nodeType) where TNode : INodeType<T>
+		public bool Add<TNode>(Location<T> parentLocation, TNode nodeType) where TNode : INodeType
 		{
 			Add(parentLocation, nodeType, out bool success);
 			return success;
@@ -95,7 +95,7 @@ namespace CodeHelpers.AI
 		/// <summary>
 		/// Constructs a new Node then assign it to our internal list at the correct index
 		/// </summary>
-		Node GenerateNewNode<TNode>(TNode nodeType) where TNode : INodeType<T>
+		Node GenerateNewNode<TNode>(TNode nodeType) where TNode : INodeType
 		{
 			Node node = TypeToNewNode(nodeType, firstEmptyIndex);
 
@@ -115,16 +115,16 @@ namespace CodeHelpers.AI
 			return node;
 		}
 
-		Node TypeToNewNode<TNode>(TNode nodeType, int index) where TNode : INodeType<T>
+		Node TypeToNewNode<TNode>(TNode nodeType, int index) where TNode : INodeType
 		{
 			switch (nodeType)
 			{
-				case Leaf<T> leaf:           return new Leaf(this, index, leaf.action);
-				case Sequencer<T> sequencer: return new Sequencer(this, index);
-				case Selector<T> selector:   return new Selector(this, index);
-				case Inverter<T> inverter:   return new Inverter(this, index);
-				case Repeater<T> repeater:   return new Repeater(this, index);
-				case Blocker<T> blocker:     return new Blocker(this, index, blocker.chance);
+				case Leaf<T> leaf:           return new LeafNode(this, index, leaf.action);
+				case Sequencer sequencer: return new SequencerNode(this, index);
+				case Selector selector:   return new SelectorNode(this, index);
+				case Inverter inverter:   return new InverterNode(this, index);
+				case Repeater repeater:   return new RepeaterNode(this, index);
+				case Blocker blocker:     return new BlockerNode(this, index, blocker.chance);
 			}
 
 			throw ExceptionHelper.Invalid(nameof(nodeType), nodeType, InvalidType.unexpected);
@@ -344,12 +344,12 @@ namespace CodeHelpers.AI
 		/// <summary>
 		/// Adds a node as a child to the globally set blueprint
 		/// </summary>
-		public Location<T> AddChild<TNode>(TNode nodeType) where TNode : INodeType<T> => AddChild(GlobalBlueprint, nodeType);
+		public Location<T> AddChild<TNode>(TNode nodeType) where TNode : INodeType => AddChild(GlobalBlueprint, nodeType);
 
 		/// <summary>
 		/// Adds a node as a child to a blueprint
 		/// </summary>
-		public Location<T> AddChild<TNode>(BehaviorTreeBlueprint<T> blueprint, TNode nodeType) where TNode : INodeType<T>
+		public Location<T> AddChild<TNode>(BehaviorTreeBlueprint<T> blueprint, TNode nodeType) where TNode : INodeType
 		{
 			var nextLocation = blueprint.Add(this, nodeType, out bool success);
 			if (!success) throw new Exception("Addition unsuccessful!");
@@ -360,13 +360,13 @@ namespace CodeHelpers.AI
 		/// <summary>
 		/// Adds a node as a sibling to the globally set blueprint
 		/// </summary>
-		public Location<T> AddSibling<TNode>(TNode nodeType) where TNode : INodeType<T> =>
+		public Location<T> AddSibling<TNode>(TNode nodeType) where TNode : INodeType =>
 			AddSibling(GlobalBlueprint, nodeType);
 
 		/// <summary>
 		/// Adds a node as a sibling to a blueprint
 		/// </summary>
-		public Location<T> AddSibling<TNode>(BehaviorTreeBlueprint<T> blueprint, TNode nodeType) where TNode : INodeType<T> =>
+		public Location<T> AddSibling<TNode>(BehaviorTreeBlueprint<T> blueprint, TNode nodeType) where TNode : INodeType =>
 			GetParent(blueprint).AddChild(blueprint, nodeType);
 
 		public bool Equals(Location<T> other) => index == other.index;

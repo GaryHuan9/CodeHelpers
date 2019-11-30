@@ -19,9 +19,9 @@ namespace CodeHelpers.AI
 			protected override void SetParent(int parentIndex, int indexInParent) => throw new Exception("Cannot set the parent of a Root node.");
 		}
 
-		class Leaf : Node
+		class LeafNode : Node
 		{
-			public Leaf(BehaviorTreeBlueprint<T> blueprint, int selfIndex, BehaviorAction<T> action) : base(blueprint, selfIndex) => this.action = action;
+			public LeafNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex, BehaviorAction<T> action) : base(blueprint, selfIndex) => this.action = action;
 
 			readonly BehaviorAction<T> action;
 
@@ -37,9 +37,9 @@ namespace CodeHelpers.AI
 			}
 		}
 
-		class Sequencer : Node
+		class SequencerNode : Node
 		{
-			public Sequencer(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
+			public SequencerNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
 
 			public override byte MaxChildCount => byte.MaxValue;
 
@@ -54,9 +54,9 @@ namespace CodeHelpers.AI
 			}
 		}
 
-		class Selector : Node
+		class SelectorNode : Node
 		{
-			public Selector(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
+			public SelectorNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
 
 			public override byte MaxChildCount => byte.MaxValue;
 
@@ -68,9 +68,9 @@ namespace CodeHelpers.AI
 			}
 		}
 
-		class Inverter : Node
+		class InverterNode : Node
 		{
-			public Inverter(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
+			public InverterNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
 
 			public override byte MaxChildCount => 1;
 
@@ -81,9 +81,9 @@ namespace CodeHelpers.AI
 			}
 		}
 
-		class Repeater : Sequencer
+		class RepeaterNode : SequencerNode
 		{
-			public Repeater(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
+			public RepeaterNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex) : base(blueprint, selfIndex) { }
 
 			protected override StatusToken GetNext(StatusToken from, T context)
 			{
@@ -95,9 +95,9 @@ namespace CodeHelpers.AI
 			}
 		}
 
-		class Blocker : Node
+		class BlockerNode : Node
 		{
-			public Blocker(BehaviorTreeBlueprint<T> blueprint, int selfIndex, float chance) : base(blueprint, selfIndex) => this.chance = chance;
+			public BlockerNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex, float chance) : base(blueprint, selfIndex) => this.chance = chance;
 
 			readonly float chance;
 			public override byte MaxChildCount => 1;
