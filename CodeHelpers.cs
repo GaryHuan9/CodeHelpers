@@ -84,20 +84,6 @@ namespace CodeHelpers
 			return result < 0 ? result + length : result;
 		}
 
-		public static void Swap(ref float thisFloat, ref float otherFloat)
-		{
-			float storageFloat = thisFloat;
-			thisFloat = otherFloat;
-			otherFloat = storageFloat;
-		}
-
-		public static void Swap(ref int thisInt, ref int otherInt)
-		{
-			int storageInt = thisInt;
-			thisInt = otherInt;
-			otherInt = storageInt;
-		}
-
 		public static int FlooredDivide(this int value, int divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
 		public static long FlooredDivide(this long value, long divisor) => value / divisor - Convert.ToInt64((value < 0) ^ (divisor < 0) && value % divisor != 0);
 
@@ -612,6 +598,13 @@ namespace CodeHelpers
 		{
 			if (CodeHelperMonoBehaviour.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
 			CodeHelperMonoBehaviour.instance.StopCoroutine(coroutine);
+		}
+
+		public static void Swap<T>(ref T first, ref T second)
+		{
+			T storage = first;
+			first = second;
+			second = storage;
 		}
 
 		public static T ToNotNullable<T>(this T? nullable, out bool isNull) where T : struct

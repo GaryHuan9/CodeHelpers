@@ -31,8 +31,13 @@ namespace CodeHelpers.MeshHelpers.Combinations
 			subMeshes = null;
 		}
 
-		public Mesh Mesh { get; }
+		public MeshMaterials(MeshMaterials source, Mesh mesh) : this(mesh, source.Materials) { }
 
+		public MeshMaterials(MeshMaterials source, Material material) : this(source.Mesh, material) => subMeshes = source.subMeshes;
+		public MeshMaterials(MeshMaterials source, Material[] materials) : this(source.Mesh, materials) => subMeshes = source.subMeshes;
+		public MeshMaterials(MeshMaterials source, MaterialCollection materials) : this(source.Mesh, materials) => subMeshes = source.subMeshes;
+
+		public Mesh Mesh { get; }
 		public MaterialCollection Materials { get; private set; }
 
 		public Material Material
@@ -110,13 +115,13 @@ namespace CodeHelpers.MeshHelpers.Combinations
 
 		public struct MaterialCollection : IReadOnlyList<Material>
 		{
-			public MaterialCollection(Material material)
+			internal MaterialCollection(Material material)
 			{
 				this.material = material;
 				materials = null;
 			}
 
-			public MaterialCollection(Material[] materials)
+			internal MaterialCollection(Material[] materials)
 			{
 				material = null;
 				this.materials = materials;
