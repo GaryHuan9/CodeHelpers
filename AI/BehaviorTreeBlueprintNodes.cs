@@ -62,9 +62,12 @@ namespace CodeHelpers.AI
 
 			protected override StatusToken GetNext(StatusToken from, T context)
 			{
-				if (from.ToChild) return new StatusToken(0); //If we just entered the selector from a parent, start at 0
-				// if (from.result == Result.success) return
-				throw new NotImplementedException();
+				if (from.ToChild) return new StatusToken(0);                                     //If we just entered the node from a parent, start at 0
+				if (from.result == Result.success) return new StatusToken(this, Result.success); //Returns success when any of the child node returns success
+
+				int next = from.index + 1;
+				if (next >= Children.Count) return new StatusToken(this, Result.failure); //Finished running all of the nodes
+				return new StatusToken((byte)next);                                       //Go to next node
 			}
 		}
 
@@ -108,6 +111,22 @@ namespace CodeHelpers.AI
 
 				if (RandomHelper.Value <= chance) return new StatusToken(0); //Execute child when RNG number is lower than chance
 				return new StatusToken(this, Result.success);                //Return success when execution was bypassed by RNG
+			}
+		}
+
+		class ConditionerNode : Node
+		{
+			public ConditionerNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex, BehaviorAction<T> condition) : base(blueprint, selfIndex) => this.condition = condition;
+
+			readonly BehaviorAction<T> condition;
+			public override byte MaxChildCount => 1;
+
+			protected override StatusToken GetNext(StatusToken from, T context)
+			{
+				if (from.ToParent) return new StatusToken(this, from.result); //Exited from child
+
+				if (condition(context) == Result.success) return new StatusToken(0); //Execute child when condition returned success
+				return new StatusToken(this, Result.failure);                        //Return failure when condition failed
 			}
 		}
 	}

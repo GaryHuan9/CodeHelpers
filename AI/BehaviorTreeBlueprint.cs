@@ -125,6 +125,7 @@ namespace CodeHelpers.AI
 				case Inverter inverter:   return new InverterNode(this, index);
 				case Repeater repeater:   return new RepeaterNode(this, index);
 				case Blocker blocker:     return new BlockerNode(this, index, blocker.chance);
+				case Conditioner<T> conditioner: return new ConditionerNode(this, index, conditioner.condition);
 			}
 
 			throw ExceptionHelper.Invalid(nameof(nodeType), nodeType, InvalidType.unexpected);

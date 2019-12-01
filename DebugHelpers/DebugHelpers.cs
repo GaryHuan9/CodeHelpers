@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 using CodeHelpers.ObjectPooling;
 using Object = System.Object;
@@ -20,8 +21,8 @@ namespace CodeHelpers.DebugHelpers
 
 		static int invokedPerFrame;
 
-		static readonly StringBuilderPooler stringBuilderPooler = new StringBuilderPooler();
-		static readonly object[] paramsArrayCache = new object[4];
+		static readonly ThreadLocal<StringBuilderPooler> stringBuilderPooler = new ThreadLocal<StringBuilderPooler>(() => new StringBuilderPooler());
+		static readonly ThreadLocal<object[]> paramsArrayCache = new ThreadLocal<object[]>(() => new object[4]);
 
 		const string NullString = "_NULL_";
 
@@ -42,35 +43,35 @@ namespace CodeHelpers.DebugHelpers
 		/// <summary>Debug.Log the specified object.</summary>
 		public static void Log(object object0)
 		{
-			paramsArrayCache[0] = object0;
-			LogInternal(paramsArrayCache, 1);
+			paramsArrayCache.Value[0] = object0;
+			LogInternal(paramsArrayCache.Value, 1);
 		}
 
 		/// <summary>Debug.Log the specified objects.</summary>
 		public static void Log(object object0, object object1)
 		{
-			paramsArrayCache[0] = object0;
-			paramsArrayCache[1] = object1;
-			LogInternal(paramsArrayCache, 2);
+			paramsArrayCache.Value[0] = object0;
+			paramsArrayCache.Value[1] = object1;
+			LogInternal(paramsArrayCache.Value, 2);
 		}
 
 		/// <summary>Debug.Log the specified objects.</summary>
 		public static void Log(object object0, object object1, object object2)
 		{
-			paramsArrayCache[0] = object0;
-			paramsArrayCache[1] = object1;
-			paramsArrayCache[2] = object2;
-			LogInternal(paramsArrayCache, 3);
+			paramsArrayCache.Value[0] = object0;
+			paramsArrayCache.Value[1] = object1;
+			paramsArrayCache.Value[2] = object2;
+			LogInternal(paramsArrayCache.Value, 3);
 		}
 
 		/// <summary>Debug.Log the specified objects.</summary>
 		public static void Log(object object0, object object1, object object2, object object3)
 		{
-			paramsArrayCache[0] = object0;
-			paramsArrayCache[1] = object1;
-			paramsArrayCache[2] = object2;
-			paramsArrayCache[3] = object3;
-			LogInternal(paramsArrayCache, 4);
+			paramsArrayCache.Value[0] = object0;
+			paramsArrayCache.Value[1] = object1;
+			paramsArrayCache.Value[2] = object2;
+			paramsArrayCache.Value[3] = object3;
+			LogInternal(paramsArrayCache.Value, 4);
 		}
 
 #endregion
@@ -95,7 +96,7 @@ namespace CodeHelpers.DebugHelpers
 				return;
 			}
 
-			StringBuilder builder = stringBuilderPooler.GetObject();
+			StringBuilder builder = stringBuilderPooler.Value.GetObject();
 
 			for (int i = 0; i < readTo; i++)
 			{
@@ -103,7 +104,7 @@ namespace CodeHelpers.DebugHelpers
 			}
 
 			Debug.Log(builder.ToString());
-			stringBuilderPooler.ReleaseObject(builder);
+			stringBuilderPooler.Value.ReleaseObject(builder);
 		}
 
 		public static string ToString(object target)

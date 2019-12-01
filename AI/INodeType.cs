@@ -15,9 +15,7 @@ namespace CodeHelpers.AI
 	public readonly struct Sequencer : INodeType { }
 
 	/// <summary>
-	/// TODO: ???????
 	/// Similar to OR; execute child nodes in order until the executed child returned success
-	/// ???????
 	/// </summary>
 	public readonly struct Selector : INodeType { }
 
@@ -46,5 +44,16 @@ namespace CodeHelpers.AI
 		public Blocker(float chance) => this.chance = chance;
 
 		public readonly float chance;
+	}
+
+	/// <summary>
+	/// Only execute child if the <see cref="condition"/> returned success.
+	///  If it returned failure, this conditioner will also return failure.
+	/// </summary>
+	public readonly struct Conditioner<T> : INodeType
+	{
+		public Conditioner(BehaviorAction<T> condition) => this.condition = condition;
+
+		public readonly BehaviorAction<T> condition;
 	}
 }

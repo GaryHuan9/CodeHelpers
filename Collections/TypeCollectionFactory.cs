@@ -71,7 +71,7 @@ namespace CodeHelpers.Collections
 			if (IsFactorySealed) throw alreadySealedException;
 		}
 
-		//NOTE: We can inherit this class!
+		//NOTE: We can/should inherit this class!
 		public class Collection : IDictionary<Type, TBase>
 		{
 			public Collection(TypeCollectionFactory<TBase> factory)
