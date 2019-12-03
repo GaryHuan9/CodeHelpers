@@ -50,8 +50,8 @@ namespace CodeHelpers.Collections
 			int index = GetIndex(item);
 			if (index < 0) throw ExceptionHelper.Invalid(nameof(item), item, "does not exist in this heap!");
 
-			SortDown(index);
 			SortUp(index);
+			SortDown(index);
 		}
 
 		int GetIndex(T item)
@@ -98,7 +98,7 @@ namespace CodeHelpers.Collections
 				if (child1Index >= 0 && comparer.Compare(items[child1Index], items[currentIndex]) < 0) currentIndex = child1Index;
 				if (child2Index >= 0 && comparer.Compare(items[child2Index], items[currentIndex]) < 0) currentIndex = child2Index;
 
-				if (currentIndex == startingIndex) return;
+				if (currentIndex == startingIndex) break;
 
 				Swap(startingIndex, currentIndex);
 				startingIndex = currentIndex;
