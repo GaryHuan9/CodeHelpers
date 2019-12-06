@@ -45,7 +45,11 @@ namespace CodeHelpers.Segment
 		/// <summary>
 		/// Get a point on this line that is the closest to <paramref name="point"/>. This value is clamped.
 		/// </summary>
-		public Vector2 GetClosestPoint(Vector2 point) => GetClosestPointUnclamped(point).Clamp(Min, Max);
+		public Vector2 GetClosestPoint(Vector2 point)
+		{
+			Vector2 direction = LengthVector.normalized;
+			return point1 + direction * Mathf.Clamp01(Vector2.Dot(point - point1, direction));
+		}
 
 		/// <summary>
 		/// Get a point on this line that is the closest to <paramref name="point"/>. This point is unclamped.
@@ -71,20 +75,20 @@ namespace CodeHelpers.Segment
 		}
 
 		/// <summary>
-		/// Get the intersection point of the current segment to <paramref name="segment"/>. <paramref name="successfulness"/> will be false and return will be (0,0) if the two segments do not intersect.
+		/// Get the intersection point of the current segment to <paramref name="segment"/>. <paramref name="success"/> will be false and return will be (0,0) if the two segments do not intersect.
 		/// </summary>
-		public Vector2 GetIntersection(Segment2 segment, out bool successfulness)
+		public Vector2 GetIntersection(Segment2 segment, out bool success)
 		{
 			if (Equals(segment))
 			{
-				successfulness = false;
+				success = false;
 				return Vector2.zero;
 			}
 
 			float x = (segment.YIntercept - YIntercept) / (Slope - segment.Slope);
 
-			successfulness = Min.x <= x && x <= Max.x;
-			return successfulness ? GetPointFromX(x) : Vector2.zero;
+			success = Min.x <= x && x <= Max.x;
+			return success ? GetPointFromX(x) : Vector2.zero;
 		}
 
 		/// <summary>
@@ -106,7 +110,7 @@ namespace CodeHelpers.Segment
 		}
 
 		public override bool Equals(object obj) => obj is Segment2 segment && Equals(segment);
-		public bool Equals(Segment2 other) => (point1.Equals(other.point1) && point2.Equals(other.point2)) || (point1.Equals(other.point2) && point2.Equals(other.point1));
+		public bool Equals(Segment2 other) => point1.Equals(other.point1) && point2.Equals(other.point2);
 
 		public override string ToString() => $"(Point1: {point1}, Point2: {point2})";
 	}
