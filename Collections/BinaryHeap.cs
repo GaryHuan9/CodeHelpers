@@ -9,17 +9,17 @@ namespace CodeHelpers.Collections
 	/// NOTE: Please make sure the comparer/comparable ONLY returns 0 if the two sides are identical
 	/// (because 0 will be used as the method Equals in Contains)
 	/// </summary>
-	public class Heap<T> : IEnumerable<T>
+	public class BinaryHeap<T> : IEnumerable<T>
 	{
-		public Heap(IComparer<T> comparer) => this.comparer = comparer;
-		public Heap() : this(Comparer<T>.Default) { }
+		public BinaryHeap(IComparer<T> comparer) => this.comparer = comparer;
+		public BinaryHeap() : this(Comparer<T>.Default) { }
 
 		List<T> items;
 		readonly IComparer<T> comparer;
 
 		public int Count => items?.Count ?? 0;
 
-		public void Add(T item)
+		public void Enqueue(T item)
 		{
 			if (items == null) items = new List<T>();
 			items.Add(item);
@@ -27,7 +27,7 @@ namespace CodeHelpers.Collections
 			SortUp(Count - 1);
 		}
 
-		public T RemoveFirst()
+		public T Dequeue()
 		{
 			if (Count == 0) throw new Exception("Cannot remove first item because the heap is empty!");
 			T firstItem = items[0];
@@ -39,7 +39,7 @@ namespace CodeHelpers.Collections
 			return firstItem;
 		}
 
-		public T PeekFirst() => Count > 0 ? items[0] : throw new Exception("Cannot peak first item because the heap is empty!");
+		public T Peek() => Count > 0 ? items[0] : throw new Exception("Cannot peak first item because the heap is empty!");
 
 		public void Clear() => items.Clear();
 
