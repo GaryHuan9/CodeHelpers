@@ -10,7 +10,7 @@ namespace CodeHelpers.ThreadHelpers
 	{
 		static ThreadHelper()
 		{
-			CodeHelperMonoBehaviour.UnityUpdateMethods += () =>
+			CodeHelperMonoBehaviour.UnityPreUpdateMethods += () =>
 			{
 				while (!mainThreadActions.IsEmpty)
 				{
@@ -20,12 +20,23 @@ namespace CodeHelpers.ThreadHelpers
 		}
 
 		static readonly ConcurrentQueue<Action> mainThreadActions = new ConcurrentQueue<Action>();
-		static Thread mainThread; //Set by CodeHelperMonoBehaviour using reflection
 
-		public static void InvokeInMainThread(Action thisAction)
+		static Thread _mainThread;
+
+		internal static Thread MainThread
 		{
-			mainThreadActions.Enqueue(thisAction);
+			get => _mainThread ?? throw ExceptionHelper.Invalid(nameof(MainThread), null, InvalidType.semiReadonlyNoData);
+			set
+			{
+				if (_mainThread == null) _mainThread = value;
+				else throw ExceptionHelper.Invalid(nameof(MainThread), MainThread, InvalidType.semiReadonlyAssignment);
+			}
 		}
+
+		/// <summary>
+		/// Invoked action in main thread before every update loop
+		/// </summary>
+		public static void InvokeInMainThread(Action action) => mainThreadActions.Enqueue(action);
 
 		/// <summary>This returns a new thread that will make sure to print out exceptions.</summary>
 		public static Thread NewThread(Action action, bool throwThreadAbortException = false, Action abortAction = null)
@@ -56,7 +67,7 @@ namespace CodeHelpers.ThreadHelpers
 			}
 		}
 
-		public static bool IsInMainThread => mainThread == null || Thread.CurrentThread == mainThread;
+		public static bool IsInMainThread => MainThread == null || Thread.CurrentThread == MainThread;
 
 		/// <summary>
 		/// This returns a method that can only be executing by one thread.

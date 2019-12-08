@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using CodeHelpers.InputHelpers;
 using System.Reflection;
+using CodeHelpers.ThreadHelpers;
 
 namespace CodeHelpers
 {
@@ -15,7 +16,7 @@ namespace CodeHelpers
 
 			DontDestroyOnLoad(this);
 
-			typeof(ThreadHelpers.ThreadHelper).GetField("mainThread", BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, System.Threading.Thread.CurrentThread);
+			ThreadHelper.MainThread = System.Threading.Thread.CurrentThread;
 		}
 
 		public static event Action OnApplicationQuitMethods;

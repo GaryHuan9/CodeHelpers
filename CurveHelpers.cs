@@ -66,7 +66,7 @@ namespace CodeHelpers
 		/// <summary>
 		/// <paramref name="steepness"/> is how quick the input will grow in the middle
 		/// lowest is 0f which means default speed
-		/// Graph: https://www.desmos.com/calculator/v1ah3eu5zd
+		/// Graph: https://www.desmos.com/calculator/jyi4mdbxpj
 		/// </summary>
 		public static float Sigmoid(float input, float steepness)
 		{
