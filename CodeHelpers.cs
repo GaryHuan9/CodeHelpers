@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using CodeHelpers.AI;
 using CodeHelpers.Collections;
@@ -92,6 +93,19 @@ namespace CodeHelpers
 #if UNSAFE_CODE_ENABLED
 		public static unsafe int SingleToInt32Bits(float value) => *(int*)&value;
 		public static unsafe float Int32BitsToSingle(int value) => *(float*)&value;
+#else
+		public static int SingleToInt32Bits(float value) => new FloatIntConverter(value).intValue;
+		public static float Int32BitsToSingle(int value) => new FloatIntConverter(value).floatValue;
+
+		[StructLayout(LayoutKind.Explicit)]
+		struct FloatIntConverter
+		{
+			public FloatIntConverter(float floatValue) : this() => this.floatValue = floatValue;
+			public FloatIntConverter(int intValue) : this() => this.intValue = intValue;
+
+			[FieldOffset(0)] public readonly float floatValue;
+			[FieldOffset(0)] public readonly int intValue;
+		}
 #endif
 
 		/// <summary>
