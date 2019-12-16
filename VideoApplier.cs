@@ -10,14 +10,17 @@ namespace CodeHelpers
 	{
 		void Awake()
 		{
-			player      = GetComponent<VideoPlayer>();
+			player = GetComponent<VideoPlayer>();
 			destination = GetComponent<RawImage>();
 
+			player.frame = startFrameOffset;
 			player.started += OnStart;
 		}
 
+		[SerializeField] int startFrameOffset;
+
 		VideoPlayer player;
-		RawImage    destination;
+		RawImage destination;
 
 		void Start()
 		{
@@ -40,13 +43,13 @@ namespace CodeHelpers
 				return;
 			}
 
-			VideoClip     clip    = player.clip;
+			VideoClip clip = player.clip;
 			RenderTexture texture = new RenderTexture((int)clip.width, (int)clip.height, 0, RenderTextureFormat.ARGB32);
 
 			destination.texture = texture;
 
 			player.targetTexture = texture;
-			player.renderMode    = VideoRenderMode.RenderTexture;
+			player.renderMode = VideoRenderMode.RenderTexture;
 		}
 	}
 }

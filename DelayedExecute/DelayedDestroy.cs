@@ -7,7 +7,7 @@ namespace CodeHelpers.DelayedExecution
 	public static class DelayedDestroy
 	{
 		static readonly Queue<Object> destroyQueue = new Queue<Object>();
-		static readonly DelayedJob    destroyJob   = new DelayedJob(DestroyJobEnumerator(), 0.8f);
+		static readonly DelayedJob destroyJob = new DelayedJob(DestroyJobEnumerator(), 0.8f);
 
 		/// <summary>
 		/// The maximum time allowed to use in one frame to destroy objects.
@@ -24,7 +24,7 @@ namespace CodeHelpers.DelayedExecution
 			{
 				//Disable target if available
 				if (target is Transform transform) target = transform.gameObject;
-				
+
 				switch (target)
 				{
 					case Behaviour behaviour:
@@ -60,7 +60,7 @@ namespace CodeHelpers.DelayedExecution
 		/// </summary>
 		public static void DestroyAllChildren(this GameObject gameObject) => gameObject.transform.DestroyAllChildren();
 
-		static IEnumerator DestroyJobEnumerator()
+		static IEnumerator<int> DestroyJobEnumerator()
 		{
 			while (true)
 			{
@@ -68,7 +68,7 @@ namespace CodeHelpers.DelayedExecution
 				else
 				{
 					Object.Destroy(destroyQueue.Dequeue());
-					yield return null;
+					yield return 0;
 				}
 			}
 		}

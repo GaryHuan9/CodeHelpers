@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeHelpers.DelayedExecution
 {
 	public class DelayedJob
 	{
-		/// <param name="jobs">Jobs; each separated with a yield return null</param>
+		/// <param name="jobs">Jobs; each separated with a yield return 0. You can return the current job tag and retrieve it with <see cref="ExecutingTag"/>. NOTE: Tags cannot be negative.</param>
 		/// <param name="maxExecutionMillisecond">The maximum time for each execution.</param>
-		public DelayedJob(IEnumerator jobs, float maxExecutionMillisecond = 5f)
+		public DelayedJob(IEnumerator<int> jobs, float maxExecutionMillisecond = 5f)
 		{
 			this.jobs = jobs ?? throw new NullReferenceException(nameof(jobs));
 			MaxExecutionMillisecond = maxExecutionMillisecond;
 		}
 
-		readonly IEnumerator jobs;
+		readonly IEnumerator<int> jobs;
 		float _maxExecutionMillisecond;
 
 		readonly System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -34,8 +35,9 @@ namespace CodeHelpers.DelayedExecution
 		}
 
 		public bool IsJobExecuting => DelayedController.IsJobExecuting(this);
+		public int ExecutingTag { get; private set; }
 
-		public static Mark ExitExecutionMark => Mark.exitExecutionMark;
+		public static int ExitExecutionMark => -987654321;
 
 		public void Execute()
 		{
@@ -44,7 +46,13 @@ namespace CodeHelpers.DelayedExecution
 
 			while (count++ != -1 && jobs.MoveNext())
 			{
-				if (jobs.Current == ExitExecutionMark) goto outBreak;
+				int currentTag = jobs.Current;
+
+				if (currentTag == ExitExecutionMark) goto outBreak;
+				if (currentTag < 0) throw new Exception("Job tags cannot be negative!");
+
+				ExecutingTag = currentTag;
+
 				if (stopwatch.Elapsed.TotalMilliseconds >= MaxExecutionMillisecond) goto outBreak;
 			}
 
@@ -66,13 +74,6 @@ namespace CodeHelpers.DelayedExecution
 			}
 
 			Finished = false;
-		}
-
-		public class Mark
-		{
-			Mark() { }
-
-			public static readonly Mark exitExecutionMark = new Mark();
 		}
 	}
 }
