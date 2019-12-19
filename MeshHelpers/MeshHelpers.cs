@@ -73,6 +73,7 @@ namespace CodeHelpers.MeshHelpers
 			baseMesh.indexFormat = vertexCount >= mesh16BitSize ? IndexFormat.UInt32 : IndexFormat.UInt16;
 			baseMesh.CombineMeshes(instances, false, false);
 
+			if (meshListDictionary.Count == 1) return new MeshMaterials(baseMesh, meshListDictionary.First().Key);
 			return new MeshMaterials(baseMesh, meshListDictionary.Keys.ToArray());
 		}
 
