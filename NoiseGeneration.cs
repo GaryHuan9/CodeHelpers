@@ -7,35 +7,41 @@ namespace CodeHelpers.NoiseGeneration
 
 #region Methods
 
-		public static float[,] NoiseToArray(NoiseInfo noiseData, Vector2 position, float[,] result, int seed)
+		public static void NoiseToArray(NoiseInfo info, Vector2 position, float[,] result, int seed)
 		{
-			return NoiseToArray(noiseData.spread, noiseData.layerCount, noiseData.persistence, noiseData.lacunarity, seed, position, result);
+			NoiseToArray(info, seed, position, result);
 		}
 
-		public static float[,] NoiseToArray(NoiseInfo noiseData, Vector2 position, Vector2Int size, int seed)
+		public static float[,] NoiseToArray(NoiseInfo info, Vector2 position, Vector2Int size, int seed)
 		{
-			return NoiseToArray(noiseData.spread, noiseData.layerCount, noiseData.persistence, noiseData.lacunarity, seed, position, new float[size.x, size.y]);
+			var results = new float[size.x, size.y];
+			NoiseToArray(info, seed, position, results);
+
+			return results;
 		}
 
-		public static float[] NoiseToArray(NoiseInfo noiseData, Vector2[] positions, Vector2 positionOffset, int seed)
+		public static float[] NoiseToArray(NoiseInfo info, Vector2[] positions, Vector2 positionOffset, int seed)
 		{
-			return NoiseToArray(noiseData.spread, noiseData.layerCount, noiseData.persistence, noiseData.lacunarity, seed, positions, positionOffset, new float[positions.Length]);
+			var results = new float[positions.Length];
+			NoiseToArray(info, seed, positions, positionOffset, results);
+
+			return results;
 		}
 
-		static float[,] NoiseToArray(float spread, int layerCount, float persistence, float lacunarity, int seed, Vector2 positionOffset, float[,] result)
+		static void NoiseToArray(NoiseInfo info, int seed, Vector2 positionOffset, float[,] result)
 		{
 			Vector2Int size = new Vector2Int(result.GetLength(0), result.GetLength(1));
 
 			float amplitude = 1f;
 			float frequency = 1f;
 
-			for (int i = 0; i < layerCount; i++)
+			for (int i = 0; i < info.layerCount; i++)
 			{
 				for (int x = 0; x < size.x; x++)
 				{
 					for (int y = 0; y < size.y; y++)
 					{
-						Vector2 position = (new Vector2(x, y) + positionOffset) / spread * frequency + Vector2.one * (seed + i);
+						Vector2 position = (new Vector2(x, y) + positionOffset) / info.spread * frequency + Vector2.one * (seed + i);
 
 						if (i == 0) result[x, y] = 0f;
 
@@ -43,40 +49,36 @@ namespace CodeHelpers.NoiseGeneration
 					}
 				}
 
-				amplitude *= persistence;
-				frequency *= lacunarity;
+				amplitude *= info.persistence;
+				frequency *= info.lacunarity;
 			}
 
 			//Set the noise range from 0 to 1
-			result.InverseLerp(0f, NoiseInfo.GetMaxHeight(layerCount, persistence));
-
-			return result;
+			result.InverseLerp(0f, NoiseInfo.GetMaxHeight(info.layerCount, info.persistence));
 		}
 
-		static float[] NoiseToArray(float spread, int layerCount, float persistence, float lacunarity, int seed, Vector2[] positions, Vector2 positionOffset, float[] result)
+		static void NoiseToArray(NoiseInfo info, int seed, Vector2[] positions, Vector2 positionOffset, float[] result)
 		{
 			float amplitude = 1f;
 			float frequency = 1f;
 
-			for (int i = 0; i < layerCount; i++)
+			for (int i = 0; i < info.layerCount; i++)
 			{
 				for (int j = 0; j < positions.Length; j++)
 				{
-					Vector2 position = (positions[j] + positionOffset) / spread * frequency + Vector2.one * (seed + i);
+					Vector2 position = (positions[j] + positionOffset) / info.spread * frequency + Vector2.one * (seed + i);
 
 					if (i == 0) result[j] = 0f;
 
 					result[j] += Mathf.PerlinNoise(position.x, position.y) * amplitude;
 				}
 
-				amplitude *= persistence;
-				frequency *= lacunarity;
+				amplitude *= info.persistence;
+				frequency *= info.lacunarity;
 			}
 
 			//Set the noise range from 0 to 1
-			result.InverseLerp(0f, NoiseInfo.GetMaxHeight(layerCount, persistence));
-
-			return result;
+			result.InverseLerp(0f, NoiseInfo.GetMaxHeight(info.layerCount, info.persistence));
 		}
 
 		public static float Sample(NoiseInfo info, int seed, Vector2 position)
@@ -133,14 +135,14 @@ namespace CodeHelpers
 	{
 		public NoiseInfo(float spread, int layerCount, float persistence = 0.5f, float lacunarity = 2f)
 		{
-			this.spread      = spread;
-			this.layerCount  = layerCount;
+			this.spread = spread;
+			this.layerCount = layerCount;
 			this.persistence = persistence;
-			this.lacunarity  = lacunarity;
+			this.lacunarity = lacunarity;
 		}
 
 		public readonly float spread;
-		public readonly int   layerCount;
+		public readonly int layerCount;
 
 		public readonly float persistence;
 		public readonly float lacunarity;
@@ -163,7 +165,7 @@ namespace CodeHelpers
 			return maxHeight;
 		}
 
-		public static implicit operator Vector4(NoiseInfo info)   => new Vector4(info.spread, info.layerCount, info.persistence, info.lacunarity);
+		public static implicit operator Vector4(NoiseInfo info) => new Vector4(info.spread, info.layerCount, info.persistence, info.lacunarity);
 		public static implicit operator NoiseInfo(Vector4 vector) => new NoiseInfo(vector.x, Mathf.RoundToInt(vector.y), vector.z, vector.w);
 	}
 }
