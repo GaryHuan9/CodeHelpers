@@ -12,6 +12,8 @@ namespace CodeHelpers.ObjectPooling
 	public class CollectionPoolerBase<T, TObject> : PoolerBase<T> where T : class, ICollection<TObject>, new()
 	{
 		protected override int MaxPoolSize => 16;
+
+		protected override T GetNewObject() => new T();
 		protected override void Reset(T target) => target.Clear();
 	}
 }

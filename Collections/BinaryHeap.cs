@@ -74,16 +74,22 @@ namespace CodeHelpers.Collections
 			return firstItem;
 		}
 
-		/// <summary>
-		/// Returns the item with the smallest priority without removing it from the heap
-		/// </summary>
-		public T Peek() => Count > 0 ? items[0] : throw new Exception("Cannot peak the first item because the heap is empty!");
-
 		public void Clear()
 		{
 			items.Clear();
 			priorities.Clear();
 		}
+
+		public void TrimExcess()
+		{
+			items.TrimExcess();
+			priorities.TrimExcess();
+		}
+
+		/// <summary>
+		/// Returns the item with the smallest priority without removing it from the heap
+		/// </summary>
+		public T Peek() => Count > 0 ? items[0] : throw new Exception("Cannot peak the first item because the heap is empty!");
 
 		public bool Contains(int priority, T item) => GetIndex(priority, item) >= 0;
 		public bool Contains(T item) => GetIndex(item) >= 0;

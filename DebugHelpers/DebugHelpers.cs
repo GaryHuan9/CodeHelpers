@@ -148,6 +148,8 @@ namespace CodeHelpers.DebugHelpers
 		class StringBuilderPooler : PoolerBase<StringBuilder>
 		{
 			protected override int MaxPoolSize => 2;
+
+			protected override StringBuilder GetNewObject() => new StringBuilder();
 			protected override void Reset(StringBuilder target) => target.Clear();
 		}
 	}

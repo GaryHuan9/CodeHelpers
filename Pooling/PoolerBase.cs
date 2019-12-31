@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CodeHelpers.ObjectPooling
 {
-	public abstract class PoolerBase<T> where T : class, new()
+	public abstract class PoolerBase<T> where T : class
 	{
 		/// <summary>
 		/// Gets the maximum size of the pool/cache.
@@ -12,18 +12,27 @@ namespace CodeHelpers.ObjectPooling
 
 		protected readonly Stack<T> pool = new Stack<T>();
 
-		public T GetObject()
+		public virtual T GetObject()
 		{
-			T target = pool.Count == 0 ? GetNewObject() : pool.Pop();
+			if (pool.Count == 0) return GetNewObject();
+
+			T target = pool.Pop();
 			Reset(target);
+
 			return target;
 		}
 
+		public virtual void ReleaseObject(T target)
+		{
+			if (pool.Count >= MaxPoolSize) Clear(target);
+			else pool.Push(target);
+		}
+
 		/// <summary>
-		/// The method used to get a new/fresh object
+		/// The method is used to get a new object
 		/// </summary>
 		/// <returns>The new object.</returns>
-		protected virtual T GetNewObject() => new T();
+		protected abstract T GetNewObject();
 
 		/// <summary>
 		/// The method that will be resetting the objects.
@@ -31,9 +40,11 @@ namespace CodeHelpers.ObjectPooling
 		/// </summary>
 		protected abstract void Reset(T target);
 
-		public virtual void ReleaseObject(T target)
+		/// <summary>
+		/// Removes the object; clears its memory
+		/// </summary>
+		protected virtual void Clear(T target)
 		{
-			if (pool.Count < MaxPoolSize) pool.Push(target);
 			if (target is IDisposable disposable) disposable.Dispose();
 		}
 	}
