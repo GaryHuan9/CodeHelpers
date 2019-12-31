@@ -119,6 +119,18 @@ namespace CodeHelpers.Collections
 
 			return finalArray;
 		}
+
+		/// <summary>
+		/// Inserts an item at <paramref name="index"/>; pushes everything back by one.
+		/// NOTE: The last item in the array will get removed/replaced!
+		/// </summary>
+		public static void Insert<T>(this T[] array, int index, T item)
+		{
+			if (!array.IsIndexValid(index)) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+			for (int i = array.Length - 1; i > index; i--) array[i] = array[i - 1];
+			array[index] = item;
+		}
 	}
 
 	public interface IDoubleComparer<in T1, in T2>
