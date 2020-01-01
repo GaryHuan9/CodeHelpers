@@ -13,18 +13,22 @@ namespace CodeHelpers.ObjectPooling
 
 		public override T GetObject()
 		{
-			if (pool.Count != 0) return base.GetObject();
+			T item;
+			start:
 
-			if (roaming.Count < MaxPoolSize)
+			if (pool.Count == 0)
 			{
-				T target = GetNewObject();
-				roaming.Enqueue(target);
-
-				return target;
+				if (roaming.Count < MaxPoolSize) item = GetNewObject();
+				else
+				{
+					base.ReleaseObject(roaming.Dequeue()); //Release the oldest item
+					goto start;
+				}
 			}
+			else item = base.GetObject();
 
-			base.ReleaseObject(roaming.Dequeue());
-			return base.GetObject();
+			roaming.Enqueue(item);
+			return item;
 		}
 
 		public override void ReleaseObject(T target) => throw new NotSupportedException($"Cannot manually release an object in {nameof(RecyclingPoolBase<T>)}");
