@@ -77,7 +77,14 @@ namespace CodeHelpers
 		static ThreadLocal<RandomS> threadRandom;
 		public static RandomS CurrentRandom => threadRandom.Value;
 
+		/// <summary>
+		/// Returns a double between 0d to 1d
+		/// </summary>
 		public static double Value => CurrentRandom.NextDouble();
+
+		/// <summary>
+		/// Returns a value between -1f to 1f
+		/// </summary>
 		public static float Value1To1 => (float)Value * 2f - 1f;
 
 		/// <summary>
