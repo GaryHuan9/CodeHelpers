@@ -165,6 +165,17 @@ namespace CodeHelpers
 			throw ExceptionHelper.NotPossible;
 		}
 
+		/// <summary>
+		/// Tilts the vector <paramref name="direction"/> randomly at an angle of <paramref name="angle"/>.
+		/// Imagine a random plane that is created aligned to <paramref name="direction"/>, then this method
+		/// will rotate <paramref name="direction"/> by <paramref name="angle"/>.
+		/// </summary>
+		public static Vector3 Tilt(Vector3 direction, float angle)
+		{
+			var axis = Quaternion.FromToRotation(Vector3.forward, direction) * Vector2.right.Rotate(Range(360f));
+			return Quaternion.AngleAxis(angle, axis) * direction;
+		}
+
 		public static Color GetRandomColorBetweenColors(Color color1, Color color2) => Color.Lerp(color1, color2, (float)Value);
 
 		public static T GetRandomFromCollection<T>(T[] array) => array[Range(0, array.Length)];
