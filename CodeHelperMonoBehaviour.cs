@@ -7,7 +7,7 @@ using CodeHelpers.ThreadHelpers;
 
 namespace CodeHelpers
 {
-	[AddComponentMenu("CodeHelper"), DefaultExecutionOrder(-200)]
+	[DefaultExecutionOrder(-200)]
 	public class CodeHelperMonoBehaviour : MonoBehaviour
 	{
 		void Awake()

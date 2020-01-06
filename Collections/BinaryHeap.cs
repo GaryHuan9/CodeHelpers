@@ -5,9 +5,8 @@ using System.Collections.Generic;
 namespace CodeHelpers.Collections
 {
 	/// <summary>
-	/// Priority implemented using binary tree
+	/// Priority queue implemented using binary heap
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	public class BinaryHeap<T> : IEnumerable<T>
 	{
 		public BinaryHeap() => EqualityComparer = EqualityComparer<T>.Default;
