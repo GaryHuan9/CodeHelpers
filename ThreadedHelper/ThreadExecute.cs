@@ -40,6 +40,8 @@ namespace CodeHelpers.ThreadHelpers
 		{
 			while (true)
 			{
+				resetEvent.Wait();
+
 				while (!executionQueue.IsEmpty)
 				{
 					if (executionQueue.TryDequeue(out Execution execution) && (!execution.useId || killingId != execution.id))
@@ -53,7 +55,6 @@ namespace CodeHelpers.ThreadHelpers
 				}
 
 				resetEvent.Reset();
-				resetEvent.Wait();
 			}
 		}
 
@@ -62,8 +63,8 @@ namespace CodeHelpers.ThreadHelpers
 			if (!ThreadHelper.IsInMainThread) throw new Exception("You only call this in the main thread.");
 			executionQueue.Enqueue(new Execution(action, id));
 
-			if (ExecutionThread.ThreadState == ThreadState.Unstarted) ExecutionThread.Start();
 			resetEvent.Set();
+			if (ExecutionThread.ThreadState == ThreadState.Unstarted) ExecutionThread.Start();
 		}
 
 		/// <summary>This method kills the current execution if it has the same id, and deletes all executions with this id in the queue</summary>
