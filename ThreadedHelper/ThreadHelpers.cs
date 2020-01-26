@@ -42,24 +42,24 @@ namespace CodeHelpers.ThreadHelpers
 		public static Thread NewThread(Action action, bool throwThreadAbortException = false, Action abortAction = null)
 		{
 			return new Thread
-			(
-				() =>
-				{
-					try
-					{
-						action();
-					}
-					catch (ThreadAbortException exception)
-					{
-						if (throwThreadAbortException) LogException(exception);
-						abortAction?.Invoke();
-					}
-					catch (Exception exception)
-					{
-						LogException(exception);
-					}
-				}
-			);
+				   (
+					   () =>
+					   {
+						   try
+						   {
+							   action();
+						   }
+						   catch (ThreadAbortException exception)
+						   {
+							   if (throwThreadAbortException) LogException(exception);
+							   abortAction?.Invoke();
+						   }
+						   catch (Exception exception)
+						   {
+							   LogException(exception);
+						   }
+					   }
+				   );
 
 			void LogException(Exception exception)
 			{

@@ -8,12 +8,10 @@ namespace CodeHelpers.ThreadHelpers
 {
 	public class ThreadExecute : IDisposable
 	{
-		/// <summary>Create a new instance</summary>
-		/// <param name="checkDelay">If this value is below 0, then we check it right after the executions. Otherwise we delay it by checkDelay seconds.</param>
-		public ThreadExecute(float checkDelay = -1f)
+		public ThreadExecute()
 		{
 			ExecutionThread = ThreadHelper.NewThread(ExecuteQueueingExecutions);
-			delay = checkDelay;
+			resetEvent = new ManualResetEventSlim(false);
 
 			CodeHelperMonoBehaviour.OnApplicationQuitMethods += Dispose;
 		}
@@ -22,16 +20,16 @@ namespace CodeHelpers.ThreadHelpers
 
 		public Thread ExecutionThread { get; private set; }
 
-		volatile int _executingId;
+		readonly ConcurrentQueue<Execution> executionQueue = new ConcurrentQueue<Execution>();
+		readonly ManualResetEventSlim resetEvent;
+
+		 int _executingId;
 
 		public int ExecutingId
 		{
 			get => _executingId;
-			private set => _executingId = value;
+			private set => Interlocked.Exchange(ref _executingId, value);
 		}
-
-		readonly ConcurrentQueue<Execution> executionQueue = new ConcurrentQueue<Execution>();
-		readonly float delay;
 
 		bool disposed;
 
@@ -47,7 +45,6 @@ namespace CodeHelpers.ThreadHelpers
 					if (executionQueue.TryDequeue(out Execution execution) && (!execution.useId || killingId != execution.id))
 					{
 						while (killingId != DefaultValue) { } //Wait until they equal
-
 						ExecutingId = execution.id;
 
 						execution.action();
@@ -55,24 +52,18 @@ namespace CodeHelpers.ThreadHelpers
 					}
 				}
 
-				if (delay > 0f) Thread.Sleep((int)Math.Round(delay * 1000f));
+				resetEvent.Reset();
+				resetEvent.Wait();
 			}
 		}
 
-		public void AddExecution(Action action)
+		public void AddExecution(Action action, int id = 0)
 		{
 			if (!ThreadHelper.IsInMainThread) throw new Exception("You only call this in the main thread.");
-
-			executionQueue.Enqueue(new Execution(action));
-			if (ExecutionThread.ThreadState == ThreadState.Unstarted) ExecutionThread.Start();
-		}
-
-		public void AddExecution(Action action, int id)
-		{
-			if (!ThreadHelper.IsInMainThread) throw new Exception("You only call this in the main thread.");
-
 			executionQueue.Enqueue(new Execution(action, id));
+
 			if (ExecutionThread.ThreadState == ThreadState.Unstarted) ExecutionThread.Start();
+			resetEvent.Set();
 		}
 
 		/// <summary>This method kills the current execution if it has the same id, and deletes all executions with this id in the queue</summary>
@@ -108,19 +99,14 @@ namespace CodeHelpers.ThreadHelpers
 			if (disposed) return;
 
 			ExecutionThread.Abort();
+			resetEvent.Dispose();
+
 			disposed = true;
 		}
 
 		readonly struct Execution
 		{
-			public Execution(Action action)
-			{
-				this.action = action;
-				id = 0;
-				useId = false;
-			}
-
-			public Execution(Action action, int id)
+			public Execution(Action action, int id = 0)
 			{
 				this.action = action;
 				this.id = id;
