@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using CodeHelpers.DebugHelpers;
+using CodeHelpers.ThreadHelpers;
 using UnityEngine.Networking;
 
 namespace CodeHelpers
@@ -25,6 +27,12 @@ namespace CodeHelpers
 		{
 			if (oldMemberName == null) return new NotSupportedException($"Use the new member, {newMemberName}, instead.");
 			return new NotSupportedException($"Old member, {oldMemberName}, should not be used for this type. Use the new member, {newMemberName}, instead.");
+		}
+
+		public static void InvalidIfNotMainThread()
+		{
+			if (ThreadHelper.IsInMainThread) return;
+			throw new Exception("This code can only be executed in the main thread.");
 		}
 
 		static string GetInvalidMessage(InvalidType type)
