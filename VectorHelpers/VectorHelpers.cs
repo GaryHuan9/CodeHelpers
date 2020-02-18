@@ -288,19 +288,8 @@ namespace CodeHelpers
 		public static Vector2Int FlooredDivide(this Vector2Int vector, Vector2Int otherVector) => new Vector2Int(vector.x.FlooredDivide(otherVector.x), vector.y.FlooredDivide(otherVector.y));
 		public static Vector2Int FlooredDivide(this Vector2Int vector, int value) => new Vector2Int(vector.x.FlooredDivide(value), vector.y.FlooredDivide(value));
 
-		public static void SwapXY(this ref Vector2 vector)
-		{
-			float storage = vector.x;
-			vector.x = vector.y;
-			vector.y = storage;
-		}
-
-		public static void SwapXY(this ref Vector2Int vector)
-		{
-			int storage = vector.x;
-			vector.x = vector.y;
-			vector.y = storage;
-		}
+		public static Vector2 SwapXY(this Vector2 vector) => new Vector2(vector.y, vector.x);
+		public static Vector2Int SwapXY(this Vector2Int vector) => new Vector2Int(vector.y, vector.x);
 
 		public static float MaxValue(this Vector2 vector) => Math.Max(vector.x, vector.y);
 		public static float MinValue(this Vector2 vector) => Math.Min(vector.x, vector.y);
