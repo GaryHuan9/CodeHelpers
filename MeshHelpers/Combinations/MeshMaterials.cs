@@ -7,13 +7,8 @@ namespace CodeHelpers.MeshHelpers.Combinations
 {
 	public struct MeshMaterials
 	{
-		public MeshMaterials(Mesh mesh, Material material)
-		{
-			Mesh = mesh;
-			Materials = new MaterialCollection(material);
-
-			subMeshes = null;
-		}
+		public MeshMaterials(Mesh mesh, Material material) : this(mesh, new MaterialCollection(material)) { }
+		public MeshMaterials(Mesh mesh) : this(mesh, new MaterialCollection()) { }
 
 		public MeshMaterials(Mesh mesh, Material[] materials)
 		{
@@ -134,7 +129,7 @@ namespace CodeHelpers.MeshHelpers.Combinations
 
 			public Material Material
 			{
-				get => this[0];
+				get => Count == 0 ? null : this[0];
 				set
 				{
 					if (material == null) throw new Exception("The MaterialCollection with multi-material cannot be changed!");
