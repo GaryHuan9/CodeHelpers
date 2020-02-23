@@ -147,11 +147,14 @@ namespace CodeHelpers.CodeCounters
 			}
 
 			int yLabelCount = Mathf.Clamp(yRange.Range, 2, 10);
+			var style = new GUIStyle(GUI.skin.label) {alignment = TextAnchor.MiddleCenter};
 
 			for (int i = 0; i < yLabelCount; i++)
 			{
 				float percent = i / (yLabelCount - 1f);
-				GUI.Label(new Rect(target.position + Vector2.Scale(sideSpacing, new Vector2(0.5f, 1f)) - ySize * percent * Vector2.up, new Vector2(100f, 100f)), Mathf.RoundToInt(yRange.Lerp(percent)).ToString());
+				Vector2 position = target.position + Vector2.Scale(sideSpacing, new Vector2(0.3f, 2f)) - ySize * percent * Vector2.up;
+
+				GUI.Label(new Rect(position, new Vector2(50f, 50f)), Mathf.RoundToInt(yRange.Lerp(percent)).ToString(), style);
 			}
 		}
 
