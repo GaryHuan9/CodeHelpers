@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using CodeHelpers.AI;
 using CodeHelpers.Collections;
 using CodeHelpers.DelayedExecution;
@@ -180,18 +181,16 @@ namespace CodeHelpers
 				invokeAction = () =>
 				{
 					action();
-					hasCalled = false;
+					Interlocked.Exchange(ref hasCalled, 0);
 				};
 			}
 
 			readonly Action invokeAction;
-			volatile bool hasCalled;
+			int hasCalled;
 
 			public void CallAction()
 			{
-				if (hasCalled) return;
-
-				hasCalled = true;
+				if (Interlocked.Exchange(ref hasCalled, 1) == 1) return;
 				InvokeEndFrame(invokeAction);
 			}
 		}
@@ -582,7 +581,8 @@ namespace CodeHelpers
 
 			public void Add(Action action)
 			{
-				if (action == null) throw new NullReferenceException("action cannot be null!!!");
+				if (action == null) throw new NullReferenceException("action cannot be null!");
+
 				if (ThreadHelper.IsInMainThread) actions.Enqueue(action);
 				else threadedActions.Enqueue(action);
 			}

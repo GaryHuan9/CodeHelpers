@@ -12,7 +12,6 @@ namespace CodeHelpers
 		public static Exception NotConvertible => new Exception("Not convertible");
 		public static Exception FoundNon => new Exception("Found non");
 		public static Exception PlayerObjectNotExist => new Exception("The player object does not exist");
-		public static Exception NotInMainThread => new Exception("This should only be invoked in the main thread!");
 
 		public static Exception Invalid(string memberName, InvalidType type) => GetException(memberName, GetInvalidMessage(type));
 		public static Exception Invalid(string memberName, object argumentValue, InvalidType type) => GetException(memberName, argumentValue, GetInvalidMessage(type));
