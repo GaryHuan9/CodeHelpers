@@ -165,6 +165,7 @@ namespace CodeHelpers.Collections
 				return true;
 			}
 
+			public bool Remove<T>() where T : TBase => Remove(typeof(T));
 			public bool Remove(KeyValuePair<Type, TBase> item) => Remove(item.Key);
 
 			public void Clear() => Array.Clear(typeObjects, 0, Count);
