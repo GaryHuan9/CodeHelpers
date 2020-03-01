@@ -48,7 +48,7 @@ namespace CodeHelpers.AI
 
 	/// <summary>
 	/// Only execute child if the <see cref="condition"/> returned success.
-	///  If it returned failure, this conditioner will also return failure.
+	/// If it returned failure, this conditioner will also return failure.
 	/// </summary>
 	public readonly struct Conditioner<T> : INodeType
 	{
