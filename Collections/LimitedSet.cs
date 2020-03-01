@@ -154,11 +154,10 @@ namespace CodeHelpers.Collections
 			}
 
 			readonly LimitedSet<T> collection;
+			readonly int version; //Started version
 
 			byte count;
 			short index; //AKA key
-
-			readonly int version; //Started version
 
 			object IEnumerator.Current => Current;
 
