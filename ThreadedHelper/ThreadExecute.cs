@@ -11,8 +11,6 @@ namespace CodeHelpers.ThreadHelpers
 		public ThreadExecute()
 		{
 			ExecutionThread = ThreadHelper.NewThread(ExecuteQueueingExecutions);
-			resetEvent = new ManualResetEventSlim(false);
-
 			CodeHelperMonoBehaviour.OnApplicationQuitMethods += Dispose;
 		}
 
@@ -21,9 +19,9 @@ namespace CodeHelpers.ThreadHelpers
 		public Thread ExecutionThread { get; private set; }
 
 		readonly ConcurrentQueue<Execution> executionQueue = new ConcurrentQueue<Execution>();
-		readonly ManualResetEventSlim resetEvent;
+		readonly AutoResetEvent resetEvent = new AutoResetEvent(false);
 
-		 int _executingId;
+		int _executingId;
 
 		public int ExecutingId
 		{
@@ -40,21 +38,19 @@ namespace CodeHelpers.ThreadHelpers
 		{
 			while (true)
 			{
-				resetEvent.Wait();
+				resetEvent.WaitOne();
 
 				while (!executionQueue.IsEmpty)
 				{
-					if (executionQueue.TryDequeue(out Execution execution) && (!execution.useId || killingId != execution.id))
-					{
-						while (killingId != DefaultValue) { } //Wait until they equal
-						ExecutingId = execution.id;
+					if (!executionQueue.TryDequeue(out Execution execution) || (execution.useId && killingId == execution.id)) continue;
 
-						execution.action();
-						ExecutingId = 0;
-					}
+					while (killingId != DefaultValue) { } //Wait until they equal
+
+					ExecutingId = execution.id;
+
+					execution.action();
+					ExecutingId = 0;
 				}
-
-				resetEvent.Reset();
 			}
 		}
 
