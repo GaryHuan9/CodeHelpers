@@ -60,7 +60,7 @@ namespace CodeHelpers
 		public static FramePhase FramePhase { get; private set; }
 
 		public static bool IsGamePaused { get; private set; }
-		public static bool IsGameQuitted { get; private set; }
+		public static bool IsGameQuitting { get; private set; }
 
 		void Start()
 		{
@@ -133,7 +133,7 @@ namespace CodeHelpers
 
 		void OnApplicationQuit()
 		{
-			IsGameQuitted = true;
+			IsGameQuitting = true;
 
 			OnApplicationQuitMethods?.Invoke();
 			UnityDrawGizmosMethods = null;

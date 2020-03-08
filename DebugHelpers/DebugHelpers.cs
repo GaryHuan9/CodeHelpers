@@ -126,18 +126,15 @@ namespace CodeHelpers.DebugHelpers
 			switch (target)
 			{
 				case null:                   return NullString;
-				case string stringTarget:    return stringTarget;
+				case string stringTarget:    return ToString(stringTarget);
 				case IEnumerable enumerable: return ToString(enumerable.Cast<object>());
 			}
 
 			return $"{target} (HCode: {target.GetHashCode()})";
 		}
 
-		static string ToString<T>(IEnumerable<T> target)
-		{
-			var enumerable = target as T[] ?? target.ToArray();
-			return $"{target.GetType()} + Count: {enumerable.Count()} [{string.Join(" , ", enumerable.Select(item => ToString(item)))}]";
-		}
+		public static string ToString(string target) => target;
+		public static string ToString<T>(IEnumerable<T> target) => $"{target.GetType()} + Count: {target.Count()} [{string.Join(" , ", target.Select(item => ToString(item)))}]";
 
 		/// <summary>
 		/// Does <paramref name="target"/> has a custom to string method?
