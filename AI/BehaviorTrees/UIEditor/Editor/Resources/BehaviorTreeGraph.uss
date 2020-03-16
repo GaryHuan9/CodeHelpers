@@ -1,0 +1,20 @@
+GridBackground {
+    --grid-background-color: #282828;
+    --line-color: rgba(193, 196, 192, 0.1);
+    --thick-line-color: rgba(193, 196, 192, 0.1);
+    --spacing: 10;
+}
+
+.unity-toolbar {
+    background-color: #3D3D3D;
+    border-bottom-color: #252525;
+}
+
+.unity-text-element {
+    color: #C4C4C4;
+    background-color: #3D3D3D;
+    border-right-color: #252525;
+    border-left-color: #252525;
+    border-top-color: #252525;
+    border-bottom-color: #252525;
+}

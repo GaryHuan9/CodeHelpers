@@ -15,7 +15,7 @@ namespace CodeHelpers.CodeCounters
 
 	public class CodeCounter : EditorWindow
 	{
-		[MenuItem("Window/Code Helpers/Code Counter")]
+		[MenuItem("Window/CodeHelpers/Code Counter")]
 		static void Init()
 		{
 			CodeCounter thisCounter = GetWindow<CodeCounter>();

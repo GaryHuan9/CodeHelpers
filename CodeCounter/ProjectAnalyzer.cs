@@ -16,7 +16,7 @@ namespace CodeHelpers.CodeCounters
 
 	public class ProjectAnalyzer : EditorWindow
 	{
-		[MenuItem("Window/Code Helpers/Project Analyzer")]
+		[MenuItem("Window/CodeHelpers/Project Analyzer")]
 		static void Init()
 		{
 			var analyzer = (ProjectAnalyzer)GetWindow(typeof(ProjectAnalyzer));

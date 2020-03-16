@@ -10,7 +10,7 @@ namespace CodeHelpers.Manager
 
 	public class ManagerWindow : EditorWindow
 	{
-		[MenuItem("Window/Code Helpers/Manager")]
+		[MenuItem("Window/CodeHelpers/Manager")]
 		static void Init()
 		{
 			ManagerWindow analyzer = (ManagerWindow)GetWindow(typeof(ManagerWindow));

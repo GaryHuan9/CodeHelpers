@@ -8,10 +8,13 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Assembly = System.Reflection.Assembly;
 
-namespace CodeHelpers.AI.BehaviorTrees.UIEditor.Editor
+namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
 	public class ActionImportDataEditorWindow : EditorWindow
 	{
+		[MenuItem("Window/CodeHelpers/Behavior Trees/Action Import Editor")]
+		public static void Open() => Open(null);
+
 		public static void Open(ActionImportData data)
 		{
 			var window = GetWindow<ActionImportDataEditorWindow>("Action Import Editor");
@@ -101,6 +104,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor.Editor
 			protected abstract void DrawInternal();
 
 			protected void MarkDataDirty() => window.isDirtied = true;
+			protected bool RemoveItemWarn(string message) => EditorUtility.DisplayDialog(message, "", "Ok", "Cancel");
 		}
 
 		class HeaderSection : Section
@@ -154,7 +158,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor.Editor
 					GUILayout.Label(import.name);
 					GUILayout.FlexibleSpace();
 
-					if (GUILayout.Button("Remove"))
+					if (GUILayout.Button("Remove") && RemoveItemWarn("Remove method?"))
 					{
 						imports.RemoveAt(i);
 						MarkDataDirty();
@@ -215,7 +219,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor.Editor
 
 				GUILayout.EndHorizontal();
 
-				if (selected.method != null && GUILayout.Button("Remove Method")) AssignMethod(null);
+				if (selected.method != null && GUILayout.Button("Remove Method") && RemoveItemWarn("Remove assigned method?")) AssignMethod(null);
 
 				GUILayout.EndVertical();
 
@@ -237,8 +241,14 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor.Editor
 			{
 				ActionImport selected = window.selection.Selected;
 
-				if (selected == null) return;
+				if (selected == null)
+				{
+					EditorUtility.DisplayDialog("No action selected!", "Please select an action before assigning the method.", "ok");
+					return;
+				}
+
 				if (selected.method == method) return;
+				if (selected.method != null && !RemoveItemWarn("Replace method?")) return;
 
 				selected.method = method;
 				MarkDataDirty();

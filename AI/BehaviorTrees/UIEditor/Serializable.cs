@@ -32,12 +32,23 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public override string ToString() => $"{declaringPath}: {namePath}";
 
-		public static bool operator ==(SerializableMethod method, object other) => other == null ? string.IsNullOrEmpty(method?.declaringPath) || string.IsNullOrEmpty(method?.namePath) : ReferenceEquals(method, other);
+		protected bool Equals(SerializableMethod other) => declaringPath == other?.declaringPath && namePath == other?.namePath;
+		public override bool Equals(object obj) => obj is SerializableMethod other && Equals(other);
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return ((declaringPath?.GetHashCode() ?? 0) * 397) ^ (namePath?.GetHashCode() ?? 0);
+			}
+		}
+
+		public static bool operator ==(SerializableMethod method, object other) => method?.Equals(other) ?? other is null;
 		public static bool operator !=(SerializableMethod method, object other) => !(method == other);
 	}
 
 	[Serializable]
-	public class SerializableType
+	public class SerializableType : IEquatable<SerializableType>
 	{
 		public SerializableType(Type type)
 		{
@@ -54,7 +65,12 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public override string ToString() => fullPath;
 
-		public static bool operator ==(SerializableType type, object other) => other == null ? string.IsNullOrEmpty(type?.fullPath) : ReferenceEquals(type, other);
+		public bool Equals(SerializableType other) => fullPath == other?.fullPath;
+		public override bool Equals(object obj) => obj is SerializableMethod other && Equals(other);
+
+		public override int GetHashCode() => fullPath?.GetHashCode() ?? 0;
+
+		public static bool operator ==(SerializableType type, object other) => type?.Equals(other) ?? other is null;
 		public static bool operator !=(SerializableType type, object other) => !(type == other);
 	}
 }
