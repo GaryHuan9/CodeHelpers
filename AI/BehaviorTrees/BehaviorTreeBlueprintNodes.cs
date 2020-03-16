@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeHelpers.AI
+namespace CodeHelpers.AI.BehaviorTrees
 {
 	public partial class BehaviorTreeBlueprint<T>
 	{

@@ -1,6 +1,4 @@
-using System;
-
-namespace CodeHelpers.AI
+namespace CodeHelpers.AI.BehaviorTrees
 {
 	public delegate Result BehaviorAction<in T>(T context);
 

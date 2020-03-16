@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CodeHelpers.AI
+namespace CodeHelpers.AI.BehaviorTrees
 {
 	public class BehaviorTree<T>
 	{

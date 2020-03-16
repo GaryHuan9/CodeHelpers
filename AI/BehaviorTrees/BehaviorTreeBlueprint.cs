@@ -1,10 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CodeHelpers.Collections;
 
-namespace CodeHelpers.AI
+namespace CodeHelpers.AI.BehaviorTrees
 {
 	public partial class BehaviorTreeBlueprint<T> : ISealable
 	{
@@ -119,12 +118,12 @@ namespace CodeHelpers.AI
 		{
 			switch (nodeType)
 			{
-				case Leaf<T> leaf:           return new LeafNode(this, index, leaf.action);
-				case Sequencer sequencer: return new SequencerNode(this, index);
-				case Selector selector:   return new SelectorNode(this, index);
-				case Inverter inverter:   return new InverterNode(this, index);
-				case Repeater repeater:   return new RepeaterNode(this, index);
-				case Blocker blocker:     return new BlockerNode(this, index, blocker.chance);
+				case Leaf<T> leaf:               return new LeafNode(this, index, leaf.action);
+				case Sequencer sequencer:        return new SequencerNode(this, index);
+				case Selector selector:          return new SelectorNode(this, index);
+				case Inverter inverter:          return new InverterNode(this, index);
+				case Repeater repeater:          return new RepeaterNode(this, index);
+				case Blocker blocker:            return new BlockerNode(this, index, blocker.chance);
 				case Conditioner<T> conditioner: return new ConditionerNode(this, index, conditioner.condition);
 			}
 

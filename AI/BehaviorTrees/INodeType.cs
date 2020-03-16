@@ -1,4 +1,4 @@
-namespace CodeHelpers.AI
+namespace CodeHelpers.AI.BehaviorTrees
 {
 	public interface INodeType { }
 
