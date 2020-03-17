@@ -10,28 +10,30 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
 	public class TreeGraphView : GraphView
 	{
-		public TreeGraphView()
+		public TreeGraphView(TreeGraphEditorWindow editorWindow)
 		{
+			this.editorWindow = editorWindow;
+
 			styleSheets.Add(TreeGraphEditorWindow.MainStyleSheet);
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
 			this.AddManipulator(new ContentDragger());
 			this.AddManipulator(new SelectionDragger());
 			this.AddManipulator(new RectangleSelector());
+			this.AddManipulator(new ClickSelector());
 
 			var grid = new GridBackground();
-			Insert(0, grid);
+			nodeSearcher = ScriptableObject.CreateInstance<NodeSearcher>();
+
 			grid.StretchToParentSize();
+			Insert(0, grid);
 
 			AddElement(CreateRootNode());
+			nodeCreationRequest = OnNodeCreationRequest;
 		}
 
-		/// <summary>
-		/// Use the <see cref="SetNodeAdder"/> method to set this property
-		/// </summary>
-		public bool NodeAdderActive => nodeAdder != null;
-
-		NodeAdder nodeAdder;
+		readonly TreeGraphEditorWindow editorWindow;
+		readonly NodeSearcher nodeSearcher;
 
 		static readonly Vector2 defaultNodeSize = new Vector2(150f, 200f);
 
@@ -41,7 +43,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			ports.ForEach(
 				port =>
 				{
-					if (startPort == port || startPort.node == port.node) return;
+					if (startPort == port || startPort.node == port.node || startPort.direction == port.direction) return;
 					compatiblePorts.Add(port);
 				}
 			);
@@ -98,27 +100,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return node;
 		}
 
-		public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+		void OnNodeCreationRequest(NodeCreationContext context)
 		{
-			base.BuildContextualMenu(evt);
-			if (evt.target != this) return;
-
-			evt.menu.InsertAction(0, "Create Node", _ => EnableNodeAdder(evt.mousePosition));
-			evt.menu.InsertSeparator("", 1);
-		}
-
-		public void EnableNodeAdder(Vector2 position)
-		{
-			if (NodeAdderActive) return;
-
-			nodeAdder = new NodeAdder(position);
-			Add(nodeAdder);
-		}
-
-		public void DisableNodeAdder()
-		{
-			Remove(nodeAdder);
-			nodeAdder = null;
+			SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), nodeSearcher);
 		}
 	}
 }

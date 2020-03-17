@@ -17,7 +17,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public static void Open(BehaviorTreeBlueprintData data)
 		{
 			var window = GetWindow<TreeGraphEditorWindow>("Graph Editor");
-			window.OnDataChanged(data);
+			window.CurrentData = data;
 		}
 
 		void OnEnable()
@@ -35,6 +35,55 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		BehaviorTreeBlueprintData currentData;
 
+		BehaviorTreeBlueprintData _currentData;
+		ActionImportData _importData;
+
+		public BehaviorTreeBlueprintData CurrentData
+		{
+			get => _currentData;
+			set
+			{
+				if (CurrentData == value) return;
+
+				_currentData = value;
+				dataField?.SetValueWithoutNotify(value);
+
+				UpdateTargetTypeLabel();
+			}
+		}
+
+		public ActionImportData ImportData
+		{
+			get => _importData;
+			set
+			{
+				if (ImportData == value) return;
+
+				var menu = targetTypesMenu.menu;
+				var typeList = menu.MenuItems();
+
+				typeList.Clear();
+				UpdateTargetTypeLabel();
+				if (value == null) return;
+
+				foreach (var type in from import in value.imports
+									 group import by import.method.Type
+									 into types
+									 select types.Key)
+				{
+					menu.AppendAction(
+						type.ToString(), _ =>
+						{
+							if (CurrentData == null) return;
+
+							CurrentData.TargetType = type;
+							UpdateTargetTypeLabel();
+						}
+					);
+				}
+			}
+		}
+
 		static StyleSheet _mainStyleSheet;
 		public static StyleSheet MainStyleSheet => _mainStyleSheet != null ? _mainStyleSheet : _mainStyleSheet = Resources.Load<StyleSheet>("BehaviorTreeGraph");
 
@@ -49,17 +98,17 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			toolbar = new Toolbar();
 			toolbar.styleSheets.Add(MainStyleSheet);
 
-			dataField = new ObjectField("Behavior Tree Data") {allowSceneObjects = false, objectType = typeof(BehaviorTreeBlueprintData)};
-			var importField = new ObjectField("Action Import Data") {allowSceneObjects = false, objectType = typeof(ActionImportData)};
+			dataField = new ObjectField("Behavior Tree Data") {allowSceneObjects = false, objectType = typeof(BehaviorTreeBlueprintData), value = CurrentData};
+			var importField = new ObjectField("Action Import Data") {allowSceneObjects = false, objectType = typeof(ActionImportData), value = ImportData};
 
 			targetTypesMenu = new ToolbarMenu {text = "Target Type", variant = ToolbarMenu.Variant.Default};
-			targetTypeLabel = new Label("None");
+			targetTypeLabel = new Label();
 
 			targetTypesMenu.styleSheets.Add(MainStyleSheet);
+			UpdateTargetTypeLabel();
 
-			dataField.SetValueWithoutNotify(currentData);
-			dataField.RegisterValueChangedCallback(changeEvent => OnDataChanged((BehaviorTreeBlueprintData)changeEvent.newValue));
-			importField.RegisterValueChangedCallback(changeEvent => OnActionImportDataChanged((ActionImportData)changeEvent.newValue));
+			dataField.RegisterValueChangedCallback(changeEvent => CurrentData = (BehaviorTreeBlueprintData)changeEvent.newValue);
+			importField.RegisterValueChangedCallback(changeEvent => ImportData = (ActionImportData)changeEvent.newValue);
 
 			toolbar.Add(new ToolbarSpacer {flex = true});
 			toolbar.Add(dataField);
@@ -75,50 +124,16 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		void ConstructGraphView()
 		{
-			graphView = new TreeGraphView {name = "Tree Graph"};
+			graphView = new TreeGraphView(this) {name = "Tree Graph"};
 			graphView.StretchToParentSize();
-
-			graphView.RegisterCallback<KeyUpEvent>(OnKeyUp);
 
 			rootVisualElement.Add(graphView);
 		}
 
-		void OnDataChanged(BehaviorTreeBlueprintData data)
+		void UpdateTargetTypeLabel()
 		{
-			currentData = data;
-			dataField.SetValueWithoutNotify(data);
-
-			OnTargetTypeChanged(data != null ? data.TargetType : null);
-		}
-
-		void OnActionImportDataChanged(ActionImportData data)
-		{
-			var menu = targetTypesMenu.menu;
-			var typeList = menu.MenuItems();
-
-			typeList.Clear();
-
-			foreach (var type in from import in data.imports
-								 group import by import.method.Type
-								 into types
-								 select types.Key)
-			{
-				menu.AppendAction(type.ToString(), _ => OnTargetTypeChanged(type));
-			}
-		}
-
-		void OnTargetTypeChanged(SerializableType type)
-		{
-			if (currentData == null) return;
-
-			currentData.TargetType = type;
+			var type = CurrentData == null ? null : CurrentData.TargetType;
 			targetTypeLabel.text = type == null ? "None" : type.ToString();
-		}
-
-		void OnKeyUp(KeyUpEvent keyEvent)
-		{
-			if (keyEvent.character != ' ') return; //Only listens for the space key
-			graphView.EnableNodeAdder(keyEvent.originalMousePosition);
 		}
 	}
 }
