@@ -28,7 +28,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public MethodInfo Method => _method ?? (_method = System.Type.GetType(declaringPath)?.GetMethod(namePath));
 		public SerializableType Type => _type ?? (_type = new SerializableType(declaringPath));
 
-		public float CompareToKeyword(string keyword) => Mathf.RoundToInt(StringHelper.CalculateSimilarity(keyword, namePath) * 100000f);
+		public float CompareToKeyword(string keyword) => StringHelper.CalculateSimilarity(keyword, namePath);
 
 		public override string ToString() => $"{declaringPath}: {namePath}";
 

@@ -14,4 +14,14 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public readonly string GUID;
 		public readonly bool entryPoint;
 	}
+
+	public class FunctionalNode : TreeGraphNode
+	{
+
+	}
+
+	public class LeafNode : TreeGraphNode
+	{
+
+	}
 }
