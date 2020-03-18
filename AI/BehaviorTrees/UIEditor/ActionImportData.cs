@@ -7,7 +7,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 	[CreateAssetMenu(fileName = "Behavior Action Imports", menuName = "CodeHelpers/Behavior Trees/Action Imports")]
 	public class ActionImportData : ScriptableObject
 	{
-		public List<ActionImport> imports = new List<ActionImport>();
+		[SerializeField] public List<ActionImport> imports = new List<ActionImport>();
 	}
 
 	[Serializable]

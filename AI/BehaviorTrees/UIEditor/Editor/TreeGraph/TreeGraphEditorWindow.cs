@@ -44,10 +44,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			set
 			{
 				if (CurrentData == value) return;
-
 				_currentData = value;
-				dataField?.SetValueWithoutNotify(value);
 
+				dataField?.SetValueWithoutNotify(value);
 				UpdateTargetTypeLabel();
 			}
 		}
@@ -58,6 +57,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			set
 			{
 				if (ImportData == value) return;
+				_importData = value;
 
 				var menu = targetTypesMenu.menu;
 				var typeList = menu.MenuItems();

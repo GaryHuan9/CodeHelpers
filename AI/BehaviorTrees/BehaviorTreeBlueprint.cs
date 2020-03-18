@@ -15,8 +15,6 @@ namespace CodeHelpers.AI.BehaviorTrees
 		readonly List<Node> nodes = new List<Node>();
 		public int NodeCount => nodes.Count;
 
-		int firstEmptyIndex = 1; //The first index that is null in the nodes List
-
 		public bool IsSealed { get; private set; }
 
 		internal StatusToken OriginToken => new StatusToken(0);
@@ -46,7 +44,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 		{
 			this.CheckSealed();
 
-			for (int i = 0; i < NodeCount; i++) nodes[i]?.Seal();
+			for (int i = 0; i < NodeCount; i++) nodes[i].Seal();
 			nodes.TrimExcess();
 
 			IsSealed = true;
@@ -96,21 +94,9 @@ namespace CodeHelpers.AI.BehaviorTrees
 		/// </summary>
 		Node GenerateNewNode<TNode>(TNode nodeType) where TNode : INodeType
 		{
-			Node node = TypeToNewNode(nodeType, firstEmptyIndex);
+			Node node = TypeToNewNode(nodeType, nodes.Count);
 
-			if (firstEmptyIndex == NodeCount)
-			{
-				nodes.Add(node);
-				firstEmptyIndex++;
-			}
-			else
-			{
-				if (nodes[firstEmptyIndex] != null) throw ExceptionHelper.Invalid(nameof(firstEmptyIndex), firstEmptyIndex, "does not point to a null index!");
-				nodes[firstEmptyIndex] = node;
-
-				while (firstEmptyIndex != NodeCount && nodes[firstEmptyIndex] != null) firstEmptyIndex++;
-			}
-
+			nodes.Add(node);
 			return node;
 		}
 

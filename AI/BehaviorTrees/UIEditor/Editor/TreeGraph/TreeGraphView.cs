@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeHelpers.DebugHelpers;
+using ICSharpCode.NRefactory.Ast;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,8 +14,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public TreeGraphView(TreeGraphEditorWindow editorWindow)
 		{
 			this.editorWindow = editorWindow;
-
-			styleSheets.Add(TreeGraphEditorWindow.MainStyleSheet);
 			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
 
 			this.AddManipulator(new ContentDragger());
@@ -23,16 +22,17 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			this.AddManipulator(new ClickSelector());
 
 			var grid = new GridBackground();
-			nodeSearcher = ScriptableObject.CreateInstance<NodeSearcher>();
-
 			grid.StretchToParentSize();
 			Insert(0, grid);
 
-			AddElement(CreateRootNode());
+			nodeSearcher = ScriptableObject.CreateInstance<NodeSearcher>();
+			nodeSearcher.Initialize(this);
+
+			CreateRootNode();
 			nodeCreationRequest = OnNodeCreationRequest;
 		}
 
-		readonly TreeGraphEditorWindow editorWindow;
+		public readonly TreeGraphEditorWindow editorWindow;
 		readonly NodeSearcher nodeSearcher;
 
 		static readonly Vector2 defaultNodeSize = new Vector2(150f, 200f);
@@ -51,53 +51,26 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return compatiblePorts;
 		}
 
-		Port GeneratePort(TreeGraphNode node, Direction portDirection, Port.Capacity capacity)
+		void CreateRootNode()
 		{
-			var port = node.InstantiatePort(Orientation.Horizontal, portDirection, capacity, typeof(int));
-
-			switch (portDirection)
-			{
-				case Direction.Input:
-					node.inputContainer.Add(port);
-					break;
-				case Direction.Output:
-					node.outputContainer.Add(port);
-					break;
-
-				default: throw new ArgumentOutOfRangeException(nameof(portDirection), portDirection, null);
-			}
-
-			return port;
+			var node = new TreeGraphNode(new NodeInfo("Internal_Root", "Root", 1, null, false));
+			node.SetPosition(new Rect(editorWindow.position.size / 2f, Vector2.one * 100f)); //Size actually does not effect anything
+			InitializeNode(node);
 		}
 
-		public void CreateNode(string nodeName) => AddElement(CreateTreeNode(nodeName));
-
-		TreeGraphNode CreateRootNode()
+		public void CreateNewNode(NodeEntry entry, Vector2 position)
 		{
-			var node = new TreeGraphNode(true) {title = "Root"};
-			var port = GeneratePort(node, Direction.Output, Port.Capacity.Multi);
+			var node = new FunctionalNode(entry);
+			node.SetPosition(new Rect(position, defaultNodeSize));
+			InitializeNode(node);
+		}
 
-			port.portName = "Children";
-			node.SetPosition(new Rect(200f, 200f, 100f, 100f)); //Size actually does not do anything
-
+		void InitializeNode(TreeGraphNode node)
+		{
 			node.RefreshExpandedState();
 			node.RefreshPorts();
 
-			return node;
-		}
-
-		TreeGraphNode CreateTreeNode(string nodeName)
-		{
-			var node = new TreeGraphNode {title = nodeName};
-			var port = GeneratePort(node, Direction.Input, Port.Capacity.Single);
-
-			port.portName = "Input";
-			node.SetPosition(new Rect(Vector2.zero, defaultNodeSize));
-
-			node.RefreshExpandedState();
-			node.RefreshPorts();
-
-			return node;
+			AddElement(node);
 		}
 
 		void OnNodeCreationRequest(NodeCreationContext context)
