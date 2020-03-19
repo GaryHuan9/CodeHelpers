@@ -30,10 +30,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		Toolbar toolbar;
 
 		ObjectField dataField;
-		ToolbarMenu targetTypesMenu;
-		Label targetTypeLabel;
-
-		BehaviorTreeBlueprintData currentData;
+		ObjectField importField;
+		ToolbarMenu targetContextMenu;
+		Label targetContextLabel;
 
 		BehaviorTreeBlueprintData _currentData;
 		ActionImportData _importData;
@@ -46,8 +45,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				if (CurrentData == value) return;
 				_currentData = value;
 
-				dataField?.SetValueWithoutNotify(value);
-				UpdateTargetTypeLabel();
+				dataField?.SetValueWithoutNotify(CurrentData);
+				ImportData = CurrentData == null ? null : CurrentData.importData;
 			}
 		}
 
@@ -56,33 +55,27 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			get => _importData;
 			set
 			{
+				DebugHelper.Log("HIHI");
+
 				if (ImportData == value) return;
 				_importData = value;
 
-				var menu = targetTypesMenu.menu;
-				var typeList = menu.MenuItems();
-
-				typeList.Clear();
-				UpdateTargetTypeLabel();
-				if (value == null) return;
-
-				foreach (var type in from import in value.imports
-									 group import by import.method.Type
-									 into types
-									 select types.Key)
+				if (CurrentData != null)
 				{
-					menu.AppendAction(
-						type.ToString(), _ =>
-						{
-							if (CurrentData == null) return;
-
-							CurrentData.TargetType = type;
-							UpdateTargetTypeLabel();
-						}
-					);
+					CurrentData.importData = ImportData;
+					EditorUtility.SetDirty(CurrentData);
 				}
+
+				importField?.SetValueWithoutNotify(ImportData);
+				RecalculateTargetContextMenu();
+
+				SetTargetContextType(CurrentData == null ? null : CurrentData.targetContextTypeMethod);
 			}
 		}
+
+		public Type TargetContextType => CurrentData == null || CurrentData.targetContextTypeMethod == null ? null : CurrentData.targetContextTypeMethod.TargetContextType;
+
+		public event Action OnTargetContextChangedMethods;
 
 		static StyleSheet _mainStyleSheet;
 		public static StyleSheet MainStyleSheet => _mainStyleSheet != null ? _mainStyleSheet : _mainStyleSheet = Resources.Load<StyleSheet>("BehaviorTreeGraph");
@@ -99,13 +92,12 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			toolbar.styleSheets.Add(MainStyleSheet);
 
 			dataField = new ObjectField("Behavior Tree Data") {allowSceneObjects = false, objectType = typeof(BehaviorTreeBlueprintData), value = CurrentData};
-			var importField = new ObjectField("Action Import Data") {allowSceneObjects = false, objectType = typeof(ActionImportData), value = ImportData};
+			importField = new ObjectField("Action Import Data") {allowSceneObjects = false, objectType = typeof(ActionImportData), value = ImportData};
 
-			targetTypesMenu = new ToolbarMenu {text = "Target Type", variant = ToolbarMenu.Variant.Default};
-			targetTypeLabel = new Label();
+			targetContextMenu = new ToolbarMenu {text = "Target Type", variant = ToolbarMenu.Variant.Default};
+			targetContextLabel = new Label();
 
-			targetTypesMenu.styleSheets.Add(MainStyleSheet);
-			UpdateTargetTypeLabel();
+			targetContextMenu.styleSheets.Add(MainStyleSheet);
 
 			dataField.RegisterValueChangedCallback(changeEvent => CurrentData = (BehaviorTreeBlueprintData)changeEvent.newValue);
 			importField.RegisterValueChangedCallback(changeEvent => ImportData = (ActionImportData)changeEvent.newValue);
@@ -115,11 +107,14 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			toolbar.Add(new ToolbarSpacer {flex = true});
 
 			toolbar.Add(importField);
-			toolbar.Add(targetTypesMenu);
-			toolbar.Add(targetTypeLabel);
+			toolbar.Add(targetContextMenu);
+			toolbar.Add(targetContextLabel);
 			toolbar.Add(new ToolbarSpacer {flex = true});
 
 			rootVisualElement.Add(toolbar);
+
+			RecalculateTargetContextMenu();
+			RecalculateTargetContextLabel();
 		}
 
 		void ConstructGraphView()
@@ -130,10 +125,36 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			rootVisualElement.Add(graphView);
 		}
 
-		void UpdateTargetTypeLabel()
+		void SetTargetContextType(SerializableMethod contextTypeMethod)
 		{
-			var type = CurrentData == null ? null : CurrentData.TargetType;
-			targetTypeLabel.text = type == null ? "None" : type.ToString();
+			if (contextTypeMethod?.TargetContextType == TargetContextType) return;
+
+			if (CurrentData != null)
+			{
+				CurrentData.targetContextTypeMethod = contextTypeMethod;
+				EditorUtility.SetDirty(CurrentData);
+			}
+
+			RecalculateTargetContextLabel();
+			OnTargetContextChangedMethods?.Invoke();
 		}
+
+		void RecalculateTargetContextMenu()
+		{
+			var menu = targetContextMenu.menu;
+
+			menu.MenuItems().Clear();
+			if (ImportData == null) return;
+
+			foreach (var pair in from import in ImportData.actions
+								 group import by import.method.TargetContextType
+								 into types
+								 select (types.Key, types.First()))
+			{
+				menu.AppendAction(pair.Key.ToString(), _ => SetTargetContextType(pair.Item2.method));
+			}
+		}
+
+		void RecalculateTargetContextLabel() => targetContextLabel.text = TargetContextType?.ToString() ?? "None";
 	}
 }

@@ -7,11 +7,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
 	public class NodeEntry : NodeInfo
 	{
-		public NodeEntry(Type nodeType, BehaviorTreeNodeAttribute attribute)
-			: base(
-				attribute.serializedName, string.IsNullOrEmpty(attribute.displayedName) ? nodeType.Name : attribute.displayedName,
-				attribute.maxChildCount, GetAttributedConstructorParameters(nodeType)
-			)
+		public NodeEntry(Type nodeType, BehaviorTreeNodeAttribute attribute) : base(nodeType, attribute)
 		{
 			this.nodeType = nodeType;
 			this.attribute = attribute;
@@ -19,32 +15,27 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public readonly Type nodeType;
 		public readonly BehaviorTreeNodeAttribute attribute;
-
-		static ParameterInfo[] GetAttributedConstructorParameters(Type type)
-		{
-			var attributedConstructor = type.GetConstructors().FirstOrDefault(constructor => constructor.GetCustomAttribute<BehaviorNodeConstructorAttribute>() != null);
-			return (attributedConstructor ?? type.GetConstructor(Type.EmptyTypes))?.GetParameters();
-		}
 	}
 
 	public class NodeInfo : IEquatable<NodeInfo>
 	{
-		public NodeInfo(string serializedName, string displayedName, int maxChildCount, ParameterInfo[] parameters = null, bool hasParent = true)
+		public NodeInfo(string serializedName, string displayedName, Type graphNodeType)
 		{
 			this.serializedName = serializedName;
 			this.displayedName = displayedName;
+			this.graphNodeType = graphNodeType;
+		}
 
-			this.maxChildCount = maxChildCount;
-			this.parameters = new ReadOnlyCollection<ParameterInfo>(parameters ?? Array.Empty<ParameterInfo>());
-			this.hasParent = hasParent;
+		public NodeInfo(Type nodeType, BehaviorTreeNodeAttribute attribute)
+		{
+			serializedName = attribute.serializedName;
+			displayedName = string.IsNullOrEmpty(attribute.displayedName) ? nodeType.Name : attribute.displayedName;
+			graphNodeType = GetTypeFromName(attribute.nodeTypeName);
 		}
 
 		public readonly string serializedName;
 		public readonly string displayedName;
-
-		public readonly int maxChildCount;
-		public readonly ReadOnlyCollection<ParameterInfo> parameters;
-		public readonly bool hasParent;
+		public readonly Type graphNodeType;
 
 		public bool Equals(NodeInfo other) => serializedName == other?.serializedName;
 		public override bool Equals(object obj) => obj is NodeInfo other && Equals(other);
@@ -53,5 +44,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public static bool operator !=(NodeInfo type, object other) => !(type == other);
 
 		public override int GetHashCode() => serializedName?.GetHashCode() ?? 0;
+
+		static Type GetTypeFromName(string nodeTypeName)
+		{
+			if (string.IsNullOrEmpty(nodeTypeName)) throw ExceptionHelper.Invalid(nameof(nodeTypeName), nodeTypeName, InvalidType.isNull);
+			return Type.GetType(nodeTypeName) ?? throw new Exception($"Invalid name \"{nodeTypeName}\" for a {nameof(TreeGraphNode)}!");
+		}
 	}
 }

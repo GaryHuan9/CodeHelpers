@@ -1,15 +1,21 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using CodeHelpers.DebugHelpers;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
 	[Serializable]
-	public class SerializableMethod
+	public class SerializableMethod : IEquatable<SerializableMethod>
 	{
 		public SerializableMethod(MethodInfo info)
 		{
-			declaringPath = info.DeclaringType.FullName;
+			Assert.IsNotNull(info);
+
+			declaringPath = info.DeclaringType.AssemblyQualifiedName;
 			namePath = info.Name;
 		}
 
@@ -23,17 +29,42 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		[SerializeField] string namePath;
 
 		MethodInfo _method;
-		SerializableType _type;
+		Type _targetContextType;
 
-		public MethodInfo Method => _method ?? (_method = System.Type.GetType(declaringPath)?.GetMethod(namePath));
-		public SerializableType Type => _type ?? (_type = new SerializableType(declaringPath));
+		public MethodInfo Method
+		{
+			get
+			{
+				if (_method != null) return _method;
+				if (string.IsNullOrEmpty(declaringPath) || string.IsNullOrEmpty(namePath)) return null;
+
+				return _method = Type.GetType(declaringPath)?.GetMethod(namePath, BehaviorActionAttribute.methodBindings);
+			}
+		}
+
+		public Type TargetContextType
+		{
+			get
+			{
+				if (_targetContextType != null) return _targetContextType;
+				if (Method == null) return null;
+
+				return _targetContextType = Method.GetParameters()[0].ParameterType;
+			}
+		}
 
 		public float CompareToKeyword(string keyword) => StringHelper.CalculateSimilarity(keyword, namePath);
 
-		public override string ToString() => $"{declaringPath}: {namePath}";
+		public override string ToString()
+		{
+			if (Equals(null)) return "";
+			if (Method == null) return "Missing method";
 
-		protected bool Equals(SerializableMethod other) => declaringPath == other?.declaringPath && namePath == other?.namePath;
-		public override bool Equals(object obj) => obj is SerializableMethod other && Equals(other);
+			return $"{Method.DeclaringType?.FullName}: {namePath}";
+		}
+
+		public bool Equals(SerializableMethod other) => other is null ? string.IsNullOrEmpty(declaringPath) && string.IsNullOrEmpty(namePath) : declaringPath == other.declaringPath && namePath == other.namePath;
+		public override bool Equals(object obj) => obj is null ? Equals(null) : obj is SerializableMethod other && Equals(other);
 
 		public override int GetHashCode()
 		{
@@ -47,109 +78,214 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public static bool operator !=(SerializableMethod method, object other) => !(method == other);
 	}
 
-	[Serializable]
-	public class SerializableType : IEquatable<SerializableType>
+	[Serializable, StructLayout(LayoutKind.Explicit)]
+	public struct SerializableGuid : IEquatable<SerializableGuid>, IComparable<SerializableGuid>
 	{
-		public SerializableType(Type type)
+		public SerializableGuid(Guid value)
 		{
-			fullPath = type.FullName;
-			_type = type;
+			part1 = part2 = part3 = part4 = 0;
+			this.value = value;
 		}
 
-		public SerializableType(string fullPath) => this.fullPath = fullPath;
+		[FieldOffset(0)] Guid value;
 
-		[SerializeField] string fullPath;
+		[FieldOffset(0), SerializeField] int part1;
+		[FieldOffset(4), SerializeField] int part2;
+		[FieldOffset(8), SerializeField] int part3;
+		[FieldOffset(12), SerializeField] int part4;
 
-		Type _type;
-		public Type Type => _type ?? (_type = Type.GetType(fullPath));
+		public bool Equals(SerializableGuid other) => value.Equals(other.value);
+		public override bool Equals(object obj) => obj is SerializableGuid guid && Equals(guid);
 
-		public override string ToString() => fullPath;
+		public int CompareTo(SerializableGuid other) => value.CompareTo(other.value);
 
-		public bool Equals(SerializableType other) => fullPath == other?.fullPath;
-		public override bool Equals(object obj) => obj is SerializableMethod other && Equals(other);
+		public override int GetHashCode() => value.GetHashCode();
+		public override string ToString() => value.ToString();
 
-		public override int GetHashCode() => fullPath?.GetHashCode() ?? 0;
-
-		public static bool operator ==(SerializableType type, object other) => type?.Equals(other) ?? other is null;
-		public static bool operator !=(SerializableType type, object other) => !(type == other);
+		public static implicit operator SerializableGuid(Guid guid) => new SerializableGuid(guid);
+		public static explicit operator Guid(SerializableGuid guid) => guid.value;
 	}
 
 	[Serializable]
-	public class SerializedParameter
+	public class SerializableParameter
 	{
-		public SerializedParameter(object behaviorAction) => throw new NotImplementedException();
-
-		public SerializedParameter(bool booleanValue)
+		public SerializableParameter(BehaviorAction behaviorAction)
 		{
-			scaler1 = booleanValue ? 1 : 0;
+			type = ParameterType.behaviorAction;
+			BehaviorActionValue = behaviorAction;
+		}
+
+		public SerializableParameter(bool booleanValue)
+		{
 			type = ParameterType.boolean;
+			BooleanValue = booleanValue;
 		}
 
-		public SerializedParameter(int integer1Value)
+		public SerializableParameter(int integer1Value)
 		{
-			scaler1 = integer1Value;
 			type = ParameterType.integer1;
+			Integer1Value = integer1Value;
 		}
 
-		public SerializedParameter(Vector2Int integer2Value)
+		public SerializableParameter(Vector2Int integer2Value)
 		{
-			scaler1 = integer2Value.x;
-			scaler2 = integer2Value.y;
 			type = ParameterType.integer2;
+			Integer2Value = integer2Value;
 		}
 
-		public SerializedParameter(Vector3Int integer3Value)
+		public SerializableParameter(Vector3Int integer3Value)
 		{
-			scaler1 = integer3Value.x;
-			scaler2 = integer3Value.y;
-			scaler3 = integer3Value.z;
 			type = ParameterType.integer3;
+			Integer3Value = integer3Value;
 		}
 
-		public SerializedParameter(float float1Value)
+		public SerializableParameter(float float1Value)
 		{
-			scaler1 = BitwiseConvert(float1Value);
 			type = ParameterType.float1;
+			Float1Value = float1Value;
 		}
 
-		public SerializedParameter(Vector2 float2Value)
+		public SerializableParameter(Vector2 float2Value)
 		{
-			scaler1 = BitwiseConvert(float2Value.x);
-			scaler2 = BitwiseConvert(float2Value.y);
 			type = ParameterType.float2;
+			Float2Value = float2Value;
 		}
 
-		public SerializedParameter(Vector3 float3Value)
+		public SerializableParameter(Vector3 float3Value)
 		{
-			scaler1 = BitwiseConvert(float3Value.x);
-			scaler2 = BitwiseConvert(float3Value.y);
-			scaler3 = BitwiseConvert(float3Value.z);
 			type = ParameterType.float3;
+			Float3Value = float3Value;
 		}
 
 		[SerializeField] ParameterType type;
 		public ParameterType Type => type;
 
+		[SerializeField] BehaviorAction behaviorAction;
+
 		[SerializeField] int scaler1;
 		[SerializeField] int scaler2;
 		[SerializeField] int scaler3;
 
-		[SerializeField] object behaviorAction;
+		public BehaviorAction BehaviorActionValue
+		{
+			get => CheckReturn(behaviorAction);
+			set
+			{
+				CheckReturn(value);
+				if (behaviorAction == value) return;
 
-		public bool BooleanValue => CheckReturn(scaler1 == 1);
+				behaviorAction = value;
+				OnValueChangedMethods?.Invoke();
+			}
+		}
 
-		public int Integer1Value => CheckReturn(scaler1);
-		public Vector2Int Integer2Value => CheckReturn(new Vector2Int(scaler1, scaler2));
-		public Vector3Int Integer3Value => CheckReturn(new Vector3Int(scaler1, scaler2, scaler3));
+		public bool BooleanValue
+		{
+			get => CheckReturn(scaler1 == 1);
+			set
+			{
+				CheckReturn(value);
+				if (BooleanValue == value) return;
 
-		public float Float1Value => CheckReturn(BitwiseConvert(scaler1));
-		public Vector2 Float2Value => CheckReturn(new Vector2(BitwiseConvert(scaler1), BitwiseConvert(scaler2)));
-		public Vector3 Float3Value => CheckReturn(new Vector3(BitwiseConvert(scaler1), BitwiseConvert(scaler2), BitwiseConvert(scaler3)));
+				scaler1 = value ? 1 : 0;
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public int Integer1Value
+		{
+			get => CheckReturn(scaler1);
+			set
+			{
+				CheckReturn(value);
+				if (Integer1Value == value) return;
+
+				scaler1 = value;
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public Vector2Int Integer2Value
+		{
+			get => CheckReturn(new Vector2Int(scaler1, scaler2));
+			set
+			{
+				CheckReturn(value);
+				if (Integer2Value == value) return;
+
+				scaler1 = value.x;
+				scaler2 = value.y;
+
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public Vector3Int Integer3Value
+		{
+			get => CheckReturn(new Vector3Int(scaler1, scaler2, scaler3));
+			set
+			{
+				CheckReturn(value);
+				if (Integer3Value == value) return;
+
+				scaler1 = value.x;
+				scaler2 = value.y;
+				scaler3 = value.z;
+
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public float Float1Value
+		{
+			get => CheckReturn(BitwiseConvert(scaler1));
+			set
+			{
+				CheckReturn(value);
+				if (Mathf.Approximately(Float1Value, value)) return;
+
+				scaler1 = BitwiseConvert(value);
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public Vector2 Float2Value
+		{
+			get => CheckReturn(new Vector2(BitwiseConvert(scaler1), BitwiseConvert(scaler2)));
+			set
+			{
+				CheckReturn(value);
+				if (Float2Value == value) return;
+
+				scaler1 = BitwiseConvert(value.x);
+				scaler2 = BitwiseConvert(value.y);
+
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public Vector3 Float3Value
+		{
+			get => CheckReturn(new Vector3(BitwiseConvert(scaler1), BitwiseConvert(scaler2), BitwiseConvert(scaler3)));
+			set
+			{
+				CheckReturn(value);
+				if (Float3Value == value) return;
+
+				scaler1 = BitwiseConvert(value.x);
+				scaler2 = BitwiseConvert(value.y);
+				scaler3 = BitwiseConvert(value.z);
+
+				OnValueChangedMethods?.Invoke();
+			}
+		}
+
+		public event Action OnValueChangedMethods;
 
 		T CheckReturn<T>(T value)
 		{
-			if (typeof(T) == Type.GetType()) return value;
-			throw new Exception($"This {nameof(SerializedParameter)} has the type {Type} but you are trying to get its value as an {typeof(T)}!");
+			if (typeof(T) == Type.GetParameterType()) return value;
+			throw new Exception($"This {nameof(SerializableParameter)} has the type {Type} but you are trying to yse its value as an {typeof(T)}!");
 		}
 
 		static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
@@ -162,7 +298,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		{
 			switch (type)
 			{
-				case ParameterType.behaviorAciton: throw new NotImplementedException();
+				case ParameterType.behaviorAction: return typeof(BehaviorAction);
 				case ParameterType.boolean:        return typeof(bool);
 				case ParameterType.integer1:       return typeof(int);
 				case ParameterType.integer2:       return typeof(Vector2Int);
@@ -176,9 +312,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		}
 	}
 
-	public enum ParameterType
+	public enum ParameterType : byte
 	{
-		behaviorAciton,
+		behaviorAction,
 		boolean,
 		integer1,
 		integer2,

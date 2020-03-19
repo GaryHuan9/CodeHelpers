@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using CodeHelpers.DebugHelpers;
-using ICSharpCode.NRefactory.Ast;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
@@ -26,15 +25,25 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			Insert(0, grid);
 
 			nodeSearcher = ScriptableObject.CreateInstance<NodeSearcher>();
-			nodeSearcher.Initialize(this);
+			actionSearcher = ScriptableObject.CreateInstance<ActionSearcher>();
 
-			CreateRootNode();
+			nodeSearcher.Initialize(this);
+			actionSearcher.Initialize(this);
+
+			edgeConnectorListener = new EdgeConnectorListener(this);
+
 			nodeCreationRequest = OnNodeCreationRequest;
+			graphViewChanged = OnGraphViewChanged;
+
+			CreateNewNode(new NodeInfo("Internal_Root", "Root", typeof(RootNode)), Vector2.one * 200f);
 		}
 
 		public readonly TreeGraphEditorWindow editorWindow;
-		readonly NodeSearcher nodeSearcher;
 
+		public readonly NodeSearcher nodeSearcher;
+		public readonly ActionSearcher actionSearcher;
+
+		readonly EdgeConnectorListener edgeConnectorListener;
 		static readonly Vector2 defaultNodeSize = new Vector2(150f, 200f);
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -51,31 +60,39 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return compatiblePorts;
 		}
 
-		void CreateRootNode()
+		public TreeGraphNode CreateNewNode(NodeInfo info, Vector2 position)
 		{
-			var node = new TreeGraphNode(new NodeInfo("Internal_Root", "Root", 1, null, false));
-			node.SetPosition(new Rect(editorWindow.position.size / 2f, Vector2.one * 100f)); //Size actually does not effect anything
-			InitializeNode(node);
-		}
+			var node = (TreeGraphNode)Activator.CreateInstance(info.graphNodeType);
 
-		public void CreateNewNode(NodeEntry entry, Vector2 position)
-		{
-			var node = new FunctionalNode(entry);
 			node.SetPosition(new Rect(position, defaultNodeSize));
-			InitializeNode(node);
-		}
+			node.Initialize(this, info);
 
-		void InitializeNode(TreeGraphNode node)
-		{
 			node.RefreshExpandedState();
 			node.RefreshPorts();
 
 			AddElement(node);
+			return node;
 		}
+
+		public EdgeConnector<Edge> GetNewEdgeConnector() => new EdgeConnector<Edge>(edgeConnectorListener);
 
 		void OnNodeCreationRequest(NodeCreationContext context)
 		{
 			SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), nodeSearcher);
+		}
+
+		GraphViewChange OnGraphViewChanged(GraphViewChange change)
+		{
+			if (change.moveDelta == Vector2.zero) return change; //We currently only care about moving nodes
+			var movedElements = change.movedElements;
+
+			for (int i = 0; i < movedElements.Count; i++)
+			{
+				if (!(movedElements[i] is TreeGraphNode node)) continue;
+				node.RecalculateOrder();
+			}
+
+			return change;
 		}
 	}
 }

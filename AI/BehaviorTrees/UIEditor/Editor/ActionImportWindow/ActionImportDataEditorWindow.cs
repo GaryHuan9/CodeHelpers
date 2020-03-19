@@ -129,18 +129,18 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			public SelectionSection(ActionImportDataEditorWindow window) : base(window) { }
 
 			Vector2 scrollPosition;
-			public ActionImport Selected { get; private set; }
+			public BehaviorAction Selected { get; private set; }
 
 			protected override void DrawInternal()
 			{
-				var imports = window.currentData.imports;
+				var imports = window.currentData.actions;
 				Assert.IsNotNull(imports);
 
 				GUILayout.BeginHorizontal();
 
 				if (GUILayout.Button("Add New"))
 				{
-					imports.Add(new ActionImport());
+					imports.Add(new BehaviorAction());
 					MarkDataDirty();
 				}
 
@@ -150,7 +150,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 				for (int i = 0; i < imports.Count; i++)
 				{
-					ActionImport import = imports[i];
+					BehaviorAction import = imports[i];
 					bool selected = Selected == import;
 
 					GUILayout.BeginHorizontal(EditorStyles.helpBox);
@@ -185,7 +185,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 			protected override void DrawInternal()
 			{
-				ActionImport selected = window.selection.Selected;
+				BehaviorAction selected = window.selection.Selected;
 
 				if (selected == null)
 				{
@@ -213,13 +213,13 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				GUILayout.EndHorizontal();
 				GUILayout.BeginHorizontal();
 
-				GUILayout.Label("Target type");
+				GUILayout.Label("Target context type");
 				GUILayout.FlexibleSpace();
-				GUILayout.Label(selected.method != null ? selected.method.Type.ToString() : "None");
+				GUILayout.Label(selected.method != null ? selected.method.TargetContextType?.ToString() : "None");
 
 				GUILayout.EndHorizontal();
 
-				if (selected.method != null && GUILayout.Button("Remove Method") && RemoveItemWarn("Remove assigned method?")) AssignMethod(null);
+				if (selected.method != null && GUILayout.Button("Remove Method")) AssignMethod(null);
 
 				GUILayout.EndVertical();
 
@@ -239,7 +239,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 			public void AssignMethod(SerializableMethod method)
 			{
-				ActionImport selected = window.selection.Selected;
+				BehaviorAction selected = window.selection.Selected;
 
 				if (selected == null)
 				{
@@ -248,7 +248,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				}
 
 				if (selected.method == method) return;
-				if (selected.method != null && !RemoveItemWarn("Replace method?")) return;
+				if (selected.method != null && !RemoveItemWarn($"{(method == null ? "Remove" : "Replace")} method?")) return;
 
 				selected.method = method;
 				MarkDataDirty();
@@ -368,7 +368,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					from pair in assemblies
 					where pair.Value.included
 					from type in pair.Key.GetTypes()
-					from method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+					from method in type.GetMethods(BehaviorActionAttribute.methodBindings)
 					where Attribute.IsDefined(method, typeof(BehaviorActionAttribute)) && method.GetParameters().Length == 1
 					select new SerializableMethod(method)
 				);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using CodeHelpers.DebugHelpers;
@@ -16,6 +15,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		TreeGraphView graphView;
 		List<SearchTreeEntry> searchTree;
+
+		public Port ConnectedPort { private get; set; }
 
 		public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
 		{
@@ -41,12 +42,28 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return searchTree;
 		}
 
-		public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
+		public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
 		{
 			var rootElement = graphView.editorWindow.rootVisualElement;
 			var worldPosition = rootElement.ChangeCoordinatesTo(rootElement.parent, context.screenMousePosition - graphView.editorWindow.position.position);
 
-			graphView.CreateNewNode((NodeEntry)searchTreeEntry.userData, graphView.contentViewContainer.WorldToLocal(worldPosition));
+			var node = graphView.CreateNewNode((NodeEntry)entry.userData, graphView.contentViewContainer.WorldToLocal(worldPosition));
+
+			if (ConnectedPort != null)
+			{
+				Port other = ConnectedPort.direction == Direction.Input ? node.ChildrenPort : node.ParentPort;
+				if (other != null)
+				{
+					//Disconnect old ports if necessary
+					if (other.capacity == Port.Capacity.Single && other.connected) { other.DisconnectAll(); DebugHelper.Log("Ye");}
+					if (ConnectedPort.capacity == Port.Capacity.Single && ConnectedPort.connected) { ConnectedPort.DisconnectAll(); DebugHelper.Log("ya");}
+
+					graphView.AddElement(ConnectedPort.ConnectTo(other)); //Connect
+				}
+
+				ConnectedPort = null;
+			}
+
 			return true;
 		}
 	}
