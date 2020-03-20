@@ -19,12 +19,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			namePath = info.Name;
 		}
 
-		public SerializableMethod(string declaringPath, string namePath)
-		{
-			this.declaringPath = declaringPath;
-			this.namePath = namePath;
-		}
-
 		[SerializeField] string declaringPath;
 		[SerializeField] string namePath;
 
@@ -38,7 +32,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				if (_method != null) return _method;
 				if (string.IsNullOrEmpty(declaringPath) || string.IsNullOrEmpty(namePath)) return null;
 
-				return _method = Type.GetType(declaringPath)?.GetMethod(namePath, BehaviorActionAttribute.methodBindings);
+				return _method = Type.GetType(declaringPath)?.GetMethod(namePath, BehaviorActionAttribute.MethodBindings);
 			}
 		}
 
@@ -76,34 +70,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public static bool operator ==(SerializableMethod method, object other) => method?.Equals(other) ?? other is null;
 		public static bool operator !=(SerializableMethod method, object other) => !(method == other);
-	}
-
-	[Serializable, StructLayout(LayoutKind.Explicit)]
-	public struct SerializableGuid : IEquatable<SerializableGuid>, IComparable<SerializableGuid>
-	{
-		public SerializableGuid(Guid value)
-		{
-			part1 = part2 = part3 = part4 = 0;
-			this.value = value;
-		}
-
-		[FieldOffset(0)] Guid value;
-
-		[FieldOffset(0), SerializeField] int part1;
-		[FieldOffset(4), SerializeField] int part2;
-		[FieldOffset(8), SerializeField] int part3;
-		[FieldOffset(12), SerializeField] int part4;
-
-		public bool Equals(SerializableGuid other) => value.Equals(other.value);
-		public override bool Equals(object obj) => obj is SerializableGuid guid && Equals(guid);
-
-		public int CompareTo(SerializableGuid other) => value.CompareTo(other.value);
-
-		public override int GetHashCode() => value.GetHashCode();
-		public override string ToString() => value.ToString();
-
-		public static implicit operator SerializableGuid(Guid guid) => new SerializableGuid(guid);
-		public static explicit operator Guid(SerializableGuid guid) => guid.value;
 	}
 
 	[Serializable]
@@ -281,6 +247,16 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		}
 
 		public event Action OnValueChangedMethods;
+
+		public void CopyFrom(SerializableParameter parameter)
+		{
+			if (parameter.Type != Type) throw ExceptionHelper.Invalid(nameof(parameter), parameter, "has a mismatched parameter type!");
+
+			behaviorAction = parameter.behaviorAction;
+			scaler1 = parameter.scaler1;
+			scaler2 = parameter.scaler2;
+			scaler3 = parameter.scaler3;
+		}
 
 		T CheckReturn<T>(T value)
 		{

@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CodeHelpers.DebugHelpers;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -11,8 +11,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
 	public abstract class TreeGraphNode : Node
 	{
-		public TreeGraphNode() => Guid = System.Guid.NewGuid();
-
 		public virtual void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			Info = info;
@@ -61,14 +59,14 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			}
 		}
 
-		public readonly SerializableGuid Guid;
+		public int GUID = -1; //Do not change this if you are not the serializer
 		public TreeGraphView GraphView { get; private set; }
 		public NodeInfo Info { get; private set; }
 
 		protected virtual bool HasParent => true;
 		protected abstract int MaxChildCount { get; }
 
-		protected virtual SerializableParameter[] Parameters => Array.Empty<SerializableParameter>();
+		public virtual SerializableParameter[] Parameters => Array.Empty<SerializableParameter>();
 		public int Order { get; private set; }
 
 		public Port ParentPort { get; private set; }
@@ -87,9 +85,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				case ParameterType.behaviorAction:
 
 					control = new VisualElement();
-					var buttons = new VisualElement {style = {flexDirection = FlexDirection.Row}};
+					var buttons = new VisualElement {style = {flexDirection = FlexDirection.Row, paddingRight = 2f, paddingLeft = 2f}};
 
-					var actionLabel = new Label(GetBehaviorActionString()) {style = {paddingLeft = 6f, paddingRight = 6f}};
+					var actionLabel = new Label(GetBehaviorActionString()) {style = {paddingLeft = 8f, paddingRight = 8f}};
 					parameter.OnValueChangedMethods += () => actionLabel.text = GetBehaviorActionString();
 
 					var configureButton = new Button {text = "Configure"};
@@ -225,6 +223,62 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			var label = control.Q<Label>();
 			if (label != null) label.style.minWidth = 64f;
 
+			TryGetParameterContainer().Add(control);
+		}
+
+		/// <summary>
+		/// Recalculate this node's order in parent.
+		/// If <paramref name="propagateToSiblings"/> is true, then the order of all its siblings will be recalculated too
+		/// </summary>
+		public void RecalculateOrder(bool propagateToSiblings = true)
+		{
+			Port parentInputPort = ParentPort?.connections?.FirstOrDefault()?.output;
+
+			if (parentInputPort == null || parentInputPort.capacity == Port.Capacity.Single) SetEmpty();
+			else
+			{
+				TreeGraphNode parentNode = (TreeGraphNode)parentInputPort.node;
+
+				if (GraphView.IsRemovingElement(this))
+				{
+					if (propagateToSiblings)
+					{
+						//Loop through all parent's children connections
+						foreach (Edge edge in parentNode.ChildrenPort.connections)
+						{
+							if (edge.input.node is TreeGraphNode node && node != this) node.RecalculateOrder(false); //Important false to avoid infinite recursion
+						}
+					}
+
+					SetEmpty();
+					return;
+				}
+
+				int order = 0;
+				float y = GetPositionImmediate().y;
+
+				//Loop through all parent's children connections
+				foreach (Edge edge in parentNode.ChildrenPort.connections)
+				{
+					if (!(edge.input.node is TreeGraphNode node) || node == this) continue;
+					if (node.GetPositionImmediate().y < y && !GraphView.IsRemovingElement(node)) order++;
+
+					if (propagateToSiblings) node.RecalculateOrder(false); //NOTE: This false is really important to avoid infinite recursions!
+				}
+
+				orderLabel.text = order.ToString(); //This looks better than "Order 1", however if it gets too difficult to understand we can change it back
+				Order = order;
+			}
+
+			void SetEmpty()
+			{
+				if (orderLabel != null) orderLabel.text = "";
+				Order = 0;
+			}
+		}
+
+		protected VisualElement TryGetParameterContainer()
+		{
 			if (parameterContainer == null)
 			{
 				VisualElement contents = this.Q("contents");
@@ -239,62 +293,109 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				contents.Add(parameterContainer);
 			}
 
-			parameterContainer.Add(control);
-
-			void CopyStyles(VisualElement source, VisualElement target)
-			{
-				//Reflection give me power!!
-				DebugHelper.Log(source.style, source.style.color);
-
-				foreach (PropertyInfo property in from property in typeof(IStyle).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-												  where property.GetSetMethod(false) != null && property.GetGetMethod(false) != null
-												  select property)
-				{
-					var value = property.GetValue(source.style, BindingFlags.Public | BindingFlags.Instance, null, null, null);
-					property.SetValue(target.style, value, BindingFlags.Public | BindingFlags.Instance, null, null, null);
-
-					DebugHelper.Log(value, property, source.style.color);
-				}
-			}
+			return parameterContainer;
 		}
 
 		/// <summary>
-		/// Recalculate this node's order in parent.
-		/// If <paramref name="propagateToSiblings"/> is true, then the order of all its siblings will be recalculated too
+		/// <see cref="Node.GetPosition"/> does not update for newly created nodes so we have to use this
 		/// </summary>
-		public void RecalculateOrder(bool propagateToSiblings = true)
-		{
-			if (ParentPort == null || !ParentPort.connected || ParentPort.connections.First().output.capacity == Port.Capacity.Single)
-			{
-				if (orderLabel != null) orderLabel.text = "";
-				Order = 0;
-			}
-			else
-			{
-				TreeGraphNode parentNode = (TreeGraphNode)ParentPort.connections.First().output.node;
-
-				int order = 0;
-				float y = GetPosition().y;
-
-				//Loop through all parent's children connections
-				foreach (Edge edge in parentNode.ChildrenPort.connections)
-				{
-					if (!(edge.input.node is TreeGraphNode node)) continue;
-					if (node.GetPosition().y < y) order++;
-
-					if (propagateToSiblings) node.RecalculateOrder(false); //NOTE: This false is really important to avoid infinite recursions!
-				}
-
-				orderLabel.text = order.ToString(); //This looks better than "Order 1", however if it gets too difficult to understand we can change it back
-				Order = order;
-			}
-		}
+		public Vector2 GetPositionImmediate() => new Vector2(style.left.value.value, style.top.value.value);
 	}
 
 	public class RootNode : TreeGraphNode
 	{
+		public override void Initialize(TreeGraphView graphView, NodeInfo info)
+		{
+			base.Initialize(graphView, info);
+
+			contextSelector = new PopupField<SerializableMethod>(
+				"Target Context", representativeMethods, 0,
+				method =>
+				{
+					if (representativeMethods.Count != 1) GraphView.editorWindow.SetTargetContextType(contextSelector?.value);
+					return "Select";
+				},
+				method =>
+				{
+					if (method == null) return "Select";
+					if (method.Method == null) return "Missing";
+
+					return method.TargetContextType.ToString();
+				}
+			);
+			typeLabel = new Label("None");
+
+			{
+				// Because the choices property in PopupField is internal, which according to https://forum.unity.com/threads/maskfield-choices-internal.672670/
+				// is a bug. So we will use reflection to set it for now
+
+				var property = contextSelector.GetType().GetProperty("choices", BindingFlags.Instance | BindingFlags.NonPublic);
+				if (property == null) throw new Exception("Reflection not working!!!");
+
+				//Should be contextSelector.choices = representativeActions
+				property.SetValue(contextSelector, representativeMethods);
+			}
+
+			VisualElement parameterContainer = TryGetParameterContainer();
+			var labelStyle = contextSelector.Q<Label>().style;
+
+			labelStyle.paddingTop = 0f;
+			labelStyle.paddingLeft = 4f;
+			labelStyle.paddingRight = 7f;
+
+			contextSelector[1].style.paddingBottom = 0f; //Set selector bottom padding to 0
+			typeLabel.style.minWidth = labelStyle.minWidth = 64f;
+			typeLabel.style.paddingRight = typeLabel.style.paddingLeft = 8f;
+
+			inputContainer.style.justifyContent = Justify.Center;
+
+			inputContainer.Add(contextSelector);
+			parameterContainer.Add(typeLabel);
+
+			RecalculateTargetContext();
+		}
+
 		protected override bool HasParent => false;
 		protected override int MaxChildCount => 1;
+
+		PopupField<SerializableMethod> contextSelector;
+		Label typeLabel;
+
+		readonly List<SerializableMethod> representativeMethods = new List<SerializableMethod> {null};
+
+		public void RecalculateTargetContext()
+		{
+			TreeGraphEditorWindow window = GraphView.editorWindow;
+
+			if (window.ImportData == null)
+			{
+				representativeMethods.Clear();
+				representativeMethods.Add(null);
+
+				contextSelector.index = 0;
+				typeLabel.text = "No action import data selected";
+
+				return;
+			}
+
+			if (true /*Can change target type*/)
+			{
+				representativeMethods.Clear();
+				representativeMethods.Add(null);
+
+				foreach (SerializableMethod method in from import in window.ImportData.actions
+													  where import.method != null
+													  group import by import.method.TargetContextType
+													  into types
+													  select types.First().method)
+				{
+					representativeMethods.Add(method);
+					if (method.TargetContextType == window.TargetContextType) contextSelector.index = representativeMethods.Count - 1;
+				}
+			}
+
+			typeLabel.text = window.TargetContextType?.ToString() ?? "None";
+		}
 	}
 
 	public class LeafNode : TreeGraphNode
@@ -302,13 +403,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-
-			Parameters[0] = new SerializableParameter(null); //Set action to null behavior action
 			GenerateParameterControl(0, "Action");
 		}
 
 		protected override int MaxChildCount => 0;
-		protected override SerializableParameter[] Parameters { get; } = new SerializableParameter[1];
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(null)}; //Set action to null behavior action
 	}
 
 	public class SequencerNode : TreeGraphNode
@@ -331,13 +430,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-
-			Parameters[0] = new SerializableParameter(1); //Set amount to 1
 			GenerateParameterControl(0, "Amount", parameter => parameter.Integer1Value = Math.Max(parameter.Integer1Value, 0));
 		}
 
 		protected override int MaxChildCount => int.MaxValue;
-		protected override SerializableParameter[] Parameters { get; } = new SerializableParameter[1];
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(1)}; //Set amount to 1
 	}
 
 	public class BlockerNode : TreeGraphNode
@@ -345,13 +442,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-
-			Parameters[0] = new SerializableParameter(1f); //Set chance to 1f
 			GenerateParameterControl(0, "Chance", parameter => parameter.Float1Value = Mathf.Clamp01(parameter.Float1Value));
 		}
 
 		protected override int MaxChildCount => 1;
-		protected override SerializableParameter[] Parameters { get; } = new SerializableParameter[1];
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(1f)}; //Set chance to 1f
 	}
 
 	public class ConditionerNode : TreeGraphNode
@@ -359,12 +454,10 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-
-			Parameters[0] = new SerializableParameter(null); //Set condition to null
 			GenerateParameterControl(0, "Condition");
 		}
 
 		protected override int MaxChildCount => 1;
-		protected override SerializableParameter[] Parameters { get; } = new SerializableParameter[1];
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(null)}; //Set condition to null
 	}
 }

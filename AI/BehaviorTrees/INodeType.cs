@@ -13,26 +13,26 @@ namespace CodeHelpers.AI.BehaviorTrees
 	/// <summary>
 	/// Similar to AND; execute child nodes in order until the executed child returned failure
 	/// </summary>
-	[BehaviorTreeNode("Internal_Sequencer", "CodeHelpers.AI.BehaviorTrees.UIEditor.SequencerNode")]
+	[BehaviorTreeNode("Internal_Sequencer", "CodeHelpers.AI.BehaviorTrees.UIEditor.SequencerNode", "Sequencer")]
 	public readonly struct Sequencer : INodeType { }
 
 	/// <summary>
 	/// Similar to OR; execute child nodes in order until the executed child returned success
 	/// </summary>
-	[BehaviorTreeNode("Internal_Selector", "CodeHelpers.AI.BehaviorTrees.UIEditor.SelectorNode")]
+	[BehaviorTreeNode("Internal_Selector", "CodeHelpers.AI.BehaviorTrees.UIEditor.SelectorNode", "Selector")]
 	public readonly struct Selector : INodeType { }
 
 	/// <summary>
 	/// Similar to NOT; execute the single child node and return its result in reverse
 	/// </summary>
-	[BehaviorTreeNode("Internal_Inverter", "CodeHelpers.AI.BehaviorTrees.UIEditor.InverterNode")]
+	[BehaviorTreeNode("Internal_Inverter", "CodeHelpers.AI.BehaviorTrees.UIEditor.InverterNode", "Inverter")]
 	public readonly struct Inverter : INodeType { }
 
 	/// <summary>
 	/// Execute all children in order repeatedly until the executed child returned failure.
 	/// NOTE: This may easily result in infinite loops if the tree is not defined carefully
 	/// </summary>
-	[BehaviorTreeNode("Internal_Repeater", "CodeHelpers.AI.BehaviorTrees.UIEditor.RepeaterNode")]
+	[BehaviorTreeNode("Internal_Repeater", "CodeHelpers.AI.BehaviorTrees.UIEditor.RepeaterNode", "Repeater")]
 	public readonly struct Repeater : INodeType
 	{
 		public Repeater(int amount) => this.amount = amount;
@@ -44,7 +44,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 	/// Only execute child if a number randomly generated between 0 to 1 is lower than chance.
 	/// When the child is not executed, a result of success is returned.
 	/// </summary>
-	[BehaviorTreeNode("Internal_Blocker", "CodeHelpers.AI.BehaviorTrees.UIEditor.BlockerNode")]
+	[BehaviorTreeNode("Internal_Blocker", "CodeHelpers.AI.BehaviorTrees.UIEditor.BlockerNode", "Blocker")]
 	public readonly struct Blocker : INodeType
 	{
 		public Blocker(float chance) => this.chance = chance;

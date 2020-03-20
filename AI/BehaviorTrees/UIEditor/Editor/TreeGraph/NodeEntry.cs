@@ -7,13 +7,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
 	public class NodeEntry : NodeInfo
 	{
-		public NodeEntry(Type nodeType, BehaviorTreeNodeAttribute attribute) : base(nodeType, attribute)
-		{
-			this.nodeType = nodeType;
-			this.attribute = attribute;
-		}
+		public NodeEntry(BehaviorTreeNodeAttribute attribute) : base(attribute) => this.attribute = attribute;
 
-		public readonly Type nodeType;
 		public readonly BehaviorTreeNodeAttribute attribute;
 	}
 
@@ -26,16 +21,18 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			this.graphNodeType = graphNodeType;
 		}
 
-		public NodeInfo(Type nodeType, BehaviorTreeNodeAttribute attribute)
+		public NodeInfo(BehaviorTreeNodeAttribute attribute)
 		{
 			serializedName = attribute.serializedName;
-			displayedName = string.IsNullOrEmpty(attribute.displayedName) ? nodeType.Name : attribute.displayedName;
+			displayedName = attribute.displayedName;
 			graphNodeType = GetTypeFromName(attribute.nodeTypeName);
 		}
 
 		public readonly string serializedName;
 		public readonly string displayedName;
 		public readonly Type graphNodeType;
+
+		public static readonly NodeInfo rootInfo = new NodeInfo("Internal_Root", "Root", typeof(RootNode));
 
 		public bool Equals(NodeInfo other) => serializedName == other?.serializedName;
 		public override bool Equals(object obj) => obj is NodeInfo other && Equals(other);

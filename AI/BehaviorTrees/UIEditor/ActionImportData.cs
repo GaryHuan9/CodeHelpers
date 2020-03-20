@@ -14,7 +14,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 	public class BehaviorAction
 	{
 		public string name = "Untitled";
-		public SerializableGuid guid = Guid.NewGuid();
+		public string guid = Guid.NewGuid().ToString();
 		public SerializableMethod method;
 
 		public override string ToString() => method == null ? "Missing Action" : name;

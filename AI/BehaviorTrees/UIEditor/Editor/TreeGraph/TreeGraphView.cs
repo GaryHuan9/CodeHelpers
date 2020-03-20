@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Graphs;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Edge = UnityEditor.Experimental.GraphView.Edge;
@@ -31,19 +31,21 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			actionSearcher.Initialize(this);
 
 			edgeConnectorListener = new EdgeConnectorListener(this);
+			CreateNewNode(NodeInfo.rootInfo, Vector2.one * 200f); //Create root node
 
 			nodeCreationRequest = OnNodeCreationRequest;
 			graphViewChanged = OnGraphViewChanged;
-
-			CreateNewNode(new NodeInfo("Internal_Root", "Root", typeof(RootNode)), Vector2.one * 200f);
 		}
 
 		public readonly TreeGraphEditorWindow editorWindow;
+		public RootNode RootNode { get; private set; }
 
 		public readonly NodeSearcher nodeSearcher;
 		public readonly ActionSearcher actionSearcher;
 
 		readonly EdgeConnectorListener edgeConnectorListener;
+		readonly HashSet<GraphElement> removingElement = new HashSet<GraphElement>();
+
 		static readonly Vector2 defaultNodeSize = new Vector2(150f, 200f);
 
 		public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -60,9 +62,19 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return compatiblePorts;
 		}
 
-		public TreeGraphNode CreateNewNode(NodeInfo info, Vector2 position)
+		public TreeGraphNode CreateNewNode(NodeInfo info, Vector2 position, SerializableParameter[] parameterSource = null)
 		{
 			var node = (TreeGraphNode)Activator.CreateInstance(info.graphNodeType);
+
+			if (parameterSource != null && parameterSource.Length > 0)
+			{
+				if (node.Parameters.Length != parameterSource.Length) throw new Exception($"Parameter length mismatch! {node.Parameters} v. {parameterSource}");
+				for (int i = 0;
+					 i < node.Parameters.Length;
+					 i++)
+					node.Parameters[i]
+						.CopyFrom(parameterSource[i]);
+			}
 
 			node.SetPosition(new Rect(position, defaultNodeSize));
 			node.Initialize(this, info);
@@ -70,11 +82,19 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			node.RefreshExpandedState();
 			node.RefreshPorts();
 
+			if (node is RootNode rootNode)
+			{
+				RootNode = rootNode;
+				RootNode.capabilities &= ~(Capabilities.Collapsible | Capabilities.Deletable);
+			}
+
 			AddElement(node);
 			return node;
 		}
 
 		public EdgeConnector<Edge> GetNewEdgeConnector() => new EdgeConnector<Edge>(edgeConnectorListener);
+
+		public bool IsRemovingElement(GraphElement element) => removingElement.Contains(element);
 
 		void OnNodeCreationRequest(NodeCreationContext context)
 		{
@@ -83,13 +103,22 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		GraphViewChange OnGraphViewChanged(GraphViewChange change)
 		{
-			if (change.moveDelta == Vector2.zero) return change; //We currently only care about moving nodes
-			var movedElements = change.movedElements;
+			removingElement.Clear();
+			if (change.elementsToRemove != null) removingElement.UnionWith(change.elementsToRemove);
 
-			for (int i = 0; i < movedElements.Count; i++)
+			foreach (GraphElement element in change.movedElements ?? Enumerable.Empty<GraphElement>())
 			{
-				if (!(movedElements[i] is TreeGraphNode node)) continue;
+				if (!(element is TreeGraphNode node)) continue;
 				node.RecalculateOrder();
+			}
+
+			foreach (GraphElement element in change.elementsToRemove ?? Enumerable.Empty<GraphElement>())
+			{
+				var port = (element as Edge)?.input;
+				var node = (port == null ? element : port.node) as TreeGraphNode;
+
+				if (port != null) removingElement.Add(node);
+				node?.RecalculateOrder();
 			}
 
 			return change;

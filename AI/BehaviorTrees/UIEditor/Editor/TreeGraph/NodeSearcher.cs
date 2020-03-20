@@ -27,14 +27,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 								 new SearchTreeGroupEntry(new GUIContent("Create Node")) //First item in tree is the title
 							 };
 
+				BehaviorTreeNodeAttribute.RescanAttributes();
 				searchTree.AddRange
 				(
-					from assembly in AppDomain.CurrentDomain.GetAssemblies()
-					from type in assembly.GetTypes()
-					where type.IsValueType
-					let attribute = type.GetCustomAttribute<BehaviorTreeNodeAttribute>()
-					where attribute != null
-					let entry = new NodeEntry(type, attribute)
+					from pair in BehaviorTreeNodeAttribute.serializedNameToAttribute
+					let entry = new NodeEntry(pair.Value)
 					select new SearchTreeEntry(new GUIContent(entry.displayedName)) {level = 1, userData = entry}
 				);
 			}
@@ -55,10 +52,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				if (other != null)
 				{
 					//Disconnect old ports if necessary
-					if (other.capacity == Port.Capacity.Single && other.connected) { other.DisconnectAll(); DebugHelper.Log("Ye");}
-					if (ConnectedPort.capacity == Port.Capacity.Single && ConnectedPort.connected) { ConnectedPort.DisconnectAll(); DebugHelper.Log("ya");}
+					if (other.capacity == Port.Capacity.Single && other.connected) graphView.DeleteElements(other.connections);
+					if (ConnectedPort.capacity == Port.Capacity.Single && ConnectedPort.connected) graphView.DeleteElements(ConnectedPort.connections);
 
 					graphView.AddElement(ConnectedPort.ConnectTo(other)); //Connect
+					((TreeGraphNode)(ConnectedPort.direction == Direction.Input ? ConnectedPort : other).node).RecalculateOrder();
 				}
 
 				ConnectedPort = null;

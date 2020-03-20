@@ -121,7 +121,7 @@ namespace CodeHelpers.DebugHelpers
 			}
 
 			string customToString = GetCustomToString(target);
-			if (!string.IsNullOrEmpty(customToString)) return customToString;
+			if (customToString != null) return customToString;
 
 			switch (target)
 			{
@@ -142,7 +142,7 @@ namespace CodeHelpers.DebugHelpers
 		/// </summary>
 		static string GetCustomToString(object target)
 		{
-			if (Equals(target, null)) return NullString;
+			if (target is null) return null;
 			string toString = target.ToString();
 			return toString == target.GetType().ToString() ? null : toString;
 		}
