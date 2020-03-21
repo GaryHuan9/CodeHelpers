@@ -266,6 +266,17 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
 		static int BitwiseConvert(float value) => CodeHelper.SingleToInt32Bits(value);
+
+		public static implicit operator BehaviorAction(SerializableParameter parameter) => parameter.BehaviorActionValue;
+		public static implicit operator bool(SerializableParameter parameter) => parameter.BooleanValue;
+
+		public static implicit operator int(SerializableParameter parameter) => parameter.Integer1Value;
+		public static implicit operator Vector2Int(SerializableParameter parameter) => parameter.Integer2Value;
+		public static implicit operator Vector3Int(SerializableParameter parameter) => parameter.Integer3Value;
+
+		public static implicit operator float(SerializableParameter parameter) => parameter.Float1Value;
+		public static implicit operator Vector2(SerializableParameter parameter) => parameter.Float2Value;
+		public static implicit operator Vector3(SerializableParameter parameter) => parameter.Float3Value;
 	}
 
 	public static class ParameterTypeExtensions

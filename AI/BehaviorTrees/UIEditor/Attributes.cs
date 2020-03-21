@@ -28,30 +28,37 @@ namespace CodeHelpers.AI.BehaviorTrees
 		static BehaviorTreeNodeAttribute()
 		{
 			serializedNameToAttributeInternal = new Dictionary<string, BehaviorTreeNodeAttribute>();
+			serializedNameToTypeInternal = new Dictionary<string, Type>();
+
 			serializedNameToAttribute = new ReadOnlyDictionary<string, BehaviorTreeNodeAttribute>(serializedNameToAttributeInternal);
+			serializedNameToType = new ReadOnlyDictionary<string, Type>(serializedNameToTypeInternal);
 
 			RescanAttributes();
 		}
-
 
 		public readonly string serializedName;
 		public readonly string nodeTypeName;
 		public readonly string displayedName;
 
 		static readonly Dictionary<string, BehaviorTreeNodeAttribute> serializedNameToAttributeInternal;
-		public readonly static ReadOnlyDictionary<string, BehaviorTreeNodeAttribute> serializedNameToAttribute;
+		static readonly Dictionary<string, Type> serializedNameToTypeInternal;
+
+		public static readonly ReadOnlyDictionary<string, BehaviorTreeNodeAttribute> serializedNameToAttribute;
+		public static readonly ReadOnlyDictionary<string, Type> serializedNameToType;
 
 		public static void RescanAttributes()
 		{
 			var collection = serializedNameToAttributeInternal;
 			collection.Clear();
 
-			foreach (BehaviorTreeNodeAttribute attribute in from assembly in AppDomain.CurrentDomain.GetAssemblies()
-															from type in assembly.GetTypes()
-															where type.IsValueType
-															select type.GetCustomAttribute<BehaviorTreeNodeAttribute>())
+			foreach ((BehaviorTreeNodeAttribute attribute, Type type) in from assembly in AppDomain.CurrentDomain.GetAssemblies()
+																		 from type in assembly.GetTypes()
+																		 let attribute = type.GetCustomAttribute<BehaviorTreeNodeAttribute>()
+																		 where type.IsValueType && attribute != null
+																		 select (attribute, type))
 			{
-				if (attribute != null) collection.Add(attribute.serializedName, attribute);
+				serializedNameToAttributeInternal.Add(attribute.serializedName, attribute);
+				serializedNameToTypeInternal.Add(attribute.serializedName, type);
 			}
 		}
 	}
