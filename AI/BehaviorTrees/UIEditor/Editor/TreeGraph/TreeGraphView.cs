@@ -31,7 +31,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			actionSearcher.Initialize(this);
 
 			edgeConnectorListener = new EdgeConnectorListener(this);
-			CreateNewNode(NodeInfo.rootInfo, Vector2.one * 200f); //Create root node
+			CreateRootNode();
 
 			nodeCreationRequest = OnNodeCreationRequest;
 			graphViewChanged = OnGraphViewChanged;
@@ -62,6 +62,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return compatiblePorts;
 		}
 
+		public void DeleteAllElements() => DeleteElements(graphElements.ToList());
+		public void CreateRootNode() => CreateNewNode(NodeInfo.rootInfo, new Vector2(100f, 200f));
+
 		public TreeGraphNode CreateNewNode(NodeInfo info, Vector2 position, SerializableParameter[] parameterSource = null)
 		{
 			var node = (TreeGraphNode)Activator.CreateInstance(info.graphNodeType);
@@ -69,11 +72,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			if (parameterSource != null && parameterSource.Length > 0)
 			{
 				if (node.Parameters.Length != parameterSource.Length) throw new Exception($"Parameter length mismatch! {node.Parameters} v. {parameterSource}");
-				for (int i = 0;
-					 i < node.Parameters.Length;
-					 i++)
-					node.Parameters[i]
-						.CopyFrom(parameterSource[i]);
+				for (int i = 0; i < node.Parameters.Length; i++) node.Parameters[i].CopyFrom(parameterSource[i]);
 			}
 
 			node.SetPosition(new Rect(position, defaultNodeSize));

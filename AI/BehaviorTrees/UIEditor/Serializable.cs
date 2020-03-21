@@ -126,7 +126,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		[SerializeField] ParameterType type;
 		public ParameterType Type => type;
 
-		[SerializeField] BehaviorAction behaviorAction;
+		[SerializeField] string behaviorActionGuid;
+		[NonSerialized] BehaviorAction behaviorAction;
 
 		[SerializeField] int scaler1;
 		[SerializeField] int scaler2;
@@ -134,13 +135,15 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public BehaviorAction BehaviorActionValue
 		{
-			get => CheckReturn(behaviorAction);
+			get => behaviorAction;
 			set
 			{
 				CheckReturn(value);
 				if (behaviorAction == value) return;
 
 				behaviorAction = value;
+				behaviorActionGuid = value?.guid;
+
 				OnValueChangedMethods?.Invoke();
 			}
 		}
@@ -252,10 +255,35 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		{
 			if (parameter.Type != Type) throw ExceptionHelper.Invalid(nameof(parameter), parameter, "has a mismatched parameter type!");
 
-			behaviorAction = parameter.behaviorAction;
+			behaviorActionGuid = parameter.behaviorActionGuid;
 			scaler1 = parameter.scaler1;
 			scaler2 = parameter.scaler2;
 			scaler3 = parameter.scaler3;
+		}
+
+		public void LoadBehaviorAction(ActionImportData data)
+		{
+			CheckReturn<BehaviorAction>(null);
+
+			if (string.IsNullOrEmpty(behaviorActionGuid)) return; //Missing action
+			behaviorAction = data.GetActionByGuid(behaviorActionGuid);
+		}
+
+		public object GetValue()
+		{
+			switch (Type)
+			{
+				case ParameterType.behaviorAction: return BehaviorActionValue;
+				case ParameterType.boolean:        return BooleanValue;
+				case ParameterType.integer1:       return Integer1Value;
+				case ParameterType.integer2:       return Integer2Value;
+				case ParameterType.integer3:       return Integer3Value;
+				case ParameterType.float1:         return Float1Value;
+				case ParameterType.float2:         return Float2Value;
+				case ParameterType.float3:         return Float3Value;
+			}
+
+			throw ExceptionHelper.Invalid(nameof(Type), Type, InvalidType.unexpected);
 		}
 
 		T CheckReturn<T>(T value)
@@ -266,17 +294,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
 		static int BitwiseConvert(float value) => CodeHelper.SingleToInt32Bits(value);
-
-		public static implicit operator BehaviorAction(SerializableParameter parameter) => parameter.BehaviorActionValue;
-		public static implicit operator bool(SerializableParameter parameter) => parameter.BooleanValue;
-
-		public static implicit operator int(SerializableParameter parameter) => parameter.Integer1Value;
-		public static implicit operator Vector2Int(SerializableParameter parameter) => parameter.Integer2Value;
-		public static implicit operator Vector3Int(SerializableParameter parameter) => parameter.Integer3Value;
-
-		public static implicit operator float(SerializableParameter parameter) => parameter.Float1Value;
-		public static implicit operator Vector2(SerializableParameter parameter) => parameter.Float2Value;
-		public static implicit operator Vector3(SerializableParameter parameter) => parameter.Float3Value;
 	}
 
 	public static class ParameterTypeExtensions

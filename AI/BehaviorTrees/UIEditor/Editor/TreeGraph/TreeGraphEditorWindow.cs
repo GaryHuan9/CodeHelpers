@@ -49,7 +49,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				dataField?.SetValueWithoutNotify(CurrentData);
 				ImportData = CurrentData == null ? null : CurrentData.importData;
 
-				if (value != null) serializer.DeserializeData();
+				if (value != null) DeserializeTreeData();
 			}
 		}
 
@@ -70,7 +70,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				}
 
 				importField?.SetValueWithoutNotify(ImportData);
-				graphView?.RootNode.RecalculateTargetContext();
+				if (ImportData != null) ImportData.RecalculateGuidMapping();
+
+				OnTargetContextChangedMethods?.Invoke();
 			}
 		}
 
@@ -102,7 +104,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			importField.RegisterValueChangedCallback(changeEvent => ImportData = (ActionImportData)changeEvent.newValue);
 
 			var saveButton = new ToolbarButton(() => serializer.SerializeCurrent()) {text = "Save"};
-			var loadButton = new ToolbarButton(() => serializer.DeserializeData()) {text = "Load"};
+			var loadButton = new ToolbarButton(DeserializeTreeData) {text = "Load"};
 
 			toolbar.Add(new ToolbarSpacer {flex = true});
 			toolbar.Add(dataField);
@@ -134,13 +136,22 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				MarkDirty();
 			}
 
-			graphView?.RootNode.RecalculateTargetContext();
 			OnTargetContextChangedMethods?.Invoke();
 		}
 
 		void MarkDirty()
 		{
 			EditorUtility.SetDirty(CurrentData);
+		}
+
+		void DeserializeTreeData()
+		{
+			if (CurrentData.rootNodes?.Length > 0) serializer.DeserializeData();
+			else
+			{
+				graphView.DeleteAllElements();
+				graphView.CreateRootNode();
+			}
 		}
 	}
 }

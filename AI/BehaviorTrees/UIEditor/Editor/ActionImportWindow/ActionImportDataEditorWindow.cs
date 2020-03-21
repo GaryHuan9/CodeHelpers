@@ -140,7 +140,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 				if (GUILayout.Button("Add New"))
 				{
-					imports.Add(new BehaviorAction());
+					imports.Add(new BehaviorAction("Untitled"));
 					MarkDataDirty();
 				}
 

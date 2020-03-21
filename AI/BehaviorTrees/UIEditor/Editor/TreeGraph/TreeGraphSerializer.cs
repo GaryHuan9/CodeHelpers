@@ -101,10 +101,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			stopwatch.Restart();
 
 			//Clear everything
-			graphView.DeleteElements(graphView.graphElements.ToList());
+			BehaviorTreeNodeAttribute.RescanAttributes();
+			graphView.DeleteAllElements();
 			RecalculateNodeInfo();
-
-			DebugHelper.Log(stopwatch.Elapsed.TotalMilliseconds);
 
 			//Setup data
 			allData = mainData.allNodes;
@@ -144,7 +143,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			serializedNameToInfo.Clear();
 			serializedNameToInfo.Add(NodeInfo.rootInfo.serializedName, NodeInfo.rootInfo);
 
-			foreach (var pair in BehaviorTreeNodeAttribute.serializedNameToAttribute)
+			foreach (var pair in BehaviorTreeNodeAttribute.SerializedNameToAttribute)
 			{
 				serializedNameToInfo.Add(pair.Key, new NodeInfo(pair.Value));
 			}

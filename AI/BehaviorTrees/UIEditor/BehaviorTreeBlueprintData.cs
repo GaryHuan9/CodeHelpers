@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using CodeHelpers.DebugHelpers;
 using UnityEngine;
 
 namespace CodeHelpers.AI.BehaviorTrees.UIEditor
@@ -20,7 +23,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			if (allNodes == null || allNodes.Count == 0) throw new Exception("No serialized graph node!");
 			if (!targetContextTypeMethod.TargetContextType.IsAssignableFrom(typeof(T))) throw new Exception($"Unmatched requested type {typeof(T)} with {targetContextTypeMethod.TargetContextType}!");
 
-			BehaviorTreeNodeAttribute.RescanAttributes();
 			var blueprint = new BehaviorTreeBlueprint<T>();
 
 			LoadBranch(blueprint.RootLocation, blueprint, mainRootNode);
@@ -45,11 +47,40 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		Location<T> LoadNode<T>(Location<T> parent, BehaviorTreeBlueprint<T> blueprint, int index)
 		{
 			TreeNodeData data = allNodes[index];
-			Type type = BehaviorTreeNodeAttribute.serializedNameToType.TryGetValue(data.nodeTypeSerializableName);
+			Type type = BehaviorTreeNodeAttribute.SerializedNameToType.TryGetValue(data.nodeTypeSerializableName);
 
 			if (type == null) throw new Exception($"Unexpected serialized node type name {data.nodeTypeSerializableName}.");
+			if (type.ContainsGenericParameters) type = type.MakeGenericType(typeof(T));
 
-			Location<T> location = blueprint.Add(parent, (INodeType)Activator.CreateInstance(type, data.parameters), out bool success);
+			INodeType node;
+
+			//Prepare node and parameters
+			if (data.parameters == null || data.parameters.Length == 0)
+			{
+				node = (INodeType)Activator.CreateInstance(type);
+			}
+			else
+			{
+				object[] parameters = new object[data.parameters.Length];
+
+				for (int i = 0; i < data.parameters.Length; i++)
+				{
+					SerializableParameter parameter = data.parameters[i];
+
+					if (parameter.Type != ParameterType.behaviorAction) parameters[i] = parameter.GetValue();
+					else
+					{
+						parameter.LoadBehaviorAction(importData);
+						var method = parameter.BehaviorActionValue.method.Method;
+						parameters[i] = (BehaviorAction<T>)method.CreateDelegate(typeof(BehaviorAction<T>));
+					}
+				}
+
+				node = (INodeType)Activator.CreateInstance(type, parameters);
+			}
+
+			//Add to blueprint
+			Location<T> location = blueprint.Add(parent, node, out bool success);
 			if (!success) throw new Exception($"Invalid node create from graph at GUID: {data.GUID}, position: {data.position}, serialized node name: {data.nodeTypeSerializableName}!");
 
 			return location;

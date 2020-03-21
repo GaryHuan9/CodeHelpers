@@ -33,12 +33,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 	/// NOTE: This may easily result in infinite loops if the tree is not defined carefully
 	/// </summary>
 	[BehaviorTreeNode("Internal_Repeater", "CodeHelpers.AI.BehaviorTrees.UIEditor.RepeaterNode", "Repeater")]
-	public readonly struct Repeater : INodeType
-	{
-		public Repeater(int amount) => this.amount = amount;
-
-		public readonly int amount;
-	}
+	public readonly struct Repeater : INodeType { }
 
 	/// <summary>
 	/// Only execute child if a number randomly generated between 0 to 1 is lower than chance.

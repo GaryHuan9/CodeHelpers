@@ -6,6 +6,8 @@ namespace CodeHelpers.AI.BehaviorTrees
 		{
 			this.blueprint = blueprint;
 			this.context = context;
+
+			SetOrigin();
 		}
 
 		public readonly BehaviorTreeBlueprint<T> blueprint;
@@ -18,12 +20,6 @@ namespace CodeHelpers.AI.BehaviorTrees
 		{
 			var currentNode = runningNode;
 			var currentToken = runningToken;
-
-			if (currentNode == null)
-			{
-				currentNode = blueprint.OriginNode;
-				currentToken = blueprint.OriginToken;
-			}
 
 			do
 			{
@@ -43,7 +39,14 @@ namespace CodeHelpers.AI.BehaviorTrees
 			}
 			while (!(currentNode is BehaviorTreeBlueprint<T>.Root));
 
+			SetOrigin();
 			return currentToken.result;
+		}
+
+		void SetOrigin()
+		{
+			runningNode = blueprint.OriginNode;
+			runningToken = blueprint.OriginToken;
 		}
 	}
 }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using CodeHelpers.DebugHelpers;
+using UnityEditor;
 
 namespace CodeHelpers.AI.BehaviorTrees
 {
@@ -25,41 +28,40 @@ namespace CodeHelpers.AI.BehaviorTrees
 			this.displayedName = displayedName;
 		}
 
-		static BehaviorTreeNodeAttribute()
-		{
-			serializedNameToAttributeInternal = new Dictionary<string, BehaviorTreeNodeAttribute>();
-			serializedNameToTypeInternal = new Dictionary<string, Type>();
-
-			serializedNameToAttribute = new ReadOnlyDictionary<string, BehaviorTreeNodeAttribute>(serializedNameToAttributeInternal);
-			serializedNameToType = new ReadOnlyDictionary<string, Type>(serializedNameToTypeInternal);
-
-			RescanAttributes();
-		}
-
 		public readonly string serializedName;
 		public readonly string nodeTypeName;
 		public readonly string displayedName;
 
-		static readonly Dictionary<string, BehaviorTreeNodeAttribute> serializedNameToAttributeInternal;
-		static readonly Dictionary<string, Type> serializedNameToTypeInternal;
+		static readonly Dictionary<string, BehaviorTreeNodeAttribute> serializedNameToAttribute = new Dictionary<string, BehaviorTreeNodeAttribute>();
+		static readonly Dictionary<string, Type> serializedNameToType = new Dictionary<string, Type>();
 
-		public static readonly ReadOnlyDictionary<string, BehaviorTreeNodeAttribute> serializedNameToAttribute;
-		public static readonly ReadOnlyDictionary<string, Type> serializedNameToType;
+		public static IReadOnlyDictionary<string, BehaviorTreeNodeAttribute> SerializedNameToAttribute => scannedAttributes ? serializedNameToAttribute : throw GetNotScanned();
+		public static IReadOnlyDictionary<string, Type> SerializedNameToType => scannedAttributes ? serializedNameToType : throw GetNotScanned();
+
+		static bool scannedAttributes;
 
 		public static void RescanAttributes()
 		{
-			var collection = serializedNameToAttributeInternal;
-			collection.Clear();
+			serializedNameToAttribute.Clear();
+			serializedNameToType.Clear();
+
+			var stopwatch = Stopwatch.StartNew();
 
 			foreach ((BehaviorTreeNodeAttribute attribute, Type type) in from assembly in AppDomain.CurrentDomain.GetAssemblies()
 																		 from type in assembly.GetTypes()
-																		 let attribute = type.GetCustomAttribute<BehaviorTreeNodeAttribute>()
-																		 where type.IsValueType && attribute != null
-																		 select (attribute, type))
+																		 where type.IsValueType && IsDefined(type, typeof(BehaviorTreeNodeAttribute))
+																		 select (type.GetCustomAttribute<BehaviorTreeNodeAttribute>(), type))
 			{
-				serializedNameToAttributeInternal.Add(attribute.serializedName, attribute);
-				serializedNameToTypeInternal.Add(attribute.serializedName, type);
+				serializedNameToAttribute.Add(attribute.serializedName, attribute);
+				serializedNameToType.Add(attribute.serializedName, type);
 			}
+
+			stopwatch.Stop();
+			DebugHelper.Log($"Rescanned Behavior Tree Node attributes in {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+			scannedAttributes = true;
 		}
+
+		static Exception GetNotScanned() => new Exception($"You have not scanned for attributes before! Scan them using the {nameof(RescanAttributes)} method!");
 	}
 }

@@ -30,7 +30,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				BehaviorTreeNodeAttribute.RescanAttributes();
 				searchTree.AddRange
 				(
-					from pair in BehaviorTreeNodeAttribute.serializedNameToAttribute
+					from pair in BehaviorTreeNodeAttribute.SerializedNameToAttribute
 					let entry = new NodeEntry(pair.Value)
 					select new SearchTreeEntry(new GUIContent(entry.displayedName)) {level = 1, userData = entry}
 				);

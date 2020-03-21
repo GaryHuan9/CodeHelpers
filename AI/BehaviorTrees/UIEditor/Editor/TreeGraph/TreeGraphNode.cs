@@ -108,7 +108,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					control.Add(actionLabel);
 					control.Add(buttons);
 
-					string GetBehaviorActionString() => parameter.BehaviorActionValue == null ? "No Action" : parameter.BehaviorActionValue.ToString();
+					string GetBehaviorActionString()
+					{
+						parameter.LoadBehaviorAction(GraphView.editorWindow.ImportData);
+						return parameter.BehaviorActionValue == null ? "Missing Action" : parameter.BehaviorActionValue.ToString();
+					}
 
 					break;
 
@@ -352,6 +356,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			inputContainer.Add(contextSelector);
 			parameterContainer.Add(typeLabel);
 
+			GraphView.editorWindow.OnTargetContextChangedMethods += RecalculateTargetContext;
 			RecalculateTargetContext();
 		}
 
@@ -363,7 +368,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		readonly List<SerializableMethod> representativeMethods = new List<SerializableMethod> {null};
 
-		public void RecalculateTargetContext()
+		void RecalculateTargetContext()
 		{
 			TreeGraphEditorWindow window = GraphView.editorWindow;
 
@@ -427,14 +432,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 	public class RepeaterNode : TreeGraphNode
 	{
-		public override void Initialize(TreeGraphView graphView, NodeInfo info)
-		{
-			base.Initialize(graphView, info);
-			GenerateParameterControl(0, "Amount", parameter => parameter.Integer1Value = Math.Max(parameter.Integer1Value, 0));
-		}
-
 		protected override int MaxChildCount => int.MaxValue;
-		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(1)}; //Set amount to 1
 	}
 
 	public class BlockerNode : TreeGraphNode
