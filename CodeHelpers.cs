@@ -25,17 +25,17 @@ namespace CodeHelpers
 #region Number Helpers
 
 		/// <summary>
-		/// Convert <paramref name="value"/> to an angle between -180(Exclusive) and 180 (Inclusive) with the same rotational value as input.
+		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.
 		/// </summary>
-		public static float ToSignedAngle(this float value) => -(value + 180f).Repeat(360f) + 180f;
+		public static float ToSignedAngle(this float value) => -(180f - value).Repeat(360f) + 180f;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -179 and 180 with the same rotational value as input.
 		/// </summary>
-		public static int ToSignedAngle(this int value) => -(value + 180).Repeat(360) + 180;
+		public static int ToSignedAngle(this int value) => -(180 - value).Repeat(360) + 180;
 
 		/// <summary>
-		/// Convert <paramref name="value"/> to an angle between 0f(Inclusive) and 360f (Exclusive) with the same rotational value as input.
+		/// Convert <paramref name="value"/> to an angle between 0f (Inclusive) and 360f (Exclusive) with the same rotational value as input.
 		/// </summary>
 		public static float ToUnsignedAngle(this float value) => value.Repeat(360f);
 
