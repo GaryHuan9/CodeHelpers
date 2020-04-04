@@ -638,6 +638,12 @@ namespace CodeHelpers
 			return cache = behaviour.GetComponentInChildren<T>();
 		}
 
+		public static float GetHorizontalFieldOfView(this Camera camera)
+		{
+			var tan = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad / 2f);
+			return Mathf.Rad2Deg * 2f * Mathf.Atan(tan * camera.aspect);
+		}
+
 		public static string ToMethodSignature(this MethodInfo method) =>
 			$@"{method.ReturnType.Name} {method.Name}({string.Join(", ", from parameter in method.GetParameters()
 																		 select $"{parameter.ParameterType.Name} {parameter.Name}")})";

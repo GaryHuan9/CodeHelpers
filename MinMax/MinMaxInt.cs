@@ -72,6 +72,9 @@ namespace CodeHelpers
 		public MinMaxInt GetEncapsulated(MinMaxInt minMax) => new MinMaxInt(Math.Min(min, minMax.min), Math.Max(max, minMax.max));
 		public MinMaxInt GetScaled(float value) => new MinMaxInt((min - Middle) * value + Middle, (max - Middle) * value + Middle);
 
+		public MinMaxInt ToSignedAngles() => new MinMaxInt(min.ToSignedAngle(), max.ToSignedAngle());
+		public MinMaxInt ToUnsignedAngles() => new MinMaxInt(min.ToUnsignedAngle(), max.ToUnsignedAngle());
+
 		public void Deconstruct(out int min, out int max)
 		{
 			min = this.min;

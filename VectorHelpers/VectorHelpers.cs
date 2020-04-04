@@ -43,6 +43,30 @@ namespace CodeHelpers
 		public static Vector3 RotateXZ(this Vector3Int vector, float degree) => vector.ToFloat().RotateXZ(degree);
 		public static Vector3 RotateXZ(this Vector3Int vector, float degree, Vector2 xzPivot) => vector.ToFloat().RotateXZ(degree, xzPivot);
 
+		public static Vector3 RotateXY(this Vector3 vector, float degree)
+		{
+			Vector2 rotated = ((Vector2)vector).Rotate(degree);
+			return new Vector3(rotated.x, rotated.y, vector.z);
+		}
+
+		public static Vector3 RotateXY(this Vector3 vector, float degree, Vector2 xyPivot)
+		{
+			Vector2 rotated = ((Vector2)vector).Rotate(degree, xyPivot);
+			return new Vector3(rotated.x, rotated.y, vector.z);
+		}
+
+		public static Vector3 RotateXY(this Vector3Int vector, float degree)
+		{
+			Vector2 rotated = ((Vector2Int)vector).Rotate(degree);
+			return new Vector3(rotated.x, rotated.y, vector.z);
+		}
+
+		public static Vector3 RotateXY(this Vector3Int vector, float degree, Vector2 xyPivot)
+		{
+			Vector2 rotated = ((Vector2Int)vector).Rotate(degree, xyPivot);
+			return new Vector3(rotated.x, rotated.y, vector.z);
+		}
+
 		public static Vector3 Mod(this Vector3 vector, float modValue) => new Vector3(vector.x % modValue, vector.y % modValue, vector.z % modValue);
 		public static Vector3 Mod(this Vector3Int vector, float modValue) => new Vector3(vector.x % modValue, vector.y % modValue, vector.z % modValue);
 		public static Vector3 Mod(this Vector3 vector, Vector3 modValue) => new Vector3(vector.x % modValue.x, vector.y % modValue.y, vector.z % modValue.z);
