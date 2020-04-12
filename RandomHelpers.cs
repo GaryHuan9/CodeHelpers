@@ -24,15 +24,13 @@ namespace CodeHelpers
 		{
 			get
 			{
-				if (!ThreadHelper.IsInMainThread) throw new Exception("Please only invoke this in the main thread.");
+				ExceptionHelper.InvalidIfNotMainThread();
 				return seeds[SeedType.normal];
 			}
-
 			set
 			{
-				if (!ThreadHelper.IsInMainThread) throw new Exception("Please only invoke this in the main thread.");
-
-				var typeValues = (int[])Enum.GetValues(typeof(SeedType));
+				ExceptionHelper.InvalidIfNotMainThread();
+				int[] typeValues = (int[])Enum.GetValues(typeof(SeedType));
 
 				for (int i = 0; i < typeValues.Length; i++)
 				{
@@ -41,7 +39,7 @@ namespace CodeHelpers
 			}
 		}
 
-		/// <summary>The thread independnent seed.</summary>
+		/// <summary>The thread independent seed.</summary>
 		public static int ThreadSeed
 		{
 			set => threadRandom.Value = new RandomS(value);
@@ -179,6 +177,8 @@ namespace CodeHelpers
 		/// </summary>
 		public static Vector3 Tilt(Vector3 direction, float angle)
 		{
+			if (Mathf.Approximately(angle, 0f)) return direction;
+
 			var axis = Quaternion.FromToRotation(Vector3.forward, direction) * Vector2.right.Rotate(Range(360f));
 			return Quaternion.AngleAxis(angle, axis) * direction;
 		}
@@ -249,7 +249,7 @@ namespace CodeHelpers
 			static float[] noiseSource;
 
 			static int _seed;
-			static int _size = 127; //NOTE: We do not want a number that 2^n because it will be easy to have repeated values
+			static int _size = 613; //NOTE: We do not want a number that 2^n because it will be easy to have repeated values
 			//A prime number will be the best
 
 			public static int NoiseSeed
@@ -285,13 +285,15 @@ namespace CodeHelpers
 
 			static void RepopulateNoise()
 			{
-				noiseSource = new float[Size];
+				var source = new float[Size];
 				RandomS random = new RandomS(NoiseSeed);
 
-				for (int i = 0; i < noiseSource.Length; i++)
+				for (int i = 0; i < source.Length; i++)
 				{
-					noiseSource[i] = (float)random.NextDouble();
+					source[i] = (float)random.NextDouble();
 				}
+
+				noiseSource = source;
 			}
 		}
 
@@ -305,17 +307,10 @@ namespace CodeHelpers
 			const int BigPrime3 = 105167;
 			const int BigPrime4 = 105407;
 
-			static int GetInt(float value)
-			{
-#if UNSAFE_CODE_ENABLED
-				return CodeHelper.SingleToInt32Bits(value);
-#else
-				return value.GetHashCode();
-#endif
-			}
+			static int GetInt(float value) => CodeHelper.SingleToInt32Bits(value);
 
 			//NOTE: The conversion from int to uint is unchecked, which means if the int value is negative, it will get warped to a large positive number
-			static float GetSource(float value) => unchecked(NoiseController.GetSource((uint)GetInt(value * BigPrime4)));
+			static float GetSource(float value) => unchecked(NoiseController.GetSource((uint)GetInt(value)));
 			static float GetSource(int value) => unchecked(NoiseController.GetSource((uint)value));
 
 			/// <summary>
