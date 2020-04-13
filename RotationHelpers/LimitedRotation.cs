@@ -16,12 +16,7 @@ namespace CodeHelpers.RotationHelpers
 		public LimitedRotation(int x, int y, int z)
 		{
 			data = (byte)((Transform(x) << 0) | (Transform(y) << 2) | (Transform(z) << 4));
-
-			int Transform(int angle)
-			{
-				angle = (angle + 45).ToUnsignedAngle();
-				return angle / 90;
-			}
+			int Transform(int angle) => (angle + 45).ToUnsignedAngle() / 90;
 		}
 
 		LimitedRotation(byte data) => this.data = data;

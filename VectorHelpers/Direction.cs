@@ -67,10 +67,7 @@ namespace CodeHelpers.VectorHelpers
 			return vector[value / 2] * RemapSign(value % 2);
 		}
 
-		/// <summary>
-		/// Returns one of the component of <paramref name="vector"/> times direction.
-		/// A faster way to calculate Vector3.Scale(direction.ToVector3(), vector).magnitude
-		/// </summary>
+		/// <inheritdoc cref="ExtractComponent(CodeHelpers.VectorHelpers.Direction,UnityEngine.Vector3Int)"/>
 		public static float ExtractComponent(this Direction direction, Vector3 vector)
 		{
 			int value = (int)direction;

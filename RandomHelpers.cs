@@ -247,6 +247,7 @@ namespace CodeHelpers
 		static class NoiseController
 		{
 			static float[] noiseSource;
+			static object sourceLocker = new object();
 
 			static int _seed;
 			static int _size = 613; //NOTE: We do not want a number that 2^n because it will be easy to have repeated values
@@ -259,8 +260,11 @@ namespace CodeHelpers
 				{
 					if (_seed != value)
 					{
-						_seed = value;
-						RepopulateNoise();
+						lock (sourceLocker)
+						{
+							_seed = value;
+							RepopulateNoise();
+						}
 					}
 				}
 			}
@@ -272,28 +276,35 @@ namespace CodeHelpers
 				{
 					if (_size == value) return;
 
-					_size = value;
-					RepopulateNoise();
+					lock (sourceLocker)
+					{
+						_size = value;
+						RepopulateNoise();
+					}
 				}
 			}
 
 			public static float GetSource(uint value)
 			{
-				if (noiseSource == null) RepopulateNoise();
-				return noiseSource[value % noiseSource.Length];
+				lock (sourceLocker)
+				{
+					if (noiseSource == null) RepopulateNoise();
+					return noiseSource[value % noiseSource.Length];
+				}
 			}
 
 			static void RepopulateNoise()
 			{
-				var source = new float[Size];
-				RandomS random = new RandomS(NoiseSeed);
-
-				for (int i = 0; i < source.Length; i++)
+				lock (sourceLocker)
 				{
-					source[i] = (float)random.NextDouble();
-				}
+					noiseSource = new float[Size];
+					RandomS random = new RandomS(NoiseSeed);
 
-				noiseSource = source;
+					for (int i = 0; i < noiseSource.Length; i++)
+					{
+						noiseSource[i] = (float)random.NextDouble();
+					}
+				}
 			}
 		}
 
