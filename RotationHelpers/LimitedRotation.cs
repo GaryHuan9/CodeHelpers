@@ -19,7 +19,7 @@ namespace CodeHelpers.RotationHelpers
 			int Transform(int angle) => (angle + 45).ToUnsignedAngle() / 90;
 		}
 
-		LimitedRotation(byte data) => this.data = data;
+		LimitedRotation(byte data) => this.data = (byte)(data & 0b00111111); //Must mask out the unnecessary bits
 
 		public LimitedRotation(float x, float y, float z) : this((int)x.ToUnsignedAngle(), (int)y.ToUnsignedAngle(), (int)z.ToUnsignedAngle()) { }
 
@@ -52,7 +52,27 @@ namespace CodeHelpers.RotationHelpers
 		/// <summary>
 		/// Returns the inverse of this rotation
 		/// </summary>
-		public LimitedRotation Inverted => new LimitedRotation(EulerAngles * -1);
+		public LimitedRotation Inverted
+		{
+			get
+			{
+				const int RightMask = 0b00010101; //Mask to extract the 0X0X0X bits
+				const int LeftMask = 0b00101010;  //Mask to extract the X0X0X0 bits
+
+				//All bit configurations (to needed bits for inverting):
+				// 00 => 00
+				// 01 => 11
+				// 10 => 10
+				// 11 => 01
+
+				int rightBits = data & RightMask; //The rights bits stay same after inverting
+				int leftBits = data & LeftMask;   //Some left bits need to be flipped to invert
+
+				leftBits ^= rightBits << 1; //The XOR result of the left and right bits is the result of the left bits
+
+				return new LimitedRotation((byte)((leftBits & LeftMask) | (rightBits & RightMask)));
+			}
+		}
 
 		/// <summary>
 		/// Gets the rotation needed to go from the first input to the second one.
@@ -64,7 +84,7 @@ namespace CodeHelpers.RotationHelpers
 			if (from.Opposite() == to)
 			{
 				//Returns a rotation with 180 degrees
-				return from == Direction.up || from == Direction.down ? new LimitedRotation(180, 0, 0) : new LimitedRotation(0, 180, 0);
+				return from == Direction.up || from == Direction.down ? new LimitedRotation(0b000010) /*180, 0, 0*/ : new LimitedRotation(0b001000) /*0, 180, 0*/;
 			}
 
 			return new LimitedRotation(from.Cross(to).ToVector3() * 90);
@@ -81,6 +101,8 @@ namespace CodeHelpers.RotationHelpers
 
 		public static Vector3 operator *(LimitedRotation rotation, Vector3 vector) => rotation.Quaternion * vector;
 		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToVector3()).ToDirection();
+
+		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;
 
 		public bool Equals(LimitedRotation other) => data.Equals(other.data);
 		public override bool Equals(object obj) => obj is LimitedRotation rotation && Equals(rotation);

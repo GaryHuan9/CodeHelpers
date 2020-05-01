@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using CodeHelpers.DebugHelpers;
 using UnityEngine;
 
@@ -82,7 +83,11 @@ namespace CodeHelpers.CodeCounters
 
 		void DrawGraph(Rect target)
 		{
-			EditorGUI.DrawRect(new Rect(target.position, Vector2.Scale(target.size, new Vector2(1f, -1f))), new Color(0.9f, 0.9f, 0.9f));
+			Color backgroundColor = new Color32(45, 45, 45, 255);
+			Color textColor = new Color32(185, 185, 185, 255);
+			Color highlightColor = new Color32(250, 20, 20, 255);
+
+			EditorGUI.DrawRect(new Rect(target.position, Vector2.Scale(target.size, new Vector2(1f, -1f))), backgroundColor);
 
 			Vector2 sideSpacing = new Vector2(100f, -30f);
 			int recordCount = Utility.CurrentHistory.Count;
@@ -94,8 +99,8 @@ namespace CodeHelpers.CodeCounters
 			float xSpacing = recordCount == 1 ? 0f : (target.width - sideSpacing.x * 2f) / (recordCount - 1);
 			float ySize = target.height + sideSpacing.y * 2f;
 
-			Handles.color = Color.black;
-			GUI.color = Color.black;
+			Handles.color = textColor;
+			GUI.color = textColor;
 
 			int infoCount = Mathf.Clamp(graphInfoDisplayCount, 1, recordCount - 1);
 
@@ -120,7 +125,7 @@ namespace CodeHelpers.CodeCounters
 						currentSourceInfo = null;
 					}
 
-					GUI.color = Color.black;
+					GUI.color = textColor;
 					GUILayout.EndArea();
 				}
 
@@ -136,9 +141,9 @@ namespace CodeHelpers.CodeCounters
 				//Point
 				if (showingInfo)
 				{
-					Handles.color = Color.red;
+					Handles.color = highlightColor;
 					Handles.DrawWireDisc(position1, Vector3.back, 2f);
-					Handles.color = Color.black;
+					Handles.color = textColor;
 				}
 				else
 				{
