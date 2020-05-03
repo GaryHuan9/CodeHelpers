@@ -67,13 +67,13 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				{
 					SerializableParameter parameter = data.parameters[i];
 
-					if (parameter.Type != ParameterType.behaviorAction) parameters[i] = parameter.GetValue();
-					else
+					if (parameter.Type == ParameterType.behaviorAction)
 					{
 						parameter.LoadBehaviorAction(importData);
 						var method = parameter.BehaviorActionValue.method.Method;
 						parameters[i] = (BehaviorAction<T>)method.CreateDelegate(typeof(BehaviorAction<T>));
 					}
+					else parameters[i] = parameter.GetValue();
 				}
 
 				node = (INodeType)Activator.CreateInstance(type, parameters);
