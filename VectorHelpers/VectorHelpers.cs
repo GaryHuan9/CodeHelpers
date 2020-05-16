@@ -523,10 +523,10 @@ namespace CodeHelpers
 			return vector;
 		}
 
-		public static readonly IReadOnlyList<Vector2Int> neighbor4Positions = Array.AsReadOnly(new Vector2Int[] {Vector2Int.right, Vector2Int.down, Vector2Int.left, Vector2Int.up});
-		public static readonly IReadOnlyList<Vector2Int> neighbor8Positions = Array.AsReadOnly(new Vector2Int[] {Vector2Int.right, new Vector2Int(1, -1), Vector2Int.down, new Vector2Int(-1, -1), Vector2Int.left, new Vector2Int(-1, 1), Vector2Int.up, new Vector2Int(1, 1)});
-		public static readonly IReadOnlyList<Vector2Int> corner4Positions = Array.AsReadOnly(new Vector2Int[] {new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1), new Vector2Int(1, 1)});
-		public static readonly IReadOnlyList<Vector2Int> corner4Positions01 = Array.AsReadOnly(new Vector2Int[] {Vector2Int.zero, Vector2Int.right, Vector2Int.up, Vector2Int.one});
+		public static readonly IReadOnlyList<Vector2Int> neighbor4Positions = Array.AsReadOnly(new[] {Vector2Int.right, Vector2Int.down, Vector2Int.left, Vector2Int.up});
+		public static readonly IReadOnlyList<Vector2Int> neighbor8Positions = Array.AsReadOnly(new[] {Vector2Int.right, new Vector2Int(1, -1), Vector2Int.down, new Vector2Int(-1, -1), Vector2Int.left, new Vector2Int(-1, 1), Vector2Int.up, new Vector2Int(1, 1)});
+		public static readonly IReadOnlyList<Vector2Int> corner4Positions = Array.AsReadOnly(new[] {new Vector2Int(1, -1), new Vector2Int(-1, -1), new Vector2Int(-1, 1), new Vector2Int(1, 1)});
+		public static readonly IReadOnlyList<Vector2Int> corner4Positions01 = Array.AsReadOnly(new[] {Vector2Int.zero, Vector2Int.right, Vector2Int.up, Vector2Int.one});
 
 #endregion
 
