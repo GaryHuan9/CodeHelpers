@@ -31,7 +31,7 @@ namespace CodeHelpers.VectorHelpers
 			IEnumerator<Vector2Int> IEnumerable<Vector2Int>.GetEnumerator() => GetEnumerator();
 
 			/// <summary>
-			/// NOTE: Do NOT use the readonly modifier if you with the <see cref="MoveNext"/> method would behave correctly
+			/// NOTE: Do NOT use the readonly modifier if you wish the <see cref="MoveNext"/> method would behave correctly
 			/// </summary>
 			public struct Enumerator : IEnumerator<Vector2Int>
 			{
@@ -75,7 +75,7 @@ namespace CodeHelpers.VectorHelpers
 			IEnumerator<Vector3Int> IEnumerable<Vector3Int>.GetEnumerator() => GetEnumerator();
 
 			/// <summary>
-			/// NOTE: Do NOT use the readonly modifier if you with the <see cref="MoveNext"/> method would behave correctly
+			/// NOTE: Do NOT use the readonly modifier if you wish the <see cref="MoveNext"/> method would behave correctly
 			/// </summary>
 			public struct Enumerator : IEnumerator<Vector3Int>
 			{
