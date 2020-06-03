@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using RandomS = System.Random;
 using CodeHelpers.ThreadHelpers;
@@ -189,20 +190,21 @@ namespace CodeHelpers
 		public static T GetRandomFromCollection<T>(IList<T> list) => list[Range(0, list.Count)];
 		public static T GetRandomFromCollection<T>(IReadOnlyList<T> list) => list[Range(0, list.Count)];
 
-		/// <summary>Fast random will only work if you are sure the dictionary can be indexed like an array!</summary>
-		public static T GetRandomFromDictionary<T>(IDictionary<int, T> dictionary, bool fastRandom = false)
+		/// <summary>
+		/// Returns a random item from the dictionary.
+		/// Assign the range of the indices of the dictionary to <paramref name="indexRange"/> if the dictionary is continuous.
+		/// Continuous = no empty index between min and max (however there can be nulls). Passing in this parameter will significantly boost the performance.
+		/// NOTE: <paramref name="indexRange"/> is [inclusive, exclusive)
+		/// </summary>
+		public static T GetRandomFromDictionary<T>(IDictionary<int, T> dictionary, MinMaxInt? indexRange = null)
 		{
 			int targetIndex = Range(0, dictionary.Count);
-			if (fastRandom) return dictionary[targetIndex];
+			if (indexRange == null) return dictionary.ElementAt(targetIndex).Value;
 
-			int index = 0;
+			if (dictionary.Count != indexRange.Value.Range) throw ExceptionHelper.Invalid(nameof(indexRange), indexRange, "the dictionary is not continuous or the range parameter is wrong!");
+			int index = targetIndex + indexRange.Value.min;
 
-			foreach (var pair in dictionary)
-			{
-				if (index++ == targetIndex) return pair.Value;
-			}
-
-			throw ExceptionHelper.NotPossible;
+			return dictionary[index];
 		}
 
 		/// <summary>
