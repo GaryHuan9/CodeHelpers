@@ -638,6 +638,12 @@ namespace CodeHelpers
 			return cache = behaviour.GetComponentInChildren<T>();
 		}
 
+		public static T GetComponentInParent<T>(this Behaviour behaviour, ref T cache)
+		{
+			if (cache != null) return cache;
+			return cache = behaviour.GetComponentInParent<T>();
+		}
+
 		public static float GetHorizontalFieldOfView(this Camera camera)
 		{
 			var tan = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad / 2f);
