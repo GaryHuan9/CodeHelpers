@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CodeHelpers;
@@ -7,93 +8,97 @@ namespace CodeHelpers.InputHelpers
 {
 	public static class InputHelper
 	{
-		static InputHelper()
+		static readonly Dictionary<InputSource, InputInfo> registeredInfo = new Dictionary<InputSource, InputInfo>();
+
+		static float Time => UnityEngine.Time.unscaledTime;
+		const float DefaultCheckDelay = 0.25f;
+
+		/// <summary>
+		/// This is invoked specifically by <see cref="CodeHelperMonoBehaviour"/> to make sure it is in the pre update frame phase and before all other pre update invokes
+		/// </summary>
+		internal static void PreUpdate()
 		{
-			inputInfoFromKey = new Dictionary<int, InputInfo>();
-
-			for (int i = -1; i >= -3; i--)
-			{
-				inputInfoFromKey.Add(i, new InputInfo(i));
-			}
-
-			for (int i = (int)KeyCode.A; i <= (int)KeyCode.Z; i++)
-			{
-				inputInfoFromKey.Add(i, new InputInfo(i));
-			}
+			foreach (var pair in registeredInfo) pair.Value.Update();
 		}
 
-		internal static readonly Dictionary<int, InputInfo> inputInfoFromKey;
+		public static void RegisterInput(int mouseButton) => RegisterInput(new InputSource(mouseButton));
+		public static void RegisterInput(KeyCode keyCode) => RegisterInput(new InputSource(keyCode));
 
-		public static void AddKeyToRecord(int key, bool isKeyboardKey) //By default we only record the keys for English charactors A to Z, but you can also add them your own
+		static void RegisterInput(InputSource source)
 		{
-			int realKey = isKeyboardKey ? key : -key - 1;
-			inputInfoFromKey.Add(realKey, new InputInfo(realKey));
+			if (registeredInfo.ContainsKey(source)) return; //Input already registered
+			registeredInfo.Add(source, new InputInfo(source));
 		}
 
-		public static int? AnyNumber
-		{
-			get
-			{
-				int outInt;
-				return int.TryParse(Input.inputString, out outInt) ? outInt : (int?)null;
-			}
-		}
+		/// <summary>
+		/// Is the current input any number? Returns null if no number
+		/// </summary>
+		public static int? AnyNumber => int.TryParse(Input.inputString, out int outInt) ? outInt : (int?)null;
 
-		public static Vector2Int GetWASDMovement(KeyCode WKey = KeyCode.W,
-												 KeyCode AKey = KeyCode.A,
-												 KeyCode SKey = KeyCode.S,
-												 KeyCode DKey = KeyCode.D) =>
+		public static Vector2Int GetWASDMovement(KeyCode wKey = KeyCode.W, KeyCode aKey = KeyCode.A, KeyCode sKey = KeyCode.S, KeyCode dKey = KeyCode.D) =>
 			new Vector2Int
 			(
-				(Input.GetKey(DKey) ? 1 : 0) + (Input.GetKey(AKey) ? -1 : 0),
-				(Input.GetKey(WKey) ? 1 : 0) + (Input.GetKey(SKey) ? -1 : 0)
+				(Input.GetKey(dKey) ? 1 : 0) + (Input.GetKey(aKey) ? -1 : 0),
+				(Input.GetKey(wKey) ? 1 : 0) + (Input.GetKey(sKey) ? -1 : 0)
 			);
+		
+		static InputInfo GetInfo(InputSource source) => registeredInfo.TryGetValue(source) ?? throw ExceptionHelper.Invalid(nameof(source), source, "is not registered!");
 
-		public static bool GetKeyHoldLessThan(KeyCode thisKey, float time = 0.2f)
+		//NOTE: The following check method should/would be invoked after all input are already updated this frame
+		
+		static bool GetInputHeldLessThan(InputSource source, float time = DefaultCheckDelay) => source.IsInputUp && Time - GetInfo(source).LastInputDownTime < time;
+
+		public static bool GetInputHeldLessThan(int mouseButton) => GetInputHeldLessThan(new InputSource(mouseButton));
+		public static bool GetInputHeldLessThan(KeyCode keyCode) => GetInputHeldLessThan(new InputSource(keyCode));
+		
+		static bool GetInputDoublePressed(InputSource source, float time = DefaultCheckDelay) => source.IsInputDown && Time - GetInfo(source).PreviousInputDownTime < time;
+
+		public static bool GetInputDoublePressed(int mouseButton) => GetInputDoublePressed(new InputSource(mouseButton));
+		public static bool GetInputDoublePressed(KeyCode keyCode) => GetInputDoublePressed(new InputSource(keyCode));
+
+		class InputInfo
 		{
-			return Input.GetKeyUp(thisKey) && Time.unscaledTime - inputInfoFromKey[(int)thisKey].thisPressedTime < time;
-		}
+			public InputInfo(InputSource source) => this.source = source;
 
-		public static bool GetKeyDoublePressed(KeyCode thisKey, float doublePressSpeed = 0.2f)
-		{
-			return Input.GetKeyDown(thisKey) && Time.unscaledTime - inputInfoFromKey[(int)thisKey].lastPressedTime < doublePressSpeed;
-		}
+			readonly InputSource source;
 
-		public static bool GetMouseButtonHoldLessThan(int thisButton, float time = 0.2f)
-		{
-			return Input.GetMouseButtonUp(thisButton) && Time.unscaledTime - inputInfoFromKey[-thisButton - 1].thisPressedTime < time;
-		}
-
-		public static bool GetMouseButtonDoublePressed(int thisButton, float doublePressSpeed = 0.2f)
-		{
-			return Input.GetMouseButtonDown(thisButton) && Time.unscaledTime - inputInfoFromKey[-thisButton - 1].lastPressedTime < doublePressSpeed;
-		}
-	}
-}
-
-namespace CodeHelpers
-{
-	class InputInfo
-	{
-		internal InputInfo(int key)
-		{
-			this.key = key;
-			isKeyboardKey = key >= 0;
-		}
-
-		readonly int key; //If this is larger or equals to 0 then it is a key, or else it is a mouse button, -1=left -2=right -3=middle
-		readonly bool isKeyboardKey;
-
-		internal float lastPressedTime = float.MinValue;
-		internal float thisPressedTime = float.MinValue;
-
-		internal void UpdateInfo()
-		{
-			if (isKeyboardKey ? Input.GetKeyDown((KeyCode)key) : Input.GetMouseButtonDown(-key - 1))
+			public float LastInputDownTime { get; private set; } = float.MinValue;
+			public float PreviousInputDownTime { get; private set; } = float.MinValue;
+			
+			public float LastInputUpTime { get; private set; } = float.MinValue;
+			public float PreviousInputUpTime { get; private set; } = float.MinValue;
+			
+			public void Update()
 			{
-				lastPressedTime = thisPressedTime;
-				thisPressedTime = Time.unscaledTime;
+				if (source.IsInputDown)
+				{
+					PreviousInputDownTime = LastInputDownTime;
+					LastInputDownTime = Time;
+				}
+
+				if (source.IsInputUp)
+				{
+					PreviousInputUpTime = LastInputUpTime;
+					LastInputUpTime = Time;
+				}
 			}
+		}
+
+		readonly struct InputSource
+		{
+			public InputSource(KeyCode keyCode) => keyData = (int)keyCode;
+			public InputSource(int mouseButton) => keyData = -mouseButton - 1;
+
+			readonly int keyData; //If this is larger or equals to 0 then it is a key, or else it is a mouse button, -1=left -2=right -3=middle
+			public bool IsKeyboardKey => keyData >= 0;
+
+			public KeyCode KeyCode => IsKeyboardKey ? (KeyCode)keyData : throw new Exception("Input is not a keyboard key");
+			public int MouseButton => IsKeyboardKey ? throw new Exception("Input is not a mouse button") : -keyData - 1;
+
+			public bool IsInputDown => IsKeyboardKey ? Input.GetKeyDown((KeyCode)keyData) : Input.GetMouseButtonDown(-keyData - 1);
+			public bool IsInputUp => IsKeyboardKey ? Input.GetKeyUp((KeyCode)keyData) : Input.GetMouseButtonUp(-keyData - 1);
+
+			public override int GetHashCode() => keyData;
 		}
 	}
 }

@@ -71,8 +71,7 @@ namespace CodeHelpers
 
 		void PreUpdate()
 		{
-			InputHelper.inputInfoFromKey.ForEach(thisPair => thisPair.Value.UpdateInfo());
-
+			InputHelper.PreUpdate();
 			FramePhase = FramePhase.Pre;
 
 			CodeHelper.invokeBeforeFrame.InvokeAll();
