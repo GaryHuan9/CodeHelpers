@@ -152,7 +152,7 @@ namespace CodeHelpers.CodeCounters
 			}
 
 			int yLabelCount = Mathf.Clamp(yRange.Range, 2, 10);
-			var style = new GUIStyle(GUI.skin.label) {alignment = TextAnchor.MiddleCenter};
+			var style = new GUIStyle(GUI.skin.label) {alignment = TextAnchor.MiddleCenter, normal = {textColor = Color.white}};
 
 			for (int i = 0; i < yLabelCount; i++)
 			{
