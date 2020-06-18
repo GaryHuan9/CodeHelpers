@@ -5,7 +5,7 @@ namespace CodeHelpers
 {
 	public static class CurveHelper
 	{
-		public static InputCheckMode CheckMode { get; set; } = InputCheckMode.exception;
+		public static InputCheckMode CheckMode { get; set; } = InputCheckMode.clamp;
 
 		static void CheckRange(ref float input)
 		{
