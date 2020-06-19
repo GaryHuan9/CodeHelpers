@@ -101,8 +101,8 @@ namespace CodeHelpers
 		public static float Sum(this Vector3 vector) => vector.x + vector.y + vector.z;
 		public static int Sum(this Vector3Int vector) => vector.x + vector.y + vector.z;
 
-		public static Vector3Int IndividualNormalize(this Vector3 vector) => new Vector3Int(vector.x.Normalized(), vector.y.Normalized(), vector.z.Normalized());
-		public static Vector3Int IndividualNormalize(this Vector3Int vector) => new Vector3Int(vector.x.Normalized(), vector.y.Normalized(), vector.z.Normalized());
+		public static Vector3Int IndividualNormalized(this Vector3 vector) => new Vector3Int(vector.x.Normalized(), vector.y.Normalized(), vector.z.Normalized());
+		public static Vector3Int IndividualNormalized(this Vector3Int vector) => new Vector3Int(vector.x.Normalized(), vector.y.Normalized(), vector.z.Normalized());
 
 		/// <summary>
 		/// Gets the index of the largest element in this vector.
@@ -330,8 +330,8 @@ namespace CodeHelpers
 		public static float Sum(this Vector2 vector) => vector.x + vector.y;
 		public static int Sum(this Vector2Int vector) => vector.x + vector.y;
 
-		public static Vector2Int IndividualNormalize(this Vector2 vector) => new Vector2Int(vector.x.Normalized(), vector.y.Normalized());
-		public static Vector2Int IndividualNormalize(this Vector2Int vector) => new Vector2Int(vector.x.Normalized(), vector.y.Normalized());
+		public static Vector2Int IndividualNormalized(this Vector2 vector) => new Vector2Int(vector.x.Normalized(), vector.y.Normalized());
+		public static Vector2Int IndividualNormalized(this Vector2Int vector) => new Vector2Int(vector.x.Normalized(), vector.y.Normalized());
 
 		/// <summary>
 		/// Gets the index of the largest element in this vector.

@@ -28,7 +28,7 @@ namespace CodeHelpers.VectorHelpers
 				offset = from;
 
 				var difference = to - from; //Make inclusive
-				difference += difference.IndividualNormalize();
+				difference += difference.IndividualNormalized();
 
 				enumerator = new VectorEnumerable.Vector3Enumerable.Enumerator(difference, true);
 			}
@@ -68,7 +68,7 @@ namespace CodeHelpers.VectorHelpers
 				offset = from;
 
 				var difference = to - from; //Make inclusive
-				difference += difference.IndividualNormalize();
+				difference += difference.IndividualNormalized();
 
 				enumerator = new VectorEnumerable.Vector2Enumerable.Enumerator(difference, true);
 			}

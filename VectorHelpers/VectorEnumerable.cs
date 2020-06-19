@@ -38,7 +38,7 @@ namespace CodeHelpers.VectorHelpers
 				internal Enumerator(Vector2Int size, bool zeroAsOne)
 				{
 					this.size = zeroAsOne ? Vector2Int.Max(Vector2Int.one, size.Abs()) : size.Abs();
-					direction = size.IndividualNormalize();
+					direction = size.IndividualNormalized();
 					current = -1;
 				}
 
@@ -82,7 +82,7 @@ namespace CodeHelpers.VectorHelpers
 				internal Enumerator(Vector3Int size, bool zeroAsOne)
 				{
 					this.size = zeroAsOne ? Vector3Int.Max(Vector3Int.one, size.Abs()) : size.Abs();
-					direction = size.IndividualNormalize();
+					direction = size.IndividualNormalized();
 					current = -1;
 				}
 
