@@ -20,7 +20,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		TreeGraphView graphView;
 		List<SearchTreeEntry> searchTree;
 
-		public SerializableParameter TargetParameter { private get; set; }
+		public SingularSerializableParameter TargetParameter { private get; set; }
 
 		void RecreateSearchTree()
 		{

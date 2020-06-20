@@ -22,7 +22,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 		class LeafNode : Node
 		{
 			public LeafNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex, BehaviorAction<T> action) : base(blueprint, selfIndex) => this.action = action;
-			
+
 			readonly BehaviorAction<T> action;
 			public override byte MaxChildCount => 0;
 			public override byte MinChildCount => 0;
@@ -126,6 +126,20 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 				if (condition(context) == Result.success) return new StatusToken(0); //Execute child when condition returned success
 				return new StatusToken(this, Result.failure);                        //Return failure when condition failed
+			}
+		}
+
+		class ConstantNode : Node
+		{
+			public ConstantNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex, bool success) : base(blueprint, selfIndex) => this.success = success;
+
+			readonly bool success;
+			public override byte MaxChildCount => 1;
+
+			protected override StatusToken GetNext(StatusToken from, T context)
+			{
+				if (from.ToChild) return new StatusToken(0); //Continue to child
+				return new StatusToken(this, success ? Result.success : Result.failure);
 			}
 		}
 	}

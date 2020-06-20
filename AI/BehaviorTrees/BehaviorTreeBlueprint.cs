@@ -111,6 +111,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 				case Repeater repeater:          return new RepeaterNode(this, index);
 				case Blocker blocker:            return new BlockerNode(this, index, blocker.chance);
 				case Conditioner<T> conditioner: return new ConditionerNode(this, index, conditioner.condition);
+				case Constant constant: return new ConstantNode(this, index, constant.success);
 			}
 
 			throw ExceptionHelper.Invalid(nameof(nodeType), nodeType, InvalidType.unexpected);

@@ -76,7 +76,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		VisualElement parameterContainer;
 		Label orderLabel;
 
-		protected VisualElement CreateParameterControl(SerializableParameter parameter, string controlName, Action<SerializableParameter> clampAction = null)
+		protected VisualElement CreateParameterControl(SingularSerializableParameter parameter, string controlName, Action<SingularSerializableParameter> clampAction = null)
 		{
 			VisualElement control;
 
@@ -122,15 +122,15 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 						if (group != null) control.Remove(group); //If had old group remove/destroy it
 						var parameters = parameter.BehaviorActionValue?.method.Parameters;
 
-						DebugHelper.Log(group, parameters, parameter.BehaviorActionParameters);
-
 						if (parameters == null || parameters.Count == 0) return; //If no parameter for this action
-						group = new VisualElement {name = ParameterGroupName};   //Create group
+
+						group = new VisualElement {name = ParameterGroupName}; //Create group
+						var accessor = ((SerializableParameter)parameter).BehaviorActionParameters;
 
 						for (int i = 0; i < parameters.Count; i++)
 						{
 							BehaviorActionParameterInfo parameterInfo = parameters[i];
-							group.Add(CreateParameterControl(parameter.BehaviorActionParameters[i], parameterInfo.name));
+							group.Add(CreateParameterControl(accessor[i], parameterInfo.name));
 						}
 
 						control.Add(group);
@@ -258,7 +258,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			return control;
 		}
 
-		protected void GenerateParameterControl(SerializableParameter parameter, string controlName, Action<SerializableParameter> clampAction = null)
+		protected void GenerateParameterControl(SerializableParameter parameter, string controlName, Action<SingularSerializableParameter> clampAction = null)
 		{
 			var control = CreateParameterControl(parameter, controlName, clampAction);
 			TryGetParameterContainer().Add(control);
@@ -491,5 +491,17 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		protected override int MaxChildCount => 1;
 		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter((BehaviorAction)null)}; //Set condition to null
+	}
+
+	public class ConstantNode : TreeGraphNode
+	{
+		public override void Initialize(TreeGraphView graphView, NodeInfo info)
+		{
+			base.Initialize(graphView, info);
+			GenerateParameterControl(Parameters[0], "Success");
+		}
+
+		protected override int MaxChildCount => 1;
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(true)}; //Set success to true
 	}
 }

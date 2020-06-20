@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CodeHelpers.DebugHelpers;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
@@ -71,11 +73,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					if (parameter.Type == ParameterType.behaviorAction)
 					{
 						parameter.LoadBehaviorAction(importData);
-						
-						MethodInfo method = parameter.BehaviorActionValue.method.Method;
-						parameters[i] = (BehaviorAction<T>)method.CreateDelegate(typeof(BehaviorAction<T>));
-
-						Delegate c = null; //WIP
+						parameters[i] = GetAction<T>(parameter);
 					}
 					else parameters[i] = parameter.GetValue();
 				}
@@ -88,6 +86,31 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			if (!success) throw new Exception($"Invalid node create from graph at GUID: {data.GUID}, position: {data.position}, serialized node name: {data.nodeTypeSerializableName}!");
 
 			return location;
+		}
+
+		static BehaviorAction<T> GetAction<T>(SerializableParameter sourceParameter)
+		{
+			MethodInfo methodInfo = sourceParameter.BehaviorActionValue.method.Method;
+			ParameterInfo[] methodParameters = methodInfo.GetParameters();
+			var parameterAccessor = sourceParameter.BehaviorActionParameters;
+
+			Type returnType = typeof(Result);
+			Assert.IsTrue(methodInfo.ReturnType == returnType);
+
+			//If has no extra parameter than the context, we can just simply create and return the delegate
+			if (methodParameters.Length == 1) return (BehaviorAction<T>)methodInfo.CreateDelegate(typeof(BehaviorAction<T>));
+
+			var parameters = new Expression[methodParameters.Length];
+			ParameterExpression contextParameter = Expression.Parameter(typeof(T));
+
+			//Assemble constant parameters
+			for (int i = 0; i < parameters.Length - 1; i++) parameters[i + 1] = Expression.Constant(parameterAccessor[i].GetValue());
+			parameters[0] = contextParameter;
+
+			var callExpression = Expression.Call(null, methodInfo, parameters);                            //Call expression with constant parameters
+			var lambdaExpression = Expression.Lambda<BehaviorAction<T>>(callExpression, contextParameter); //Precompiled delegate
+
+			return lambdaExpression.Compile();
 		}
 	}
 

@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using CodeHelpers.DebugHelpers;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Object = UnityEngine.Object;
 
 namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 {
@@ -109,59 +110,59 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 	}
 
 	[Serializable]
-	public class SerializableParameter
+	public class SingularSerializableParameter
 	{
-		public SerializableParameter(ParameterType type) => this.type = type;
+		public SingularSerializableParameter(ParameterType type) => this.type = type;
 
-		public SerializableParameter(SerializableParameter source)
+		public SingularSerializableParameter(SingularSerializableParameter source)
 		{
 			type = source.Type;
 			CopyFrom(source);
 		}
 
-		public SerializableParameter(BehaviorAction behaviorAction)
+		public SingularSerializableParameter(BehaviorAction behaviorAction)
 		{
 			type = ParameterType.behaviorAction;
 			BehaviorActionValue = behaviorAction;
 		}
 
-		public SerializableParameter(bool booleanValue)
+		public SingularSerializableParameter(bool booleanValue)
 		{
 			type = ParameterType.boolean;
 			BooleanValue = booleanValue;
 		}
 
-		public SerializableParameter(int integer1Value)
+		public SingularSerializableParameter(int integer1Value)
 		{
 			type = ParameterType.integer1;
 			Integer1Value = integer1Value;
 		}
 
-		public SerializableParameter(Vector2Int integer2Value)
+		public SingularSerializableParameter(Vector2Int integer2Value)
 		{
 			type = ParameterType.integer2;
 			Integer2Value = integer2Value;
 		}
 
-		public SerializableParameter(Vector3Int integer3Value)
+		public SingularSerializableParameter(Vector3Int integer3Value)
 		{
 			type = ParameterType.integer3;
 			Integer3Value = integer3Value;
 		}
 
-		public SerializableParameter(float float1Value)
+		public SingularSerializableParameter(float float1Value)
 		{
 			type = ParameterType.float1;
 			Float1Value = float1Value;
 		}
 
-		public SerializableParameter(Vector2 float2Value)
+		public SingularSerializableParameter(Vector2 float2Value)
 		{
 			type = ParameterType.float2;
 			Float2Value = float2Value;
 		}
 
-		public SerializableParameter(Vector3 float3Value)
+		public SingularSerializableParameter(Vector3 float3Value)
 		{
 			type = ParameterType.float3;
 			Float3Value = float3Value;
@@ -173,25 +174,20 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		[SerializeField] string behaviorActionGuid;
 		[NonSerialized] BehaviorAction behaviorAction;
 
-		[SerializeField] BehaviorActionParametersAccessor _behaviorActionParameters;
-
 		[SerializeField] int scaler1;
 		[SerializeField] int scaler2;
 		[SerializeField] int scaler3;
 
-		public BehaviorAction BehaviorActionValue
+		public virtual BehaviorAction BehaviorActionValue
 		{
 			get => behaviorAction;
 			set
 			{
 				CheckReturn(value);
-				if (behaviorAction == value) return;
+				if (BehaviorActionValue == value) return;
 
 				behaviorAction = value;
 				behaviorActionGuid = value?.guid;
-
-				if (BehaviorActionValue == null) BehaviorActionParameters = null;
-				else BehaviorActionParameters = new BehaviorActionParametersAccessor(BehaviorActionValue);
 
 				OnValueChangedMethods?.Invoke();
 			}
@@ -298,15 +294,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			}
 		}
 
-		public BehaviorActionParametersAccessor BehaviorActionParameters
-		{
-			get => _behaviorActionParameters;
-			private set => _behaviorActionParameters = value;
-		}
-
 		public event Action OnValueChangedMethods;
 
-		public void CopyFrom(SerializableParameter parameter)
+		public virtual void CopyFrom(SingularSerializableParameter parameter)
 		{
 			if (parameter.Type != Type) throw ExceptionHelper.Invalid(nameof(parameter), parameter, "has a mismatched parameter type!");
 
@@ -315,8 +305,6 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			scaler1 = parameter.scaler1;
 			scaler2 = parameter.scaler2;
 			scaler3 = parameter.scaler3;
-
-			if (parameter.BehaviorActionParameters != null) BehaviorActionParameters = new BehaviorActionParametersAccessor(parameter.BehaviorActionParameters);
 		}
 
 		public void LoadBehaviorAction(ActionImportData data)
@@ -344,14 +332,57 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			throw ExceptionHelper.Invalid(nameof(Type), Type, InvalidType.unexpected);
 		}
 
-		T CheckReturn<T>(T value)
+		protected T CheckReturn<T>(T value)
 		{
 			if (typeof(T) == Type.GetParameterType()) return value;
 			throw new Exception($"This {nameof(SerializableParameter)} has the type {Type} but you are trying to yse its value as an {typeof(T)}!");
 		}
 
-		static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
-		static int BitwiseConvert(float value) => CodeHelper.SingleToInt32Bits(value);
+		protected static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
+		protected static int BitwiseConvert(float value) => CodeHelper.SingleToInt32Bits(value);
+	}
+
+	[Serializable]
+	public class SerializableParameter : SingularSerializableParameter
+	{
+		public SerializableParameter(ParameterType type) : base(type) { }
+		public SerializableParameter(SerializableParameter source) : base(source) { }
+		public SerializableParameter(BehaviorAction behaviorAction) : base(behaviorAction) { }
+		public SerializableParameter(bool booleanValue) : base(booleanValue) { }
+		public SerializableParameter(int integer1Value) : base(integer1Value) { }
+		public SerializableParameter(Vector2Int integer2Value) : base(integer2Value) { }
+		public SerializableParameter(Vector3Int integer3Value) : base(integer3Value) { }
+		public SerializableParameter(float float1Value) : base(float1Value) { }
+		public SerializableParameter(Vector2 float2Value) : base(float2Value) { }
+		public SerializableParameter(Vector3 float3Value) : base(float3Value) { }
+
+		public override BehaviorAction BehaviorActionValue
+		{
+			set
+			{
+				CheckReturn(value);
+				if (BehaviorActionValue == value) return;
+
+				BehaviorActionParameters = value == null ? null : new BehaviorActionParametersAccessor(value);
+				base.BehaviorActionValue = value;
+			}
+		}
+
+		[SerializeField] BehaviorActionParametersAccessor _behaviorActionParameters;
+
+		public BehaviorActionParametersAccessor BehaviorActionParameters
+		{
+			get => _behaviorActionParameters;
+			private set => _behaviorActionParameters = value;
+		}
+
+		public override void CopyFrom(SingularSerializableParameter parameter)
+		{
+			base.CopyFrom(parameter);
+
+			if (!(parameter is SerializableParameter serializable)) return;
+			if (serializable.BehaviorActionParameters != null) BehaviorActionParameters = new BehaviorActionParametersAccessor(serializable.BehaviorActionParameters);
+		}
 
 		[Serializable]
 		public class BehaviorActionParametersAccessor
@@ -359,22 +390,22 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			public BehaviorActionParametersAccessor(BehaviorAction action)
 			{
 				IReadOnlyList<BehaviorActionParameterInfo> source = action.method.Parameters;
-				parameters = new SerializableParameter[source.Count];
+				parameters = new SingularSerializableParameter[source.Count];
 
-				for (int i = 0; i < source.Count; i++) parameters[i] = new SerializableParameter(source[i].type);
+				for (int i = 0; i < source.Count; i++) parameters[i] = new SingularSerializableParameter(source[i].type);
 			}
 
 			public BehaviorActionParametersAccessor(BehaviorActionParametersAccessor source)
 			{
 				if (source.parameters == null || source.parameters.Length == 0) return;
 
-				parameters = new SerializableParameter[source.parameters.Length];
-				for (int i = 0; i < parameters.Length; i++) parameters[i] = new SerializableParameter(source[i]);
+				parameters = new SingularSerializableParameter[source.parameters.Length];
+				for (int i = 0; i < parameters.Length; i++) parameters[i] = new SingularSerializableParameter(source[i]);
 			}
 
-			[SerializeField] SerializableParameter[] parameters; //Should be readonly
+			[SerializeField] SingularSerializableParameter[] parameters; //Should be readonly
 
-			public SerializableParameter this[int index] => parameters[index];
+			public SingularSerializableParameter this[int index] => parameters[index];
 		}
 	}
 

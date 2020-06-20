@@ -58,4 +58,16 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 		public readonly BehaviorAction<T> condition;
 	}
+
+	/// <summary>
+	/// Always return success or failure no matter what the child returns.
+	/// Still will be blocked by a result of <see cref="Result.running"/>
+	/// </summary>
+	[BehaviorTreeNode("Internal_Constant", "CodeHelpers.AI.BehaviorTrees.UIEditor.ConstantNode")]
+	public readonly struct Constant : INodeType
+	{
+		public Constant(bool success) => this.success = success;
+
+		public readonly bool success;
+	}
 }

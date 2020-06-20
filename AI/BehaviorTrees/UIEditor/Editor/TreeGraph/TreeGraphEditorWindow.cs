@@ -51,7 +51,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				dataField?.SetValueWithoutNotify(CurrentData);
 				ImportData = CurrentData == null ? null : CurrentData.importData;
 
-				if (value != null) DeserializeTreeData();
+				if (CurrentData != null) DeserializeTreeData();
 			}
 		}
 
