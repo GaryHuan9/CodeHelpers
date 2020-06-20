@@ -369,7 +369,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					where pair.Value.included
 					from type in pair.Key.GetTypes()
 					from method in type.GetMethods(BehaviorActionAttribute.MethodBindings)
-					where Attribute.IsDefined(method, typeof(BehaviorActionAttribute)) && method.GetParameters().Length == 1
+					where Attribute.IsDefined(method, typeof(BehaviorActionAttribute))
 					select new SerializableMethod(method)
 				);
 			}

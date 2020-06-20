@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Reflection;
 using CodeHelpers.DebugHelpers;
 using UnityEngine;
@@ -70,8 +71,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					if (parameter.Type == ParameterType.behaviorAction)
 					{
 						parameter.LoadBehaviorAction(importData);
-						var method = parameter.BehaviorActionValue.method.Method;
+						
+						MethodInfo method = parameter.BehaviorActionValue.method.Method;
 						parameters[i] = (BehaviorAction<T>)method.CreateDelegate(typeof(BehaviorAction<T>));
+
+						Delegate c = null; //WIP
 					}
 					else parameters[i] = parameter.GetValue();
 				}

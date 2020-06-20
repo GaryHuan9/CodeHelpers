@@ -24,8 +24,10 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public NodeInfo(BehaviorTreeNodeAttribute attribute)
 		{
 			serializedName = attribute.serializedName;
-			displayedName = attribute.displayedName;
 			graphNodeType = GetTypeFromName(attribute.nodeTypeName);
+
+			string name = BehaviorTreeNodeAttribute.SerializedNameToType[attribute.serializedName].Name;
+			displayedName = name.Contains('`') ? name.Substring(0, name.IndexOf("`", StringComparison.Ordinal)) : name;
 		}
 
 		public readonly string serializedName;

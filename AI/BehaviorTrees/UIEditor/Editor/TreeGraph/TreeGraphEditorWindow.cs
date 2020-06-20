@@ -17,7 +17,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public static void Open(BehaviorTreeBlueprintData data)
 		{
 			var window = GetWindow<TreeGraphEditorWindow>("Graph Editor");
+
 			window.CurrentData = data;
+			window.minSize = new Vector2(500f, 300f);
 		}
 
 		void OnEnable()

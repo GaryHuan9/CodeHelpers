@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using CodeHelpers.DebugHelpers;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -75,9 +76,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		VisualElement parameterContainer;
 		Label orderLabel;
 
-		protected void GenerateParameterControl(int parameterIndex, string controlName, Action<SerializableParameter> clampAction = null)
+		protected VisualElement CreateParameterControl(SerializableParameter parameter, string controlName, Action<SerializableParameter> clampAction = null)
 		{
-			SerializableParameter parameter = Parameters[parameterIndex];
 			VisualElement control;
 
 			switch (parameter.Type)
@@ -85,10 +85,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				case ParameterType.behaviorAction:
 
 					control = new VisualElement();
-					var buttons = new VisualElement {style = {flexDirection = FlexDirection.Row, paddingRight = 2f, paddingLeft = 2f}};
 
-					var actionLabel = new Label(GetBehaviorActionString()) {style = {paddingLeft = 8f, paddingRight = 8f}};
-					parameter.OnValueChangedMethods += () => actionLabel.text = GetBehaviorActionString();
+					var buttons = new VisualElement {style = {flexDirection = FlexDirection.Row, paddingRight = 2f, paddingLeft = 2f}};
+					var actionLabel = new Label {style = {paddingLeft = 8f, paddingRight = 8f}};
 
 					var configureButton = new Button {text = "Configure"};
 					configureButton.clickable.clickedWithEventInfo +=
@@ -108,10 +107,33 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					control.Add(actionLabel);
 					control.Add(buttons);
 
-					string GetBehaviorActionString()
+					parameter.OnValueChangedMethods += OnBehaviorActionChanged;
+					OnBehaviorActionChanged(); //Trigger a refresh
+
+					void OnBehaviorActionChanged()
 					{
-						parameter.LoadBehaviorAction(GraphView.editorWindow.ImportData);
-						return parameter.BehaviorActionValue == null ? "Missing Action" : parameter.BehaviorActionValue.ToString();
+						parameter.LoadBehaviorAction(GraphView.editorWindow.ImportData); //Refresh action name
+						actionLabel.text = parameter.BehaviorActionValue == null ? "Missing Action" : parameter.BehaviorActionValue.ToString();
+
+						//Behavior action parameter controls
+						const string ParameterGroupName = "Behavior Action Parameters Group";
+						VisualElement group = control.Q<VisualElement>(ParameterGroupName);
+
+						if (group != null) control.Remove(group); //If had old group remove/destroy it
+						var parameters = parameter.BehaviorActionValue?.method.Parameters;
+
+						DebugHelper.Log(group, parameters, parameter.BehaviorActionParameters);
+
+						if (parameters == null || parameters.Count == 0) return; //If no parameter for this action
+						group = new VisualElement {name = ParameterGroupName};   //Create group
+
+						for (int i = 0; i < parameters.Count; i++)
+						{
+							BehaviorActionParameterInfo parameterInfo = parameters[i];
+							group.Add(CreateParameterControl(parameter.BehaviorActionParameters[i], parameterInfo.name));
+						}
+
+						control.Add(group);
 					}
 
 					break;
@@ -224,9 +246,21 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				default: throw ExceptionHelper.Invalid(nameof(parameter.Type), parameter.Type, InvalidType.unexpected);
 			}
 
-			var label = control.Q<Label>();
-			if (label != null) label.style.minWidth = 64f;
+			control.Query<FloatField>().ForEach(field => field.style.minWidth = 60f);
+			Label label = control.Q<Label>();
 
+			if (label != null)
+			{
+				label.style.minWidth = 0f;
+				label.style.paddingRight = 20f;
+			}
+
+			return control;
+		}
+
+		protected void GenerateParameterControl(SerializableParameter parameter, string controlName, Action<SerializableParameter> clampAction = null)
+		{
+			var control = CreateParameterControl(parameter, controlName, clampAction);
 			TryGetParameterContainer().Add(control);
 		}
 
@@ -408,11 +442,11 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-			GenerateParameterControl(0, "Action");
+			GenerateParameterControl(Parameters[0], "Action");
 		}
 
 		protected override int MaxChildCount => 0;
-		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(null)}; //Set action to null behavior action
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter((BehaviorAction)null)}; //Set action to null behavior action
 	}
 
 	public class SequencerNode : TreeGraphNode
@@ -440,7 +474,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-			GenerateParameterControl(0, "Chance", parameter => parameter.Float1Value = Mathf.Clamp01(parameter.Float1Value));
+			GenerateParameterControl(Parameters[0], "Chance", parameter => parameter.Float1Value = Mathf.Clamp01(parameter.Float1Value));
 		}
 
 		protected override int MaxChildCount => 1;
@@ -452,10 +486,10 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public override void Initialize(TreeGraphView graphView, NodeInfo info)
 		{
 			base.Initialize(graphView, info);
-			GenerateParameterControl(0, "Condition");
+			GenerateParameterControl(Parameters[0], "Condition");
 		}
 
 		protected override int MaxChildCount => 1;
-		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter(null)}; //Set condition to null
+		public override SerializableParameter[] Parameters { get; } = {new SerializableParameter((BehaviorAction)null)}; //Set condition to null
 	}
 }

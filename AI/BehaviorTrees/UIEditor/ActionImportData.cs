@@ -18,11 +18,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			for (int i = 0; i < actions.Count; i++) guidToActionIndex.Add(actions[i].guid, i);
 		}
 
-		public BehaviorAction GetActionByGuid(string guid)
-		{
-			if (!guidToActionIndex.ContainsKey(guid)) return null;
-			return actions[guidToActionIndex[guid]];
-		}
+		public BehaviorAction GetActionByGuid(string guid) => guidToActionIndex.ContainsKey(guid) ? actions[guidToActionIndex[guid]] : null;
 
 		public void OnBeforeSerialize() { }
 		public void OnAfterDeserialize() => RecalculateGuidMapping();
@@ -39,6 +35,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public string name;
 		public string guid;
+		
 		public SerializableMethod method;
 
 		public override string ToString() => method == null ? "Missing Action" : name;

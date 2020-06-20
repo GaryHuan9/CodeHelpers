@@ -22,9 +22,8 @@ namespace CodeHelpers.AI.BehaviorTrees
 		class LeafNode : Node
 		{
 			public LeafNode(BehaviorTreeBlueprint<T> blueprint, int selfIndex, BehaviorAction<T> action) : base(blueprint, selfIndex) => this.action = action;
-
+			
 			readonly BehaviorAction<T> action;
-
 			public override byte MaxChildCount => 0;
 			public override byte MinChildCount => 0;
 

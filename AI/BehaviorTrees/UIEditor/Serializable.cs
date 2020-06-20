@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CodeHelpers.DebugHelpers;
@@ -24,6 +26,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		MethodInfo _method;
 		Type _targetContextType;
+		IReadOnlyList<BehaviorActionParameterInfo> _parameters;
 
 		public MethodInfo Method
 		{
@@ -44,6 +47,25 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				if (Method == null) return null;
 
 				return _targetContextType = Method.GetParameters()[0].ParameterType;
+			}
+		}
+
+		public IReadOnlyList<BehaviorActionParameterInfo> Parameters
+		{
+			get
+			{
+				if (_parameters != null) return _parameters;
+				if (Method == null) return null;
+
+				Type contextType = TargetContextType;
+
+				return _parameters = new ReadOnlyCollection<BehaviorActionParameterInfo>
+					   (
+						   (from parameter in Method.GetParameters()
+							let type = parameter.ParameterType
+							where type.HasParameterType() && type != contextType
+							select new BehaviorActionParameterInfo(parameter.Name, type.GetParameterType())).ToArray()
+					   );
 			}
 		}
 
@@ -72,9 +94,31 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public static bool operator !=(SerializableMethod method, object other) => !(method == other);
 	}
 
+	public readonly struct BehaviorActionParameterInfo
+	{
+		public BehaviorActionParameterInfo(string name, ParameterType type)
+		{
+			Assert.IsFalse(type == ParameterType.behaviorAction);
+
+			this.name = name;
+			this.type = type;
+		}
+
+		public readonly string name;
+		public readonly ParameterType type;
+	}
+
 	[Serializable]
 	public class SerializableParameter
 	{
+		public SerializableParameter(ParameterType type) => this.type = type;
+
+		public SerializableParameter(SerializableParameter source)
+		{
+			type = source.Type;
+			CopyFrom(source);
+		}
+
 		public SerializableParameter(BehaviorAction behaviorAction)
 		{
 			type = ParameterType.behaviorAction;
@@ -129,6 +173,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		[SerializeField] string behaviorActionGuid;
 		[NonSerialized] BehaviorAction behaviorAction;
 
+		[SerializeField] BehaviorActionParametersAccessor _behaviorActionParameters;
+
 		[SerializeField] int scaler1;
 		[SerializeField] int scaler2;
 		[SerializeField] int scaler3;
@@ -143,6 +189,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 				behaviorAction = value;
 				behaviorActionGuid = value?.guid;
+
+				if (BehaviorActionValue == null) BehaviorActionParameters = null;
+				else BehaviorActionParameters = new BehaviorActionParametersAccessor(BehaviorActionValue);
 
 				OnValueChangedMethods?.Invoke();
 			}
@@ -249,6 +298,12 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			}
 		}
 
+		public BehaviorActionParametersAccessor BehaviorActionParameters
+		{
+			get => _behaviorActionParameters;
+			private set => _behaviorActionParameters = value;
+		}
+
 		public event Action OnValueChangedMethods;
 
 		public void CopyFrom(SerializableParameter parameter)
@@ -256,9 +311,12 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			if (parameter.Type != Type) throw ExceptionHelper.Invalid(nameof(parameter), parameter, "has a mismatched parameter type!");
 
 			behaviorActionGuid = parameter.behaviorActionGuid;
+
 			scaler1 = parameter.scaler1;
 			scaler2 = parameter.scaler2;
 			scaler3 = parameter.scaler3;
+
+			if (parameter.BehaviorActionParameters != null) BehaviorActionParameters = new BehaviorActionParametersAccessor(parameter.BehaviorActionParameters);
 		}
 
 		public void LoadBehaviorAction(ActionImportData data)
@@ -294,26 +352,57 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
 		static int BitwiseConvert(float value) => CodeHelper.SingleToInt32Bits(value);
+
+		[Serializable]
+		public class BehaviorActionParametersAccessor
+		{
+			public BehaviorActionParametersAccessor(BehaviorAction action)
+			{
+				IReadOnlyList<BehaviorActionParameterInfo> source = action.method.Parameters;
+				parameters = new SerializableParameter[source.Count];
+
+				for (int i = 0; i < source.Count; i++) parameters[i] = new SerializableParameter(source[i].type);
+			}
+
+			public BehaviorActionParametersAccessor(BehaviorActionParametersAccessor source)
+			{
+				if (source.parameters == null || source.parameters.Length == 0) return;
+
+				parameters = new SerializableParameter[source.parameters.Length];
+				for (int i = 0; i < parameters.Length; i++) parameters[i] = new SerializableParameter(source[i]);
+			}
+
+			[SerializeField] SerializableParameter[] parameters; //Should be readonly
+
+			public SerializableParameter this[int index] => parameters[index];
+		}
 	}
 
 	public static class ParameterTypeExtensions
 	{
+		static readonly Dictionary<ParameterType, Type> enumToType =
+			new Dictionary<ParameterType, Type>
+			{
+				{ParameterType.behaviorAction, typeof(BehaviorAction)}, {ParameterType.boolean, typeof(bool)},
+				{ParameterType.integer1, typeof(int)}, {ParameterType.integer2, typeof(Vector2Int)}, {ParameterType.integer3, typeof(Vector3Int)},
+				{ParameterType.float1, typeof(float)}, {ParameterType.float2, typeof(Vector2)}, {ParameterType.float3, typeof(Vector3)}
+			};
+
+		static readonly Dictionary<Type, ParameterType> typeToEnum = enumToType.ToDictionary(pair => pair.Value, pair => pair.Key);
+
 		public static Type GetParameterType(this ParameterType type)
 		{
-			switch (type)
-			{
-				case ParameterType.behaviorAction: return typeof(BehaviorAction);
-				case ParameterType.boolean:        return typeof(bool);
-				case ParameterType.integer1:       return typeof(int);
-				case ParameterType.integer2:       return typeof(Vector2Int);
-				case ParameterType.integer3:       return typeof(Vector3Int);
-				case ParameterType.float1:         return typeof(float);
-				case ParameterType.float2:         return typeof(Vector2);
-				case ParameterType.float3:         return typeof(Vector3);
-			}
-
+			if (enumToType.ContainsKey(type)) return enumToType[type];
 			throw ExceptionHelper.Invalid(nameof(type), type, InvalidType.unexpected);
 		}
+
+		public static ParameterType GetParameterType(this Type type)
+		{
+			if (typeToEnum.ContainsKey(type)) return typeToEnum[type];
+			throw ExceptionHelper.Invalid(nameof(type), type, InvalidType.unexpected);
+		}
+
+		public static bool HasParameterType(this Type type) => typeToEnum.ContainsKey(type);
 	}
 
 	public enum ParameterType : byte
