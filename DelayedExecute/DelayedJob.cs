@@ -8,7 +8,7 @@ namespace CodeHelpers.DelayedExecution
 	public class DelayedJob
 	{
 		/// <param name="jobs">Jobs; each separated with a yield return 0. You can return the current job tag and retrieve it with <see cref="ExecutingTag"/>. NOTE: Tags cannot be negative.</param>
-		/// <param name="maxExecutionMillisecond">The maximum time for each execution.</param>
+		/// <param name="maxExecutionMillisecond">The maximum time for each execution in milliseconds.</param>
 		public DelayedJob(IEnumerator<int> jobs, float maxExecutionMillisecond = 5f)
 		{
 			this.jobs = jobs ?? throw new NullReferenceException(nameof(jobs));
@@ -37,7 +37,7 @@ namespace CodeHelpers.DelayedExecution
 		public bool IsJobExecuting => DelayedController.IsJobExecuting(this);
 		public int ExecutingTag { get; private set; }
 
-		public static int ExitExecutionMark => -987654321;
+		public static int ExitExecutionMark => -123;
 
 		public void Execute()
 		{

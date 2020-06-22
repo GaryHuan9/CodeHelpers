@@ -20,26 +20,24 @@ namespace CodeHelpers.DelayedExecution
 
 		public static void Destroy(Object target)
 		{
-			if (target != null)
+			if (target == null) throw ExceptionHelper.Invalid(nameof(target), target, InvalidType.isNull);
+			if (target is Transform transform) target = transform.gameObject;
+
+			//Disable target if available
+			switch (target)
 			{
-				//Disable target if available
-				if (target is Transform transform) target = transform.gameObject;
+				case Behaviour behaviour:
 
-				switch (target)
-				{
-					case Behaviour behaviour:
+					behaviour.enabled = false;
 
-						behaviour.enabled = false;
+					break;
 
-						break;
+				case GameObject gameObject:
 
-					case GameObject gameObject:
+					gameObject.SetActive(false);
+					gameObject.transform.SetParent(null);
 
-						gameObject.SetActive(false);
-						gameObject.transform.SetParent(null);
-
-						break;
-				}
+					break;
 			}
 
 			//Add to job

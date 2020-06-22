@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeHelpers.DebugHelpers;
 using CodeHelpers.MeshHelpers.Collections;
 using CodeHelpers.MeshHelpers.Combinations;
 using UnityEngine;
@@ -12,6 +13,11 @@ namespace CodeHelpers.MeshHelpers
 	public static class MeshHelper
 	{
 		const int mesh16BitSize = 65530; //65536, left 6 for safety
+
+		//These cache can be used by any thread unsafe methods. Just make sure the clear up after use.
+		static readonly List<Vector3> vertexListCache = new List<Vector3>();
+		static readonly List<int> triangleListCache = new List<int>();
+		static readonly List<Vector3> normalListCache = new List<Vector3>();
 
 		/// <summary>
 		/// Combines the meshes given. Contains materials.
@@ -136,10 +142,10 @@ namespace CodeHelpers.MeshHelpers
 			var theseNormals = combineNormals ? new List<Vector3>() : null;
 
 			meshes.ForEach(
-				(thisMesh, index) =>
+				(mesh, index) =>
 				{
-					Mesh targetMesh = thisMesh.mesh;
-					Matrix4x4 thisMatrix = thisMesh.matrix;
+					Mesh targetMesh = mesh.mesh;
+					Matrix4x4 thisMatrix = mesh.matrix;
 
 					//Vertices and normals
 					int oldVertexCount = vertices.Count;
@@ -179,7 +185,7 @@ namespace CodeHelpers.MeshHelpers
 					//Triangles
 					for (int i = 0; i < targetMesh.subMeshCount; i++)
 					{
-						int subMeshIndex = i + thisMesh.subMeshOffset;
+						int subMeshIndex = i + mesh.subMeshOffset;
 
 						if (!triangles.ContainsKey(subMeshIndex)) triangles.Add(subMeshIndex, new List<int>());
 
@@ -203,28 +209,78 @@ namespace CodeHelpers.MeshHelpers
 		/// <summary>This applies a transform (matrix) to a mesh, this does not create a new mesh.</summary>
 		public static Mesh ApplyMatrix(Mesh mesh, Matrix4x4 matrix)
 		{
-			var vertices = new List<Vector3>();
-			var normals = new List<Vector3>();
+			mesh.GetVertices(vertexListCache);
+			mesh.GetNormals(normalListCache);
 
-			mesh.GetVertices(vertices);
-			mesh.GetNormals(normals);
-
-			for (int i = 0; i < vertices.Count; i++)
+			for (int i = 0; i < vertexListCache.Count; i++)
 			{
-				vertices[i] = matrix.MultiplyPoint3x4(vertices[i]);
-				normals[i] = matrix.MultiplyVector(normals[i]);
+				vertexListCache[i] = matrix.MultiplyPoint3x4(vertexListCache[i]);
+				normalListCache[i] = matrix.MultiplyVector(normalListCache[i]);
 			}
 
-			mesh.SetVertices(vertices);
-			mesh.SetNormals(normals);
+			mesh.SetVertices(vertexListCache);
+			mesh.SetNormals(normalListCache);
 
 			mesh.RecalculateBounds();
 			mesh.RecalculateTangents();
+
+			vertexListCache.Clear();
+			normalListCache.Clear();
 
 			return mesh;
 		}
 
 		/// <summary>Creates a new mesh with the data of this old mesh.</summary>
 		public static Mesh Clone(this Mesh mesh) => Object.Instantiate(mesh);
+
+		/// <summary>
+		/// Returns the interior volume of this <paramref name="mesh"/>.
+		/// NOTE: The mesh should be closed, but it does not have to be convex.
+		/// </summary>
+		public static float GetVolume(Mesh mesh)
+		{
+			//References:
+			//Paper - http://chenlab.ece.cornell.edu/Publication/Cha/icip01_Cha.pdf
+			//Stack Overflow answer - https://stackoverflow.com/a/1568551/9196958
+
+			float totalVolume = 0f;
+			mesh.GetVertices(vertexListCache);
+
+			for (int i = 0; i < mesh.subMeshCount; i++)
+			{
+				mesh.GetTriangles(triangleListCache, i);
+				int triangleCount = triangleListCache.Count;
+
+				for (int j = 0; j < triangleCount; j += 3)
+				{
+					totalVolume += SignedVolumeOfTriangle
+					(
+						vertexListCache[triangleListCache[j]],
+						vertexListCache[triangleListCache[j + 1]],
+						vertexListCache[triangleListCache[j + 2]]
+					);
+				}
+
+				triangleListCache.Clear();
+			}
+
+			vertexListCache.Clear();
+
+			return totalVolume;
+
+			float SignedVolumeOfTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
+			{
+				//Returns the signed volume of a tetrahedral formed with the 3 points and the origin
+
+				float v321 = point3.x * point2.y * point1.z;
+				float v231 = point2.x * point3.y * point1.z;
+				float v312 = point3.x * point1.y * point2.z;
+				float v132 = point1.x * point3.y * point2.z;
+				float v213 = point2.x * point1.y * point3.z;
+				float v123 = point1.x * point2.y * point3.z;
+
+				return 1f / 6f * (-v321 + v231 + v312 - v132 - v213 + v123);
+			}
+		}
 	}
 }

@@ -24,6 +24,34 @@ namespace CodeHelpers.Collections
 
 		public int Count => items?.Count ?? 0;
 
+		public int Capacity
+		{
+			get => items?.Capacity ?? 0;
+			set
+			{
+				if (value < Count) throw ExceptionHelper.Invalid(nameof(Capacity), value, $"is smaller than {nameof(Count)}, {Count}.");
+
+				if (value == 0)
+				{
+					items = null;
+					priorities = null;
+				}
+				else
+				{
+					if (items == null)
+					{
+						items = new List<T>(value);
+						priorities = new List<int>(value);
+					}
+					else
+					{
+						items.Capacity = Capacity;
+						priorities.Capacity = Capacity;
+					}
+				}
+			}
+		}
+
 		//NOTE: Returns negative number if index out of bounds
 		static int GetParentIndex(int index) => index == 0 ? -1 : (index - 1) / 2;
 
@@ -56,12 +84,20 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Returns the item with the smallest priority and remove it from the heap
+		/// Returns the item with the smallest priority and remove it from the collection.
 		/// </summary>
-		public T Dequeue()
+		public T Dequeue() => Dequeue(out int _);
+
+		/// <summary>
+		/// <inheritdoc cref="Dequeue()"/>
+		/// <paramref name="priority"/> will be assigned the priority of the dequeued item.
+		/// </summary>
+		public T Dequeue(out int priority)
 		{
-			if (Count == 0) throw new Exception("Cannot remove the first item because the heap is empty!");
+			if (Count == 0) throw new Exception("Cannot remove the first item because the collection is empty!");
+
 			T firstItem = items[0];
+			priority = priorities[0];
 
 			int count = Count - 1; //Need to cache because Count will change when we modify the lists
 			Swap(0, count);
@@ -86,25 +122,54 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Returns the item with the smallest priority without removing it from the heap
+		/// Returns the item with the smallest priority without removing it from the collection.
 		/// </summary>
-		public T Peek() => Count > 0 ? items[0] : throw new Exception("Cannot peak the first item because the heap is empty!");
+		public T Peek() => Peek(out int _);
 
+		/// <summary>
+		/// <inheritdoc cref="Peek()"/>
+		/// <paramref name="priority"/> will be assigned the priority of the peeked item.
+		/// </summary>
+		public T Peek(out int priority)
+		{
+			if (Count == 0) throw new Exception("Cannot peak the first item because the collection is empty!");
+
+			priority = priorities[0];
+			return items[0];
+		}
+
+		/// <summary>
+		/// Returns if <see cref="item"/> exists in the collection.
+		/// This overload requires more information than <see cref="Contains(T)"/> but is much faster.
+		/// </summary>
 		public bool Contains(int priority, T item) => GetIndex(priority, item) >= 0;
+
+		/// <summary>
+		/// Returns if <see cref="item"/> exists in the collection.
+		/// This overload requires less information than <see cref="Contains(int,T)"/> but is much slower.
+		/// </summary>
 		public bool Contains(T item) => GetIndex(item) >= 0;
 
+		/// <summary>
+		/// Reassigns <paramref name="item"/> to a new priority.
+		/// This overload requires more information than <see cref="Recalculate(T,int)"/> but is much faster.
+		/// </summary>
 		public void Recalculate(int oldPriority, T item, int newPriority)
 		{
 			int index = GetIndex(oldPriority, item);
-			if (index < 0) throw ExceptionHelper.Invalid(nameof(item), item, "does not exist in this heap!");
+			if (index < 0) throw ExceptionHelper.Invalid(nameof(item), item, "does not exist in this collection!");
 
 			Recalculate(index, newPriority);
 		}
 
+		/// <summary>
+		/// Reassigns <paramref name="item"/> to a new priority.
+		/// This overload requires less information than <see cref="Recalculate(int,T,int)"/> but is much slower.
+		/// </summary>
 		public void Recalculate(T item, int newPriority)
 		{
 			int index = GetIndex(item);
-			if (index < 0) throw ExceptionHelper.Invalid(nameof(item), item, "does not exist in this heap!");
+			if (index < 0) throw ExceptionHelper.Invalid(nameof(item), item, "does not exist in this collection!");
 
 			Recalculate(index, newPriority);
 		}
@@ -187,24 +252,7 @@ namespace CodeHelpers.Collections
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-		static readonly List<T>.Enumerator emptyEnumerator = new List<T>().GetEnumerator(); //Because this is a struct, every time accessing creates a defensive copy
+		static readonly List<T>.Enumerator emptyEnumerator = new List<T>().GetEnumerator(); //Because this is a struct, every time accessing it creates a defensive copy
 		public List<T>.Enumerator GetEnumerator() => items?.GetEnumerator() ?? emptyEnumerator;
-
-		public readonly struct Pair : IComparable<Pair>
-		{
-			public Pair(int priority, T item)
-			{
-				this.priority = priority;
-				this.item = item;
-			}
-
-			public readonly int priority;
-			public readonly T item;
-
-			public int CompareTo(Pair other) => priority.CompareTo(other.priority);
-
-			public static implicit operator KeyValuePair<int, T>(Pair pair) => new KeyValuePair<int, T>(pair.priority, pair.item);
-			public static explicit operator Pair(KeyValuePair<int, T> pair) => new Pair(pair.Key, pair.Value);
-		}
 	}
 }
