@@ -7,7 +7,7 @@ namespace CodeHelpers.DelayedExecution
 	{
 		static DelayedController() => CodeHelperMonoBehaviour.UnityUpdateMethods += ConstantUpdate;
 
-		static readonly List<JobInfo>               allJobs    = new List<JobInfo>();
+		static readonly List<JobInfo> allJobs = new List<JobInfo>();
 		static readonly Dictionary<DelayedJob, int> jobToIndex = new Dictionary<DelayedJob, int>();
 
 		/// <summary>
@@ -60,13 +60,13 @@ namespace CodeHelpers.DelayedExecution
 		{
 			public JobInfo(DelayedJob job, bool removeAfterFinished, Action<DelayedJob> onFinished)
 			{
-				this.job                 = job;
+				this.job = job;
 				this.removeAfterFinished = removeAfterFinished;
-				this.onFinished          = onFinished;
+				this.onFinished = onFinished;
 			}
 
-			public readonly DelayedJob         job;
-			public readonly bool               removeAfterFinished;
+			public readonly DelayedJob job;
+			public readonly bool removeAfterFinished;
 			public readonly Action<DelayedJob> onFinished;
 		}
 	}

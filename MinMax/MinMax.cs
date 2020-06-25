@@ -10,16 +10,24 @@ namespace CodeHelpers
 	{
 		public MinMax(float min, float max)
 		{
-			this.min = Mathf.Min(min, max);
-			this.max = Mathf.Max(min, max);
+			this.min = Math.Min(min, max);
+			this.max = Math.Max(min, max);
 		}
 
 		public MinMax(float value) => min = max = value;
 
 		public MinMax(params float[] values)
 		{
-			min = Mathf.Min(values);
-			max = Mathf.Max(values);
+			min = float.MaxValue;
+			max = float.MinValue;
+
+			for (int i = 0; i < values.Length; i++)
+			{
+				float value = values[i];
+
+				min = Math.Min(min, value);
+				max = Math.Max(max, value);
+			}
 		}
 
 		public MinMax(Vector4 vector)

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CodeHelpers.QuaternionHelpers
+namespace CodeHelpers.VectorHelpers
 {
 	public static class QuaternionHelper
 	{

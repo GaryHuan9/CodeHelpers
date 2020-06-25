@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using CodeHelpers.InputHelpers;
-using System.Reflection;
+using CodeHelpers.Events;
 using CodeHelpers.ThreadHelpers;
 
 namespace CodeHelpers
@@ -18,17 +18,56 @@ namespace CodeHelpers
 
 			ThreadHelper.MainThread = System.Threading.Thread.CurrentThread;
 		}
-
-		public static event Action OnApplicationQuitMethods;
+		
+		/// <summary>
+		/// Invoked on Unity's draw gizmos phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityDrawGizmosMethods;
 
+		/// <summary>
+		/// Invoked on Unity's pre update phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityPreUpdateMethods;
+
+		/// <summary>
+		/// Invoked on Unity's update phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityUpdateMethods;
+
+		/// <summary>
+		/// Invoked on Unity's late update phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityLateUpdateMethods;
+		
+		/// <summary>
+		/// Invoked on Unity's fixed update phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityFixedUpdateMethods;
+		
+		/// <summary>
+		/// Invoked on Unity's end update phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityEndUpdateMethods;
 
+		/// <summary>
+		/// Invoked on Unity's post render phase.
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
 		public static event Action UnityPostRenderMethods;
+
+		/// <summary>
+		/// Invoked when the application quits
+		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
+		/// </summary>
+		public static event Action OnApplicationQuitMethods;
+		
+		
 
 		/// <summary>
 		/// NOTE: Any delegate subscribed to this will only be invoked once!
@@ -91,7 +130,7 @@ namespace CodeHelpers
 			FramePhase = FramePhase.Middle;
 
 			CodeHelper.invokeNextFrame.InvokeAll();
-			UnityUpdateMethods?.Invoke();
+			UnityUpdateMethods.Invoke();
 
 			OnUnityUpdateMethods?.Invoke();
 			OnUnityUpdateMethods = null;
