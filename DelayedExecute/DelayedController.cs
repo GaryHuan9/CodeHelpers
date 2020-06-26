@@ -6,9 +6,7 @@ namespace CodeHelpers.DelayedExecution
 	public static class DelayedController
 	{
 		static DelayedController() => CodeHelperMonoBehaviour.UnityUpdateMethods += ConstantUpdate;
-
-		static readonly List<JobInfo> allJobs = new List<JobInfo>();
-		static readonly Dictionary<DelayedJob, int> jobToIndex = new Dictionary<DelayedJob, int>();
+		static readonly Dictionary<DelayedJob, JobInfo> allJobs = new Dictionary<DelayedJob, JobInfo>();
 
 		/// <summary>
 		/// Starts a job.
@@ -18,9 +16,7 @@ namespace CodeHelpers.DelayedExecution
 		public static void StartJob(DelayedJob job, Action<DelayedJob> onFinished = null, bool removeAfterFinished = true)
 		{
 			if (IsJobExecuting(job)) throw new Exception("Job already executing!");
-
-			jobToIndex.Add(job, allJobs.Count);
-			allJobs.Add(new JobInfo(job, removeAfterFinished, onFinished));
+			allJobs.Add(job, new JobInfo(removeAfterFinished, onFinished));
 		}
 
 		/// <summary>
@@ -28,44 +24,37 @@ namespace CodeHelpers.DelayedExecution
 		/// </summary>
 		public static void RemoveJob(DelayedJob job)
 		{
-			if (!IsJobExecuting(job)) throw new Exception("Job is not executing!");
-
-			int index = jobToIndex[job];
-
-			jobToIndex.Remove(job);
-			allJobs.RemoveAt(index);
+			if (IsJobExecuting(job)) allJobs.Remove(job);
+			else throw new Exception("Job is not executing!");
 		}
 
-		public static bool IsJobExecuting(DelayedJob job) => jobToIndex.ContainsKey(job);
+		public static bool IsJobExecuting(DelayedJob job) => allJobs.ContainsKey(job);
 
 		static void ConstantUpdate()
 		{
-			for (int i = 0; i < allJobs.Count; i++)
+			foreach (var pair in allJobs)
 			{
-				JobInfo info = allJobs[i];
-				info.job.Execute();
+				JobInfo info = pair.Value;
+				DelayedJob job = pair.Key;
 
-				if (!info.job.Finished) continue;
+				job.Execute();
+				if (!job.Finished) continue;
 
-				info.onFinished?.Invoke(info.job);
-
+				info.onFinished?.Invoke(job);
 				if (!info.removeAfterFinished) continue;
 
-				RemoveJob(info.job);
-				i--;
+				RemoveJob(job);
 			}
 		}
 
 		readonly struct JobInfo
 		{
-			public JobInfo(DelayedJob job, bool removeAfterFinished, Action<DelayedJob> onFinished)
+			public JobInfo(bool removeAfterFinished, Action<DelayedJob> onFinished)
 			{
-				this.job = job;
 				this.removeAfterFinished = removeAfterFinished;
 				this.onFinished = onFinished;
 			}
 
-			public readonly DelayedJob job;
 			public readonly bool removeAfterFinished;
 			public readonly Action<DelayedJob> onFinished;
 		}

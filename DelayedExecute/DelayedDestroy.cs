@@ -6,7 +6,9 @@ namespace CodeHelpers.DelayedExecution
 {
 	public static class DelayedDestroy
 	{
+		static readonly List<Object> mustDestroyList = new List<Object>();
 		static readonly Queue<Object> destroyQueue = new Queue<Object>();
+
 		static readonly DelayedJob destroyJob = new DelayedJob(DestroyJobEnumerator(), 0.8f);
 
 		/// <summary>
@@ -23,6 +25,8 @@ namespace CodeHelpers.DelayedExecution
 			if (target == null) throw ExceptionHelper.Invalid(nameof(target), target, InvalidType.isNull);
 			if (target is Transform transform) target = transform.gameObject;
 
+			bool mustDestroy = false;
+
 			//Disable target if available
 			switch (target)
 			{
@@ -38,23 +42,30 @@ namespace CodeHelpers.DelayedExecution
 					gameObject.transform.SetParent(null);
 
 					break;
-				
+
 				case Rigidbody rigidbody:
 
 					rigidbody.detectCollisions = false;
 					rigidbody.isKinematic = true;
-					
+
 					break;
-				
+
 				case Rigidbody2D rigidbody:
 
 					rigidbody.isKinematic = true;
-					
+
+					break;
+
+				case Component component:
+
+					mustDestroy = true;
 					break;
 			}
 
 			//Add to job
-			destroyQueue.Enqueue(target);
+			if (mustDestroy) mustDestroyList.Add(target);
+			else destroyQueue.Enqueue(target);
+
 			if (!destroyJob.IsJobExecuting) DelayedController.StartJob(destroyJob);
 		}
 
@@ -75,12 +86,20 @@ namespace CodeHelpers.DelayedExecution
 		{
 			while (true)
 			{
-				if (destroyQueue.Count == 0) yield return DelayedJob.ExitExecutionMark;
-				else
+				if (mustDestroyList.Count != 0)
 				{
-					Object.Destroy(destroyQueue.Dequeue());
+					for (int i = 0; i < mustDestroyList.Count; i++) Object.Destroy(mustDestroyList[i]);
+					mustDestroyList.Clear();
+
 					yield return 0;
 				}
+
+				if (destroyQueue.Count != 0)
+				{
+					Object.Destroy(destroyQueue.Dequeue());
+					yield return 1;
+				}
+				else yield return DelayedJob.ExitExecutionMark;
 			}
 		}
 	}

@@ -41,7 +41,9 @@ namespace CodeHelpers.DelayedExecution
 
 		public void Execute()
 		{
-			stopwatch.Restart();
+			stopwatch.Reset();
+			stopwatch.Start();
+			
 			int count = 0;
 
 			while (count++ != -1 && jobs.MoveNext())
@@ -68,7 +70,7 @@ namespace CodeHelpers.DelayedExecution
 			{
 				jobs.Reset();
 			}
-			catch (NotSupportedException notSupportedException)
+			catch (NotSupportedException)
 			{
 				throw new NotSupportedException("Job is a compiler-generated (yield) enumerator and does not support restart!");
 			}
