@@ -38,6 +38,19 @@ namespace CodeHelpers.DelayedExecution
 					gameObject.transform.SetParent(null);
 
 					break;
+				
+				case Rigidbody rigidbody:
+
+					rigidbody.detectCollisions = false;
+					rigidbody.isKinematic = true;
+					
+					break;
+				
+				case Rigidbody2D rigidbody:
+
+					rigidbody.isKinematic = true;
+					
+					break;
 			}
 
 			//Add to job

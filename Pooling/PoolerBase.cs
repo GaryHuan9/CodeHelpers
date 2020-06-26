@@ -12,20 +12,16 @@ namespace CodeHelpers.ObjectPooling
 
 		protected readonly Stack<T> pool = new Stack<T>();
 
-		public virtual T GetObject()
-		{
-			if (pool.Count == 0) return GetNewObject();
-
-			T target = pool.Pop();
-			Reset(target);
-
-			return target;
-		}
+		public virtual T GetObject() => pool.Count == 0 ? GetNewObject() : pool.Pop();
 
 		public virtual void ReleaseObject(T target)
 		{
 			if (pool.Count >= MaxPoolSize) Clear(target);
-			else pool.Push(target);
+			else
+			{
+				Reset(target);
+				pool.Push(target);
+			}
 		}
 
 		/// <summary>
@@ -36,7 +32,7 @@ namespace CodeHelpers.ObjectPooling
 
 		/// <summary>
 		/// The method that will be resetting the objects.
-		/// Invoked BEFORE each GetObject returns.
+		/// Invoked right when <see cref="ReleaseObject"/> is invoked.
 		/// </summary>
 		protected abstract void Reset(T target);
 
