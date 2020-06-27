@@ -50,7 +50,7 @@ namespace CodeHelpers
 		public static float EaseOut(float input)
 		{
 			CheckRange(ref input);
-			return Flip(EaseIn(input));
+			return 1f - Flip(EaseIn(input));
 		}
 
 		/// <summary>

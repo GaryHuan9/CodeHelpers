@@ -178,10 +178,10 @@ namespace CodeHelpers
 			public OneCallMethod(Action action)
 			{
 				invokeAction = () =>
-				{
-					action();
-					Interlocked.Exchange(ref hasCalled, 0);
-				};
+							   {
+								   action();
+								   Interlocked.Exchange(ref hasCalled, 0);
+							   };
 			}
 
 			readonly Action invokeAction;
