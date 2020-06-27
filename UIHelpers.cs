@@ -5,12 +5,13 @@ namespace CodeHelpers
 {
 	public static class UIHelper
 	{
-		public static RectTransform RectTransform(this Component     component)     => (RectTransform)component.transform;
-		public static RectTransform RectTransform(this Transform     transform)     => (RectTransform)transform;
+		public static RectTransform RectTransform(this Component component) => (RectTransform)component.transform;
+
+		public static RectTransform RectTransform(this Transform transform) => (RectTransform)transform;
 		// public static UITransformHelper Helper(this        Component component) => new UITransformHelper(component);
 
-		static        Canvas mainCanvas;
-		const         string mainCanvasTag = "MainCanvas";
+		static Canvas mainCanvas;
+		const string mainCanvasTag = "MainCanvas";
 		public static Canvas MainCanvas => mainCanvas == null ? mainCanvas = GetMainCanvas() : mainCanvas;
 
 		static Canvas GetMainCanvas()
@@ -29,8 +30,10 @@ namespace CodeHelpers
 			if (allTaggedCanvas.Length == 1) return allTaggedCanvas[0];
 			if (allTaggedCanvas.Length == 0)
 			{
-				Debug.LogWarning("There are multiple root canvas, but none of them are tagged \""                                + mainCanvasTag + "\"." +
-								 "\n UIHelper cannot determine which one is the main canvas. Please tag the main canvas with \"" + mainCanvasTag + "\".");
+				Debug.LogWarning(
+					"There are multiple root canvas, but none of them are tagged \"" + mainCanvasTag + "\"." +
+					"\n UIHelper cannot determine which one is the main canvas. Please tag the main canvas with \"" + mainCanvasTag + "\"."
+				);
 				return null;
 			}
 
@@ -40,7 +43,7 @@ namespace CodeHelpers
 
 		// public static Vector2 MainCanvasWorldSize => new UITransformHelper(MainCanvas).WorldSize;
 
-		public static Vector2 MainCanvasWorldSize           => MainCanvas.WorldSize();
+		public static Vector2 MainCanvasWorldSize => MainCanvas.WorldSize();
 		public static Vector2 WorldSize(this Canvas canvas) => Vector2.Scale(canvas.RectTransform().sizeDelta, canvas.RectTransform().localScale);
 	}
 
