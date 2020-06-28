@@ -6,7 +6,9 @@ namespace CodeHelpers.DelayedExecution
 	public static class DelayedController
 	{
 		static DelayedController() => CodeHelperMonoBehaviour.UnityUpdateMethods += ConstantUpdate;
+
 		static readonly Dictionary<DelayedJob, JobInfo> allJobs = new Dictionary<DelayedJob, JobInfo>();
+		static readonly List<DelayedJob> finishedJobs = new List<DelayedJob>();
 
 		/// <summary>
 		/// Starts a job.
@@ -43,8 +45,11 @@ namespace CodeHelpers.DelayedExecution
 				info.onFinished?.Invoke(job);
 				if (!info.removeAfterFinished) continue;
 
-				RemoveJob(job);
+				finishedJobs.Add(job);
 			}
+
+			for (int i = 0; i < finishedJobs.Count; i++) RemoveJob(finishedJobs[i]);
+			finishedJobs.Clear();
 		}
 
 		readonly struct JobInfo

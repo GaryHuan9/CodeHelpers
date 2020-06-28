@@ -130,7 +130,7 @@ namespace CodeHelpers
 			FramePhase = FramePhase.Middle;
 
 			CodeHelper.invokeNextFrame.InvokeAll();
-			UnityUpdateMethods.Invoke();
+			UnityUpdateMethods?.Invoke();
 
 			OnUnityUpdateMethods?.Invoke();
 			OnUnityUpdateMethods = null;
