@@ -16,9 +16,6 @@ namespace CodeHelpers
 		public static Vector3 ToXZ3(this Vector2Int vector, float y) => new Vector3(vector.x, y, vector.y);
 		public static Vector3Int ToXZ3(this Vector2Int vector, int y = 0) => new Vector3Int(vector.x, y, vector.y);
 
-		public static void SetXZ(this ref Vector3 vector, Vector2 xz) => vector = new Vector3(xz.x, vector.y, xz.y);
-		public static void SetXZ(this ref Vector3Int vector, Vector2Int xz) => vector = new Vector3Int(xz.x, vector.y, xz.y);
-
 		public static Vector3Int Floor(this Vector3 vector) => new Vector3Int(Mathf.FloorToInt(vector.x), Mathf.FloorToInt(vector.y), Mathf.FloorToInt(vector.z));
 		public static Vector3Int FloorEpsilon(this Vector3 vector) => new Vector3Int(Mathf.FloorToInt(vector.x + CodeHelper.Epsilon), Mathf.FloorToInt(vector.y + CodeHelper.Epsilon), Mathf.FloorToInt(vector.z + CodeHelper.Epsilon));
 
@@ -218,6 +215,38 @@ namespace CodeHelpers
 			}
 		}
 
+		public static Vector3 ReplaceX(this Vector3 vector, float value) => new Vector3(value, vector.y, vector.z);
+		public static Vector3 ReplaceY(this Vector3 vector, float value) => new Vector3(vector.x, value, vector.z);
+		public static Vector3 ReplaceZ(this Vector3 vector, float value) => new Vector3(vector.x, vector.y, value);
+
+		public static Vector3Int ReplaceX(this Vector3Int vector, int value) => new Vector3Int(value, vector.y, vector.z);
+		public static Vector3Int ReplaceY(this Vector3Int vector, int value) => new Vector3Int(vector.x, value, vector.z);
+		public static Vector3Int ReplaceZ(this Vector3Int vector, int value) => new Vector3Int(vector.x, vector.y, value);
+
+		public static Vector3 Replace(this Vector3 vector, int index, float value)
+		{
+			switch (index)
+			{
+				case 0: return vector.ReplaceX(value);
+				case 1: return vector.ReplaceY(value);
+				case 2: return vector.ReplaceZ(value);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+		}
+
+		public static Vector3Int Replace(this Vector3Int vector, int index, int value)
+		{
+			switch (index)
+			{
+				case 0: return vector.ReplaceX(value);
+				case 1: return vector.ReplaceY(value);
+				case 2: return vector.ReplaceZ(value);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+		}
+
 		public static readonly IReadOnlyList<Direction> neighbor6Directions = Array.AsReadOnly(Enum.GetValues(typeof(Direction)).Cast<Direction>().ToArray());
 
 		/// <summary>
@@ -363,18 +392,6 @@ namespace CodeHelpers
 		public static bool LessThanOrEquals(this Vector2Int vector, Vector2Int otherVector) => vector.x <= otherVector.x && vector.y <= otherVector.y;
 		public static bool GreaterThanOrEquals(this Vector2Int vector, Vector2Int otherVector) => vector.x >= otherVector.x && vector.y >= otherVector.y;
 
-		public static Vector3 Set(this Vector3 vector, int index, float value)
-		{
-			vector[index] = value;
-			return vector;
-		}
-
-		public static Vector3Int Set(this Vector3Int vector, int index, int value)
-		{
-			vector[index] = value;
-			return vector;
-		}
-
 		public static Vector2 EpsilonVector2 => Vector2.one * CodeHelper.Epsilon;
 
 		public static Vector2 MaxVector2 => Vector2.one * float.MaxValue;
@@ -511,16 +528,32 @@ namespace CodeHelpers
 			void RotateDirection() => direction = neighbor4Positions[(++index).Repeat(4)];
 		}
 
-		public static Vector2 Set(this Vector2 vector, int index, float value)
+		public static Vector2 ReplaceX(this Vector2 vector, float value) => new Vector2(value, vector.y);
+		public static Vector2 ReplaceY(this Vector2 vector, float value) => new Vector2(vector.x, value);
+
+		public static Vector2Int ReplaceX(this Vector2Int vector, int value) => new Vector2Int(value, vector.y);
+		public static Vector2Int ReplaceY(this Vector2Int vector, int value) => new Vector2Int(vector.x, value);
+
+		public static Vector2 Replace(this Vector2 vector, int index, float value)
 		{
-			vector[index] = value;
-			return vector;
+			switch (index)
+			{
+				case 0: return vector.ReplaceX(value);
+				case 1: return vector.ReplaceY(value);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 		}
 
-		public static Vector2Int Set(this Vector2Int vector, int index, int value)
+		public static Vector2Int Replace(this Vector2Int vector, int index, int value)
 		{
-			vector[index] = value;
-			return vector;
+			switch (index)
+			{
+				case 0: return vector.ReplaceX(value);
+				case 1: return vector.ReplaceY(value);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 		}
 
 		public static readonly IReadOnlyList<Vector2Int> neighbor4Positions = Array.AsReadOnly(new[] {Vector2Int.right, Vector2Int.down, Vector2Int.left, Vector2Int.up});
@@ -609,7 +642,7 @@ namespace CodeHelpers
 			vector[index2] = storage;
 		}
 
-		public static Vector4 Set(this Vector4 vector, int index, float value)
+		public static Vector4 Replace(this Vector4 vector, int index, float value)
 		{
 			vector[index] = value;
 			return vector;

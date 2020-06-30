@@ -58,6 +58,16 @@ namespace CodeHelpers.VectorHelpers
 		}
 
 		/// <summary>
+		/// If this direction is in the y axis, convert it into a direction in the z axis
+		/// </summary>
+		public static Direction FromYToZ(this Direction direction) => direction == Direction.up || direction == Direction.down ? direction + 2 : direction;
+
+		/// <summary>
+		/// If this direction is in the z axis, convert it into a direction in the y axis
+		/// </summary>
+		public static Direction FromZToY(this Direction direction) => direction == Direction.forward || direction == Direction.backward ? direction - 2 : direction;
+
+		/// <summary>
 		/// Returns one of the component of <paramref name="vector"/> times direction.
 		/// A faster way to calculate Vector3Int.Scale(direction.ToVector3(), vector).magnitude
 		/// </summary>
