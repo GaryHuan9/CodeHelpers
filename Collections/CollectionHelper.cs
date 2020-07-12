@@ -6,6 +6,11 @@ namespace CodeHelpers.Collections
 {
 	public static class CollectionHelper
 	{
+		/// <summary>
+		/// Binary search the <paramref name="list"/>. Returns the positive index if an item according to the <paramref name="comparer"/> is found.
+		/// If no matching items can be found, returns a negative number. You can get where the item is suppose to be located by using the bit invert operator on that number.
+		/// NOTE: Must use an ordered list. None ordered lists will yield incorrect results.
+		/// </summary>
 		public static int BinarySearch<TItem, TKey>(this IList<TItem> list, TKey key, IDoubleComparer<TItem, TKey> comparer)
 		{
 			if (list.Count == 0) return ~0;
