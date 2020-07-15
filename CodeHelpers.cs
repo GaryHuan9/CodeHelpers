@@ -582,7 +582,7 @@ namespace CodeHelpers
 			{
 				if (action == null) throw new NullReferenceException("action cannot be null!");
 
-				if (ThreadHelper.IsInMainThread) actions.Enqueue(action);
+				if (ThreadHelper.IsOnMainThread) actions.Enqueue(action);
 				else threadedActions.Enqueue(action);
 			}
 

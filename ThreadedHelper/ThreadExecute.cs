@@ -56,7 +56,7 @@ namespace CodeHelpers.ThreadHelpers
 
 		public void AddExecution(Action action, int id = 0)
 		{
-			if (!ThreadHelper.IsInMainThread) throw new Exception("You only call this in the main thread.");
+			if (!ThreadHelper.IsOnMainThread) throw new Exception("You only call this in the main thread.");
 			executionQueue.Enqueue(new Execution(action, id));
 
 			resetEvent.Set();
@@ -66,7 +66,7 @@ namespace CodeHelpers.ThreadHelpers
 		/// <summary>This method kills the current execution if it has the same id, and deletes all executions with this id in the queue</summary>
 		public bool KillAllExecutions(int id)
 		{
-			if (!ThreadHelper.IsInMainThread) throw new Exception("You only call this in the main thread because it contains enumeration of the queue.");
+			if (!ThreadHelper.IsOnMainThread) throw new Exception("You only call this in the main thread because it contains enumeration of the queue.");
 
 			bool successful = false;
 			Interlocked.Exchange(ref killingId, id);

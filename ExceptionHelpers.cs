@@ -30,7 +30,7 @@ namespace CodeHelpers
 
 		public static void InvalidIfNotMainThread()
 		{
-			if (ThreadHelper.IsInMainThread) return;
+			if (ThreadHelper.IsOnMainThread) return;
 			throw new Exception("This code can only be executed in the main thread.");
 		}
 

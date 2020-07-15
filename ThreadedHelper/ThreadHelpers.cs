@@ -67,7 +67,7 @@ namespace CodeHelpers.ThreadHelpers
 			}
 		}
 
-		public static bool IsInMainThread => MainThread == null || Thread.CurrentThread == MainThread;
+		public static bool IsOnMainThread => MainThread == null || Thread.CurrentThread == MainThread;
 
 		/// <summary>
 		/// This returns a method that can only be executing by one thread.
