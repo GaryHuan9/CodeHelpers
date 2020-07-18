@@ -85,8 +85,8 @@ namespace CodeHelpers.NoiseGeneration
 		{
 			float result = 0f;
 
-			float amplitude = 1;
-			float frequency = 1;
+			float amplitude = 1f;
+			float frequency = 1f;
 
 			for (int j = 0; j < info.layerCount; j++)
 			{
