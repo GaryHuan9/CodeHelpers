@@ -180,7 +180,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 		public virtual BehaviorAction BehaviorActionValue
 		{
-			get => behaviorAction;
+			get => CheckReturn(behaviorAction);
 			set
 			{
 				CheckReturn(value);
@@ -349,6 +349,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public SerializableParameter(SerializableParameter source) : base(source) { }
 		public SerializableParameter(BehaviorAction behaviorAction) : base(behaviorAction) { }
 		public SerializableParameter(bool booleanValue) : base(booleanValue) { }
+		//public SerializableParameter(Enum enumerationValue) : base(enumerationValue) { }
 		public SerializableParameter(int integer1Value) : base(integer1Value) { }
 		public SerializableParameter(Vector2Int integer2Value) : base(integer2Value) { }
 		public SerializableParameter(Vector3Int integer3Value) : base(integer3Value) { }
@@ -414,7 +415,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		static readonly Dictionary<ParameterType, Type> enumToType =
 			new Dictionary<ParameterType, Type>
 			{
-				{ParameterType.behaviorAction, typeof(BehaviorAction)}, {ParameterType.boolean, typeof(bool)},
+				{ParameterType.behaviorAction, typeof(BehaviorAction)}, {ParameterType.boolean, typeof(bool)}, {ParameterType.enumeration, typeof(Enum)},
 				{ParameterType.integer1, typeof(int)}, {ParameterType.integer2, typeof(Vector2Int)}, {ParameterType.integer3, typeof(Vector3Int)},
 				{ParameterType.float1, typeof(float)}, {ParameterType.float2, typeof(Vector2)}, {ParameterType.float3, typeof(Vector3)}
 			};
@@ -440,6 +441,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 	{
 		behaviorAction,
 		boolean,
+		enumeration,
 		integer1,
 		integer2,
 		integer3,

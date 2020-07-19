@@ -41,5 +41,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			throw ExceptionHelper.Invalid(nameof(result), result, InvalidType.unexpected);
 		}
+
+		public static Result ToResult(this bool value) => value ? Result.success : Result.failure;
 	}
 }

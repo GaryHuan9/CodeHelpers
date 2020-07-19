@@ -153,6 +153,13 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					control = toggle;
 					break;
 
+				case ParameterType.enumeration:
+
+					control = new EnumField();
+					//TODO
+
+					break;
+
 				case ParameterType.integer1:
 
 					var integerField = new IntegerField(controlName) {value = parameter.Integer1Value};
