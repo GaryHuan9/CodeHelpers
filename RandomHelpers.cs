@@ -87,12 +87,12 @@ namespace CodeHelpers
 		public static float Value1To1 => (float)Value * 2f - 1f;
 
 		/// <summary>
-		/// Returns a random int inside [min,max) 
+		/// Returns a random int inside (min inclusive, max exclusive)
 		/// </summary>
 		public static int Range(int min, int max) => CurrentRandom.Next(min, max);
 
 		/// <summary>
-		/// Returns a random int inside [0,max) 
+		/// Returns a random int inside (0 inclusive, max exclusive)
 		/// </summary>
 		public static int Range(int max) => CurrentRandom.Next(max);
 
