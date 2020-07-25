@@ -7,6 +7,12 @@ namespace CodeHelpers.ObjectPooling
 	public static class CollectionPooler<T>
 	{
 		public static readonly CollectionPoolerBase<List<T>, T> list = new CollectionPoolerBase<List<T>, T>();
+		public static readonly CollectionPoolerBase<HashSet<T>, T> hashSet = new CollectionPoolerBase<HashSet<T>, T>();
+	}
+
+	public static class CollectionPooler<TKey, TValue>
+	{
+		public static readonly CollectionPoolerBase<Dictionary<TKey, TValue>, KeyValuePair<TKey, TValue>> dictionary = new CollectionPoolerBase<Dictionary<TKey, TValue>, KeyValuePair<TKey, TValue>>();
 	}
 
 	public class CollectionPoolerBase<T, TObject> : PoolerBase<T> where T : class, ICollection<TObject>, new()

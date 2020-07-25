@@ -1,40 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using CodeHelpers.DebugHelpers;
 using CodeHelpers.MeshHelpers.Collections;
 using CodeHelpers.MeshHelpers.Combinations;
+using CodeHelpers.ObjectPooling;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Object = UnityEngine.Object;
 
 namespace CodeHelpers.MeshHelpers
 {
 	public static class MeshHelper
 	{
-		const int mesh16BitSize = 65530; //65536, left 6 for safety
+		const uint Mesh16BitSize = 65530; //65536, left 6 for safety
 
-		//These cache can be used by any thread unsafe methods. Just make sure the clear up after use.
-		static readonly List<Vector3> vertexListCache = new List<Vector3>();
-		static readonly List<int> triangleListCache = new List<int>();
-		static readonly List<Vector3> normalListCache = new List<Vector3>();
+		static readonly MeshPooler meshPooler = new MeshPooler();
 
 		/// <summary>
 		/// Combines the meshes given. Contains materials.
 		/// </summary>
 		public static MeshMaterials CombineMeshes(IList<MeshMaterials> models, IList<Matrix4x4> matrices, Mesh baseMesh = null)
 		{
-			if (models.Count != matrices.Count)
-			{
-				throw new Exception
-				(
-					"Different length of array for mesh combine.\n" +
-					$"models.Length = {models.Count} matrices.Length = {matrices.Count}"
-				);
-			}
+			if (models.Count != matrices.Count) throw new Exception($"Different length of array for mesh combine. {nameof(models)} Length = {models.Count} {nameof(matrices)} Length = {matrices.Count}");
 
-			var meshListDictionary = new Dictionary<Material, ListWithVertexCount>();
-			Mesh subMesh;
+			var dictionary = CollectionPooler<Material, List<CombineInstance>>.dictionary.GetObject();
+			uint totalVertexCount = 0;
 
 			for (int i = 0; i < models.Count; i++)
 			{
@@ -43,50 +31,54 @@ namespace CodeHelpers.MeshHelpers
 				//Loop through all the materials
 				for (int j = 0; j < model.Materials.Count; j++)
 				{
-					subMesh = model.GetSubMesh(j);
+					Mesh subMesh = model.GetSubMesh(j);
 
-					var material = model.Materials[j];
-					var meshList = meshListDictionary.ContainsKey(material) ? meshListDictionary[material] : new ListWithVertexCount {list = new List<CombineInstance>()};
+					Material material = model.Materials[j];
+					List<CombineInstance> list;
 
-					meshList.vertexCount += subMesh.vertexCount;
-					meshList.list.Add(new CombineInstance {mesh = subMesh, transform = matrices[i]});
+					if (!dictionary.ContainsKey(material))
+					{
+						list = CollectionPooler<CombineInstance>.list.GetObject();
+						dictionary.Add(material, list);
+					}
+					else list = dictionary[material];
 
-					meshListDictionary[material] = meshList;
+					list.Add(new CombineInstance {mesh = subMesh, transform = matrices[i]});
+					totalVertexCount += (uint)subMesh.vertexCount;
 				}
 			}
 
-			CombineInstance[] instances = new CombineInstance[meshListDictionary.Count];
+			CombineInstance[] instances = new CombineInstance[dictionary.Count];
+			Material[] materials = new Material[dictionary.Count];
 
-			int vertexCount = 0;
 			int loopIndex = 0;
 
-			foreach (var pair in meshListDictionary)
+			//Combine first pass, material sub meshes
+			foreach (KeyValuePair<Material, List<CombineInstance>> pair in dictionary)
 			{
-				subMesh = new Mesh {indexFormat = pair.Value.vertexCount >= mesh16BitSize ? IndexFormat.UInt32 : IndexFormat.UInt16};
+				Mesh subMesh = meshPooler.GetObject();
+				if (totalVertexCount >= Mesh16BitSize) subMesh.indexFormat = IndexFormat.UInt32;
 
-				subMesh.CombineMeshes(pair.Value.list.ToArray(), true);
-				vertexCount += subMesh.vertexCount;
+				subMesh.CombineMeshes(pair.Value.ToArray(), true, true, false);
+				CollectionPooler<CombineInstance>.list.ReleaseObject(pair.Value); //Clean list
 
-				instances[loopIndex++] = new CombineInstance
-										 {
-											 mesh = subMesh,
-											 subMeshIndex = 0
-										 };
+				instances[loopIndex] = new CombineInstance {mesh = subMesh, subMeshIndex = 0};
+				materials[loopIndex] = pair.Key;
+
+				loopIndex++;
 			}
 
+			//Combine second pass
 			if (baseMesh == null) baseMesh = new Mesh();
+			else baseMesh.Clear();
 
-			baseMesh.indexFormat = vertexCount >= mesh16BitSize ? IndexFormat.UInt32 : IndexFormat.UInt16;
-			baseMesh.CombineMeshes(instances, false, false);
+			baseMesh.indexFormat = totalVertexCount < Mesh16BitSize ? IndexFormat.UInt16 : IndexFormat.UInt32;
+			baseMesh.CombineMeshes(instances, false, false, false);
 
-			if (meshListDictionary.Count == 1) return new MeshMaterials(baseMesh, meshListDictionary.First().Key);
-			return new MeshMaterials(baseMesh, meshListDictionary.Keys.ToArray());
-		}
+			CollectionPooler<Material, List<CombineInstance>>.dictionary.ReleaseObject(dictionary); //Clean dictionary
+			for (int i = 0; i < instances.Length; i++) meshPooler.ReleaseObject(instances[i].mesh); //Clean old submeshes
 
-		struct ListWithVertexCount
-		{
-			public List<CombineInstance> list;
-			public int vertexCount;
+			return new MeshMaterials(baseMesh, materials);
 		}
 
 		/// <summary>
@@ -120,7 +112,7 @@ namespace CodeHelpers.MeshHelpers
 
 			if (baseMesh == null) baseMesh = new Mesh();
 
-			baseMesh.indexFormat = vertexCount >= mesh16BitSize ? IndexFormat.UInt32 : IndexFormat.UInt16;
+			baseMesh.indexFormat = vertexCount >= Mesh16BitSize ? IndexFormat.UInt32 : IndexFormat.UInt16;
 			baseMesh.CombineMeshes(instances, true);
 
 			return baseMesh;
@@ -206,32 +198,35 @@ namespace CodeHelpers.MeshHelpers
 			return new MeshThreadedData(vertices, triangles, uvs, normals);
 		}
 
-		/// <summary>This applies a transform (matrix) to a mesh, this does not create a new mesh.</summary>
+		/// <summary>This applies a transform (matrix) to a mesh. NOTE: this does not create a new mesh.</summary>
 		public static Mesh ApplyMatrix(Mesh mesh, Matrix4x4 matrix)
 		{
-			mesh.GetVertices(vertexListCache);
-			mesh.GetNormals(normalListCache);
+			var vertices = CollectionPooler<Vector3>.list.GetObject();
+			var normals = CollectionPooler<Vector3>.list.GetObject();
 
-			for (int i = 0; i < vertexListCache.Count; i++)
+			mesh.GetVertices(vertices);
+			mesh.GetNormals(normals);
+
+			for (int i = 0; i < vertices.Count; i++)
 			{
-				vertexListCache[i] = matrix.MultiplyPoint3x4(vertexListCache[i]);
-				normalListCache[i] = matrix.MultiplyVector(normalListCache[i]);
+				vertices[i] = matrix.MultiplyPoint3x4(vertices[i]);
+				normals[i] = matrix.MultiplyVector(normals[i]);
 			}
 
-			mesh.SetVertices(vertexListCache);
-			mesh.SetNormals(normalListCache);
+			mesh.SetVertices(vertices);
+			mesh.SetNormals(normals);
 
 			mesh.RecalculateBounds();
 			mesh.RecalculateTangents();
 
-			vertexListCache.Clear();
-			normalListCache.Clear();
+			CollectionPooler<Vector3>.list.ReleaseObject(vertices);
+			CollectionPooler<Vector3>.list.ReleaseObject(normals);
 
 			return mesh;
 		}
 
 		/// <summary>Creates a new mesh with the data of this old mesh.</summary>
-		public static Mesh Clone(this Mesh mesh) => Object.Instantiate(mesh);
+		public static Mesh Clone(this Mesh mesh) => UnityEngine.Object.Instantiate(mesh);
 
 		/// <summary>
 		/// Returns the interior volume of this <paramref name="mesh"/>.
@@ -244,31 +239,32 @@ namespace CodeHelpers.MeshHelpers
 			//Stack Overflow answer - https://stackoverflow.com/a/1568551/9196958
 
 			float totalVolume = 0f;
-			mesh.GetVertices(vertexListCache);
+			var vertices = CollectionPooler<Vector3>.list.GetObject();
+
+			mesh.GetVertices(vertices);
 
 			for (int i = 0; i < mesh.subMeshCount; i++)
 			{
-				mesh.GetTriangles(triangleListCache, i);
-				int triangleCount = triangleListCache.Count;
+				var triangles = CollectionPooler<int>.list.GetObject();
+				mesh.GetTriangles(triangles, i);
 
-				for (int j = 0; j < triangleCount; j += 3)
+				for (int j = 0; j < triangles.Count; j += 3)
 				{
-					totalVolume += SignedVolumeOfTriangle
+					totalVolume += GetSignedVolumeOfTriangle
 					(
-						vertexListCache[triangleListCache[j]],
-						vertexListCache[triangleListCache[j + 1]],
-						vertexListCache[triangleListCache[j + 2]]
+						vertices[triangles[j]],
+						vertices[triangles[j + 1]],
+						vertices[triangles[j + 2]]
 					);
 				}
 
-				triangleListCache.Clear();
+				CollectionPooler<int>.list.ReleaseObject(triangles);
 			}
 
-			vertexListCache.Clear();
-
+			CollectionPooler<Vector3>.list.ReleaseObject(vertices);
 			return totalVolume;
 
-			float SignedVolumeOfTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
+			float GetSignedVolumeOfTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
 			{
 				//Returns the signed volume of a tetrahedral formed with the 3 points and the origin
 
@@ -279,7 +275,7 @@ namespace CodeHelpers.MeshHelpers
 				float v213 = point2.x * point1.y * point3.z;
 				float v123 = point1.x * point2.y * point3.z;
 
-				return 1f / 6f * (-v321 + v231 + v312 - v132 - v213 + v123);
+				return (-v321 + v231 + v312 - v132 - v213 + v123) / 6f;
 			}
 		}
 	}
