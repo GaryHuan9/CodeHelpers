@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using RandomS = System.Random;
 using CodeHelpers.ThreadHelpers;
+using CodeHelpers.VectorHelpers;
 
 namespace CodeHelpers
 {
@@ -320,7 +321,7 @@ namespace CodeHelpers
 			const int BigPrime3 = 105167;
 			const int BigPrime4 = 105407;
 
-			static int GetInt(float value) => CodeHelper.SingleToInt32Bits(value);
+			static int GetInt(float value) => ScalerHelper.SingleToInt32Bits(value);
 
 			//NOTE: The conversion from int to uint is unchecked, which means if the int value is negative, it will get warped to a large positive number
 			static float GetSource(float value) => unchecked(NoiseController.GetSource((uint)GetInt(value)));

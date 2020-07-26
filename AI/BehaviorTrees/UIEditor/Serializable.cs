@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using CodeHelpers.DebugHelpers;
+using CodeHelpers.VectorHelpers;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Object = UnityEngine.Object;
@@ -338,8 +339,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			throw new Exception($"This {nameof(SerializableParameter)} has the type {Type} but you are trying to yse its value as an {typeof(T)}!");
 		}
 
-		protected static float BitwiseConvert(int value) => CodeHelper.Int32BitsToSingle(value);
-		protected static int BitwiseConvert(float value) => CodeHelper.SingleToInt32Bits(value);
+		protected static float BitwiseConvert(int value) => ScalerHelper.Int32BitsToSingle(value);
+		protected static int BitwiseConvert(float value) => ScalerHelper.SingleToInt32Bits(value);
 	}
 
 	[Serializable]
@@ -348,7 +349,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		public SerializableParameter(ParameterType type) : base(type) { }
 		public SerializableParameter(SerializableParameter source) : base(source) { }
 		public SerializableParameter(BehaviorAction behaviorAction) : base(behaviorAction) { }
+
 		public SerializableParameter(bool booleanValue) : base(booleanValue) { }
+
 		//public SerializableParameter(Enum enumerationValue) : base(enumerationValue) { }
 		public SerializableParameter(int integer1Value) : base(integer1Value) { }
 		public SerializableParameter(Vector2Int integer2Value) : base(integer2Value) { }

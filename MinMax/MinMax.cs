@@ -3,6 +3,7 @@ using System.Diagnostics.Contracts;
 using System;
 using System.Collections.Generic;
 using CodeHelpers.ThreadHelpers;
+using CodeHelpers.VectorHelpers;
 
 namespace CodeHelpers
 {

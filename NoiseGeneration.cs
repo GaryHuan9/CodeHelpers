@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace CodeHelpers.NoiseGeneration
+namespace CodeHelpers.Noises
 {
-	public static class NoiseGenerationHelper
+	public static class NoiseHelper
 	{
 
 #region Methods
