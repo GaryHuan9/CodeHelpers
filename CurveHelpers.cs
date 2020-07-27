@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Xml;
 using UnityEngine;
 
 namespace CodeHelpers
 {
-	public static class CurveHelper
+	public static class CurveHelper //https://www.desmos.com/calculator/tsrynhfbtr
 	{
 		public static InputCheckMode CheckMode { get; set; } = InputCheckMode.clamp;
 
@@ -50,7 +51,7 @@ namespace CodeHelpers
 		public static float EaseOut(float input)
 		{
 			CheckRange(ref input);
-			return 1f - Flip(EaseIn(input));
+			return -input * input + 2f * input;
 		}
 
 		/// <summary>
@@ -60,8 +61,15 @@ namespace CodeHelpers
 		public static float Ease(float input, float acceleration)
 		{
 			CheckRange(ref input);
-			return Mathf.Pow(input, acceleration >= 0f ? acceleration + 1f : 1f / -(acceleration - 1f));
+
+			if (Mathf.Approximately(acceleration, 0f)) return input;
+
+			if (acceleration > 0f) return Mathf.Pow(input, acceleration + 1f);
+			return 1f - Mathf.Pow(1f - input, -acceleration + 1f);
 		}
+
+		public static float EaseInSmooth(float input) => EaseIn(Sigmoid(input));
+		public static float EaseOutSmooth(float input) => EaseOut(Sigmoid(input));
 
 		/// <summary>
 		/// <paramref name="steepness"/> is how quick the input will grow in the middle

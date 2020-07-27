@@ -4,13 +4,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using CodeHelpers.ThreadHelpers;
 using CodeHelpers.VectorHelpers;
 
 namespace CodeHelpers
 {
-	[Serializable]
-	public readonly struct MinMaxInt : IEquatable<MinMaxInt>, IEnumerable<int>
+	public readonly struct MinMaxInt : IEquatable<MinMaxInt>
 	{
 		public MinMaxInt(int min, int max)
 		{
@@ -76,6 +74,8 @@ namespace CodeHelpers
 		public MinMaxInt ToSignedAngles() => new MinMaxInt(min.ToSignedAngle(), max.ToSignedAngle());
 		public MinMaxInt ToUnsignedAngles() => new MinMaxInt(min.ToUnsignedAngle(), max.ToUnsignedAngle());
 
+		public LoopEnumerator Loop() => new LoopEnumerator(this);
+
 		public void Deconstruct(out int min, out int max)
 		{
 			min = this.min;
@@ -88,8 +88,7 @@ namespace CodeHelpers
 		public static MinMaxInt OneToOne => new MinMaxInt(-1, 1);
 		public static MinMaxInt MinToMax => new MinMaxInt(int.MinValue, int.MaxValue);
 
-		public static List<MinMaxInt> GetRangesFromValue(IEnumerable<MinMaxInt> minMaxes, float value) =>
-			minMaxes.Where(t => t.Contains(value)).ToList();
+		public static List<MinMaxInt> GetRangesFromValue(IEnumerable<MinMaxInt> minMaxes, float value) => minMaxes.Where(t => t.Contains(value)).ToList();
 
 		public static MinMaxInt operator +(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min + other.min, minMax.max + other.max);
 		public static MinMaxInt operator -(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min - other.min, minMax.max - other.max);
@@ -117,14 +116,9 @@ namespace CodeHelpers
 
 		public override int GetHashCode() => ((Vector2Int)this).GetHashCode();
 
-		public Enumerator GetEnumerator() => new Enumerator(this);
-
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
-
-		public struct Enumerator : IEnumerator<int>
+		public struct LoopEnumerator : IEnumerator<int>
 		{
-			public Enumerator(MinMaxInt minMax)
+			public LoopEnumerator(MinMaxInt minMax)
 			{
 				this.minMax = minMax;
 				Current = minMax.min - 1;
