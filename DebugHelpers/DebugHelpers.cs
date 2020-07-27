@@ -113,9 +113,9 @@ namespace CodeHelpers.DebugHelpers
 		{
 			switch (target)
 			{
-				case Vector3 vector:    return vector.ToString("G4");
-				case Vector2 vector:    return vector.ToString("G4");
-				case Vector4 vector:    return vector.ToString("G4");
+				case Vector3 vector:    return vector.ToString("F3");
+				case Vector2 vector:    return vector.ToString("F3");
+				case Vector4 vector:    return vector.ToString("F3");
 				case Vector3Int vector: return vector.ToString();
 				case Vector2Int vector: return vector.ToString();
 			}
