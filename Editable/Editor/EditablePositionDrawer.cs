@@ -2,7 +2,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeHelpers.Editable.Editor
+namespace CodeHelpers.Editable.Editors
 {
 	[CustomPropertyDrawer(typeof(EditablePosition))]
 	public class EditablePositionDrawer : EditableDrawer

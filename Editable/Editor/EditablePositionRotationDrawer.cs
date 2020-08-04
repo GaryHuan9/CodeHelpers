@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeHelpers.Editable.Editor
+namespace CodeHelpers.Editable.Editors
 {
 	[CustomPropertyDrawer(typeof(EditablePositionRotation))]
 	public class EditablePositionRotationDrawer : EditableDrawer

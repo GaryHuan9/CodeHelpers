@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeHelpers.Editable.Editor
+namespace CodeHelpers.Editable.Editors
 {
 	//NOTE: This causes NaughtAttributes to malfunction!
 

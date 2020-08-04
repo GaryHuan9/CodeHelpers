@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeHelpers.Editable.Editor
+namespace CodeHelpers.Editable.Editors
 {
 	//NOTE: Remember to enable EditableEditor if you want the UI editor to work!
 
