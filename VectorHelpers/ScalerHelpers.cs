@@ -89,14 +89,14 @@ namespace CodeHelpers.VectorHelpers
 		public static int SingleToInt32Bits(float value) => new FloatIntConverter(value).intValue;
 		public static float Int32BitsToSingle(int value) => new FloatIntConverter(value).floatValue;
 
-		[StructLayout(LayoutKind.Explicit)]
+		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
 		struct FloatIntConverter
 		{
 			public FloatIntConverter(float floatValue) : this() => this.floatValue = floatValue;
 			public FloatIntConverter(int intValue) : this() => this.intValue = intValue;
 
-			[FieldOffset(0)] public readonly float floatValue;
-			[FieldOffset(0)] public readonly int intValue;
+			[System.Runtime.InteropServices.FieldOffset(0)] public readonly float floatValue;
+			[System.Runtime.InteropServices.FieldOffset(0)] public readonly int intValue;
 		}
 #endif
 
