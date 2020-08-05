@@ -108,39 +108,39 @@ namespace CodeHelpers.Editors
 			Vector2Int singleSize = new Vector2Int(first.width, first.height);
 			Vector2Int resolution = GetCubemapSize(singleSize);
 
-			Color32[] colors = new Color32[resolution.Size()];
+			Color[] colors = new Color[resolution.Size()];
 			Texture2D result = new Texture2D(resolution.x, resolution.y);
 
-			Color32[][] sourceColors = new Color32[textures.Length][];
+			Color[][] sourceColors = new Color[textures.Length][];
 
 			for (int i = 0; i < textures.Length; i++)
 			{
 				if (textures[i] == null) continue;
-				sourceColors[i] = textures[i].GetPixels32();
+				sourceColors[i] = textures[i].GetPixels();
 			}
 
 			foreach (Vector2Int pixel in resolution.Loop())
 			{
 				int regionIndex = GetPixelTextureIndex(pixel, singleSize);
-				Color32 color;
+				Color color;
 
 				if (regionIndex >= 0)
 				{
-					Color32[] source = sourceColors[regionIndex];
+					Color[] source = sourceColors[regionIndex];
 
-					if (source == null) color = new Color32(0, 0, 0, 1); //Black for missing texture
+					if (source == null) color = new Color(0f, 0f, 0f, 1f); //Black for missing texture
 					else
 					{
 						Vector2Int region = GetPixelTextureOffset(pixel, singleSize);
 						color = source[region.y * singleSize.x + region.x];
 					}
 				}
-				else color = new Color32(0, 0, 0, 0); //Transparent 
+				else color = new Color(0f, 0f, 0f, 0f); //Transparent 
 
 				colors[pixel.y * resolution.x + pixel.x] = color;
 			}
 
-			result.SetPixels32(colors);
+			result.SetPixels(colors);
 			result.Apply();
 
 			File.WriteAllBytes(path, result.EncodeToPNG());

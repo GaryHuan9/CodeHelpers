@@ -35,7 +35,7 @@ namespace CodeHelpers.Editors
 
 		void SaveGradient(string path)
 		{
-			Color32[] colors = new Color32[resolution.Size()];
+			Color[] colors = new Color[resolution.Size()];
 			Texture2D texture = new Texture2D(resolution.x, resolution.y);
 
 			foreach (Vector2Int pixel in resolution.Loop())
@@ -44,7 +44,7 @@ namespace CodeHelpers.Editors
 				colors[index] = gradient.Evaluate(pixel.x / (resolution.x - 1f));
 			}
 
-			texture.SetPixels32(colors);
+			texture.SetPixels(colors);
 			texture.Apply();
 
 			File.WriteAllBytes(path, texture.EncodeToPNG());
