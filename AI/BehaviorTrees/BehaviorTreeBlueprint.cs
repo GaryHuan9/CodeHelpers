@@ -5,6 +5,16 @@ using CodeHelpers.Collections;
 
 namespace CodeHelpers.AI.BehaviorTrees
 {
+	// blueprint = new BehaviorTreeBlueprint<Test>();
+	//
+	// using (var _ = new GlobalLocationBlueprint<Test>(blueprint))
+	// {
+	// 	blueprint.RootLocation.AddChild(new Repeater())
+	// 			 .AddChild(new Leaf<Test>(Counter1))
+	// 			 .AddSibling(new Leaf<Test>(Counter2));
+	// }
+	// blueprint.Seal();
+
 	public partial class BehaviorTreeBlueprint<T> : ISealable
 	{
 		public BehaviorTreeBlueprint()
@@ -111,7 +121,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 				case Repeater repeater:          return new RepeaterNode(this, index);
 				case Blocker blocker:            return new BlockerNode(this, index, blocker.chance);
 				case Conditioner<T> conditioner: return new ConditionerNode(this, index, conditioner.condition);
-				case Constant constant: return new ConstantNode(this, index, constant.success);
+				case Constant constant:          return new ConstantNode(this, index, constant.success);
 			}
 
 			throw ExceptionHelper.Invalid(nameof(nodeType), nodeType, InvalidType.unexpected);
