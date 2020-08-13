@@ -67,6 +67,24 @@ namespace CodeHelpers
 		[Pure] public float Lerp(float value) => Mathf.Lerp(min, max, value);
 		[Pure] public float InverseLerp(float value) => Mathf.InverseLerp(min, max, value);
 
+		/// <summary>
+		/// Is the magnitude of <paramref name="vector"/> contains in this <see cref="MinMax"/>?
+		/// </summary>
+		public bool ContainsMagnitude(Vector3 vector)
+		{
+			float squared = vector.sqrMagnitude;
+			return min * min <= squared && squared <= max * max;
+		}
+
+		/// <summary>
+		/// Is the magnitude of <paramref name="vector"/> contains in this <see cref="MinMax"/>?
+		/// </summary>
+		public bool ContainsMagnitude(Vector2 vector)
+		{
+			float squared = vector.sqrMagnitude;
+			return min * min <= squared && squared <= max * max;
+		}
+
 		public MinMaxInt GetEncapsulated(int value) => new MinMaxInt(Math.Min(min, value), Math.Max(max, value));
 		public MinMaxInt GetEncapsulated(MinMaxInt minMax) => new MinMaxInt(Math.Min(min, minMax.min), Math.Max(max, minMax.max));
 		public MinMaxInt GetScaled(float value) => new MinMaxInt((min - Middle) * value + Middle, (max - Middle) * value + Middle);

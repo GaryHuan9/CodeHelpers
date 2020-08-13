@@ -72,7 +72,14 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			if (parameterSource != null && parameterSource.Length > 0)
 			{
 				if (node.Parameters.Length != parameterSource.Length) throw new Exception($"Parameter length mismatch! {node.Parameters} v. {parameterSource}");
-				for (int i = 0; i < node.Parameters.Length; i++) node.Parameters[i].CopyFrom(parameterSource[i]);
+
+				for (int i = 0; i < node.Parameters.Length; i++)
+				{
+					var parameter = parameterSource[i];
+
+					if (parameter.Type == ParameterType.behaviorAction) parameter.LoadBehaviorAction(editorWindow.ImportData);
+					node.Parameters[i].CopyFrom(parameter);
+				}
 			}
 
 			node.SetPosition(new Rect(position, defaultNodeSize));

@@ -41,6 +41,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 		ActionEditSection actionEdit;
 		MethodSearchSection methodSearch;
 
+		const string UntitledName = "Untitled Action";
+
 		void OnGUI()
 		{
 			DefineSections();
@@ -140,7 +142,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 				if (GUILayout.Button("Add New"))
 				{
-					imports.Add(new BehaviorAction("Untitled"));
+					imports.Add(new BehaviorAction(UntitledName));
 					MarkDataDirty();
 				}
 
@@ -248,7 +250,9 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				}
 
 				if (selected.method == method) return;
+
 				if (selected.method != null && !RemoveItemWarn($"{(method == null ? "Remove" : "Replace")} method?")) return;
+				if (selected.name == UntitledName && method != null) selected.name = method.Method.Name;
 
 				selected.method = method;
 				MarkDataDirty();

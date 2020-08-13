@@ -385,7 +385,10 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			base.CopyFrom(parameter);
 
 			if (!(parameter is SerializableParameter serializable)) return;
-			if (serializable.BehaviorActionParameters != null) BehaviorActionParameters = new BehaviorActionParametersAccessor(serializable.BehaviorActionParameters);
+			if (serializable.BehaviorActionParameters != null && serializable.Type == ParameterType.behaviorAction)
+			{
+				BehaviorActionParameters = new BehaviorActionParametersAccessor(serializable.BehaviorActionParameters, serializable.BehaviorActionValue);
+			}
 		}
 
 		[Serializable]
@@ -399,12 +402,54 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				for (int i = 0; i < source.Count; i++) parameters[i] = new SingularSerializableParameter(source[i].type);
 			}
 
-			public BehaviorActionParametersAccessor(BehaviorActionParametersAccessor source)
+			public BehaviorActionParametersAccessor(BehaviorActionParametersAccessor source, BehaviorAction action)
 			{
-				if (source.parameters == null || source.parameters.Length == 0) return;
+				int sourceLength = source.parameters?.Length ?? 0;
+				var actionSource = action.method.Parameters;
 
-				parameters = new SingularSerializableParameter[source.parameters.Length];
-				for (int i = 0; i < parameters.Length; i++) parameters[i] = new SingularSerializableParameter(source[i]);
+				//Checks if the parameters mismatch
+				bool match = sourceLength == actionSource.Count;
+
+				if (match)
+				{
+					int min = Math.Min(sourceLength, actionSource.Count);
+
+					for (int i = 0; i < min; i++)
+					{
+						if (source[i].Type == actionSource[i].type) continue;
+
+						Debug.LogWarning
+						(
+							$"Mismatching parameters list for {action}! Source: {source.parameters} " +
+							$"vs Action: {actionSource}! All parameters are reset to default!"
+						);
+
+						match = false;
+						break;
+					}
+				}
+				else
+					Debug.LogWarning
+					(
+						$"Mismatching length for parameter list for {action}. Source length: {sourceLength} " +
+						$"vs Action length: {actionSource.Count}! All parameters are reset to default!"
+					);
+
+				//Actually copy the parameters
+				if (match)
+				{
+					if (sourceLength == 0) return;
+
+					parameters = new SingularSerializableParameter[source.parameters.Length];
+					for (int i = 0; i < parameters.Length; i++) parameters[i] = new SingularSerializableParameter(source[i]);
+				}
+				else
+				{
+					if (actionSource.Count == 0) return;
+
+					parameters = new SingularSerializableParameter[actionSource.Count];
+					for (int i = 0; i < actionSource.Count; i++) parameters[i] = new SingularSerializableParameter(actionSource[i].type);
+				}
 			}
 
 			[SerializeField] SingularSerializableParameter[] parameters; //Should be readonly
