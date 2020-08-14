@@ -385,7 +385,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			base.CopyFrom(parameter);
 
 			if (!(parameter is SerializableParameter serializable)) return;
-			if (serializable.BehaviorActionParameters != null && serializable.Type == ParameterType.behaviorAction)
+			if (serializable.BehaviorActionParameters != null && serializable.Type == ParameterType.behaviorAction && serializable.BehaviorActionValue != null)
 			{
 				BehaviorActionParameters = new BehaviorActionParametersAccessor(serializable.BehaviorActionParameters, serializable.BehaviorActionValue);
 			}
@@ -404,15 +404,17 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 
 			public BehaviorActionParametersAccessor(BehaviorActionParametersAccessor source, BehaviorAction action)
 			{
+				var actionSource = action.method?.Parameters;
+
 				int sourceLength = source.parameters?.Length ?? 0;
-				var actionSource = action.method.Parameters;
+				int actionSourceLength = actionSource?.Count ?? 0;
 
 				//Checks if the parameters mismatch
-				bool match = sourceLength == actionSource.Count;
+				bool match = sourceLength == actionSourceLength;
 
 				if (match)
 				{
-					int min = Math.Min(sourceLength, actionSource.Count);
+					int min = Math.Min(sourceLength, actionSourceLength);
 
 					for (int i = 0; i < min; i++)
 					{
@@ -432,7 +434,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 					Debug.LogWarning
 					(
 						$"Mismatching length for parameter list for {action}. Source length: {sourceLength} " +
-						$"vs Action length: {actionSource.Count}! All parameters are reset to default!"
+						$"vs Action length: {actionSourceLength}! All parameters are reset to default!"
 					);
 
 				//Actually copy the parameters
@@ -445,7 +447,7 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 				}
 				else
 				{
-					if (actionSource.Count == 0) return;
+					if (actionSourceLength == 0) return;
 
 					parameters = new SingularSerializableParameter[actionSource.Count];
 					for (int i = 0; i < actionSource.Count; i++) parameters[i] = new SingularSerializableParameter(actionSource[i].type);
