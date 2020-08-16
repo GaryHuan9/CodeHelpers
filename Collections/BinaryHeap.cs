@@ -111,6 +111,8 @@ namespace CodeHelpers.Collections
 
 		public void Clear()
 		{
+			if (items == null) return;
+
 			items.Clear();
 			priorities.Clear();
 		}
