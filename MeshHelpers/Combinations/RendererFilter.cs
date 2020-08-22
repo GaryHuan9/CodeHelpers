@@ -1,10 +1,10 @@
 using System;
+using CodeHelpers.ObjectPooling;
 using UnityEngine;
 
 namespace CodeHelpers.MeshHelpers.Combinations
 {
-	[Serializable]
-	public struct RendererFilter
+	public readonly struct RendererFilter
 	{
 		public RendererFilter(MeshRenderer renderer, MeshFilter filter)
 		{
@@ -14,18 +14,23 @@ namespace CodeHelpers.MeshHelpers.Combinations
 
 		public RendererFilter(Component behaviour)
 		{
-			renderer = behaviour.GetComponentsInChildren<MeshRenderer>()?.TryGetValue(0);
-			filter = behaviour.GetComponentsInChildren<MeshFilter>()?.TryGetValue(0);
+			var renderers = CollectionPooler<MeshRenderer>.list.GetObject();
+			var filters = CollectionPooler<MeshFilter>.list.GetObject();
+
+			behaviour.GetComponentsInChildren(renderers);
+			behaviour.GetComponentsInChildren(filters);
+
+			renderer = renderers.TryGetValue(0);
+			filter = filters.TryGetValue(0);
+
+			CollectionPooler<MeshRenderer>.list.ReleaseObject(renderers);
+			CollectionPooler<MeshFilter>.list.ReleaseObject(filters);
 		}
 
-		public RendererFilter(GameObject gameObject)
-		{
-			renderer = gameObject.GetComponentsInChildren<MeshRenderer>()?.TryGetValue(0);
-			filter = gameObject.GetComponentsInChildren<MeshFilter>()?.TryGetValue(0);
-		}
+		public RendererFilter(GameObject gameObject) : this(gameObject.transform) { }
 
-		public MeshRenderer renderer;
-		public MeshFilter filter;
+		public readonly MeshRenderer renderer;
+		public readonly MeshFilter filter;
 
 		public Mesh Mesh
 		{

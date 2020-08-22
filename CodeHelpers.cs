@@ -383,11 +383,8 @@ namespace CodeHelpers
 			return enumerable.All(thisT => valueGetter(thisT).Equals(selectedValue));
 		}
 
-		public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key) =>
-			dictionary.ContainsKey(key) ? dictionary[key] : default;
-
-		public static T TryGetValue<T>(this IReadOnlyList<T> list, int index) =>
-			list.IsIndexValid(index) ? list[index] : default;
+		public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key) => dictionary.ContainsKey(key) ? dictionary[key] : default;
+		public static T TryGetValue<T>(this IReadOnlyList<T> list, int index) => list.IsIndexValid(index) ? list[index] : default;
 
 		public static void Swap<T>(this T[] array, int index1, int index2)
 		{

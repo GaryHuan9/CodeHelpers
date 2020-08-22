@@ -26,11 +26,11 @@ namespace CodeHelpers.Events
 		/// Instead, register/subscribe this action to the event.
 		/// </summary>
 		public readonly Action eventInput;
-		
+
 		void OnEvent()
 		{
 			if (unsubscribeAction == null) throw new Exception($"You must set an {nameof(unsubscribeAction)} when initializing this handler.");
-			if (unsubscribed) throw new Exception($"The handler should already be unsubscribed but the event is still reaching it! You did not properly define the {nameof(unsubscribeAction)}");
+			if (unsubscribed) throw new Exception($"The handler should already be unsubscribed but the event is still reaching it! You did not properly invoke {nameof(SetUnsubscribeAction)}!");
 
 			if (listenerReference.TryGetTarget(out TListener listener))
 			{
