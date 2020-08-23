@@ -62,7 +62,7 @@ namespace CodeHelpers.Collections
 
 		int GetId(Type type)
 		{
-			if (typeToId.ContainsKey(type)) return typeToId[type];
+			if (typeToId.TryGetValue(type, out int id)) return id;
 			throw ExceptionHelper.Invalid(nameof(type), type, InvalidType.unexpected);
 		}
 
@@ -177,6 +177,7 @@ namespace CodeHelpers.Collections
 			}
 
 			IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<KeyValuePair<Type, TBase>>)this).GetEnumerator();
+
 			IEnumerator<KeyValuePair<Type, TBase>> IEnumerable<KeyValuePair<Type, TBase>>.GetEnumerator()
 			{
 				for (int i = 0; i < Count; i++)

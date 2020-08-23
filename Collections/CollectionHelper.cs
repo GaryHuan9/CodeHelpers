@@ -136,6 +136,15 @@ namespace CodeHelpers.Collections
 			for (int i = array.Length - 1; i > index; i--) array[i] = array[i - 1];
 			array[index] = item;
 		}
+
+		public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
+		{
+			bool hasValue = dictionary.TryGetValue(key, out TValue value);
+			return hasValue ? value : default; //Using the native TryGetValue method is much more efficient than using ContainsKey and the indexer
+		}
+
+		public static T TryGetValue<T>(this IReadOnlyList<T> list, int index) => list.IsIndexValid(index) ? list[index] : default;
+
 	}
 
 	public interface IDoubleComparer<in T1, in T2>

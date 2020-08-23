@@ -1,8 +1,7 @@
-﻿﻿using System;
-using System.Collections;
+﻿using System;
+using CodeHelpers.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CodeHelpers;
 
 namespace CodeHelpers.InputHelpers
 {
@@ -41,16 +40,16 @@ namespace CodeHelpers.InputHelpers
 				(Input.GetKey(dKey) ? 1 : 0) + (Input.GetKey(aKey) ? -1 : 0),
 				(Input.GetKey(wKey) ? 1 : 0) + (Input.GetKey(sKey) ? -1 : 0)
 			);
-		
+
 		static InputInfo GetInfo(InputSource source) => registeredInfo.TryGetValue(source) ?? throw ExceptionHelper.Invalid(nameof(source), source, "is not registered!");
 
 		//NOTE: The following check method should/would be invoked after all input are already updated this frame
-		
+
 		static bool GetInputHeldLessThan(InputSource source, float time = DefaultCheckDelay) => source.IsInputUp && Time - GetInfo(source).LastInputDownTime < time;
 
 		public static bool GetInputHeldLessThan(int mouseButton) => GetInputHeldLessThan(new InputSource(mouseButton));
 		public static bool GetInputHeldLessThan(KeyCode keyCode) => GetInputHeldLessThan(new InputSource(keyCode));
-		
+
 		static bool GetInputDoublePressed(InputSource source, float time = DefaultCheckDelay) => source.IsInputDown && Time - GetInfo(source).PreviousInputDownTime < time;
 
 		public static bool GetInputDoublePressed(int mouseButton) => GetInputDoublePressed(new InputSource(mouseButton));
@@ -64,10 +63,10 @@ namespace CodeHelpers.InputHelpers
 
 			public float LastInputDownTime { get; private set; } = float.MinValue;
 			public float PreviousInputDownTime { get; private set; } = float.MinValue;
-			
+
 			public float LastInputUpTime { get; private set; } = float.MinValue;
 			public float PreviousInputUpTime { get; private set; } = float.MinValue;
-			
+
 			public void Update()
 			{
 				if (source.IsInputDown)

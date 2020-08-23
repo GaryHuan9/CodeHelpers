@@ -100,14 +100,8 @@ namespace CodeHelpers.Collections
 
 		public bool TryGetValue(byte key, out T value)
 		{
-			if (ContainsKey(key))
-			{
-				value = this[key];
-				return true;
-			}
-
-			value = null;
-			return false;
+			value = items[key];
+			return value != default;
 		}
 
 		void IncreaseVersion() => version = unchecked(version + 1);
