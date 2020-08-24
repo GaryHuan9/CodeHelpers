@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Diagnostics;
+using CodeHelpers.DebugHelpers;
 using CodeHelpers.InputHelpers;
 using CodeHelpers.Events;
 using CodeHelpers.ThreadHelpers;
@@ -13,12 +15,13 @@ namespace CodeHelpers
 		void Awake()
 		{
 			if (SingletonHelper.QuietDestroyCurrent(ref instance, this) != this) return;
+			frameTimeHelper = gameObject.AddComponent<FrameTimeHelper>();
 
 			DontDestroyOnLoad(this);
 
 			ThreadHelper.MainThread = System.Threading.Thread.CurrentThread;
 		}
-		
+
 		/// <summary>
 		/// Invoked on Unity's draw gizmos phase.
 		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
@@ -42,13 +45,13 @@ namespace CodeHelpers
 		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
 		/// </summary>
 		public static event Action UnityLateUpdateMethods;
-		
+
 		/// <summary>
 		/// Invoked on Unity's fixed update phase.
 		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
 		/// </summary>
 		public static event Action UnityFixedUpdateMethods;
-		
+
 		/// <summary>
 		/// Invoked on Unity's end update phase.
 		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
@@ -66,8 +69,6 @@ namespace CodeHelpers
 		/// NOTE: Remember to use <see cref="WeakEventHandler{TListener}"/> if you want to avoid memory leaks!
 		/// </summary>
 		public static event Action OnApplicationQuitMethods;
-		
-		
 
 		/// <summary>
 		/// NOTE: Any delegate subscribed to this will only be invoked once!
@@ -95,16 +96,23 @@ namespace CodeHelpers
 		public static event Action OnUnityEndUpdateMethods;
 
 		internal static CodeHelperMonoBehaviour instance;
+		internal static FrameTimeHelper frameTimeHelper;
 
 		public static FramePhase FramePhase { get; private set; }
+		public static float FrameTime => (float)frameTimeHelper.Elapsed.TotalMilliseconds;
 
-		public static bool IsGamePaused { get; private set; }
+		static bool _isGamePaused;
+
+#if UNITY_EDITOR
+		public static bool IsGamePaused => _isGamePaused || UnityEditor.EditorApplication.isPaused;
+#else
+		public static bool IsGamePaused => _isGamePaused;
+#endif
+
 		public static bool IsGameQuitting { get; private set; }
 
-		void Start()
-		{
-			StartCoroutine(EndOfFrameUpdate());
-		}
+		void Start() => StartCoroutine(EndOfFrameCoroutine(EndUpdate));
+		void OnApplicationPause(bool pauseStatus) => _isGamePaused = pauseStatus;
 
 #region Updates
 
@@ -182,17 +190,17 @@ namespace CodeHelpers
 			UnityPostRenderMethods?.Invoke();
 		}
 
-		IEnumerator EndOfFrameUpdate()
+		static IEnumerator EndOfFrameCoroutine(Action action)
 		{
 			WaitForEndOfFrame endUpdate = new WaitForEndOfFrame();
 			WaitUntil unPause = new WaitUntil(() => !IsGamePaused);
 
 			while (true)
 			{
-				if (IsGamePaused) yield return unPause;
 				yield return endUpdate;
+				if (IsGamePaused) yield return unPause;
 
-				EndUpdate();
+				action();
 			}
 		}
 
@@ -201,14 +209,24 @@ namespace CodeHelpers
 			UnityDrawGizmosMethods?.Invoke();
 		}
 
-		void OnApplicationFocus(bool hasFocus)
+		[DefaultExecutionOrder(200)]
+		public class FrameTimeHelper : MonoBehaviour
 		{
-			IsGamePaused = !hasFocus;
-		}
+			void Awake()
+			{
+				stopwatch = new Stopwatch();
+				StartCoroutine(EndOfFrameCoroutine(OnEndOfFrame));
+			}
 
-		void OnApplicationPause(bool pauseStatus)
-		{
-			IsGamePaused = pauseStatus;
+			Stopwatch stopwatch;
+
+			public TimeSpan Elapsed => stopwatch.Elapsed;
+
+			void OnEndOfFrame()
+			{
+				stopwatch.Reset();
+				stopwatch.Start();
+			}
 		}
 	}
 
