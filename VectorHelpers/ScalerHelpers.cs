@@ -38,23 +38,40 @@ namespace CodeHelpers.VectorHelpers
 
 		public static int CeilDivide(this int value, int divider) => (value - 1) / divider + 1;
 
-		// public static bool AlmostEquals(this float value, float other)
-		// {
-		// 	if (value == other) return true;
-		// 	return Math.Abs(value - other) < Math.Abs(value) / (1 << 20);
-		// }
-		//
-		// public static bool AlmostEquals(this double value, double other)
-		// {
-		// 	if (value == other) return true;
-		// 	return Math.Abs(value - other) < Math.Abs(value) / (1 << 48);
-		// }
+		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
+		{
+			if (left == right) return true;                  //Handles absolute equals and degenerate cases
+			const float Normal = (1L << 23) * float.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a float
+
+			float difference = Math.Abs(left - right);
+
+			//If too close to zero to use relative comparison
+			if (left == 0f || right == 0f || difference < Normal) return difference < epsilon * Normal;
+
+			//Relative comparison
+			float sum = Math.Abs(left) + Math.Abs(right);
+			return difference < epsilon * Math.Min(sum, float.MaxValue);
+		}
+
+		public static bool AlmostEquals(double left, double right, double epsilon = 0.00000001d)
+		{
+			if (left == right) return true;                    //Handles absolute equals and degenerate cases
+			const double Normal = (1L << 52) * double.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a double
+
+			double difference = Math.Abs(left - right);
+
+			//If too close to zero to use relative comparison
+			if (left == 0d || right == 0d || difference < Normal) return difference < epsilon * Normal;
+
+			//Relative comparison
+			double sum = Math.Abs(left) + Math.Abs(right);
+			return difference < epsilon * Math.Min(sum, double.MaxValue);
+		}
 
 		public static Vector2Int To2D(this int value, int height) => new Vector2Int(value / height, value % height);
 
-		public static int Normalized(this float value) => Mathf.Approximately(value, 0) ? 0 : value < 0 ? -1 : 1;
-		public static int Normalized(this float value, float threshold) => Mathf.Abs(value) <= threshold ? 0 : value < 0 ? -1 : 1;
-		public static int Normalized(this int value) => value == 0 ? 0 : value < 0 ? -1 : 1;
+		public static int Signed(this float value) => AlmostEquals(value, 0f) ? 0 : Math.Sign(value);
+		public static int Signed(this int value) => Math.Sign(value);
 
 		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
 		public static float Repeat(this float value, float length)
