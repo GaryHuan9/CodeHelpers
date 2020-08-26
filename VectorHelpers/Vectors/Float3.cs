@@ -87,9 +87,15 @@ namespace CodeHelpers.VectorHelpers
 
 #region Simple Properties
 
+#region Scaler Returns
+
 		public float Magnitude => (float)Math.Sqrt(SquaredMagnitudeDouble);
 		public float SquaredMagnitude => (float)SquaredMagnitudeDouble;
 		public double SquaredMagnitudeDouble => (double)x * x + (double)y * y + (double)z * z;
+
+#endregion
+
+#region Float3 Returns
 
 		public Float3 Absoluted => new Float3(Math.Abs(x), Math.Abs(y), Math.Abs(z));
 		public Float3 Signed => new Float3(x.Signed(), y.Signed(), z.Signed());
@@ -107,24 +113,37 @@ namespace CodeHelpers.VectorHelpers
 
 #endregion
 
+#endregion
+
+#region Static Operators
+
+#region Two Variables
+
+		public static Float3 Min(Float3 left, Float3 right) => new Float3(Math.Min(left.x, right.x), Math.Min(left.y, right.y), Math.Min(left.z, right.z));
+		public static Float3 Max(Float3 left, Float3 right) => new Float3(Math.Max(left.x, right.x), Math.Max(left.y, right.y), Math.Max(left.z, right.z));
+
+#endregion
+
+#endregion
+
 #region Operators
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(Float3 left, Float3 right) => new Float3(left.x + right.x, left.y + right.y, left.z + right.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(Float3 left, Float3 right) => new Float3(left.x - right.x, left.y - right.y, left.z - right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(in Float3 left, in Float3 right) => new Float3(left.x + right.x, left.y + right.y, left.z + right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(in Float3 left, in Float3 right) => new Float3(left.x - right.x, left.y - right.y, left.z - right.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(Float3 left, Float3 right) => new Float3(left.x * right.x, left.y * right.y, left.z * right.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(Float3 left, Float3 right) => new Float3(left.x / right.x, left.y / right.y, left.z / right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(in Float3 left, in Float3 right) => new Float3(left.x * right.x, left.y * right.y, left.z * right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(in Float3 left, in Float3 right) => new Float3(left.x / right.x, left.y / right.y, left.z / right.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(Float3 left, float right) => new Float3(left.x * right, left.y * right, left.z * right);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(Float3 left, float right) => new Float3(left.x / right, left.y / right, left.z / right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(in Float3 left, float right) => new Float3(left.x * right, left.y * right, left.z * right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(in Float3 left, float right) => new Float3(left.x / right, left.y / right, left.z / right);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(float left, Float3 right) => new Float3(left * right.x, left * right.y, left * right.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(float left, Float3 right) => new Float3(left / right.x, left / right.y, left / right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(float left, in Float3 right) => new Float3(left * right.x, left * right.y, left * right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(float left, in Float3 right) => new Float3(left / right.x, left / right.y, left / right.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(Float3 value) => new Float3(-value.x, -value.y, -value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(in Float3 value) => new Float3(-value.x, -value.y, -value.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Float3 left, Float3 right) => left.Equals(right);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Float3 left, Float3 right) => !left.Equals(right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float3 left, in Float3 right) => left.Equals(right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float3 left, in Float3 right) => !left.Equals(right);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);

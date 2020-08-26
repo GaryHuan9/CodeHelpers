@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using CodeHelpers.ObjectPooling;
 using UnityEngine;
 
 namespace CodeHelpers.VectorHelpers
@@ -125,8 +126,6 @@ namespace CodeHelpers.VectorHelpers
 		{
 			if (value < 0) throw ExceptionHelper.Invalid(nameof(value), value, "cannot be negative.");
 
-			const int MaxLength = 4;
-
 			if (value >= 1000000000) return Format(1000000000, 'B');
 			if (value >= 1000000) return Format(1000000, 'M');
 			if (value >= 1000) return Format(1000, 'K');
@@ -138,26 +137,21 @@ namespace CodeHelpers.VectorHelpers
 				int integer = value / level;
 				int floating = value / (level / 1000) - integer * 1000;
 
-				var builder = new StringBuilder();
+				var builder = CommonPooler.stringBuilder.GetObject();
 
 				builder.Append(integer);
 				builder.Append('.');
 				builder.Append(floating.ToString("D3"));
 
-				bool hasDot = true;
-
-				while (builder.Length > MaxLength - 1) RemoveLast();
-				while (hasDot && builder[builder.Length - 1] == '0') RemoveLast();
-				while (hasDot && builder[builder.Length - 1] == '.') RemoveLast();
+				if (builder.Length > 3) builder.Remove(3, builder.Length - 3);
+				if (builder[builder.Length - 1] == '.') builder.Remove(builder.Length - 1, 1);
 
 				builder.Append(suffix);
-				return builder.ToString();
 
-				void RemoveLast()
-				{
-					if (builder[builder.Length - 1] == '.') hasDot = false;
-					builder.Remove(builder.Length - 1, 1);
-				}
+				string result = builder.ToString();
+				CommonPooler.stringBuilder.ReleaseObject(builder);
+
+				return result;
 			}
 		}
 	}

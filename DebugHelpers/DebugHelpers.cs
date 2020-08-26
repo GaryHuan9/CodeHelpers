@@ -146,13 +146,5 @@ namespace CodeHelpers.DebugHelpers
 			string toString = target.ToString();
 			return toString == target.GetType().ToString() ? null : toString;
 		}
-
-		class StringBuilderPooler : PoolerBase<StringBuilder>
-		{
-			protected override int MaxPoolSize => 2;
-
-			protected override StringBuilder GetNewObject() => new StringBuilder();
-			protected override void Reset(StringBuilder target) => target.Clear();
-		}
 	}
 }
