@@ -12,8 +12,6 @@ namespace CodeHelpers.MeshHelpers
 	{
 		const uint Mesh16BitSize = 65530; //65536, left 6 for safety
 
-		static readonly MeshPooler meshPooler = new MeshPooler();
-
 		/// <summary>
 		/// Combines the meshes given. Contains materials.
 		/// </summary>
@@ -56,7 +54,7 @@ namespace CodeHelpers.MeshHelpers
 			//Combine first pass, material sub meshes
 			foreach (KeyValuePair<Material, List<CombineInstance>> pair in dictionary)
 			{
-				Mesh subMesh = meshPooler.GetObject();
+				Mesh subMesh = CommonPooler.mesh.GetObject();
 				if (totalVertexCount >= Mesh16BitSize) subMesh.indexFormat = IndexFormat.UInt32;
 
 				subMesh.CombineMeshes(pair.Value.ToArray(), true, true, false);
@@ -75,8 +73,8 @@ namespace CodeHelpers.MeshHelpers
 			baseMesh.indexFormat = totalVertexCount < Mesh16BitSize ? IndexFormat.UInt16 : IndexFormat.UInt32;
 			baseMesh.CombineMeshes(instances, false, false, false);
 
-			CollectionPooler<Material, List<CombineInstance>>.dictionary.ReleaseObject(dictionary); //Clean dictionary
-			for (int i = 0; i < instances.Length; i++) meshPooler.ReleaseObject(instances[i].mesh); //Clean old submeshes
+			CollectionPooler<Material, List<CombineInstance>>.dictionary.ReleaseObject(dictionary);        //Release pooled dictionary
+			for (int i = 0; i < instances.Length; i++) CommonPooler.mesh.ReleaseObject(instances[i].mesh); //Release pooled submeshes
 
 			return new MeshMaterials(baseMesh, materials);
 		}
