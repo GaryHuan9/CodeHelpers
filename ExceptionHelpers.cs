@@ -44,7 +44,7 @@ namespace CodeHelpers
 				case InvalidType.minLargerThanMax:         return "is larger than max.";
 				case InvalidType.collectionCountIs0:       return "has a count/length of 0, which is unexpected.";
 				case InvalidType.unexpectedIdentification: return "is an unexpected identification.";
-				case InvalidType.indistinctiveCollection:  return "is a collection with items that are not distinctive.";
+				case InvalidType.indistinctCollection:     return "is a collection with items that are not distinctive.";
 				case InvalidType.foundDuplicate:           return "is already present and a duplicate of a current object.";
 				case InvalidType.semiReadonlyAssignment:   return "is semi-readonly (can only be assigned once).";
 				case InvalidType.semiReadonlyNoData:       return "is semi-readonly and needs an assignment before accessing.";
@@ -63,7 +63,7 @@ namespace CodeHelpers
 		minLargerThanMax,
 		collectionCountIs0,
 		unexpectedIdentification,
-		indistinctiveCollection,
+		indistinctCollection,
 		foundDuplicate,
 		semiReadonlyAssignment,
 		semiReadonlyNoData,
