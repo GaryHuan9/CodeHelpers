@@ -103,7 +103,7 @@ namespace CodeHelpers.VectorHelpers
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => ScalerHelper.AlmostEquals(squaredMagnitude, 0d);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => ScalarHelper.AlmostEquals(squaredMagnitude, 0d);
 
 #endregion
 

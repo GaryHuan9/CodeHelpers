@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CodeHelpers.VectorHelpers
 {
-	public static class ScalerHelper
+	public static class ScalarHelper
 	{
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.

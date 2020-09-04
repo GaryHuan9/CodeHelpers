@@ -339,8 +339,8 @@ namespace CodeHelpers.AI.BehaviorTrees.UIEditor
 			throw new Exception($"This {nameof(SerializableParameter)} has the type {Type} but you are trying to yse its value as an {typeof(T)}!");
 		}
 
-		protected static float BitwiseConvert(int value) => ScalerHelper.Int32BitsToSingle(value);
-		protected static int BitwiseConvert(float value) => ScalerHelper.SingleToInt32Bits(value);
+		protected static float BitwiseConvert(int value) => ScalarHelper.Int32BitsToSingle(value);
+		protected static int BitwiseConvert(float value) => ScalarHelper.SingleToInt32Bits(value);
 	}
 
 	[Serializable]
