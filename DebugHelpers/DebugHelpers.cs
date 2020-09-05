@@ -134,7 +134,12 @@ namespace CodeHelpers.DebugHelpers
 		}
 
 		public static string ToString(string target) => target;
-		public static string ToString<T>(IEnumerable<T> target) => $"{target.GetType()} + Count: {target.Count()} [{string.Join(" , ", target.Select(item => ToString(item)))}]";
+
+		public static string ToString<T>(IEnumerable<T> target)
+		{
+			var array = target.Select(item => ToString(item)).ToArray();
+			return $"{target.GetType()} + Count: {array.Length} [{string.Join(", ", array)}]";
+		}
 
 		/// <summary>
 		/// Does <paramref name="target"/> has a custom to string method?
