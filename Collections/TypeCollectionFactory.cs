@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Analytics;
 using UnityEngine.Assertions;
 
 namespace CodeHelpers.Collections
@@ -10,125 +11,150 @@ namespace CodeHelpers.Collections
 	/// The class will greatly reduce memory since it uses an array instead of a dictionary.
 	/// Also, the produced class can be inherited to further expand its feature.
 	/// </summary>
-	public class TypeCollectionFactory<TBase> where TBase : class
+	public abstract class TypeCollectionFactory<TBase> where TBase : class
 	{
-		//Maps a type object to an id. This id should be from 0 to count, with no empty ids in between.
-		readonly Dictionary<Type, int> typeToId = new Dictionary<Type, int>();
-		readonly List<Func<TBase>> idToFactory = new List<Func<TBase>>(); //Factory for different kinds of objects
-		Type[] idToType;
+		readonly List<IGenerator<TBase>> generators = new List<IGenerator<TBase>>(); //Indexed by type token
 
+		public int Count => generators.Count;
 		public bool IsFactorySealed { get; private set; }
 
 		static readonly Exception alreadySealedException = new Exception("Factory already sealed!");
-		static readonly Exception sealBeforeCollectionException = new Exception("Need to seal the factory before getting new collection!");
+		static readonly Exception notSealedException = new Exception("Operation cannot be completed with an unsealed factory!");
 
-		void AddType(Type type)
+		public void AddInstantiableType<T>() where T : TBase, new() => AddInstantiableType(() => new T());
+
+		public void AddInstantiableType<T>(Func<T> generator) where T : TBase => AddInstantiableType(new DelegateGenerator<T>(generator));
+
+		public void AddInstantiableType<T>(IGenerator<T> generator) where T : TBase
 		{
-			CheckSealed();
-			typeToId.Add(type, typeToId.Count);
+			int token = GetToken<T>();
+
+			if (IsFactorySealed) throw alreadySealedException;
+			if (token >= 0) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "has already been added!");
+
+			SetToken<T>(Count);
+			generators.Add((IGenerator<TBase>)generator);
 		}
 
-		public void AddInstantiableType<T>(Func<T> factory) where T : class, TBase
-		{
-			AddType(typeof(T));
-			idToFactory.Add(factory);
-		}
+		public void AddType<T>() where T : TBase => AddInstantiableType((IGenerator<T>)null);
 
-		public void AddInstantiableType<T>() where T : class, TBase, new() => AddInstantiableType(() => new T());
+		/// <summary>
+		/// Should return the stored token for given type, <typeparamref name="T"/>.
+		/// Returns a negative number if no token was stored for <typeparamref name="T"/>.
+		/// </summary>
+		protected abstract int GetToken<T>() where T : TBase;
 
-		public void AddType<T>() where T : TBase
-		{
-			AddType(typeof(T));
-			idToFactory.Add(null); //Add null to keep the match between id and factory
-		}
+		/// <summary>
+		/// Should assign <paramref name="token"/> as the unique identification for type <typeparamref name="T"/>.
+		/// This stored value should not be changed through other manners other than this method.
+		/// </summary>
+		protected abstract void SetToken<T>(int token) where T : TBase;
 
 		public void Seal()
 		{
-			CheckSealed();
-			IsFactorySealed = true;
+			if (!IsFactorySealed) IsFactorySealed = true;
+			else throw alreadySealedException;
 
-			idToType = new Type[typeToId.Count];
-			foreach (var pair in typeToId) idToType[pair.Value] = pair.Key;
-
-			Assert.AreEqual(typeToId.Count, idToType.Length);
-			idToFactory.TrimExcess();
+			generators.TrimExcess();
 		}
 
 		public Collection GetNewCollection()
 		{
-			if (IsFactorySealed) return new Collection(this);
-			throw sealBeforeCollectionException;
+			if (!IsFactorySealed) throw notSealedException;
+			return new Collection(this);
 		}
 
-		int GetId(Type type)
+		public interface IGenerator<out T> where T : TBase
 		{
-			if (typeToId.TryGetValue(type, out int id)) return id;
-			throw ExceptionHelper.Invalid(nameof(type), type, InvalidType.unexpected);
+			T Generate();
 		}
 
-		void CheckSealed()
+		public class DelegateGenerator<T> : IGenerator<T> where T : TBase
 		{
-			if (IsFactorySealed) throw alreadySealedException;
+			public DelegateGenerator(Func<T> generator) => this.generator = generator;
+
+			readonly Func<T> generator;
+
+			public T Generate() => generator();
 		}
 
 		//NOTE: We can/should inherit this class!
-		public class Collection : IDictionary<Type, TBase>
+		public class Collection : IEnumerable<TBase>
 		{
 			public Collection(TypeCollectionFactory<TBase> factory)
 			{
-				if (!factory.IsFactorySealed) throw sealBeforeCollectionException;
+				if (!factory.IsFactorySealed) throw notSealedException;
 				this.factory = factory;
 			}
 
 			readonly TypeCollectionFactory<TBase> factory;
-			TBase[] typeObjects; //Initialize as null so no extra allocation
+			TBase[] objectsArray; //Initialize as null so no extra allocation
 
-			public int Count => factory.typeToId.Count;
-			public bool IsReadOnly => false;
+			public int Count => factory.Count;
 
-			public TBase this[Type type]
+			protected TBase this[int token]
 			{
-				get => this[factory.GetId(type)];
-				set => this[factory.GetId(type)] = value;
-			}
-
-			protected TBase this[int id]
-			{
-				get => typeObjects?[id];
+				get => objectsArray?[token];
 				set
 				{
-					if (typeObjects == null && value == null) return;
-					(typeObjects ?? (typeObjects = new TBase[Count]))[id] = value;
+					if (objectsArray == null)
+					{
+						if (value == null) return;
+						objectsArray = new TBase[Count];
+					}
+
+					objectsArray[token] = value;
 				}
 			}
 
-			public T GetObject<T>() where T : TBase => (T)GetObject(typeof(T));
-			public TBase GetObject(Type type) => this[type];
+			public T GetObject<T>() where T : TBase => (T)this[factory.GetToken<T>()];
 
-			public void Add(Type key, TBase value)
+			public bool Contains<T>() where T : TBase
 			{
-				if (this[key] == null) this[key] = value;
-				else throw ExceptionHelper.Invalid(nameof(key), key, "already exists!");
+				int token = factory.GetToken<T>();
+				return token > 0 && this[token] != null;
 			}
 
-			public void Add<T>(T item) where T : class, TBase => Add(item.GetType(), item);
-			public void Add(KeyValuePair<Type, TBase> item) => Add(item.Key, item.Value);
+			public bool TryGetObject<T>(out T value) where T : TBase
+			{
+				int token = factory.GetToken<T>();
+				if (token <= 0)
+				{
+					value = default;
+					return false;
+				}
+
+				value = (T)this[token];
+				return value != null;
+			}
+
+			public void Add<T>(T value) where T : class, TBase
+			{
+				Assert.IsTrue(typeof(T) == value.GetType());
+				int token = factory.GetToken<T>();
+
+				if (token < 0) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "is not a registered type!");
+				if (this[token] != null) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "already exists!");
+
+				this[token] = value;
+			}
 
 			/// <summary>
-			/// Create and assign all missing objects into the collection.
-			/// NOTE: Only creates object types added through <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}(System.Func{T})"/> or <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}()"/>
-			/// The method will invoke <paramref name="action"/> when a new object gets created, but you can leave at null.
+			/// Generate and assign all missing objects into the collection.
+			/// NOTE: Only objects with types added through <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}(System.Func{T})"/> or <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}()"/>
+			/// will be generated. No modification will be done to other objects.
 			/// </summary>
 			public void InstantiatedAll(Action<TBase> action = null)
 			{
 				for (int i = 0; i < Count; i++)
 				{
-					if (this[i] != null || factory.idToFactory[i] == null) continue;
+					IGenerator<TBase> generator = factory.generators[i];
+					if (this[i] != null || generator == null) continue;
 
-					var newObject = factory.idToFactory[i]();
-					action?.Invoke(newObject);
+					TBase newObject = generator.Generate();
 
 					this[i] = newObject;
+					action?.Invoke(newObject);
 				}
 			}
 
@@ -140,57 +166,40 @@ namespace CodeHelpers.Collections
 			/// </summary>
 			public T InstantiateNew<T>() where T : class, TBase
 			{
-				int id = factory.GetId(typeof(T));
-				var newObject = this[id];
+				int token = factory.GetToken<T>();
 
-				if (newObject == null)
-				{
-					if (factory.idToFactory[id] == null) throw new Exception($"Did not specify factory for {typeof(T)}");
+				if (token < 0) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "is not a registered type!");
+				if (this[token] != null) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "already exists!");
 
-					newObject = factory.idToFactory[id]();
-					Add(newObject);
-				}
+				IGenerator<TBase> generator = factory.generators[token];
 
-				return (T)newObject;
+				if (generator == null) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "does not have a generator!");
+				if (!(generator is IGenerator<T> castedGenerator)) throw ExceptionHelper.NotPossible;
+
+				return (T)(this[token] = castedGenerator.Generate());
 			}
 
-			public bool ContainsKey(Type key) => this[key] != null;
-			public bool Contains(KeyValuePair<Type, TBase> item) => ContainsKey(item.Key);
-
-			public bool Remove(Type key)
+			public bool Remove<T>() where T : TBase
 			{
-				if (this[key] == null) return false;
+				int token = factory.GetToken<T>();
+				if (this[token] == null) return false;
 
-				this[key] = null;
+				this[token] = null;
 				return true;
 			}
 
-			public bool Remove<T>() where T : TBase => Remove(typeof(T));
-			public bool Remove(KeyValuePair<Type, TBase> item) => Remove(item.Key);
+			public void Clear() => Array.Clear(objectsArray, 0, Count);
 
-			public void Clear() => Array.Clear(typeObjects, 0, Count);
-
-			public bool TryGetValue(Type key, out TBase value)
-			{
-				value = this[key];
-				return ContainsKey(key);
-			}
-
-			IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<KeyValuePair<Type, TBase>>)this).GetEnumerator();
-
-			IEnumerator<KeyValuePair<Type, TBase>> IEnumerable<KeyValuePair<Type, TBase>>.GetEnumerator()
+			public IEnumerator<TBase> GetEnumerator()
 			{
 				for (int i = 0; i < Count; i++)
 				{
-					Type type = factory.idToType[i];
-					yield return new KeyValuePair<Type, TBase>(type, this[type]);
+					TBase value = this[i];
+					if (value != null) yield return value;
 				}
 			}
 
-			void ICollection<KeyValuePair<Type, TBase>>.CopyTo(KeyValuePair<Type, TBase>[] array, int arrayIndex) => throw new NotSupportedException();
-
-			ICollection<Type> IDictionary<Type, TBase>.Keys => throw new NotSupportedException();
-			ICollection<TBase> IDictionary<Type, TBase>.Values => throw new NotSupportedException();
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 		}
 	}
 }
