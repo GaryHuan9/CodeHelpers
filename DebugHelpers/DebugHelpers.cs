@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using UnityEngine;
 using CodeHelpers.ObjectPooling;
-using Object = System.Object;
 
 namespace CodeHelpers.DebugHelpers
 {
@@ -21,8 +21,18 @@ namespace CodeHelpers.DebugHelpers
 
 		static int invokedPerFrame;
 
-		static readonly ThreadLocal<StringBuilderPooler> stringBuilderPooler = new ThreadLocal<StringBuilderPooler>(() => new StringBuilderPooler());
-		static readonly ThreadLocal<object[]> paramsArrayCache = new ThreadLocal<object[]>(() => new object[4]);
+		static readonly ThreadLocal<StringBuilderPooler> stringBuilderPoolerLocal = new ThreadLocal<StringBuilderPooler>(() => new StringBuilderPooler());
+		static readonly ThreadLocal<ObjectsBuffer> objectsBufferLocal = new ThreadLocal<ObjectsBuffer>(() => new ObjectsBuffer(4, DebugLogType.normal));
+
+		static readonly ReadOnlyDictionary<DebugLogType, Action<string>> logActions = new ReadOnlyDictionary<DebugLogType, Action<string>>
+		(
+			new Dictionary<DebugLogType, Action<string>>
+			{
+				{DebugLogType.normal, Debug.Log},
+				{DebugLogType.warning, Debug.LogWarning},
+				{DebugLogType.error, Debug.LogError}
+			}
+		);
 
 		const string NullString = "_NULL_";
 
@@ -35,76 +45,86 @@ namespace CodeHelpers.DebugHelpers
 			return ++invokedPerFrame;
 		}
 
-		/// <summary>Debug.Log the specified objects.</summary>
-		public static void Log(params object[] objects) => LogInternal(objects, objects.Length);
+#region LogOverloads
 
-#region LogOverloadedMethods
+		public static void Log(DebugLogType type, params object[] objects) => LogInternal(new ObjectsBuffer(objects, type), objects.Length);
 
-		/// <summary>Debug.Log the specified object.</summary>
-		public static void Log(object object0)
+		public static void Log(DebugLogType type, object object0)
 		{
-			paramsArrayCache.Value[0] = object0;
-			LogInternal(paramsArrayCache.Value, 1);
+			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
+						 {
+							 [0] = object0
+						 };
+			LogInternal(buffer, 1);
 		}
 
-		/// <summary>Debug.Log the specified objects.</summary>
-		public static void Log(object object0, object object1)
+		public static void Log(DebugLogType type, object object0, object object1)
 		{
-			paramsArrayCache.Value[0] = object0;
-			paramsArrayCache.Value[1] = object1;
-			LogInternal(paramsArrayCache.Value, 2);
+			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
+						 {
+							 [0] = object0,
+							 [1] = object1
+						 };
+			LogInternal(buffer, 2);
 		}
 
-		/// <summary>Debug.Log the specified objects.</summary>
-		public static void Log(object object0, object object1, object object2)
+		public static void Log(DebugLogType type, object object0, object object1, object object2)
 		{
-			paramsArrayCache.Value[0] = object0;
-			paramsArrayCache.Value[1] = object1;
-			paramsArrayCache.Value[2] = object2;
-			LogInternal(paramsArrayCache.Value, 3);
+			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
+						 {
+							 [0] = object0,
+							 [1] = object1,
+							 [2] = object2
+						 };
+			LogInternal(buffer, 3);
 		}
 
-		/// <summary>Debug.Log the specified objects.</summary>
-		public static void Log(object object0, object object1, object object2, object object3)
+		public static void Log(DebugLogType type, object object0, object object1, object object2, object object3)
 		{
-			paramsArrayCache.Value[0] = object0;
-			paramsArrayCache.Value[1] = object1;
-			paramsArrayCache.Value[2] = object2;
-			paramsArrayCache.Value[3] = object3;
-			LogInternal(paramsArrayCache.Value, 4);
+			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
+						 {
+							 [0] = object0,
+							 [1] = object1,
+							 [2] = object2,
+							 [3] = object3
+						 };
+			LogInternal(buffer, 4);
 		}
+
+		public static void Log(object object0) => Log(DebugLogType.normal, object0);
+		public static void Log(object object0, object object1) => Log(DebugLogType.normal, object0, object1);
+		public static void Log(object object0, object object1, object object2) => Log(DebugLogType.normal, object0, object1, object2);
+		public static void Log(object object0, object object1, object object2, object object3) => Log(DebugLogType.normal, object0, object1, object2, object3);
+
+		public static void LogWarning(object object0) => Log(DebugLogType.warning, object0);
+		public static void LogWarning(object object0, object object1) => Log(DebugLogType.warning, object0, object1);
+		public static void LogWarning(object object0, object object1, object object2) => Log(DebugLogType.warning, object0, object1, object2);
+		public static void LogWarning(object object0, object object1, object object2, object object3) => Log(DebugLogType.warning, object0, object1, object2, object3);
+
+		public static void LogError(object object0) => Log(DebugLogType.error, object0);
+		public static void LogError(object object0, object object1) => Log(DebugLogType.error, object0, object1);
+		public static void LogError(object object0, object object1, object object2) => Log(DebugLogType.error, object0, object1, object2);
+		public static void LogError(object object0, object object1, object object2, object object3) => Log(DebugLogType.error, object0, object1, object2, object3);
 
 #endregion
 
 		/// <summary>
-		/// Logs objects in <paramref name="objects"/>.
-		/// Will only process objects from index 0 to <paramref name="length"/> (inclusive,exclusive)
+		/// Logs objects buffered in <paramref name="buffer"/>.
+		/// Will only process objects from index 0 to <paramref name="length"/> [inclusive, exclusive)
 		/// </summary>
-		static void LogInternal(IReadOnlyList<object> objects, int length)
+		static void LogInternal(ObjectsBuffer buffer, int length)
 		{
-			int readTo = Math.Min(objects.Count, length);
-
-			if (readTo == 0)
+			if (length == 0) //Handles degenerate input
 			{
 				Debug.Log("");
 				return;
 			}
 
-			if (readTo == 1)
-			{
-				Debug.Log(ToString(objects[0]));
-				return;
-			}
+			StringBuilder builder = stringBuilderPoolerLocal.Value.GetObject();
+			for (int i = 0; i < length; i++) builder.AppendFormat($"{ToString(buffer[i])}; ");
 
-			StringBuilder builder = stringBuilderPooler.Value.GetObject();
-
-			for (int i = 0; i < readTo; i++)
-			{
-				builder.AppendFormat($"{ToString(objects[i])}; ");
-			}
-
-			Debug.Log(builder.ToString());
-			stringBuilderPooler.Value.ReleaseObject(builder);
+			logActions[buffer.logType](builder.ToString());
+			stringBuilderPoolerLocal.Value.ReleaseObject(builder);
 		}
 
 		public static string ToDebugString(this object target) => ToString(target);
@@ -151,5 +171,35 @@ namespace CodeHelpers.DebugHelpers
 			string toString = target.ToString();
 			return toString == target.GetType().ToString() ? null : toString;
 		}
+
+		readonly struct ObjectsBuffer
+		{
+			public ObjectsBuffer(object[] objects, DebugLogType logType)
+			{
+				this.objects = objects;
+				this.logType = logType;
+			}
+
+			public ObjectsBuffer(int bufferSize, DebugLogType logType) : this(new object[bufferSize], logType) { }
+			public ObjectsBuffer(ObjectsBuffer buffer, DebugLogType logType) : this(buffer.objects, logType) { }
+
+			readonly object[] objects;
+			public readonly DebugLogType logType;
+
+			public object this[int index]
+			{
+				get => objects[index];
+				set => objects[index] = value;
+			}
+
+			public int Length => objects.Length;
+		}
+	}
+
+	public enum DebugLogType
+	{
+		normal,
+		warning,
+		error
 	}
 }

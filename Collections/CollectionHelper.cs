@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 namespace CodeHelpers.Collections
 {
@@ -146,7 +147,11 @@ namespace CodeHelpers.Collections
 
 		public static T TryGetValue<T>(this IReadOnlyList<T> list, int index) => list.IsIndexValid(index) ? list[index] : default;
 
-		public static IOrderedEnumerable<T> Shuffle<T>(this IEnumerable<T> enumerable) => enumerable.OrderBy(_ => RandomHelper.CurrentRandom.Next());
+		public static void Shuffle<T>(this IList<T> list)
+		{
+			Random random = RandomHelper.CurrentRandom;
+			for (int i = list.Count - 1; i > 0; i--) list.Swap(i, random.Next(i + 1));
+		}
 	}
 
 	public interface IDoubleComparer<in T1, in T2>
