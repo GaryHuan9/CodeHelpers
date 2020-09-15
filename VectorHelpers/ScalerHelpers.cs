@@ -39,6 +39,9 @@ namespace CodeHelpers.VectorHelpers
 
 		public static int CeilDivide(this int value, int divider) => (value - 1) / divider + 1;
 
+		public static bool IsPowerOfTwo(this int value) => (value & -value) == value;  //Or (value & (value - 1)) == 0;
+		public static bool IsPowerOfTwo(this long value) => (value & -value) == value; //Or (value & (value - 1)) == 0;
+
 		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
 		{
 			if (left == right) return true;                  //Handles absolute equals and degenerate cases

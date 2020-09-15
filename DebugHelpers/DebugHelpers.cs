@@ -91,6 +91,8 @@ namespace CodeHelpers.DebugHelpers
 			LogInternal(buffer, 4);
 		}
 
+		public static void Log(params object[] objects) => Log(DebugLogType.normal, objects);
+
 		public static void Log(object object0) => Log(DebugLogType.normal, object0);
 		public static void Log(object object0, object object1) => Log(DebugLogType.normal, object0, object1);
 		public static void Log(object object0, object object1, object object2) => Log(DebugLogType.normal, object0, object1, object2);
