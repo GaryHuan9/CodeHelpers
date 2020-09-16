@@ -5,6 +5,32 @@ using UnityEngine;
 
 namespace CodeHelpers.VectorHelpers
 {
+	public readonly struct DirectionStruct
+	{
+		public DirectionStruct(Vector3Int vector) => data = (byte)((GetSign(vector.z) << 4) | (GetSign(vector.y) << 2) | GetSign(vector.x));
+
+		DirectionStruct(byte data) => this.data = data;
+
+		/// <summary>
+		/// Only 6 bits out of the 8 bits available from a byte is used.
+		/// 00ZZ YYXX, each axis uses two bits to represent -1, 0, and 1
+		/// 00 equals 0, 01 equals 1, and 11 equals -1
+		/// </summary>
+		readonly byte data;
+
+		static int GetSign(int value)
+		{
+			if (value > 0) return 0b01;
+			return value < 0 ? 0b11 : 0b00;
+		}
+
+		static int GetSign(float value)
+		{
+			if (ScalarHelper.AlmostEquals(value, 0f)) return 0b00;
+			return value < 0f ? 0b11 : 0b01;
+		}
+	}
+
 	public enum Direction : byte //DO NOT CHANGE THE VALUE OF THESE ENUMS
 	{
 		right = 0,
