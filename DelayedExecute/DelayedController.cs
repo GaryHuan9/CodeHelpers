@@ -5,7 +5,7 @@ namespace CodeHelpers.DelayedExecution
 {
 	public static class DelayedController
 	{
-		static DelayedController() => CodeHelperMonoBehaviour.UnityUpdateMethods += ConstantUpdate;
+		static DelayedController() => CodeHelperMonoBehavior.UnityUpdateMethods += ConstantUpdate;
 
 		static readonly Dictionary<DelayedJob, JobInfo> allJobs = new Dictionary<DelayedJob, JobInfo>();
 		static readonly List<DelayedJob> finishedJobs = new List<DelayedJob>();

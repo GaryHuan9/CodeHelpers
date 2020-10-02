@@ -11,7 +11,7 @@ namespace CodeHelpers.ThreadHelpers
 		public ThreadExecute()
 		{
 			ExecutionThread = ThreadHelper.NewThread(ExecuteQueueingExecutions);
-			CodeHelperMonoBehaviour.OnApplicationQuitMethods += Dispose;
+			CodeHelperMonoBehavior.OnApplicationQuitMethods += Dispose;
 		}
 
 		~ThreadExecute() => Dispose();

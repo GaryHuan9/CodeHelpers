@@ -10,7 +10,7 @@ namespace CodeHelpers.ThreadHelpers
 	{
 		static ThreadHelper()
 		{
-			CodeHelperMonoBehaviour.UnityPreUpdateMethods += () =>
+			CodeHelperMonoBehavior.UnityPreUpdateMethods += () =>
 			{
 				while (!mainThreadActions.IsEmpty)
 				{

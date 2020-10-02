@@ -13,7 +13,7 @@ namespace CodeHelpers.InputHelpers
 		const float DefaultCheckDelay = 0.25f;
 
 		/// <summary>
-		/// This is invoked specifically by <see cref="CodeHelperMonoBehaviour"/> to make sure it is in the pre update frame phase and before all other pre update invokes
+		/// This is invoked specifically by <see cref="CodeHelperMonoBehavior"/> to make sure it is in the pre update frame phase and before all other pre update invokes
 		/// </summary>
 		internal static void PreUpdate()
 		{

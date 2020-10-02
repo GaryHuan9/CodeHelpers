@@ -454,20 +454,20 @@ namespace CodeHelpers
 
 		public static Coroutine StartCoroutine(IEnumerator coroutine)
 		{
-			if (CodeHelperMonoBehaviour.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
-			return CodeHelperMonoBehaviour.instance.StartCoroutine(coroutine);
+			if (CodeHelperMonoBehavior.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
+			return CodeHelperMonoBehavior.instance.StartCoroutine(coroutine);
 		}
 
 		public static void StopCoroutine(IEnumerator coroutine)
 		{
-			if (CodeHelperMonoBehaviour.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
-			CodeHelperMonoBehaviour.instance.StopCoroutine(coroutine);
+			if (CodeHelperMonoBehavior.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
+			CodeHelperMonoBehavior.instance.StopCoroutine(coroutine);
 		}
 
 		public static void StopCoroutine(Coroutine coroutine)
 		{
-			if (CodeHelperMonoBehaviour.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
-			CodeHelperMonoBehaviour.instance.StopCoroutine(coroutine);
+			if (CodeHelperMonoBehavior.instance == null) throw new Exception("You did not add CodeHelper in the scene yet!!!");
+			CodeHelperMonoBehavior.instance.StopCoroutine(coroutine);
 		}
 
 		public static void Swap<T>(ref T first, ref T second)

@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Diagnostics;
-using CodeHelpers.DebugHelpers;
 using CodeHelpers.InputHelpers;
 using CodeHelpers.Events;
 using CodeHelpers.ThreadHelpers;
@@ -10,7 +9,7 @@ using CodeHelpers.ThreadHelpers;
 namespace CodeHelpers
 {
 	[DefaultExecutionOrder(-200)]
-	public class CodeHelperMonoBehaviour : MonoBehaviour
+	public class CodeHelperMonoBehavior : MonoBehaviour
 	{
 		void Awake()
 		{
@@ -95,7 +94,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static event Action OnUnityEndUpdateMethods;
 
-		internal static CodeHelperMonoBehaviour instance;
+		internal static CodeHelperMonoBehavior instance;
 		internal static FrameTimeHelper frameTimeHelper;
 
 		public static FramePhase FramePhase { get; private set; }

@@ -12,7 +12,7 @@ namespace CodeHelpers.DebugHelpers
 {
 	public static class DebugHelper
 	{
-		static DebugHelper() => CodeHelperMonoBehaviour.UnityPreUpdateMethods += ConstantUpdate;
+		static DebugHelper() => CodeHelperMonoBehavior.UnityPreUpdateMethods += ConstantUpdate;
 
 		static void ConstantUpdate()
 		{
@@ -41,7 +41,7 @@ namespace CodeHelpers.DebugHelpers
 		/// </summary>
 		public static int InvokedPerFrame()
 		{
-			if (CodeHelperMonoBehaviour.FramePhase == FramePhase.Pre) throw new Exception("This method does not work in pre frames!");
+			if (CodeHelperMonoBehavior.FramePhase == FramePhase.Pre) throw new Exception("This method does not work in pre frames!");
 			return ++invokedPerFrame;
 		}
 

@@ -9,7 +9,7 @@ namespace CodeHelpers.DebugHelpers
 	{
 		static InfiniteLoopDebug()
 		{
-			CodeHelperMonoBehaviour.UnityPreUpdateMethods += PreUpdate;
+			CodeHelperMonoBehavior.UnityPreUpdateMethods += PreUpdate;
 			frameWatch.Restart();
 		}
 
