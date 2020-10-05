@@ -8,8 +8,10 @@ namespace CodeHelpers.Collections
 {
 	/// <summary>
 	/// This is a factory class which produces classes that can replace Dictionaries mapping from a Type to some kind of T.
-	/// The class will greatly reduce memory since it uses an array instead of a dictionary.
+	/// The class will greatly reduce memory and improve speed since it uses an array instead of a dictionary.
 	/// Also, the produced class can be inherited to further expand its feature.
+	/// NOTE: The magic of this class is that you should store the tokens into static generic classes as a public static int field.
+	/// NOTE: Can reduce invocation time to <see cref="Collection.GetObject{T}()"/> in half.
 	/// </summary>
 	public abstract class TypeCollectionFactory<TBase> where TBase : class
 	{
