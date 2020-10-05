@@ -107,7 +107,7 @@ namespace CodeHelpers.Collections
 				}
 			}
 
-			public T GetObject<T>() where T : TBase => (T)this[factory.GetToken<T>()];
+			public virtual T GetObject<T>() where T : TBase => (T)this[factory.GetToken<T>()];
 
 			public bool Contains<T>() where T : TBase
 			{
