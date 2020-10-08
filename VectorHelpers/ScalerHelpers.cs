@@ -42,7 +42,7 @@ namespace CodeHelpers.VectorHelpers
 		public static bool IsPowerOfTwo(this int value) => (value & -value) == value;  //Or (value & (value - 1)) == 0;
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value; //Or (value & (value - 1)) == 0;
 
-		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
+		public static bool AlmostEquals(float left, float right, float epsilon = 1E-5f)
 		{
 			if (left == right) return true;                  //Handles absolute equals and degenerate cases
 			const float Normal = (1L << 23) * float.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a float
@@ -57,7 +57,7 @@ namespace CodeHelpers.VectorHelpers
 			return difference < epsilon * Math.Min(sum, float.MaxValue);
 		}
 
-		public static bool AlmostEquals(double left, double right, double epsilon = 0.00000001d)
+		public static bool AlmostEquals(double left, double right, double epsilon = 1E-8d)
 		{
 			if (left == right) return true;                    //Handles absolute equals and degenerate cases
 			const double Normal = (1L << 52) * double.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a double
