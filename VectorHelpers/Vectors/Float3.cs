@@ -59,6 +59,22 @@ namespace CodeHelpers.VectorHelpers
 
 #endregion
 
+#region Swizzled2
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XX => new Float2(x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XY => new Float2(x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XZ => new Float2(x, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YX => new Float2(y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YY => new Float2(y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YZ => new Float2(y, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 ZX => new Float2(z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 ZY => new Float2(z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 ZZ => new Float2(z, z);
+
+#endregion
+
 #region Static Properties
 
 		public static readonly Float3 Right = new Float3(1f, 0f, 0f);
@@ -89,20 +105,58 @@ namespace CodeHelpers.VectorHelpers
 
 #region Scaler Returns
 
-		public float Magnitude => (float)Math.Sqrt(SquaredMagnitudeDouble);
-		public float SquaredMagnitude => (float)SquaredMagnitudeDouble;
-		public double SquaredMagnitudeDouble => (double)x * x + (double)y * y + (double)z * z;
+		public float Magnitude
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)Math.Sqrt(SquaredMagnitudeDouble);
+		}
+
+		public float SquaredMagnitude
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)SquaredMagnitudeDouble;
+		}
+
+		public double SquaredMagnitudeDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (double)x * x + (double)y * y + (double)z * z;
+		}
+
+		public float Product
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x * y * z;
+		}
+
+		public double ProductDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (double)x * y * z;
+		}
+
+		public float Sum
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x + y + z;
+		}
+
+		public double SumDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (double)x + y + z;
+		}
 
 #endregion
 
 #region Float3 Returns
 
-		public Float3 Absoluted => new Float3(Math.Abs(x), Math.Abs(y), Math.Abs(z));
-		public Float3 Signed => new Float3(x.Signed(), y.Signed(), z.Signed());
+		public Float3 Absoluted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float3(Math.Abs(x), Math.Abs(y), Math.Abs(z));
+		}
+
+		public Float3 Signed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float3(x.Signed(), y.Signed(), z.Signed());
+		}
 
 		public Float3 Normalized
 		{
-			get
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
 				double squared = SquaredMagnitudeDouble;
 				if (AlmostEqualsZero(squared)) return Zero;
@@ -115,12 +169,44 @@ namespace CodeHelpers.VectorHelpers
 
 #endregion
 
-#region Static Operators
+#region Methods
 
-#region Two Variables
+#region Instance
 
-		public static Float3 Min(Float3 left, Float3 right) => new Float3(Math.Min(left.x, right.x), Math.Min(left.y, right.y), Math.Min(left.z, right.z));
-		public static Float3 Max(Float3 left, Float3 right) => new Float3(Math.Max(left.x, right.x), Math.Max(left.y, right.y), Math.Max(left.z, right.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Dot(Float3 other) => x * other.x + y * other.y + z * other.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DotDouble(Float3 other) => (double)x * other.x + (double)y * other.y + (double)z * other.z;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Cross(Float3 other) => new Float3
+		(
+			(float)((double)y * other.z - (double)z * other.y),
+			(float)((double)z * other.x - (double)x * other.z),
+			(float)((double)x * other.y - (double)y * other.x)
+		);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Float3 other)
+		{
+			double magnitude = Math.Sqrt(SquaredMagnitudeDouble * other.SquaredMagnitudeDouble);
+			return AlmostEqualsZero(magnitude) ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * ScalarHelper.RadianToDegree;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Float3 other, Float3 normal)
+		{
+			float angle = Angle(other);
+			return Cross(other).Dot(normal) < 0f ? -angle : angle;
+		}
+
+#endregion
+
+#region Static
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Min(Float3 left, Float3 right) => new Float3(Math.Min(left.x, right.x), Math.Min(left.y, right.y), Math.Min(left.z, right.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(Float3 left, Float3 right) => new Float3(Math.Max(left.x, right.x), Math.Max(left.y, right.y), Math.Max(left.z, right.z));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 left, Float3 right, Float3 value) => new Float3(ScalarHelper.Lerp(left.x, right.x, value.x), ScalarHelper.Lerp(left.y, right.y, value.y), ScalarHelper.Lerp(left.z, right.z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 left, Float3 right, float value) => Lerp(left, right, (Float3)value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, Float3 value) => new Float3(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y), ScalarHelper.InverseLerp(left.z, right.z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, float value) => InverseLerp(left, right, (Float3)value);
 
 #endregion
 
@@ -142,11 +228,17 @@ namespace CodeHelpers.VectorHelpers
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(in Float3 value) => new Float3(-value.x, -value.y, -value.z);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(in Float3 left, in Float3 right) => new Float3(left.x % right.x, left.y % right.y, left.z % right.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(in Float3 left, float right) => new Float3(left.x % right, left.y % right, left.z % right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(float left, in Float3 right) => new Float3(left % right.x, left % right.y, left % right.z);
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float3 left, in Float3 right) => left.Equals(right);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float3 left, in Float3 right) => !left.Equals(right);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => ScalarHelper.AlmostEquals(squaredMagnitude, 0d);
 

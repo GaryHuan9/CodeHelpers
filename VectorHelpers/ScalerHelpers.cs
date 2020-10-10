@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using CodeHelpers.ObjectPooling;
 using UnityEngine;
 
@@ -7,6 +6,15 @@ namespace CodeHelpers.VectorHelpers
 {
 	public static class ScalarHelper
 	{
+		public const double RadianToDegreeDouble = 180d / Math.PI;
+		public const double DegreeToRadianDouble = Math.PI / 180d;
+
+		public const float RadianToDegree = (float)RadianToDegreeDouble;
+		public const float DegreeToRadian = (float)DegreeToRadianDouble;
+
+		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
+		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
+
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.
 		/// </summary>
@@ -42,7 +50,7 @@ namespace CodeHelpers.VectorHelpers
 		public static bool IsPowerOfTwo(this int value) => (value & -value) == value;  //Or (value & (value - 1)) == 0;
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value; //Or (value & (value - 1)) == 0;
 
-		public static bool AlmostEquals(float left, float right, float epsilon = 1E-5f)
+		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
 		{
 			if (left == right) return true;                  //Handles absolute equals and degenerate cases
 			const float Normal = (1L << 23) * float.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a float
@@ -57,7 +65,7 @@ namespace CodeHelpers.VectorHelpers
 			return difference < epsilon * Math.Min(sum, float.MaxValue);
 		}
 
-		public static bool AlmostEquals(double left, double right, double epsilon = 1E-8d)
+		public static bool AlmostEquals(double left, double right, double epsilon = 0.00000001d)
 		{
 			if (left == right) return true;                    //Handles absolute equals and degenerate cases
 			const double Normal = (1L << 52) * double.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a double
