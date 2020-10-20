@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using CodeHelpers.VectorHelpers;
 using UnityEngine;
 
 namespace CodeHelpers
@@ -62,10 +63,10 @@ namespace CodeHelpers
 		{
 			CheckRange(ref input);
 
-			if (Mathf.Approximately(acceleration, 0f)) return input;
+			if (ScalarHelper.AlmostEquals(acceleration, 0f)) return input;
 
-			if (acceleration > 0f) return Mathf.Pow(input, acceleration + 1f);
-			return 1f - Mathf.Pow(1f - input, -acceleration + 1f);
+			if (acceleration > 0f) return (float)Math.Pow(input, acceleration + 1f);
+			return 1f - (float)Math.Pow(1f - input, -acceleration + 1f);
 		}
 
 		public static float EaseInSmooth(float input) => EaseIn(Sigmoid(input));

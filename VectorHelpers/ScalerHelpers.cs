@@ -6,6 +6,8 @@ namespace CodeHelpers.VectorHelpers
 {
 	public static class ScalarHelper
 	{
+		public const float Epsilon = 0.00001f;
+
 		public const double RadianToDegreeDouble = 180d / Math.PI;
 		public const double DegreeToRadianDouble = Math.PI / 180d;
 

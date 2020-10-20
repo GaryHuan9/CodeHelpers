@@ -79,13 +79,14 @@ namespace CodeHelpers.ThreadHelpers
 				successful = true;
 			}
 
-			executionQueue.ForEach(
-				thisExecution =>
-				{
-					if (thisExecution.id != id) executionQueue.Enqueue(thisExecution);
-					else successful = true;
-				}
-			);
+			while (!executionQueue.IsEmpty)
+			{
+				if (!executionQueue.TryDequeue(out Execution item)) continue;
+
+				if (item.id == id) successful = true;
+				else executionQueue.Enqueue(item);
+			}
+
 			Interlocked.Exchange(ref killingId, DefaultValue);
 
 			return successful;

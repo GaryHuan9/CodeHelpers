@@ -131,67 +131,65 @@ namespace CodeHelpers.MeshHelpers
 			var theseUVs = combineUVs ? new List<Vector2>() : null;
 			var theseNormals = combineNormals ? new List<Vector3>() : null;
 
-			meshes.ForEach(
-				(mesh, index) =>
+			foreach (MeshMatrix meshMatrix in meshes)
+			{
+				Mesh targetMesh = meshMatrix.mesh;
+				Matrix4x4 thisMatrix = meshMatrix.matrix;
+
+				//Vertices and normals
+				int oldVertexCount = vertices.Count;
+				int vertexCount = targetMesh.vertexCount;
+
+				vertices.Capacity += vertexCount;
+
+				targetMesh.GetVertices(theseVertices);
+
+				if (combineNormals)
 				{
-					Mesh targetMesh = mesh.mesh;
-					Matrix4x4 thisMatrix = mesh.matrix;
+					normals.Capacity += vertexCount;
 
-					//Vertices and normals
-					int oldVertexCount = vertices.Count;
-					int vertexCount = targetMesh.vertexCount;
+					targetMesh.GetNormals(theseNormals);
 
-					vertices.Capacity += vertexCount;
-
-					targetMesh.GetVertices(theseVertices);
-
-					if (combineNormals)
+					for (int i = 0; i < vertexCount; i++)
 					{
-						normals.Capacity += vertexCount;
-
-						targetMesh.GetNormals(theseNormals);
-
-						for (int i = 0; i < vertexCount; i++)
-						{
-							vertices.Add(thisMatrix.MultiplyPoint3x4(theseVertices[i]));
-							normals.Add(thisMatrix.MultiplyVector(theseNormals[i]));
-						}
-					}
-					else
-					{
-						for (int i = 0; i < vertexCount; i++)
-						{
-							vertices.Add(thisMatrix.MultiplyPoint3x4(theseVertices[i]));
-						}
-					}
-
-					//UVs
-					if (combineUVs)
-					{
-						targetMesh.GetUVs(0, theseUVs);
-						uvs.AddRange(theseUVs);
-					}
-
-					//Triangles
-					for (int i = 0; i < targetMesh.subMeshCount; i++)
-					{
-						int subMeshIndex = i + mesh.subMeshOffset;
-
-						if (!triangles.ContainsKey(subMeshIndex)) triangles.Add(subMeshIndex, new List<int>());
-
-						var subMeshTriangles = triangles[subMeshIndex];
-						targetMesh.GetTriangles(theseTriangles, i);
-
-						int trianglesCount = theseTriangles.Count;
-						subMeshTriangles.Capacity += trianglesCount;
-
-						for (int j = 0; j < trianglesCount; j++)
-						{
-							subMeshTriangles.Add(theseTriangles[j] + oldVertexCount);
-						}
+						vertices.Add(thisMatrix.MultiplyPoint3x4(theseVertices[i]));
+						normals.Add(thisMatrix.MultiplyVector(theseNormals[i]));
 					}
 				}
-			);
+				else
+				{
+					for (int i = 0; i < vertexCount; i++)
+					{
+						vertices.Add(thisMatrix.MultiplyPoint3x4(theseVertices[i]));
+					}
+				}
+
+				//UVs
+				if (combineUVs)
+				{
+					targetMesh.GetUVs(0, theseUVs);
+					uvs.AddRange(theseUVs);
+				}
+
+				//Triangles
+				for (int i = 0; i < targetMesh.subMeshCount; i++)
+				{
+					int subMeshIndex = i + meshMatrix.subMeshOffset;
+
+					if (!triangles.ContainsKey(subMeshIndex)) triangles.Add(subMeshIndex, new List<int>());
+
+					var subMeshTriangles = triangles[subMeshIndex];
+					targetMesh.GetTriangles(theseTriangles, i);
+
+					int trianglesCount = theseTriangles.Count;
+					subMeshTriangles.Capacity += trianglesCount;
+
+					for (int j = 0; j < trianglesCount; j++)
+					{
+						subMeshTriangles.Add(theseTriangles[j] + oldVertexCount);
+					}
+				}
+			}
 
 			return new MeshThreadedData(vertices, triangles, uvs, normals);
 		}

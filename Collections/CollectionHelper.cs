@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -151,6 +152,30 @@ namespace CodeHelpers.Collections
 		{
 			Random random = RandomHelper.CurrentRandom;
 			for (int i = list.Count - 1; i > 0; i--) list.Swap(i, random.Next(i + 1));
+		}
+
+		public static void ForEach<T>(this IReadOnlyList<T> array, Action<T> action)
+		{
+			if (array == null) return;
+
+			for (int i = 0; i < array.Count; i++)
+			{
+				action(array[i]);
+			}
+		}
+
+		public static void Swap<T>(this T[] array, int index1, int index2)
+		{
+			T storage = array[index1];
+			array[index1] = array[index2];
+			array[index2] = storage;
+		}
+
+		public static void Swap<T>(this IList<T> list, int index1, int index2)
+		{
+			T storage = list[index1];
+			list[index1] = list[index2];
+			list[index2] = storage;
 		}
 	}
 
