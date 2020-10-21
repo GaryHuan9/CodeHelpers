@@ -107,12 +107,17 @@ namespace CodeHelpers.Vectors
 
 		public float Magnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)Math.Sqrt(SquaredMagnitudeDouble);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)MagnitudeDouble;
+		}
+
+		public double MagnitudeDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Sqrt(SquaredMagnitudeDouble);
 		}
 
 		public float SquaredMagnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)SquaredMagnitudeDouble;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x * x + y * y + z * z;
 		}
 
 		public double SquaredMagnitudeDouble
@@ -230,10 +235,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(Float3 left, Float3 right) => new Float3(Math.Max(left.x, right.x), Math.Max(left.y, right.y), Math.Max(left.z, right.z));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 left, Float3 right, Float3 value) => new Float3(ScalarHelper.Lerp(left.x, right.x, value.x), ScalarHelper.Lerp(left.y, right.y, value.y), ScalarHelper.Lerp(left.z, right.z, value.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 left, Float3 right, float value) => Lerp(left, right, (Float3)value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 left, Float3 right, float value) => new Float3(ScalarHelper.Lerp(left.x, right.x, value), ScalarHelper.Lerp(left.y, right.y, value), ScalarHelper.Lerp(left.z, right.z, value));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, Float3 value) => new Float3(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y), ScalarHelper.InverseLerp(left.z, right.z, value.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, float value) => InverseLerp(left, right, (Float3)value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, float value) => new Float3(ScalarHelper.InverseLerp(left.x, right.x, value), ScalarHelper.InverseLerp(left.y, right.y, value), ScalarHelper.InverseLerp(left.z, right.z, value));
 
 #endregion
 
@@ -266,6 +271,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
 
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(UnityEngine.Vector3 value) => new Float3(value.x, value.y, value.z);

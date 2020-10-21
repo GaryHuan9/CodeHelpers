@@ -96,12 +96,17 @@ namespace CodeHelpers.Vectors
 
 		public float Magnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)Math.Sqrt(SquaredMagnitudeDouble);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)MagnitudeDouble;
+		}
+
+		public double MagnitudeDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Sqrt(SquaredMagnitudeDouble);
 		}
 
 		public float SquaredMagnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)SquaredMagnitudeDouble;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x * x + y * y;
 		}
 
 		public double SquaredMagnitudeDouble
@@ -202,10 +207,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Max(Float2 left, Float2 right) => new Float2(Math.Max(left.x, right.x), Math.Max(left.y, right.y));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 left, Float2 right, Float2 value) => new Float2(ScalarHelper.Lerp(left.x, right.x, value.x), ScalarHelper.Lerp(left.y, right.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 left, Float2 right, float value) => Lerp(left, right, (Float2)value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 left, Float2 right, float value) => new Float2(ScalarHelper.Lerp(left.x, right.x, value), ScalarHelper.Lerp(left.y, right.y, value));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 left, Float2 right, Float2 value) => new Float2(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 left, Float2 right, float value) => InverseLerp(left, right, (Float2)value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 left, Float2 right, float value) => new Float2(ScalarHelper.InverseLerp(left.x, right.x, value), ScalarHelper.InverseLerp(left.y, right.y, value));
 
 #endregion
 

@@ -15,7 +15,10 @@ namespace CodeHelpers.Vectors
 		public const float DegreeToRadian = (float)DegreeToRadianDouble;
 
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
+		public static int Lerp(int left, int right, int value) => (right - left) * value + left;
+
 		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
+		public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.

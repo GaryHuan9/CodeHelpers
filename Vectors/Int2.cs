@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
-	public struct Int2 : IEquatable<Int2>, IFormattable
+	public readonly struct Int2 : IEquatable<Int2>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int2(int x, int y)
@@ -67,6 +67,67 @@ namespace CodeHelpers.Vectors
 
 #endregion
 
+#region Static Properties
+
+		public static readonly Int2 Right = new Int2(1, 0);
+		public static readonly Int2 Left = new Int2(-1, 0);
+
+		public static readonly Int2 Up = new Int2(0, 1);
+		public static readonly Int2 Down = new Int2(0, -1);
+
+		public static readonly Int2 One = new Int2(1, 1);
+		public static readonly Int2 Zero = new Int2(0, 0);
+		public static readonly Int2 NegativeOne = new Int2(-1, -1);
+
+		public static readonly Int2 MaxValue = new Int2(int.MaxValue, int.MaxValue);
+		public static readonly Int2 MinValue = new Int2(int.MinValue, int.MinValue);
+
+#endregion
+
+#region Simple Properties
+
+#region Scaler Returns
+
+		public float Magnitude
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)MagnitudeLong;
+		}
+
+		public double MagnitudeLong
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Sqrt(SquaredMagnitudeLong);
+		}
+
+		public int SquaredMagnitude
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x * x + y * y;
+		}
+
+		public long SquaredMagnitudeLong
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x * x + (long)y * y;
+		}
+
+		public int Product
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x * y;
+		}
+
+		public long ProductLong
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x * y;
+		}
+
+		public int Sum
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x + y;
+		}
+
+		public long SumLong
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x + y;
+		}
+
 		public int this[int index]
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -89,9 +150,44 @@ namespace CodeHelpers.Vectors
 			}
 		}
 
+#endregion
+
+#region Float2 Returns
+
+		public Int2 Absoluted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(Math.Abs(x), Math.Abs(y));
+		}
+
+		public Int2 Signed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(x.Signed(), y.Signed());
+		}
+
+		public Float2 Normalized
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				long squared = SquaredMagnitudeLong;
+				if (squared == 0) return Float2.Zero;
+
+				return this / (float)Math.Sqrt(squared);
+			}
+		}
+
+#endregion
+
+#endregion
+
 #region Methods
 
 #region Instance
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public int Dot(Int2 other) => x * other.x + y * other.y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public long DotLong(Int2 other) => (long)x * other.x + (long)y * other.y;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Int2 other) => Math.Abs(SignedAngle(other));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Int2 other) => (float)Math.Atan2((long)x * other.y - (long)y * other.x, DotLong(other)) * ScalarHelper.RadianToDegree;
 
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public UnityEngine.Vector2Int U() => new UnityEngine.Vector2Int(x, y);
@@ -99,9 +195,70 @@ namespace CodeHelpers.Vectors
 
 #endregion
 
+#region Static
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Min(Int2 left, Int2 right) => new Int2(Math.Min(left.x, right.x), Math.Min(left.y, right.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Max(Int2 left, Int2 right) => new Int2(Math.Max(left.x, right.x), Math.Max(left.y, right.y));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 left, Int2 right, Int2 value) => new Int2(ScalarHelper.Lerp(left.x, right.x, value.x), ScalarHelper.Lerp(left.y, right.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 left, Int2 right, int value) => new Int2(ScalarHelper.Lerp(left.x, right.x, value), ScalarHelper.Lerp(left.y, right.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Int2 left, Int2 right, Float2 value) => new Float2(ScalarHelper.Lerp(left.x, right.x, value.x), ScalarHelper.Lerp(left.y, right.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Int2 left, Int2 right, float value) => new Float2(ScalarHelper.Lerp(left.x, right.x, value), ScalarHelper.Lerp(left.y, right.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 InverseLerp(Int2 left, Int2 right, Int2 value) => new Int2(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 InverseLerp(Int2 left, Int2 right, int value) => new Int2(ScalarHelper.InverseLerp(left.x, right.x, value), ScalarHelper.InverseLerp(left.y, right.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 left, Int2 right, Float2 value) => new Float2(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 left, Int2 right, float value) => new Float2(ScalarHelper.InverseLerp(left.x, right.x, value), ScalarHelper.InverseLerp(left.y, right.y, value));
+
+#endregion
+
 #endregion
 
 #region Operators
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator +(in Int2 left, in Int2 right) => new Int2(left.x + right.x, left.y + right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(in Int2 left, in Int2 right) => new Int2(left.x - right.x, left.y - right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(in Int2 left, in Float2 right) => new Float2(left.x + right.x, left.y + right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Int2 left, in Float2 right) => new Float2(left.x - right.x, left.y - right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(in Float2 left, in Int2 right) => new Float2(left.x + right.x, left.y + right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Float2 left, in Int2 right) => new Float2(left.x - right.x, left.y - right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(in Int2 left, in Int2 right) => new Int2(left.x * right.x, left.y * right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(in Int2 left, in Int2 right) => new Int2(left.x / right.x, left.y / right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Int2 left, in Float2 right) => new Float2(left.x * right.x, left.y * right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Int2 left, in Float2 right) => new Float2(left.x / right.x, left.y / right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Float2 left, in Int2 right) => new Float2(left.x * right.x, left.y * right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Float2 left, in Int2 right) => new Float2(left.x / right.x, left.y / right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(in Int2 left, int right) => new Int2(left.x * right, left.y * right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(in Int2 left, int right) => new Int2(left.x / right, left.y / right);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Int2 left, float right) => new Float2(left.x * right, left.y * right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Int2 left, float right) => new Float2(left.x / right, left.y / right);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(int left, in Int2 right) => new Int2(left * right.x, left * right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(int left, in Int2 right) => new Int2(left / right.x, left / right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float left, in Int2 right) => new Float2(left * right.x, left * right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float left, in Int2 right) => new Float2(left / right.x, left / right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(in Int2 value) => new Int2(-value.x, -value.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(in Int2 left, in Int2 right) => new Int2(left.x % right.x, left.y % right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Int2 left, in Float2 right) => new Float2(left.x % right.x, left.y % right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Float2 left, in Int2 right) => new Float2(left.x % right.x, left.y % right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(in Int2 left, int right) => new Int2(left.x % right, left.y % right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(int left, in Int2 right) => new Int2(left % right.x, left % right.y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Int2 left, float right) => new Float2(left.x % right, left.y % right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(float left, in Int2 right) => new Float2(left % right.x, left % right.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Int2 left, in Int2 right) => left.Equals(right);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Int2 left, in Int2 right) => !left.Equals(right);
