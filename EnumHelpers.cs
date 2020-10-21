@@ -1,5 +1,5 @@
 ﻿using System;
-using CodeHelpers.VectorHelpers;
+using CodeHelpers.Vectors;
 
 namespace CodeHelpers
 {

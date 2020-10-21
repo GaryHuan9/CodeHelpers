@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if CODEHELPERS_UNITY //NOTE: Will be rewritten with CodeHelper vector library
+
+using System;
 using UnityEngine;
 
 namespace CodeHelpers.Segment
@@ -115,3 +117,5 @@ namespace CodeHelpers.Segment
 		public override string ToString() => $"(Point1: {point1}, Point2: {point2})";
 	}
 }
+
+#endif

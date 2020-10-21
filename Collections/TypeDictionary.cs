@@ -1,9 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
-using System.Collections.Generic;
-
-namespace CodeHelpers.Collections
+﻿namespace CodeHelpers.Collections
 {
 	//NOTE: static
 

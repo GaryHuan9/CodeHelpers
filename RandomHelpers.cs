@@ -2,14 +2,10 @@
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using RandomS = System.Random;
-using CodeHelpers.ThreadHelpers;
-using CodeHelpers.VectorHelpers;
 
 namespace CodeHelpers
 {
-	public static class RandomHelper
+	public static partial class RandomHelper
 	{
 		static RandomHelper() => Seed = Environment.TickCount;
 
@@ -44,7 +40,7 @@ namespace CodeHelpers
 		/// <summary>The thread independent seed.</summary>
 		public static int ThreadSeed
 		{
-			set => threadRandom.Value = new RandomS(value);
+			set => threadRandom.Value = new Random(value);
 		}
 
 		public static int GetSeed(SeedType type) => seeds[type];
@@ -65,7 +61,7 @@ namespace CodeHelpers
 					case SeedType.threaded:
 
 						Interlocked.Exchange(ref currentThreadedSeed, seed);
-						threadRandom = new ThreadLocal<RandomS>(() => new RandomS(Interlocked.Increment(ref currentThreadedSeed)));
+						threadRandom = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref currentThreadedSeed)));
 
 						break;
 				}
@@ -74,8 +70,8 @@ namespace CodeHelpers
 
 #endregion
 
-		static ThreadLocal<RandomS> threadRandom;
-		public static RandomS CurrentRandom => threadRandom.Value;
+		static ThreadLocal<Random> threadRandom;
+		public static Random CurrentRandom => threadRandom.Value;
 
 		/// <summary>
 		/// Returns a double between 0d to 1d
@@ -98,7 +94,7 @@ namespace CodeHelpers
 		public static int Range(int max) => CurrentRandom.Next(max);
 
 		/// <summary>
-		/// Returns a random float inside [min,max) 
+		/// Returns a random float inside [min,max)
 		/// </summary>
 		public static float Range(float min, float max)
 		{
@@ -107,7 +103,7 @@ namespace CodeHelpers
 		}
 
 		/// <summary>
-		/// Returns a random float inside [0f,max) 
+		/// Returns a random float inside [0f,max)
 		/// </summary>
 		public static float Range(float max) => Range(0f, max);
 
@@ -121,7 +117,7 @@ namespace CodeHelpers
 		}
 
 		/// <summary>
-		/// Returns a random double inside [0d,max) 
+		/// Returns a random double inside [0d,max)
 		/// </summary>
 		public static double Range(double max) => Range(0d, max);
 
@@ -171,21 +167,6 @@ namespace CodeHelpers
 
 			throw ExceptionHelper.NotPossible;
 		}
-
-		/// <summary>
-		/// Tilts the vector <paramref name="direction"/> randomly at an angle of <paramref name="angle"/>.
-		/// Imagine a random plane that is created aligned to <paramref name="direction"/>, then this method
-		/// will rotate <paramref name="direction"/> by <paramref name="angle"/>.
-		/// </summary>
-		public static Vector3 Tilt(Vector3 direction, float angle)
-		{
-			if (Mathf.Approximately(angle, 0f)) return direction;
-
-			var axis = Quaternion.FromToRotation(Vector3.forward, direction) * Vector2.right.Rotate(Range(360f));
-			return Quaternion.AngleAxis(angle, axis) * direction;
-		}
-
-		public static Color GetRandomColorBetweenColors(Color color1, Color color2) => Color.Lerp(color1, color2, (float)Value);
 
 		public static T GetRandomFromCollection<T>(T[] array) => array[Range(0, array.Length)];
 		public static T GetRandomFromCollection<T>(IList<T> list) => list[Range(0, list.Count)];
@@ -301,7 +282,7 @@ namespace CodeHelpers
 				lock (sourceLocker)
 				{
 					noiseSource = new float[Size];
-					RandomS random = new RandomS(NoiseSeed);
+					Random random = new Random(NoiseSeed);
 
 					for (int i = 0; i < noiseSource.Length; i++)
 					{
@@ -316,107 +297,9 @@ namespace CodeHelpers
 		/// </summary>
 		public static class NoiseEvaluator
 		{
-			const int BigPrime1 = 105691;
-			const int BigPrime2 = 104827;
-			const int BigPrime3 = 105167;
-			const int BigPrime4 = 105407;
-
-			static int GetInt(float value) => ScalarHelper.SingleToInt32Bits(value);
-
-			//NOTE: The conversion from int to uint is unchecked, which means if the int value is negative, it will get warped to a large positive number
-			static float GetSource(float value) => unchecked(NoiseController.GetSource((uint)GetInt(value)));
-			static float GetSource(int value) => unchecked(NoiseController.GetSource((uint)value));
-
-			/// <summary>
 			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
 			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(int value) => GetSource(value);
-
-			/// <summary>
-			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
-			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(float value) => GetSource(value);
-
-			/// <summary>
-			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
-			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(Vector3Int value)
-			{
-				unchecked
-				{
-					int result = BigPrime1;
-
-					result = result * BigPrime2 + value.x;
-					result = result * BigPrime2 + value.y;
-					result = result * BigPrime2 + value.z;
-
-					return GetSource(result);
-				}
-			}
-
-			/// <summary>
-			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
-			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(Vector3 value)
-			{
-				unchecked
-				{
-					int result = BigPrime1;
-
-					result = result * BigPrime2 + GetInt(value.x);
-					result = result * BigPrime2 + GetInt(value.y);
-					result = result * BigPrime2 + GetInt(value.z);
-
-					return GetSource(result);
-				}
-			}
-
-			/// <summary>
-			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
-			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(Vector2Int value)
-			{
-				unchecked
-				{
-					int result = BigPrime1;
-
-					result = result * BigPrime2 + value.x;
-					result = result * BigPrime2 + value.y;
-
-					return GetSource(result);
-				}
-			}
-
-			/// <summary>
-			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
-			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(Vector2 value)
-			{
-				unchecked
-				{
-					int result = BigPrime1;
-
-					result = result * BigPrime2 + GetInt(value.x);
-					result = result * BigPrime2 + GetInt(value.y);
-
-					return GetSource(result);
-				}
-			}
-
-			/// <summary>
-			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
-			/// The number returned will only change if <paramref name="value"/> is different.
-			/// </summary>
-			public static float Evaluate(object value)
-			{
-				return GetSource(value.GetHashCode());
-			}
+			public static float Evaluate<T>(T value) => unchecked(NoiseController.GetSource((uint)value.GetHashCode()));
 		}
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Xml;
-using CodeHelpers.VectorHelpers;
+using CodeHelpers.Vectors;
 using UnityEngine;
 
 namespace CodeHelpers

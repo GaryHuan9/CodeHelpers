@@ -1,9 +1,9 @@
+#if CODEHELPERS_UNITY //NOTE: Will be rewritten with CodeHelper vector library
+
 using UnityEngine;
-using System.Diagnostics.Contracts;
 using System;
 using System.Collections.Generic;
-using CodeHelpers.ThreadHelpers;
-using CodeHelpers.VectorHelpers;
+using CodeHelpers.Vectors;
 
 namespace CodeHelpers
 {
@@ -139,3 +139,5 @@ namespace CodeHelpers
 		public override int GetHashCode() => ((Vector2)this).GetHashCode();
 	}
 }
+
+#endif

@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using Random = System.Random;
+using CodeHelpers.Vectors;
 
 namespace CodeHelpers.Collections
 {
@@ -68,37 +65,41 @@ namespace CodeHelpers.Collections
 		public static bool IsIndexValid<T>(this IReadOnlyList<T> array, int index) =>
 			array.Count > index && index >= 0;
 
-		public static bool IsIndexValid<T>(this T[,] array, Vector2Int index) =>
+		public static bool IsIndexValid<T>(this T[,] array, Int2 index) =>
 			array.GetLength(0) > index.x && index.x >= 0 &&
 			array.GetLength(1) > index.y && index.y >= 0;
 
-		public static bool IsIndexValid<T>(this T[,,] array, Vector3Int index) =>
+		public static bool IsIndexValid<T>(this T[,,] array, Int3 index) =>
 			array.GetLength(0) > index.x && index.x >= 0 &&
 			array.GetLength(1) > index.y && index.y >= 0 &&
 			array.GetLength(2) > index.z && index.z >= 0;
 
-		public static Vector2Int? IndexOf<T>(this T[,] array, T item) where T : IEquatable<T>
+		public static Int2? IndexOf<T>(this T[,] array, T item) where T : IEquatable<T>
 		{
-			for (int x = 0; x < array.GetLength(0); x++)
+			Int2 size = array.Size();
+
+			for (int x = 0; x < size.x; x++)
 			{
-				for (int y = 0; y < array.GetLength(1); y++)
+				for (int y = 0; y < size.y; y++)
 				{
-					if (array[x, y].Equals(item)) return new Vector2Int(x, y);
+					if (array[x, y].Equals(item)) return new Int2(x, y);
 				}
 			}
 
 			return null;
 		}
 
-		public static Vector3Int? IndexOf<T>(this T[,,] array, T item) where T : IEquatable<T>
+		public static Int3? IndexOf<T>(this T[,,] array, T item) where T : IEquatable<T>
 		{
-			for (int x = 0; x < array.GetLength(0); x++)
+			Int3 size = array.Size();
+
+			for (int x = 0; x < size.x; x++)
 			{
-				for (int y = 0; y < array.GetLength(1); y++)
+				for (int y = 0; y < size.y; y++)
 				{
-					for (int z = 0; z < array.GetLength(2); z++)
+					for (int z = 0; z < size.z; z++)
 					{
-						if (array[x, y, z].Equals(item)) return new Vector3Int(x, y, z);
+						if (array[x, y, z].Equals(item)) return new Int3(x, y, z);
 					}
 				}
 			}
@@ -106,8 +107,8 @@ namespace CodeHelpers.Collections
 			return null;
 		}
 
-		public static Vector2Int Size<T>(this T[,] array) => new Vector2Int(array.GetLength(0), array.GetLength(1));
-		public static Vector3Int Size<T>(this T[,,] array) => new Vector3Int(array.GetLength(0), array.GetLength(1), array.GetLength(2));
+		public static Int2 Size<T>(this T[,] array) => new Int2(array.GetLength(0), array.GetLength(1));
+		public static Int3 Size<T>(this T[,,] array) => new Int3(array.GetLength(0), array.GetLength(1), array.GetLength(2));
 
 		public static float[,] CombineFloatArrays(float[,] array1, float[,] array2, float chance1, float chance2)
 		{

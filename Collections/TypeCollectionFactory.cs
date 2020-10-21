@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Analytics;
-using UnityEngine.Assertions;
 
 namespace CodeHelpers.Collections
 {
@@ -132,7 +130,7 @@ namespace CodeHelpers.Collections
 
 			public void Add<T>(T value) where T : class, TBase
 			{
-				Assert.IsTrue(typeof(T) == value.GetType());
+				if (typeof(T) != value.GetType()) throw ExceptionHelper.Invalid(nameof(value), value, "is not passed as the most derived type in its class hierarchy");
 				int token = factory.GetToken<T>();
 
 				if (token < 0) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "is not a registered type!");

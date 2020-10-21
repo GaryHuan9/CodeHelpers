@@ -1,3 +1,5 @@
+#if CODEHELPERS_UNITY
+
 using UnityEngine;
 
 namespace CodeHelpers.Segment
@@ -83,3 +85,5 @@ namespace CodeHelpers.Segment
 		public override string ToString() => $"(Point1: {point1}, Point2: {point2})";
 	}
 }
+
+#endif

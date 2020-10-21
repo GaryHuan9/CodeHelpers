@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Diagnostics;
+using CodeHelpers.ObjectPooling;
 
 namespace CodeHelpers
 {
@@ -29,10 +30,10 @@ namespace CodeHelpers
 
 			thisWatch.Stop();
 			return new PerformanceTest(thisTest, times)
-			{
-				tookMilliseconds = thisWatch.Elapsed.TotalMilliseconds,
-				tookNanoseconds = thisWatch.Elapsed.TotalMilliseconds * 1000000
-			};
+				   {
+					   tookMilliseconds = thisWatch.Elapsed.TotalMilliseconds,
+					   tookNanoseconds = thisWatch.Elapsed.TotalMilliseconds * 1000000
+				   };
 		}
 
 		public static PerformanceTest Test(PerformanceTest thisTest) => Test(thisTest.thisTest, thisTest.testTimes);
@@ -56,5 +57,4 @@ namespace CodeHelpers
 		public double tookMilliseconds;
 		public double tookNanoseconds;
 	}
-
 }

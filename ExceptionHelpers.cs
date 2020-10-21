@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Threading;
-using CodeHelpers.DebugHelpers;
-using CodeHelpers.ThreadHelpers;
-using UnityEngine.Networking;
+using CodeHelpers.Threads;
 
 namespace CodeHelpers
 {
