@@ -116,15 +116,33 @@ namespace CodeHelpers.Vectors
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
+		public static int SingleToInt32Bits(float value)
+		{
 #if UNSAFE_CODE_ENABLED
-		public static unsafe int SingleToInt32Bits(float value) => *(int*)&value;
-		public static unsafe float Int32BitsToSingle(int value) => *(float*)&value;
+			unsafe
+			{
+				return *(int*)&value;
+			}
 #else
-		public static int SingleToInt32Bits(float value) => new FloatIntConverter(value).intValue;
-		public static float Int32BitsToSingle(int value) => new FloatIntConverter(value).floatValue;
+			return new FloatIntConverter(value).intValue;
+#endif
+		}
 
+		public static float Int32BitsToSingle(int value)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				return *(float*)&value;
+			}
+#else
+			return new FloatIntConverter(value).floatValue;
+#endif
+		}
+
+#if !UNSAFE_CODE_ENABLED
 		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-		struct FloatIntConverter
+		readonly struct FloatIntConverter
 		{
 			public FloatIntConverter(float floatValue) : this() => this.floatValue = floatValue;
 			public FloatIntConverter(int intValue) : this() => this.intValue = intValue;

@@ -96,7 +96,7 @@ namespace CodeHelpers.Vectors
 		public static readonly Float3 PositiveInfinity = new Float3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		public static readonly Float3 NegativeInfinity = new Float3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
 
-		public static readonly Float3 Epsilon = new Float3(float.Epsilon, float.Epsilon, float.Epsilon);
+		public static readonly Float3 Epsilon = new Float3(ScalarHelper.Epsilon, ScalarHelper.Epsilon, ScalarHelper.Epsilon);
 		public static readonly Float3 NaN = new Float3(float.NaN, float.NaN, float.NaN);
 
 #endregion
@@ -143,6 +143,42 @@ namespace CodeHelpers.Vectors
 		public double SumDouble
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (double)x + y + z;
+		}
+
+		public float MinComponent
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x < y) return x < z ? x : z;
+				return y < z ? y : z;
+			}
+		}
+
+		public int MinIndex
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x < y) return x < z ? 0 : 2;
+				return y < z ? 1 : 2;
+			}
+		}
+
+		public float MaxComponent
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x > y) return x > z ? x : z;
+				return y > z ? y : z;
+			}
+		}
+
+		public int MaxIndex
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x > y) return x > z ? 0 : 2;
+				return y > z ? 1 : 2;
+			}
 		}
 
 		public float this[int index]
@@ -193,6 +229,44 @@ namespace CodeHelpers.Vectors
 			}
 		}
 
+		public Float3 Sorted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x < y)
+				{
+					if (y < z) return XYZ;
+					if (x < z) return XZY;
+
+					return ZXY;
+				}
+
+				if (x < z) return YXZ;
+				if (y < z) return YZX;
+
+				return ZYX;
+			}
+		}
+
+		public Float3 SortedReversed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x > y)
+				{
+					if (y > z) return XYZ;
+					if (x > z) return XZY;
+
+					return ZXY;
+				}
+
+				if (x > z) return YXZ;
+				if (y > z) return YZX;
+
+				return ZYX;
+			}
+		}
+
 #endregion
 
 #endregion
@@ -239,6 +313,30 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, Float3 value) => new Float3(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y), ScalarHelper.InverseLerp(left.z, right.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 left, Float3 right, float value) => new Float3(ScalarHelper.InverseLerp(left.x, right.x, value), ScalarHelper.InverseLerp(left.y, right.y, value), ScalarHelper.InverseLerp(left.z, right.z, value));
+
+#endregion
+
+#region Create
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float3 Create(int index, float value)
+		{
+
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float3 Replace(int index, float value)
+		{
+
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceX(float value) => new Float3(value, y, z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceY(float value) => new Float3(x, value, z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceZ(float value) => new Float3(x, y, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXY(Float2 value) => new Float3(value.x, value.y, z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceYZ(Float2 value) => new Float3(x, value.x, value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXZ(Float2 value) => new Float3(value.x, y, value.y);
 
 #endregion
 

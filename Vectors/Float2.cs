@@ -85,7 +85,7 @@ namespace CodeHelpers.Vectors
 		public static readonly Float2 PositiveInfinity = new Float2(float.PositiveInfinity, float.PositiveInfinity);
 		public static readonly Float2 NegativeInfinity = new Float2(float.NegativeInfinity, float.NegativeInfinity);
 
-		public static readonly Float2 Epsilon = new Float2(float.Epsilon, float.Epsilon);
+		public static readonly Float2 Epsilon = new Float2(ScalarHelper.Epsilon, ScalarHelper.Epsilon);
 		public static readonly Float2 NaN = new Float2(float.NaN, float.NaN);
 
 #endregion
