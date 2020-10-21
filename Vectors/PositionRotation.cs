@@ -1,3 +1,5 @@
+#if CODEHELPERS_UNITY
+
 using UnityEngine;
 
 namespace CodeHelpers.Vectors
@@ -18,10 +20,12 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		public PositionRotation GetMirror(Direction direction)
 		{
-			Vector3Int mirror = direction.ToVector3().Abs() * -2 + Vector3Int.one;
+			Vector3Int mirror = direction.ToVector3().U().Abs() * -2 + Vector3Int.one;
 			rotation.ToAngleAxis(out float angle, out Vector3 axis);
 
 			return new PositionRotation(Vector3.Scale(position, mirror), Quaternion.AngleAxis(-angle, Vector3.Scale(axis, mirror)));
 		}
 	}
 }
+
+#endif

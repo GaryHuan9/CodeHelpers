@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if CODEHELPERS_UNITY
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -254,7 +256,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static readonly IReadOnlyList<Vector3Int> neighbor6Positions = Array.AsReadOnly(
 			(from Direction direction in neighbor6Directions
-			 select direction.ToVector3()).ToArray()
+			 select direction.ToVector3().U()).ToArray()
 		);
 
 		/// <summary>
@@ -657,3 +659,5 @@ namespace CodeHelpers
 
 	}
 }
+
+#endif

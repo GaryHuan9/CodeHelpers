@@ -26,10 +26,10 @@ namespace CodeHelpers.RotationHelpers
 
 #if CODEHELPERS_UNITY
 		public LimitedRotation(UnityEngine.Quaternion quaternion) : this(quaternion.eulerAngles) { }
-#endif
 
 		public LimitedRotation(Direction direction, int angle) : this(direction.ToVector3() * angle) { }
 		public LimitedRotation(Direction direction, float angle) : this(direction.ToVector3().ToFloat() * angle) { }
+#endif
 
 		/// <summary>
 		/// Bit representation: 0000 0000
@@ -99,15 +99,13 @@ namespace CodeHelpers.RotationHelpers
 		public static bool operator !=(LimitedRotation first, LimitedRotation second) => !first.Equals(second);
 
 #if CODEHELPERS_UNITY
-
 		// NOTE: Cannot just add/subtract the two euler angles because gimbal lock might occur
 		public static LimitedRotation operator *(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Quaternion);
 		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Inverted.Quaternion);
 
 		public static UnityEngine.Vector3 operator *(LimitedRotation rotation, UnityEngine.Vector3 vector) => rotation.Quaternion * vector;
 		public static UnityEngine.Vector3Int operator *(LimitedRotation rotation, UnityEngine.Vector3Int vector) => (rotation * vector.ToFloat()).RoundToInt();
-		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToVector3()).ToDirection();
-
+		public static Direction operator *(LimitedRotation rotation, Direction direction) => ((Float3)(rotation * (UnityEngine.Vector3)direction.ToVector3().U())).ToDirection();
 #endif
 
 		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;

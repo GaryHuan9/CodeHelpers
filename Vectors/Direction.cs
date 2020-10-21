@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace CodeHelpers.Vectors
 {
 	public readonly struct DirectionStruct
 	{
-		public DirectionStruct(Vector3Int vector) => data = (byte)((GetSign(vector.z) << 4) | (GetSign(vector.y) << 2) | GetSign(vector.x));
+		public DirectionStruct(Int3 vector) => data = (byte)((GetSign(vector.z) << 4) | (GetSign(vector.y) << 2) | GetSign(vector.x));
 
 		DirectionStruct(byte data) => this.data = data;
 
@@ -49,31 +48,31 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		static int RemapSign(int sign) => sign * -2 + 1;
 
-		public static Direction ToDirection(this Vector3Int vector) => ToDirection(vector.ToFloat());
-		public static Direction ToDirection(this Vector2Int vector) => ToDirection(vector.ToFloat());
+		public static Direction ToDirection(this Int3 vector) => ToDirection(vector.XYZ);
+		public static Direction ToDirection(this Int2 vector) => ToDirection(vector.XY_);
 
-		public static Direction ToDirection(this Vector3 vector)
+		public static Direction ToDirection(this Float3 vector)
 		{
-			if (vector == Vector3.zero) throw ExceptionHelper.NotConvertible;
+			if (vector == Float3.Zero) throw ExceptionHelper.NotConvertible;
 
-			int maxIndex = vector.Abs().GetMaxIndex();
+			int maxIndex = vector.Absoluted.GetMaxIndex();
 			return (Direction)(maxIndex * 2 + (vector[maxIndex] < 0f ? 1 : 0));
 		}
 
-		public static Vector3Int ToVector3(this Direction direction)
+		public static Int3 ToVector3(this Direction direction)
 		{
 			int value = (int)direction;
-			return new Vector3Int {[value / 2] = RemapSign(value % 2)};
+			return new Int3 {[value / 2] = RemapSign(value % 2)};
 		}
 
-		public static Vector2Int ToVector2(this Direction direction)
+		public static Int2 ToVector2(this Direction direction)
 		{
 			switch (direction)
 			{
-				case Direction.right: return Vector2Int.right;
-				case Direction.left:  return Vector2Int.left;
-				case Direction.up:    return Vector2Int.up;
-				case Direction.down:  return Vector2Int.down;
+				case Direction.right: return Int2.right;
+				case Direction.left:  return Int2.left;
+				case Direction.up:    return Int2.up;
+				case Direction.down:  return Int2.down;
 
 				case Direction.forward:
 				case Direction.backward: throw ExceptionHelper.NotConvertible;
@@ -96,14 +95,14 @@ namespace CodeHelpers.Vectors
 		/// Returns one of the component of <paramref name="vector"/> times direction.
 		/// A faster way to calculate Vector3Int.Scale(direction.ToVector3(), vector).magnitude
 		/// </summary>
-		public static int ExtractComponent(this Direction direction, Vector3Int vector)
+		public static int ExtractComponent(this Direction direction, Int3 vector)
 		{
 			int value = (int)direction;
 			return vector[value / 2] * RemapSign(value % 2);
 		}
 
-		/// <inheritdoc cref="ExtractComponent(Direction,UnityEngine.Vector3Int)"/>
-		public static float ExtractComponent(this Direction direction, Vector3 vector)
+		/// <inheritdoc cref="ExtractComponent(CodeHelpers.Vectors.Direction,CodeHelpers.Vectors.Int3)"/>
+		public static float ExtractComponent(this Direction direction, Float3 vector)
 		{
 			int value = (int)direction;
 			return vector[value / 2] * RemapSign(value % 2);
@@ -160,16 +159,16 @@ namespace CodeHelpers.Vectors
 		/// NOTE: this returns a vector2, because it project as an orthographic camera looking down at the plane and the point, where
 		/// the normal is pointing at the camera.
 		/// </summary>
-		public static Vector2 Project(this Direction direction, Vector3 point)
+		public static Float2 Project(this Direction direction, Float3 point)
 		{
 			switch (direction)
 			{
-				case Direction.right:    return new Vector2(point.z, point.y);
-				case Direction.left:     return new Vector2(-point.z, point.y);
-				case Direction.up:       return new Vector2(point.x, point.z);
-				case Direction.down:     return new Vector2(-point.x, point.z);
-				case Direction.forward:  return new Vector2(point.y, point.x);
-				case Direction.backward: return new Vector2(-point.y, point.x);
+				case Direction.right:    return new Float2(point.z, point.y);
+				case Direction.left:     return new Float2(-point.z, point.y);
+				case Direction.up:       return new Float2(point.x, point.z);
+				case Direction.down:     return new Float2(-point.x, point.z);
+				case Direction.forward:  return new Float2(point.y, point.x);
+				case Direction.backward: return new Float2(-point.y, point.x);
 			}
 
 			throw ExceptionHelper.NotPossible;
@@ -227,7 +226,7 @@ namespace CodeHelpers.Vectors
 		}
 
 		//Why write your own when you can use the library?
-		static Direction GetCross(Direction from, Direction to) => Vector3.Cross(from.ToVector3(), to.ToVector3()).ToDirection();
+		static Direction GetCross(Direction from, Direction to) => from.ToVector3().Cross(to.ToVector3()).ToDirection();
 
 		/// <summary>
 		/// Gets the cross value of <paramref name="from"/> and <paramref name="to"/>.

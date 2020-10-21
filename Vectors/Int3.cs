@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
@@ -18,6 +19,84 @@ namespace CodeHelpers.Vectors
 		public readonly int y;
 		public readonly int z;
 
+#region Swizzled3
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXX => new Float3(x, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXY => new Float3(x, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXZ => new Float3(x, x, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYX => new Float3(x, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYY => new Float3(x, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYZ => new Float3(x, y, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZX => new Float3(x, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZY => new Float3(x, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZZ => new Float3(x, z, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXX => new Float3(y, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXY => new Float3(y, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXZ => new Float3(y, x, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYX => new Float3(y, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYY => new Float3(y, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYZ => new Float3(y, y, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZX => new Float3(y, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZY => new Float3(y, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZZ => new Float3(y, z, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZXX => new Float3(z, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZXY => new Float3(z, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZXZ => new Float3(z, x, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZYX => new Float3(z, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZYY => new Float3(z, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZYZ => new Float3(z, y, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZX => new Float3(z, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZY => new Float3(z, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZZ => new Float3(z, z, z);
+
+#endregion
+
+#region Swizzled2
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XX => new Float2(x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XY => new Float2(x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XZ => new Float2(x, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YX => new Float2(y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YY => new Float2(y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YZ => new Float2(y, z);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 ZX => new Float2(z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 ZY => new Float2(z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 ZZ => new Float2(z, z);
+
+#endregion
+
+		public int this[int index]
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+#if UNSAFE_CODE_ENABLED
+				unsafe
+				{
+					if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+					fixed (Int3* pointer = &this) return ((int*)pointer)[index];
+				}
+#else
+				switch (index)
+				{
+					case 0: return x;
+					case 1: return y;
+					case 2: return z;
+				}
+
+				throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+#endif
+			}
+		}
 
 #region Methods
 
@@ -40,6 +119,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int3 other) => x == other.x && y == other.y && z == other.z;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(int value) => new Int3(value, value, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(Int3 value) => new Float3(value.x, value.y, value.z);
 
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Int3(UnityEngine.Vector3Int value) => new Int3(value.x, value.y, value.z);

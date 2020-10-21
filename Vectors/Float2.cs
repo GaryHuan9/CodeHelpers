@@ -129,6 +129,28 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (double)x + y;
 		}
 
+		public float this[int index]
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+#if UNSAFE_CODE_ENABLED
+				unsafe
+				{
+					if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+					fixed (Float2* pointer = &this) return ((float*)pointer)[index];
+				}
+#else
+				switch (index)
+				{
+					case 0: return x;
+					case 1: return y;
+				}
+
+				throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+#endif
+			}
+		}
+
 #endregion
 
 #region Float2 Returns
