@@ -396,6 +396,7 @@ namespace CodeHelpers.Vectors
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Int3(UnityEngine.Vector3Int value) => new Int3(value.x, value.y, value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3Int(Int3 value) => new UnityEngine.Vector3Int(value.x, value.y, value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator UnityEngine.Vector3(Int3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);
 #endif
 
 #endregion

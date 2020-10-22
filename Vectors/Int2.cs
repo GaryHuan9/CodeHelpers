@@ -268,6 +268,7 @@ namespace CodeHelpers.Vectors
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Int2(UnityEngine.Vector2Int value) => new Int2(value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector2Int(Int2 value) => new UnityEngine.Vector2Int(value.x, value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator UnityEngine.Vector2(Int2 value) => new UnityEngine.Vector2(value.x, value.y);
 #endif
 
 #endregion
