@@ -24,11 +24,11 @@ namespace CodeHelpers.RotationHelpers
 		public LimitedRotation(Int3 eulerAngles) : this(eulerAngles.x, eulerAngles.y, eulerAngles.z) { }
 		public LimitedRotation(Float3 eulerAngles) : this(eulerAngles.x, eulerAngles.y, eulerAngles.z) { }
 
+		public LimitedRotation(Direction direction, int angle) : this(direction.ToVector3() * angle) { }
+		public LimitedRotation(Direction direction, float angle) : this(direction.ToVector3() * angle) { }
+
 #if CODEHELPERS_UNITY
 		public LimitedRotation(UnityEngine.Quaternion quaternion) : this(quaternion.eulerAngles) { }
-
-		public LimitedRotation(Direction direction, int angle) : this(direction.ToVector3() * angle) { }
-		public LimitedRotation(Direction direction, float angle) : this(direction.ToVector3().ToFloat() * angle) { }
 #endif
 
 		/// <summary>
@@ -104,8 +104,13 @@ namespace CodeHelpers.RotationHelpers
 		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Inverted.Quaternion);
 
 		public static UnityEngine.Vector3 operator *(LimitedRotation rotation, UnityEngine.Vector3 vector) => rotation.Quaternion * vector;
-		public static UnityEngine.Vector3Int operator *(LimitedRotation rotation, UnityEngine.Vector3Int vector) => (rotation * vector.ToFloat()).RoundToInt();
-		public static Direction operator *(LimitedRotation rotation, Direction direction) => ((Float3)(rotation * (UnityEngine.Vector3)direction.ToVector3().U())).ToDirection();
+		public static UnityEngine.Vector3Int operator *(LimitedRotation rotation, UnityEngine.Vector3Int vector) => (rotation.Quaternion * vector).RoundToInt();
+
+		public static Float3 operator *(LimitedRotation rotation, Float3 vector) => rotation.Quaternion * vector;
+		public static Int3 operator *(LimitedRotation rotation, Int3 vector) => (rotation.Quaternion * vector);
+
+		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation.Quaternion * direction.ToVector3()).ToDirection();
+		public static Direction operator *(LimitedRotation rotation, Direction direction) => ((Float3)(rotation * (UnityEngine.Vector3)direction.ToVector3())).ToDirection();
 #endif
 
 		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;

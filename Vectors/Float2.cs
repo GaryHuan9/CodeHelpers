@@ -69,23 +69,23 @@ namespace CodeHelpers.Vectors
 
 #region Static Properties
 
-		public static readonly Float2 Right = new Float2(1f, 0f);
-		public static readonly Float2 Left = new Float2(-1f, 0f);
+		public static readonly Float2 right = new Float2(1f, 0f);
+		public static readonly Float2 left = new Float2(-1f, 0f);
 
-		public static readonly Float2 Up = new Float2(0f, 1f);
-		public static readonly Float2 Down = new Float2(0f, -1f);
+		public static readonly Float2 up = new Float2(0f, 1f);
+		public static readonly Float2 down = new Float2(0f, -1f);
 
-		public static readonly Float2 One = new Float2(1f, 1f);
-		public static readonly Float2 Zero = new Float2(0f, 0f);
-		public static readonly Float2 NegativeOne = new Float2(-1f, -1f);
+		public static readonly Float2 one = new Float2(1f, 1f);
+		public static readonly Float2 zero = new Float2(0f, 0f);
+		public static readonly Float2 negativeOne = new Float2(-1f, -1f);
 
-		public static readonly Float2 MaxValue = new Float2(float.MaxValue, float.MaxValue);
-		public static readonly Float2 MinValue = new Float2(float.MinValue, float.MinValue);
+		public static readonly Float2 maxValue = new Float2(float.MaxValue, float.MaxValue);
+		public static readonly Float2 minValue = new Float2(float.MinValue, float.MinValue);
 
-		public static readonly Float2 PositiveInfinity = new Float2(float.PositiveInfinity, float.PositiveInfinity);
-		public static readonly Float2 NegativeInfinity = new Float2(float.NegativeInfinity, float.NegativeInfinity);
+		public static readonly Float2 positiveInfinity = new Float2(float.PositiveInfinity, float.PositiveInfinity);
+		public static readonly Float2 negativeInfinity = new Float2(float.NegativeInfinity, float.NegativeInfinity);
 
-		public static readonly Float2 Epsilon = new Float2(ScalarHelper.Epsilon, ScalarHelper.Epsilon);
+		public static readonly Float2 epsilon = new Float2(Scalars.Epsilon, Scalars.Epsilon);
 		public static readonly Float2 NaN = new Float2(float.NaN, float.NaN);
 
 #endregion
@@ -175,10 +175,40 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
 				double squared = SquaredMagnitudeDouble;
-				if (AlmostEqualsZero(squared)) return Zero;
+				if (AlmostEqualsZero(squared)) return zero;
 
 				return this / (float)Math.Sqrt(squared);
 			}
+		}
+
+		public Int2 Floored
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2((int)Math.Floor(x), (int)Math.Floor(y));
+		}
+
+		public Float2 FlooredFloat
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2((float)Math.Floor(x), (float)Math.Floor(y));
+		}
+
+		public Int2 Ceiled
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2((int)Math.Ceiling(x), (int)Math.Ceiling(y));
+		}
+
+		public Float2 CeiledFloat
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2((float)Math.Ceiling(x), (float)Math.Ceiling(y));
+		}
+
+		public Int2 Rounded
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2((int)Math.Round(x), (int)Math.Round(y));
+		}
+
+		public Float2 RoundedFloat
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2((float)Math.Round(x), (float)Math.Round(y));
 		}
 
 #endregion
@@ -193,24 +223,20 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DotDouble(Float2 other) => (double)x * other.x + (double)y * other.y;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Float2 other) => Math.Abs(SignedAngle(other));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Float2 other) => (float)Math.Atan2((double)x * other.y - (double)y * other.x, DotDouble(other)) * ScalarHelper.RadianToDegree;
-
-#if CODEHELPERS_UNITY
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public UnityEngine.Vector2 U() => new UnityEngine.Vector2(x, y);
-#endif
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Float2 other) => (float)Math.Atan2((double)x * other.y - (double)y * other.x, DotDouble(other)) * Scalars.RadianToDegree;
 
 #endregion
 
 #region Static
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Min(Float2 left, Float2 right) => new Float2(Math.Min(left.x, right.x), Math.Min(left.y, right.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Max(Float2 left, Float2 right) => new Float2(Math.Max(left.x, right.x), Math.Max(left.y, right.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Min(Float2 first, Float2 second) => new Float2(Math.Min(first.x, second.x), Math.Min(first.y, second.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Max(Float2 first, Float2 second) => new Float2(Math.Max(first.x, second.x), Math.Max(first.y, second.y));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 left, Float2 right, Float2 value) => new Float2(ScalarHelper.Lerp(left.x, right.x, value.x), ScalarHelper.Lerp(left.y, right.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 left, Float2 right, float value) => new Float2(ScalarHelper.Lerp(left.x, right.x, value), ScalarHelper.Lerp(left.y, right.y, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 first, Float2 second, Float2 value) => new Float2(Scalars.Lerp(first.x, second.x, value.x), Scalars.Lerp(first.y, second.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 first, Float2 second, float value) => new Float2(Scalars.Lerp(first.x, second.x, value), Scalars.Lerp(first.y, second.y, value));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 left, Float2 right, Float2 value) => new Float2(ScalarHelper.InverseLerp(left.x, right.x, value.x), ScalarHelper.InverseLerp(left.y, right.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 left, Float2 right, float value) => new Float2(ScalarHelper.InverseLerp(left.x, right.x, value), ScalarHelper.InverseLerp(left.y, right.y, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 first, Float2 second, Float2 value) => new Float2(Scalars.InverseLerp(first.x, second.x, value.x), Scalars.InverseLerp(first.y, second.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Float2 first, Float2 second, float value) => new Float2(Scalars.InverseLerp(first.x, second.x, value), Scalars.InverseLerp(first.y, second.y, value));
 
 #endregion
 
@@ -218,26 +244,26 @@ namespace CodeHelpers.Vectors
 
 #region Operators
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(in Float2 left, in Float2 right) => new Float2(left.x + right.x, left.y + right.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Float2 left, in Float2 right) => new Float2(left.x - right.x, left.y - right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(in Float2 first, in Float2 second) => new Float2(first.x + second.x, first.y + second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Float2 first, in Float2 second) => new Float2(first.x - second.x, first.y - second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Float2 left, in Float2 right) => new Float2(left.x * right.x, left.y * right.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Float2 left, in Float2 right) => new Float2(left.x / right.x, left.y / right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Float2 first, in Float2 second) => new Float2(first.x * second.x, first.y * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Float2 first, in Float2 second) => new Float2(first.x / second.x, first.y / second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Float2 left, float right) => new Float2(left.x * right, left.y * right);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Float2 left, float right) => new Float2(left.x / right, left.y / right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Float2 first, float second) => new Float2(first.x * second, first.y * second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Float2 first, float second) => new Float2(first.x / second, first.y / second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float left, in Float2 right) => new Float2(left * right.x, left * right.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float left, in Float2 right) => new Float2(left / right.x, left / right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float first, in Float2 second) => new Float2(first * second.x, first * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float first, in Float2 second) => new Float2(first / second.x, first / second.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Float2 value) => new Float2(-value.x, -value.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Float2 left, in Float2 right) => new Float2(left.x % right.x, left.y % right.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Float2 left, float right) => new Float2(left.x % right, left.y % right);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(float left, in Float2 right) => new Float2(left % right.x, left % right.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Float2 first, in Float2 second) => new Float2(first.x % second.x, first.y % second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Float2 first, float second) => new Float2(first.x % second, first.y % second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(float first, in Float2 second) => new Float2(first % second.x, first % second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float2 left, in Float2 right) => left.Equals(right);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float2 left, in Float2 right) => !left.Equals(right);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float2 first, in Float2 second) => first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float2 first, in Float2 second) => !first.Equals(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);
@@ -246,9 +272,10 @@ namespace CodeHelpers.Vectors
 
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float2(UnityEngine.Vector2 value) => new Float2(value.x, value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector2(Float2 value) => new UnityEngine.Vector2(value.x, value.y);
 #endif
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => ScalarHelper.AlmostEquals(squaredMagnitude, 0d);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => Scalars.AlmostEquals(squaredMagnitude, 0d);
 
 #endregion
 

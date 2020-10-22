@@ -24,7 +24,7 @@ namespace CodeHelpers.Vectors
 
 		static int GetSign(float value)
 		{
-			if (ScalarHelper.AlmostEquals(value, 0f)) return 0b00;
+			if (Scalars.AlmostEquals(value, 0f)) return 0b00;
 			return value < 0f ? 0b11 : 0b01;
 		}
 	}
@@ -48,21 +48,21 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		static int RemapSign(int sign) => sign * -2 + 1;
 
-		public static Direction ToDirection(this Int3 vector) => ToDirection(vector.XYZ);
+		public static Direction ToDirection(this Int3 vector) => ToDirection((Float3)vector.XYZ);
 		public static Direction ToDirection(this Int2 vector) => ToDirection(vector.XY_);
 
 		public static Direction ToDirection(this Float3 vector)
 		{
-			if (vector == Float3.Zero) throw ExceptionHelper.NotConvertible;
+			if (vector == Float3.zero) throw ExceptionHelper.NotConvertible;
 
-			int maxIndex = vector.Absoluted.GetMaxIndex();
+			int maxIndex = vector.Absoluted.MaxIndex;
 			return (Direction)(maxIndex * 2 + (vector[maxIndex] < 0f ? 1 : 0));
 		}
 
 		public static Int3 ToVector3(this Direction direction)
 		{
 			int value = (int)direction;
-			return new Int3 {[value / 2] = RemapSign(value % 2)};
+			return Int3.Create(value / 2, RemapSign(value % 2));
 		}
 
 		public static Int2 ToVector2(this Direction direction)

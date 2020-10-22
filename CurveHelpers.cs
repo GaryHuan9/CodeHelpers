@@ -63,7 +63,7 @@ namespace CodeHelpers
 		{
 			CheckRange(ref input);
 
-			if (ScalarHelper.AlmostEquals(acceleration, 0f)) return input;
+			if (Scalars.AlmostEquals(acceleration, 0f)) return input;
 
 			if (acceleration > 0f) return (float)Math.Pow(input, acceleration + 1f);
 			return 1f - (float)Math.Pow(1f - input, -acceleration + 1f);

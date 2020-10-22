@@ -19,10 +19,10 @@ namespace CodeHelpers
 		public static Vector3Int ToXZ3(this Vector2Int vector, int y = 0) => new Vector3Int(vector.x, y, vector.y);
 
 		public static Vector3Int Floor(this Vector3 vector) => new Vector3Int(Mathf.FloorToInt(vector.x), Mathf.FloorToInt(vector.y), Mathf.FloorToInt(vector.z));
-		public static Vector3Int FloorEpsilon(this Vector3 vector) => new Vector3Int(Mathf.FloorToInt(vector.x + ScalarHelper.Epsilon), Mathf.FloorToInt(vector.y + ScalarHelper.Epsilon), Mathf.FloorToInt(vector.z + ScalarHelper.Epsilon));
+		public static Vector3Int FloorEpsilon(this Vector3 vector) => new Vector3Int(Mathf.FloorToInt(vector.x + Scalars.Epsilon), Mathf.FloorToInt(vector.y + Scalars.Epsilon), Mathf.FloorToInt(vector.z + Scalars.Epsilon));
 
 		public static Vector3Int Ceil(this Vector3 vector) => new Vector3Int(Mathf.CeilToInt(vector.x), Mathf.CeilToInt(vector.y), Mathf.CeilToInt(vector.z));
-		public static Vector3Int CeilEpsilon(this Vector3 vector) => new Vector3Int(Mathf.CeilToInt(vector.x - ScalarHelper.Epsilon), Mathf.CeilToInt(vector.y - ScalarHelper.Epsilon), Mathf.CeilToInt(vector.z - ScalarHelper.Epsilon));
+		public static Vector3Int CeilEpsilon(this Vector3 vector) => new Vector3Int(Mathf.CeilToInt(vector.x - Scalars.Epsilon), Mathf.CeilToInt(vector.y - Scalars.Epsilon), Mathf.CeilToInt(vector.z - Scalars.Epsilon));
 
 		public static Vector3 Round(this Vector3 vector) => new Vector3(Mathf.Round(vector.x), Mathf.Round(vector.y), Mathf.Round(vector.z));
 		public static Vector3Int RoundToInt(this Vector3 vector) => new Vector3Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y), Mathf.RoundToInt(vector.z));
@@ -79,7 +79,7 @@ namespace CodeHelpers
 		public static Vector3 Abs(this Vector3 vector) => new Vector3(Math.Abs(vector.x), Math.Abs(vector.y), Math.Abs(vector.z));
 		public static Vector3Int Abs(this Vector3Int vector) => new Vector3Int(Math.Abs(vector.x), Math.Abs(vector.y), Math.Abs(vector.z));
 
-		public static Vector3 AddEpsilon(this Vector3 vector, int scale = 1) => vector + Vector3.one * ScalarHelper.Epsilon * scale;
+		public static Vector3 AddEpsilon(this Vector3 vector, int scale = 1) => vector + Vector3.one * Scalars.Epsilon * scale;
 
 		public static Vector3 Divide(this Vector3 vector, Vector3 otherVector) => new Vector3(vector.x / otherVector.x, vector.y / otherVector.y, vector.z / otherVector.z);
 		public static Vector3Int Divide(this Vector3Int vector, Vector3Int otherVector) => new Vector3Int(vector.x / otherVector.x, vector.y / otherVector.y, vector.z / otherVector.z);
@@ -147,7 +147,7 @@ namespace CodeHelpers
 			vector[index2] = storage;
 		}
 
-		public static Vector3 EpsilonVector3 => Vector3.one * ScalarHelper.Epsilon;
+		public static Vector3 EpsilonVector3 => Vector3.one * Scalars.Epsilon;
 
 		public static Vector3 MaxVector3 => Vector3.one * float.MaxValue;
 		public static Vector3 MinVector3 => Vector3.one * float.MinValue;
@@ -157,7 +157,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static IEnumerable<Vector3Int> GetPointsFromSphere(float radius)
 		{
-			int radiusInt = Mathf.CeilToInt(radius - ScalarHelper.Epsilon);
+			int radiusInt = Mathf.CeilToInt(radius - Scalars.Epsilon);
 			float radiusSquared = radius * radius;
 
 			for (int x = -radiusInt; x <= radiusInt; x++)
@@ -256,7 +256,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static readonly IReadOnlyList<Vector3Int> neighbor6Positions = Array.AsReadOnly(
 			(from Direction direction in neighbor6Directions
-			 select direction.ToVector3().U()).ToArray()
+			 select (Vector3Int)direction.ToVector3()).ToArray()
 		);
 
 		/// <summary>
@@ -289,10 +289,10 @@ namespace CodeHelpers
 		public static Vector2Int ToXZ2(this Vector3Int vector) => new Vector2Int(vector.x, vector.z);
 
 		public static Vector2Int Floor(this Vector2 vector) => new Vector2Int(Mathf.FloorToInt(vector.x), Mathf.FloorToInt(vector.y));
-		public static Vector2Int FloorEpsilon(this Vector2 vector) => new Vector2Int(Mathf.FloorToInt(vector.x + ScalarHelper.Epsilon), Mathf.FloorToInt(vector.y + ScalarHelper.Epsilon));
+		public static Vector2Int FloorEpsilon(this Vector2 vector) => new Vector2Int(Mathf.FloorToInt(vector.x + Scalars.Epsilon), Mathf.FloorToInt(vector.y + Scalars.Epsilon));
 
 		public static Vector2Int Ceil(this Vector2 vector) => new Vector2Int(Mathf.CeilToInt(vector.x), Mathf.CeilToInt(vector.y));
-		public static Vector2Int CeilEpsilon(this Vector2 vector) => new Vector2Int(Mathf.CeilToInt(vector.x - ScalarHelper.Epsilon), Mathf.CeilToInt(vector.y - ScalarHelper.Epsilon));
+		public static Vector2Int CeilEpsilon(this Vector2 vector) => new Vector2Int(Mathf.CeilToInt(vector.x - Scalars.Epsilon), Mathf.CeilToInt(vector.y - Scalars.Epsilon));
 
 		public static Vector2 Round(this Vector2 vector) => new Vector2(Mathf.Round(vector.x), Mathf.Round(vector.y));
 		public static Vector2Int RoundToInt(this Vector2 vector) => new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
@@ -394,7 +394,7 @@ namespace CodeHelpers
 		public static bool LessThanOrEquals(this Vector2Int vector, Vector2Int otherVector) => vector.x <= otherVector.x && vector.y <= otherVector.y;
 		public static bool GreaterThanOrEquals(this Vector2Int vector, Vector2Int otherVector) => vector.x >= otherVector.x && vector.y >= otherVector.y;
 
-		public static Vector2 EpsilonVector2 => Vector2.one * ScalarHelper.Epsilon;
+		public static Vector2 EpsilonVector2 => Vector2.one * Scalars.Epsilon;
 
 		public static Vector2 MaxVector2 => Vector2.one * float.MaxValue;
 		public static Vector2 MinVector2 => Vector2.one * float.MinValue;
@@ -404,7 +404,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static IEnumerable<Vector2Int> GetPointsFromCircle(float radius)
 		{
-			int radiusInt = Mathf.CeilToInt(radius - ScalarHelper.Epsilon);
+			int radiusInt = Mathf.CeilToInt(radius - Scalars.Epsilon);
 			float radiusSquared = radius * radius;
 
 			for (int x = -radiusInt; x <= radiusInt; x++)
@@ -650,7 +650,7 @@ namespace CodeHelpers
 			return vector;
 		}
 
-		public static Vector4 EpsilonVector4 => Vector4.one * ScalarHelper.Epsilon;
+		public static Vector4 EpsilonVector4 => Vector4.one * Scalars.Epsilon;
 
 		public static Vector4 MaxVector4 => Vector4.one * float.MaxValue;
 		public static Vector4 MinVector4 => Vector4.one * float.MinValue;

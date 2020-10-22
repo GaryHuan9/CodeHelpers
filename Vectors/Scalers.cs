@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CodeHelpers.Vectors
 {
-	public static class ScalarHelper
+	public static class Scalars
 	{
 		public const float Epsilon = 0.00001f;
 
@@ -110,6 +110,10 @@ namespace CodeHelpers.Vectors
 			long result = value % length;
 			return result < 0 ? result + length : result;
 		}
+
+		public static int Floored(this float value) => (int)Math.Floor(value);
+		public static int Ceiled(this float value) => (int)Math.Ceiling(value);
+		public static int Rounded(this float value) => (int)Math.Round(value);
 
 		public static int FlooredDivide(this int value, int divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
 		public static long FlooredDivide(this long value, long divisor) => value / divisor - Convert.ToInt64((value < 0) ^ (divisor < 0) && value % divisor != 0);
