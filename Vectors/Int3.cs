@@ -187,6 +187,44 @@ namespace CodeHelpers.Vectors
 			}
 		}
 
+		public Int3 Sorted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x < y)
+				{
+					if (y < z) return XYZ;
+					if (x < z) return XZY;
+
+					return ZXY;
+				}
+
+				if (x < z) return YXZ;
+				if (y < z) return YZX;
+
+				return ZYX;
+			}
+		}
+
+		public Int3 SortedReversed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x > y)
+				{
+					if (y > z) return XYZ;
+					if (x > z) return XZY;
+
+					return ZXY;
+				}
+
+				if (x > z) return YXZ;
+				if (y > z) return YZX;
+
+				return ZYX;
+			}
+		}
+
 #endregion
 
 #endregion
@@ -241,7 +279,7 @@ namespace CodeHelpers.Vectors
 #region Create
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int3 Create(int index, float value)
+		public static Int3 Create(int index, int value)
 		{
 #if UNSAFE_CODE_ENABLED
 			unsafe
@@ -249,7 +287,7 @@ namespace CodeHelpers.Vectors
 				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 
 				Int3 result = default;
-				((float*)&result)[index] = value;
+				((int*)&result)[index] = value;
 
 				return result;
 			}

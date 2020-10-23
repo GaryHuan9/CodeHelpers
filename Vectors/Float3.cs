@@ -436,7 +436,14 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float3 first, in Float3 second) => !first.Equals(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other)
+		{
+			double dx = x - other.x;
+			double dy = y - other.y;
+			double dz = z - other.z;
+			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);

@@ -181,6 +181,16 @@ namespace CodeHelpers.Vectors
 			}
 		}
 
+		public Float2 Sorted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x < y ? XY : YX;
+		}
+
+		public Float2 SortedReversed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x > y ? XY : YX;
+		}
+
 		public Int2 Floored
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2((int)Math.Floor(x), (int)Math.Floor(y));
@@ -240,6 +250,62 @@ namespace CodeHelpers.Vectors
 
 #endregion
 
+#region Create
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Float2 Create(int index, float value)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+				Float2 result = default;
+				((float*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Float2(value, 0f);
+				case 1:  return new Float2(0f, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float2 CreateX(float value) => new Float2(value, 0f);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float2 CreateY(float value) => new Float2(0f, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 Replace(int index, float value)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+				Float2 result = this; //Make a copy of this struct
+				((float*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Float2(value, y);
+				case 1:  return new Float2(x, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceX(float value) => new Float2(value, y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceY(float value) => new Float2(x, value);
+
+#endregion
+
 #endregion
 
 #region Operators
@@ -266,7 +332,13 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float2 first, in Float2 second) => !first.Equals(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other) => AlmostEqualsZero((other - this).SquaredMagnitudeDouble);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other)
+		{
+			double dx = x - other.x;
+			double dy = y - other.y;
+			return AlmostEqualsZero(dx * dx + dy * dy);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(float value) => new Float2(value, value);
 

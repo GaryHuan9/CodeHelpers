@@ -175,6 +175,16 @@ namespace CodeHelpers.Vectors
 			}
 		}
 
+		public Int2 Sorted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x < y ? XY : YX;
+		}
+
+		public Int2 SortedReversed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x > y ? XY : YX;
+		}
+
 #endregion
 
 #endregion
@@ -207,6 +217,88 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 first, Int2 second, Float2 value) => new Float2(Scalars.InverseLerp(first.x, second.x, value.x), Scalars.InverseLerp(first.y, second.y, value.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 first, Int2 second, float value) => new Float2(Scalars.InverseLerp(first.x, second.x, value), Scalars.InverseLerp(first.y, second.y, value));
+
+#endregion
+
+#region Create
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int2 Create(int index, int value)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+				Int2 result = default;
+				((int*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Int2(value, 0);
+				case 1:  return new Int2(0, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int2 CreateX(int value) => new Int2(value, 0);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int2 CreateY(int value) => new Int2(0, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Int2 Replace(int index, int value)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+				Int2 result = this; //Make a copy of this struct
+				((int*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Int2(value, y);
+				case 1:  return new Int2(x, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 Replace(int index, float value)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+				Float2 result = this; //Make a copy of this struct
+				((float*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Float3(value, y);
+				case 1:  return new Float3(x, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Int2 ReplaceX(int value) => new Int2(value, y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Int2 ReplaceY(int value) => new Int2(x, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceX(float value) => new Float2(value, y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceY(float value) => new Float2(x, value);
 
 #endregion
 
