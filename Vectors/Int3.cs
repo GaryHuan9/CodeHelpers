@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
-	public readonly struct Int3 : IEquatable<Int3>, IFormattable
+	public readonly struct Int3 : IEquatable<Int3>, IEnumerable<int>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int3(int x, int y, int z)
@@ -127,6 +129,16 @@ namespace CodeHelpers.Vectors
 		public long ProductLong
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x * y * z;
+		}
+
+		public int ProductAbsoluted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs(x * y * z);
+		}
+
+		public long ProductAbsolutedLong
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs((long)x * y * z);
 		}
 
 		public int Sum
@@ -274,6 +286,11 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Int3 first, Int3 second, Float3 value) => new Float3(Scalars.InverseLerp(first.x, second.x, value.x), Scalars.InverseLerp(first.y, second.y, value.y), Scalars.InverseLerp(first.z, second.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Int3 first, Int3 second, float value) => new Float3(Scalars.InverseLerp(first.x, second.x, value), Scalars.InverseLerp(first.y, second.y, value), Scalars.InverseLerp(first.z, second.z, value));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Repeat(Int3 value, Int3 divisor) => new Int3(value.x.FlooredDivide(divisor.x), value.y.FlooredDivide(divisor.y), value.z.FlooredDivide(divisor.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Int3 value, Float3 divisor) => new Int3(value.x.FlooredDivide(divisor.x), value.y.FlooredDivide(divisor.y), value.z.FlooredDivide(divisor.z));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 FlooredDivide(Int3 value, Int3 divisor) => new Int3(value.x.FlooredDivide(divisor.x), value.y.FlooredDivide(divisor.y), value.z.FlooredDivide(divisor.z));
+
 #endregion
 
 #region Create
@@ -374,6 +391,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceYZ(Float2 value) => new Float3(x, value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXZ(Float2 value) => new Float3(value.x, y, value.y);
 
+#if CODEHELPERS_UNITY
+		public UnityEngine.Vector3Int U() => new UnityEngine.Vector3Int(x, y, z);
+#endif
+
 #endregion
 
 #endregion
@@ -454,5 +475,109 @@ namespace CodeHelpers.Vectors
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
 		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)}, {z.ToString(format, formatProvider)})";
+
+#region Enumerations
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+
+		public Enumerator GetEnumerator() => new Enumerator(this);
+
+		/// <summary>
+		/// Returns an enumerable that can be put into a foreach loop; from (0,0,0) to (vector.x-1,vector.y-1,vector.z-1)
+		/// If <paramref name="zeroAsOne"/> is true then the loop will treat zeros in the vector as ones.
+		/// </summary>
+		public LoopEnumerable Loop(bool zeroAsOne = false) => new LoopEnumerable(this, zeroAsOne);
+
+		public struct Enumerator : IEnumerator<int>
+		{
+			public Enumerator(Int3 source)
+			{
+				this.source = source;
+				index = -1;
+			}
+
+			readonly Int3 source;
+			int index;
+
+			object IEnumerator.Current => Current;
+			public int Current => source[index];
+
+			public bool MoveNext()
+			{
+				if (index == 2) return false;
+
+				index++;
+				return true;
+			}
+
+			public void Reset() => index = -1;
+
+			public void Dispose() { }
+		}
+
+		public readonly struct LoopEnumerable : IEnumerable<Int3>
+		{
+			public LoopEnumerable(Int3 vector, bool zeroAsOne) => enumerator = new LoopEnumerator(vector, zeroAsOne);
+
+			readonly LoopEnumerator enumerator;
+
+			public LoopEnumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<Int3> IEnumerable<Int3>.GetEnumerator() => GetEnumerator();
+
+			/// <summary>
+			/// NOTE: Do NOT use the readonly modifier if you wish the <see cref="MoveNext"/> method would behave correctly
+			/// </summary>
+			public struct LoopEnumerator : IEnumerator<Int3>
+			{
+				internal LoopEnumerator(Int3 size, bool zeroAsOne)
+				{
+					direction = (size.x < 0 ? 0b0001 : 0) | (size.y < 0 ? 0b0010 : 0) | (size.z < 0 ? 0b0100 : 0);
+
+					size = size.Absoluted;
+
+					this.size = zeroAsOne ? Max(one, size) : size;
+					product = size.Product;
+
+					current = -1;
+				}
+
+				/// <summary>
+				/// Bit vector indicating whether an axis should be negated or not.
+				/// Using int because byte will be allocated into four bytes anyways
+				/// </summary>
+				readonly int direction;
+
+				readonly Int3 size;
+				readonly int product;
+
+				int current;
+
+				object IEnumerator.Current => Current;
+
+				public Int3 Current => new Int3
+				(
+					current / (size.y * size.z) * ((direction & 0b0001) == 0 ? 1 : -1),
+					current / size.z % size.y * ((direction & 0b0010) == 0 ? 1 : -1),
+					current % size.z * ((direction & 0b0100) == 0 ? 1 : -1)
+				);
+
+				public bool MoveNext()
+				{
+					if (current + 1 >= product) return false;
+					current++;
+					return true;
+				}
+
+				public void Reset() => current = -1;
+
+				public void Dispose() { }
+			}
+		}
+
+#endregion
+
 	}
 }

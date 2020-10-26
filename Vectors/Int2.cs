@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
-	public readonly struct Int2 : IEquatable<Int2>, IFormattable
+	public readonly struct Int2 : IEquatable<Int2>, IEnumerable<int>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int2(int x, int y)
@@ -116,6 +118,16 @@ namespace CodeHelpers.Vectors
 		public long ProductLong
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x * y;
+		}
+
+		public int ProductAbsoluted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs(x * y);
+		}
+
+		public long ProductAbsolutedLong
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs((long)x * y);
 		}
 
 		public int Sum
@@ -300,6 +312,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceX(float value) => new Float2(value, y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceY(float value) => new Float2(x, value);
 
+#if CODEHELPERS_UNITY
+		public UnityEngine.Vector2Int U() => new UnityEngine.Vector2Int(x, y);
+#endif
+
 #endregion
 
 #endregion
@@ -377,5 +393,108 @@ namespace CodeHelpers.Vectors
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
 		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)})";
+
+#region Enumerations
+
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+
+		public Enumerator GetEnumerator() => new Enumerator(this);
+
+		/// <summary>
+		/// Returns an enumerable that can be put into a foreach loop; from (0,0,0) to (vector.x-1,vector.y-1,vector.z-1)
+		/// If <paramref name="zeroAsOne"/> is true then the loop will treat zeros in the vector as ones.
+		/// </summary>
+		public LoopEnumerable Loop(bool zeroAsOne = false) => new LoopEnumerable(this, zeroAsOne);
+
+		public struct Enumerator : IEnumerator<int>
+		{
+			public Enumerator(Int2 source)
+			{
+				this.source = source;
+				index = -1;
+			}
+
+			readonly Int2 source;
+			int index;
+
+			object IEnumerator.Current => Current;
+			public int Current => source[index];
+
+			public bool MoveNext()
+			{
+				if (index == 1) return false;
+
+				index++;
+				return true;
+			}
+
+			public void Reset() => index = -1;
+
+			public void Dispose() { }
+		}
+
+		public readonly struct LoopEnumerable : IEnumerable<Int2>
+		{
+			public LoopEnumerable(Int2 value, bool zeroAsOne) => enumerator = new LoopEnumerator(value, zeroAsOne);
+
+			readonly LoopEnumerator enumerator;
+
+			public LoopEnumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<Int2> IEnumerable<Int2>.GetEnumerator() => GetEnumerator();
+
+			/// <summary>
+			/// NOTE: Do NOT use the readonly modifier if you wish the <see cref="MoveNext"/> method would behave correctly
+			/// </summary>
+			public struct LoopEnumerator : IEnumerator<Int2>
+			{
+				internal LoopEnumerator(Int2 size, bool zeroAsOne)
+				{
+					direction = (size.x < 0 ? 0b0001 : 0) | (size.y < 0 ? 0b0010 : 0);
+
+					size = size.Absoluted;
+
+					sizeY = zeroAsOne && size.y == 0 ? 1 : size.y;
+					product = size.Product;
+
+					current = -1;
+				}
+
+				/// <summary>
+				/// Bit vector indicating whether an axis should be negated or not.
+				/// Using int because byte will be allocated into four bytes anyways
+				/// </summary>
+				readonly int direction;
+
+				readonly int sizeY;
+				readonly int product;
+
+				int current;
+
+				object IEnumerator.Current => Current;
+
+				public Int2 Current => new Int2
+				(
+					current / sizeY * ((direction & 0b0001) == 0 ? 1 : -1),
+					current % sizeY * ((direction & 0b0010) == 0 ? 1 : -1)
+				);
+
+				public bool MoveNext()
+				{
+					if (current + 1 >= product) return false;
+					current++;
+					return true;
+				}
+
+				public void Reset() => current = -1;
+
+				public void Dispose() { }
+			}
+		}
+
+#endregion
+
 	}
 }

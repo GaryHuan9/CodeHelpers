@@ -135,6 +135,16 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (double)x * y * z;
 		}
 
+		public float ProductAbsoluted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs(x * y * z);
+		}
+
+		public double ProductAbsolutedDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs((double)x * y * z);
+		}
+
 		public float Sum
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x + y + z;
@@ -407,6 +417,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXY(Float2 value) => new Float3(value.x, value.y, z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceYZ(Float2 value) => new Float3(x, value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXZ(Float2 value) => new Float3(value.x, y, value.y);
+
+#if CODEHELPERS_UNITY
+		public UnityEngine.Vector3 U() => new UnityEngine.Vector3(x, y, z);
+#endif
 
 #endregion
 
