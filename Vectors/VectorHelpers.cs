@@ -264,7 +264,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static readonly IReadOnlyList<Vector3Int> neighbor18Positions = new ReadOnlyCollection<Vector3Int>(
 			(
-				from Vector3Int position in new Vector3Int(3, 3, 3).Loop()
+				from Vector3Int position in new Int3(3, 3, 3).Loop()
 				where position != Vector3Int.one && position.sqrMagnitude % 4 != 0
 				select position - Vector3Int.one
 			).ToList()
@@ -275,7 +275,7 @@ namespace CodeHelpers
 		/// </summary>
 		public static readonly IReadOnlyList<Vector3Int> neighbor26Positions = new ReadOnlyCollection<Vector3Int>(
 			(
-				from Vector3Int position in new Vector3Int(3, 3, 3).Loop()
+				from Vector3Int position in new Int3(3, 3, 3).Loop()
 				where position != Vector3Int.one
 				select position - Vector3Int.one
 			).ToList()

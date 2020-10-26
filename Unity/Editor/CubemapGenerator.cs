@@ -14,7 +14,7 @@ namespace CodeHelpers.Editors
 		public static void Open()
 		{
 			var window = GetWindow<CubemapGenerator>("Cubemap Generator");
-			window.minSize = new Vector2(100f, 100f);
+			window.minSize = new Float2(100f, 100f);
 		}
 
 		readonly Texture2D[] textures = new Texture2D[EnumHelper<Direction>.EnumLength];
@@ -48,14 +48,14 @@ namespace CodeHelpers.Editors
 			else
 			{
 				string invalidMessage = null;
-				Vector2Int singleSize = new Vector2Int(first.width, first.height);
+				Int2 singleSize = new Int2(first.width, first.height);
 
 				for (int i = 0; i < textures.Length; i++)
 				{
 					Texture2D texture = textures[i];
 					if (texture == null) continue;
 
-					Vector2Int size = new Vector2Int(texture.width, texture.height);
+					Int2 size = new Int2(texture.width, texture.height);
 
 					if (size.x != size.y)
 					{
@@ -107,10 +107,10 @@ namespace CodeHelpers.Editors
 		{
 			Texture2D first = FirstTexture;
 
-			Vector2Int singleSize = new Vector2Int(first.width, first.height);
-			Vector2Int resolution = GetCubemapSize(singleSize);
+			Int2 singleSize = new Int2(first.width, first.height);
+			Int2 resolution = GetCubemapSize(singleSize);
 
-			Color[] colors = new Color[resolution.Size()];
+			Color[] colors = new Color[resolution.ProductAbsoluted];
 			Texture2D result = new Texture2D(resolution.x, resolution.y);
 
 			Color[][] sourceColors = new Color[textures.Length][];
@@ -121,7 +121,7 @@ namespace CodeHelpers.Editors
 				sourceColors[i] = textures[i].GetPixels();
 			}
 
-			foreach (Vector2Int pixel in resolution.Loop())
+			foreach (Int2 pixel in resolution.Loop())
 			{
 				int regionIndex = GetPixelTextureIndex(pixel, singleSize);
 				Color color;
@@ -133,7 +133,7 @@ namespace CodeHelpers.Editors
 					if (source == null) color = new Color(0f, 0f, 0f, 1f); //Black for missing texture
 					else
 					{
-						Vector2Int region = GetPixelTextureOffset(pixel, singleSize);
+						Int2 region = GetPixelTextureOffset(pixel, singleSize);
 						color = source[region.y * singleSize.x + region.x];
 					}
 				}
@@ -152,9 +152,9 @@ namespace CodeHelpers.Editors
 		/// <summary>
 		/// Returns the region local direction index for the global <paramref name="pixel"/>.
 		/// </summary>
-		static int GetPixelTextureIndex(Vector2Int pixel, Vector2Int singleSize)
+		static int GetPixelTextureIndex(Int2 pixel, Int2 singleSize)
 		{
-			Vector2Int region = pixel.Divide(singleSize);
+			Int2 region = pixel / singleSize;
 			int regionId = region.x * 3 + region.y;
 
 			switch (regionId)
@@ -173,9 +173,9 @@ namespace CodeHelpers.Editors
 		/// <summary>
 		/// Returns the region local offset for the global <paramref name="pixel"/>.
 		/// </summary>
-		static Vector2Int GetPixelTextureOffset(Vector2Int pixel, Vector2Int singleSize) => pixel.Mod(singleSize);
+		static Int2 GetPixelTextureOffset(Int2 pixel, Int2 singleSize) => pixel % singleSize;
 
-		static Vector2Int GetCubemapSize(Vector2Int sourceSize) => new Vector2Int(sourceSize.x * 4, sourceSize.y * 3);
+		static Int2 GetCubemapSize(Int2 sourceSize) => new Int2(sourceSize.x * 4, sourceSize.y * 3);
 
 		static string GetName(int index) => ((Direction)index).ToString().ToUpperInvariant();
 	}

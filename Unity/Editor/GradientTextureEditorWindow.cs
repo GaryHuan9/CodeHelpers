@@ -11,11 +11,11 @@ namespace CodeHelpers.Editors
 		public static void Open()
 		{
 			var window = GetWindow<GradientTextureEditorWindow>("Texture Generator");
-			window.minSize = new Vector2(100f, 100f);
+			window.minSize = new Float2(100f, 100f);
 		}
 
 		Gradient gradient = new Gradient();
-		Vector2Int resolution = new Vector2Int(512, 1);
+		Int2 resolution = new Int2(512, 1);
 
 		void OnGUI()
 		{
@@ -24,7 +24,7 @@ namespace CodeHelpers.Editors
 			int width = EditorGUILayout.IntField("Width", resolution.x);
 			int height = EditorGUILayout.IntField("Height", resolution.y);
 
-			resolution = Vector2Int.Max(Vector2Int.one, new Vector2Int(width, height));
+			resolution = Int2.Max(Int2.one, new Int2(width, height));
 
 			if (GUILayout.Button("Generate"))
 			{
@@ -35,10 +35,10 @@ namespace CodeHelpers.Editors
 
 		void SaveGradient(string path)
 		{
-			Color[] colors = new Color[resolution.Size()];
+			Color[] colors = new Color[resolution.ProductAbsoluted];
 			Texture2D texture = new Texture2D(resolution.x, resolution.y);
 
-			foreach (Vector2Int pixel in resolution.Loop())
+			foreach (Int2 pixel in resolution.Loop())
 			{
 				int index = pixel.y * resolution.x + pixel.x;
 				colors[index] = gradient.Evaluate(pixel.x / (resolution.x - 1f));

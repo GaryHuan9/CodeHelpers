@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using CodeHelpers.ObjectPooling;
 using UnityEngine;
 
@@ -55,6 +56,7 @@ namespace CodeHelpers.Vectors
 		public static bool IsPowerOfTwo(this int value) => (value & -value) == value;  //Or (value & (value - 1)) == 0;
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value; //Or (value & (value - 1)) == 0;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
 		{
 			if (left == right) return true;                  //Handles absolute equals and degenerate cases
@@ -70,6 +72,7 @@ namespace CodeHelpers.Vectors
 			return difference < epsilon * Math.Min(sum, float.MaxValue);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool AlmostEquals(double left, double right, double epsilon = 0.00000001d)
 		{
 			if (left == right) return true;                    //Handles absolute equals and degenerate cases
@@ -105,10 +108,17 @@ namespace CodeHelpers.Vectors
 		}
 
 		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
+		public static double Repeat(this double value, double length)
+		{
+			double result = value % length;
+			return result < 0d ? result + length : result;
+		}
+
+		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
 		public static long Repeat(this long value, long length)
 		{
 			long result = value % length;
-			return result < 0 ? result + length : result;
+			return result < 0L ? result + length : result;
 		}
 
 		public static int Floored(this float value) => (int)Math.Floor(value);

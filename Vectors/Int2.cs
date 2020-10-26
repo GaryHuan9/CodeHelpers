@@ -140,6 +140,26 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x + y;
 		}
 
+		public int MinComponent
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x < y ? x : y;
+		}
+
+		public int MinIndex
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x < y ? 0 : 1;
+		}
+
+		public int MaxComponent
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x > y ? x : y;
+		}
+
+		public int MaxIndex
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x > y ? 0 : 1;
+		}
+
 		public int this[int index]
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -211,24 +231,63 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Int2 other) => Math.Abs(SignedAngle(other));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Int2 other) => (float)Math.Atan2((long)x * other.y - (long)y * other.x, DotLong(other)) * Scalars.RadianToDegree;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Min(Int2 other) => new Int2(Math.Min(x, other.x), Math.Min(y, other.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Max(Int2 other) => new Int2(Math.Max(x, other.x), Math.Max(y, other.y));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Lerp(Int2 other, Int2 value) => new Int2(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Lerp(Int2 other, int value) => new Int2(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Lerp(Int2 other, Float2 value) => new Float2(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Lerp(Int2 other, float value) => new Float2(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 InverseLerp(Int2 other, Int2 value) => new Int2(Scalars.InverseLerp(x, other.x, value.x), Scalars.InverseLerp(y, other.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 InverseLerp(Int2 other, int value) => new Int2(Scalars.InverseLerp(x, other.x, value), Scalars.InverseLerp(y, other.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 InverseLerp(Int2 other, Float2 value) => new Float2(Scalars.InverseLerp(x, other.x, value.x), Scalars.InverseLerp(y, other.y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 InverseLerp(Int2 other, float value) => new Float2(Scalars.InverseLerp(x, other.x, value), Scalars.InverseLerp(y, other.y, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Repeat(Int2 length) => new Int2(x.Repeat(length.x), y.Repeat(length.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Repeat(int length) => new Int2(x.Repeat(length), y.Repeat(length));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Repeat(Float2 length) => new Float2(((float)x).Repeat(length.x), ((float)y).Repeat(length.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Repeat(float length) => new Float2(((float)x).Repeat(length), ((float)y).Repeat(length));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 FlooredDivide(Int2 divisor) => new Int2(x.FlooredDivide(divisor.x), y.FlooredDivide(divisor.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 FlooredDivide(int divisor) => new Int2(x.FlooredDivide(divisor), y.FlooredDivide(divisor));
+
 #endregion
 
 #region Static
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Min(Int2 first, Int2 second) => new Int2(Math.Min(first.x, second.x), Math.Min(first.y, second.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Max(Int2 first, Int2 second) => new Int2(Math.Max(first.x, second.x), Math.Max(first.y, second.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Dot(Int2 first, Int2 second) => first.Dot(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static long DotLong(Int2 first, Int2 second) => first.DotLong(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 first, Int2 second, Int2 value) => new Int2(Scalars.Lerp(first.x, second.x, value.x), Scalars.Lerp(first.y, second.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 first, Int2 second, int value) => new Int2(Scalars.Lerp(first.x, second.x, value), Scalars.Lerp(first.y, second.y, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Angle(Int2 first, Int2 second) => first.Angle(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SignedAngle(Int2 first, Int2 second) => first.SignedAngle(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Int2 first, Int2 second, Float2 value) => new Float2(Scalars.Lerp(first.x, second.x, value.x), Scalars.Lerp(first.y, second.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Int2 first, Int2 second, float value) => new Float2(Scalars.Lerp(first.x, second.x, value), Scalars.Lerp(first.y, second.y, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Min(Int2 first, Int2 second) => first.Min(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Max(Int2 first, Int2 second) => first.Max(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 InverseLerp(Int2 first, Int2 second, Int2 value) => new Int2(Scalars.InverseLerp(first.x, second.x, value.x), Scalars.InverseLerp(first.y, second.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 InverseLerp(Int2 first, Int2 second, int value) => new Int2(Scalars.InverseLerp(first.x, second.x, value), Scalars.InverseLerp(first.y, second.y, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 first, Int2 second, Int2 value) => first.Lerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 first, Int2 second, int value) => first.Lerp(second, value);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 first, Int2 second, Float2 value) => new Float2(Scalars.InverseLerp(first.x, second.x, value.x), Scalars.InverseLerp(first.y, second.y, value.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 first, Int2 second, float value) => new Float2(Scalars.InverseLerp(first.x, second.x, value), Scalars.InverseLerp(first.y, second.y, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Int2 first, Int2 second, Float2 value) => first.Lerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Int2 first, Int2 second, float value) => first.Lerp(second, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 InverseLerp(Int2 first, Int2 second, Int2 value) => first.InverseLerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 InverseLerp(Int2 first, Int2 second, int value) => first.InverseLerp(second, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 first, Int2 second, Float2 value) => first.InverseLerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 InverseLerp(Int2 first, Int2 second, float value) => first.InverseLerp(second, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Repeat(Int2 value, Int2 length) => value.Repeat(length);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Repeat(Int2 value, int length) => value.Repeat(length);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Repeat(Int2 value, Float2 length) => value.Repeat(length);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Repeat(Int2 value, float length) => value.Repeat(length);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 FlooredDivide(Int2 value, Int2 divisor) => value.FlooredDivide(divisor);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 FlooredDivide(Int2 value, int divisor) => value.FlooredDivide(divisor);
 
 #endregion
 

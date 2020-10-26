@@ -86,9 +86,13 @@ namespace CodeHelpers.Vectors
 		public static readonly Float3 forward = new Float3(0f, 0f, 1f);
 		public static readonly Float3 backward = new Float3(0f, 0f, -1f);
 
-		public static readonly Float3 one = new Float3(1f, 1f, 1f);
 		public static readonly Float3 zero = new Float3(0f, 0f, 0f);
+
+		public static readonly Float3 one = new Float3(1f, 1f, 1f);
 		public static readonly Float3 negativeOne = new Float3(-1f, -1f, -1f);
+
+		public static readonly Float3 half = new Float3(0.5f, 0.5f, 0.5f);
+		public static readonly Float3 negativeHalf = new Float3(-0.5f, -0.5f, -0.5f);
 
 		public static readonly Float3 maxValue = new Float3(float.MaxValue, float.MaxValue, float.MaxValue);
 		public static readonly Float3 minValue = new Float3(float.MinValue, float.MinValue, float.MinValue);
@@ -337,18 +341,41 @@ namespace CodeHelpers.Vectors
 			return Cross(other).Dot(normal) < 0f ? -angle : angle;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Min(Float3 other) => new Float3(Math.Min(x, other.x), Math.Min(y, other.y), Math.Min(z, other.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Max(Float3 other) => new Float3(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, Float3 value) => new Float3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, float value) => new Float3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 InverseLerp(Float3 other, Float3 value) => new Float3(Scalars.InverseLerp(x, other.x, value.x), Scalars.InverseLerp(y, other.y, value.y), Scalars.InverseLerp(z, other.z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 InverseLerp(Float3 other, float value) => new Float3(Scalars.InverseLerp(x, other.x, value), Scalars.InverseLerp(y, other.y, value), Scalars.InverseLerp(z, other.z, value));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(Float3 length) => new Float3(x.Repeat(length.x), y.Repeat(length.y), z.Repeat(length.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(float length) => new Float3(x.Repeat(length), y.Repeat(length), z.Repeat(length));
+
 #endregion
 
 #region Static
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Min(Float3 first, Float3 second) => new Float3(Math.Min(first.x, second.x), Math.Min(first.y, second.y), Math.Min(first.z, second.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(Float3 first, Float3 second) => new Float3(Math.Max(first.x, second.x), Math.Max(first.y, second.y), Math.Max(first.z, second.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Dot(Float3 first, Float3 second) => first.Dot(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DotDouble(Float3 first, Float3 second) => first.DotDouble(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, Float3 value) => new Float3(Scalars.Lerp(first.x, second.x, value.x), Scalars.Lerp(first.y, second.y, value.y), Scalars.Lerp(first.z, second.z, value.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, float value) => new Float3(Scalars.Lerp(first.x, second.x, value), Scalars.Lerp(first.y, second.y, value), Scalars.Lerp(first.z, second.z, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Cross(Float3 first, Float3 second) => first.Cross(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 first, Float3 second, Float3 value) => new Float3(Scalars.InverseLerp(first.x, second.x, value.x), Scalars.InverseLerp(first.y, second.y, value.y), Scalars.InverseLerp(first.z, second.z, value.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 first, Float3 second, float value) => new Float3(Scalars.InverseLerp(first.x, second.x, value), Scalars.InverseLerp(first.y, second.y, value), Scalars.InverseLerp(first.z, second.z, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Angle(Float3 first, Float3 second) => first.Angle(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SignedAngle(Float3 first, Float3 second, Float3 normal) => first.SignedAngle(second, normal);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Min(Float3 first, Float3 second) => first.Min(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(Float3 first, Float3 second) => first.Max(second);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, Float3 value) => first.Lerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, float value) => first.Lerp(second, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 first, Float3 second, Float3 value) => first.InverseLerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 first, Float3 second, float value) => first.InverseLerp(second, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Float3 value, Float3 length) => value.Repeat(length);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Float3 value, float length) => value.Repeat(length);
 
 #endregion
 

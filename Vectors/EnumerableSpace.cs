@@ -1,43 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
-using CodeHelpers;
-using CodeHelpers.Vectors;
-using UnityEngine;
 
 namespace CodeHelpers.Vectors
 {
-	public readonly struct EnumerableSpace3D : IEnumerable<Vector3Int>
+	public readonly struct EnumerableSpace3D : IEnumerable<Int3>
 	{
 		/// <summary>
 		/// Creates a foreach-loop compatible IEnumerable which yields all position/vector inside a 3D rectangular space
 		/// starts at <paramref name="from"/> and ends at <paramref name="to"/> (Both inclusive). 
 		/// </summary>
-		public EnumerableSpace3D(Vector3Int from, Vector3Int to) => enumerator = new Enumerator(from, to);
+		public EnumerableSpace3D(Int3 from, Int3 to) => enumerator = new Enumerator(from, to);
 
 		readonly Enumerator enumerator;
 
 		public Enumerator GetEnumerator() => enumerator;
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		IEnumerator<Vector3Int> IEnumerable<Vector3Int>.GetEnumerator() => GetEnumerator();
+		IEnumerator<Int3> IEnumerable<Int3>.GetEnumerator() => GetEnumerator();
 
-		public struct Enumerator : IEnumerator<Vector3Int>
+		public struct Enumerator : IEnumerator<Int3>
 		{
-			internal Enumerator(Vector3Int from, Vector3Int to)
+			internal Enumerator(Int3 from, Int3 to)
 			{
 				offset = from;
 
-				var difference = to - from; //Make inclusive
-				difference += difference.IndividualNormalized();
+				Int3 difference = to - from; //Make inclusive
+				difference += difference.Signed;
 
-				enumerator = new VectorEnumerable.Vector3Enumerable.Enumerator(difference, true);
+				enumerator = new Int3.LoopEnumerable.LoopEnumerator(difference, true);
 			}
 
-			readonly Vector3Int offset;
-			VectorEnumerable.Vector3Enumerable.Enumerator enumerator;
+			readonly Int3 offset;
+			Int3.LoopEnumerable.LoopEnumerator enumerator;
 
 			object IEnumerator.Current => Current;
-			public Vector3Int Current => enumerator.Current + offset;
+			public Int3 Current => enumerator.Current + offset;
 
 			public bool MoveNext() => enumerator.MoveNext();
 
@@ -46,38 +43,38 @@ namespace CodeHelpers.Vectors
 		}
 	}
 
-	public readonly struct EnumerableSpace2D : IEnumerable<Vector2Int>
+	public readonly struct EnumerableSpace2D : IEnumerable<Int2>
 	{
 		/// <summary>
 		/// Creates a foreach-loop compatible IEnumerable which yields all position/vector inside a 2D rectangular space
 		/// starts at <paramref name="from"/> and ends at <paramref name="to"/> (Both inclusive). 
 		/// </summary>
-		public EnumerableSpace2D(Vector2Int from, Vector2Int to) => enumerator = new Enumerator(from, to);
+		public EnumerableSpace2D(Int2 from, Int2 to) => enumerator = new Enumerator(from, to);
 
 		readonly Enumerator enumerator;
 
 		public Enumerator GetEnumerator() => enumerator;
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		IEnumerator<Vector2Int> IEnumerable<Vector2Int>.GetEnumerator() => GetEnumerator();
+		IEnumerator<Int2> IEnumerable<Int2>.GetEnumerator() => GetEnumerator();
 
-		public struct Enumerator : IEnumerator<Vector2Int>
+		public struct Enumerator : IEnumerator<Int2>
 		{
-			internal Enumerator(Vector2Int from, Vector2Int to)
+			internal Enumerator(Int2 from, Int2 to)
 			{
 				offset = from;
 
-				var difference = to - from; //Make inclusive
-				difference += difference.IndividualNormalized();
+				Int2 difference = to - from; //Make inclusive
+				difference += difference.Signed;
 
-				enumerator = new VectorEnumerable.Vector2Enumerable.Enumerator(difference, true);
+				enumerator = new Int2.LoopEnumerable.LoopEnumerator(difference, true);
 			}
 
-			readonly Vector2Int offset;
-			VectorEnumerable.Vector2Enumerable.Enumerator enumerator;
+			readonly Int2 offset;
+			Int2.LoopEnumerable.LoopEnumerator enumerator;
 
 			object IEnumerator.Current => Current;
-			public Vector2Int Current => enumerator.Current + offset;
+			public Int2 Current => enumerator.Current + offset;
 
 			public bool MoveNext() => enumerator.MoveNext();
 
