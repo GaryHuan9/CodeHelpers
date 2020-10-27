@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
+	[Serializable]
 	public readonly struct Int2 : IEquatable<Int2>, IEnumerable<int>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

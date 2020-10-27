@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
+	[Serializable]
 	public readonly struct Float3 : IEquatable<Float3>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

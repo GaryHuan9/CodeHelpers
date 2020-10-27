@@ -93,7 +93,7 @@ namespace CodeHelpers.Vectors
 
 		/// <summary>
 		/// Returns one of the component of <paramref name="vector"/> times direction.
-		/// A faster way to calculate Vector3Int.Scale(direction.ToVector3(), vector).magnitude
+		/// A faster way to calculate Int3.Scale(direction.ToVector3(), vector).magnitude
 		/// </summary>
 		public static int ExtractComponent(this Direction direction, Int3 vector)
 		{
