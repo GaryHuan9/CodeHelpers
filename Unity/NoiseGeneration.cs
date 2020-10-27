@@ -1,5 +1,6 @@
 ﻿#if CODEHELPERS_UNITY
 
+using CodeHelpers.Vectors;
 using UnityEngine;
 
 namespace CodeHelpers.Unity
@@ -14,7 +15,7 @@ namespace CodeHelpers.Unity
 			NoiseToArray(info, seed, position, result);
 		}
 
-		public static float[,] NoiseToArray(NoiseInfo info, Vector2 position, Vector2Int size, int seed)
+		public static float[,] NoiseToArray(NoiseInfo info, Vector2 position, Int2 size, int seed)
 		{
 			var results = new float[size.x, size.y];
 			NoiseToArray(info, seed, position, results);
@@ -32,7 +33,7 @@ namespace CodeHelpers.Unity
 
 		static void NoiseToArray(NoiseInfo info, int seed, Vector2 positionOffset, float[,] result)
 		{
-			Vector2Int size = new Vector2Int(result.GetLength(0), result.GetLength(1));
+			Int2 size = new Int2(result.GetLength(0), result.GetLength(1));
 
 			float amplitude = 1f;
 			float frequency = 1f;

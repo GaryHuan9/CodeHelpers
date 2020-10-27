@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using CodeHelpers.Collections;
+using CodeHelpers.Vectors;
 using UnityEngine;
 
 namespace CodeHelpers.Unity
@@ -36,8 +37,8 @@ namespace CodeHelpers.Unity
 		/// </summary>
 		public static int? AnyNumber => int.TryParse(Input.inputString, out int outInt) ? outInt : (int?)null;
 
-		public static Vector2Int GetWASDMovement(KeyCode wKey = KeyCode.W, KeyCode aKey = KeyCode.A, KeyCode sKey = KeyCode.S, KeyCode dKey = KeyCode.D) =>
-			new Vector2Int
+		public static Int2 GetWASDMovement(KeyCode wKey = KeyCode.W, KeyCode aKey = KeyCode.A, KeyCode sKey = KeyCode.S, KeyCode dKey = KeyCode.D) =>
+			new Int2
 			(
 				(Input.GetKey(dKey) ? 1 : 0) + (Input.GetKey(aKey) ? -1 : 0),
 				(Input.GetKey(wKey) ? 1 : 0) + (Input.GetKey(sKey) ? -1 : 0)

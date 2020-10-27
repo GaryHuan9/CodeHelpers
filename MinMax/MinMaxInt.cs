@@ -35,13 +35,13 @@ namespace CodeHelpers
 			max = Mathf.RoundToInt(vector.MaxValue());
 		}
 
-		public MinMaxInt(Vector3Int vector)
+		public MinMaxInt(Int3 vector)
 		{
 			min = vector.MinValue();
 			max = vector.MaxValue();
 		}
 
-		public MinMaxInt(Vector2Int vector)
+		public MinMaxInt(Int2 vector)
 		{
 			min = vector.MinValue();
 			max = vector.MaxValue();
@@ -127,14 +127,14 @@ namespace CodeHelpers
 		public static implicit operator MinMaxInt(Vector3 vector) => new MinMaxInt(vector);
 		public static implicit operator MinMaxInt(Vector4 vector) => new MinMaxInt(vector);
 
-		public static explicit operator Vector2Int(MinMaxInt minMax) => new Vector2Int(minMax.min, minMax.max);
+		public static explicit operator Int2(MinMaxInt minMax) => new Int2(minMax.min, minMax.max);
 
 		public override string ToString() => $"min : {min} max : {max}";
 
 		public override bool Equals(object obj) => obj is MinMaxInt minMax && Equals(minMax);
 		public bool Equals(MinMaxInt other) => other == this;
 
-		public override int GetHashCode() => ((Vector2Int)this).GetHashCode();
+		public override int GetHashCode() => ((Int2)this).GetHashCode();
 
 		public struct LoopEnumerator : IEnumerator<int>
 		{
