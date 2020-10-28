@@ -103,11 +103,8 @@ namespace CodeHelpers.RotationHelpers
 		public static LimitedRotation operator *(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Quaternion);
 		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Inverted.Quaternion);
 
-		public static UnityEngine.Vector3 operator *(LimitedRotation rotation, UnityEngine.Vector3 vector) => rotation.Quaternion * vector;
-		public static UnityEngine.Int3 operator *(LimitedRotation rotation, UnityEngine.Int3 vector) => (rotation.Quaternion * vector).RoundToInt();
-
 		public static Float3 operator *(LimitedRotation rotation, Float3 vector) => rotation.Quaternion * vector;
-		public static Int3 operator *(LimitedRotation rotation, Int3 vector) => ((Float3)(rotation.Quaternion * (UnityEngine.Vector3)vector)).Rounded;
+		public static Int3 operator *(LimitedRotation rotation, Int3 vector) => ((Float3)(rotation.Quaternion * vector.U())).Rounded;
 		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToVector3()).ToDirection();
 #endif
 

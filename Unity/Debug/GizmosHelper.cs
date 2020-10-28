@@ -1,28 +1,29 @@
 #if CODEHELPERS_UNITY && UNITY_EDITOR
 
+using CodeHelpers.Vectors;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Debugs
 {
 	public static class GizmosHelper
 	{
-		public static void DrawArrow(Vector3 origin, Vector3 end, float angle = 30f) => DrawArrow(origin, end, (origin - end).magnitude / 10f, angle);
+		public static void DrawArrow(Float3 origin, Float3 end, float angle = 30f) => DrawArrow(origin, end, (origin - end).Magnitude / 10f, angle);
 
-		public static void DrawArrow(Vector3 origin, Vector3 end, float arrowSize, float angle)
+		public static void DrawArrow(Float3 origin, Float3 end, float arrowSize, float angle)
 		{
 			Gizmos.DrawLine(origin, end);
 
-			var rotation = Quaternion.FromToRotation(Vector3.up, origin - end);
+			var rotation = Quaternion.FromToRotation(Float3.up, origin - end);
 
-			DrawPiece(Vector3.right);
-			DrawPiece(Vector3.forward);
-			DrawPiece(Vector3.left);
-			DrawPiece(Vector3.back);
+			DrawPiece(Float3.right);
+			DrawPiece(Float3.forward);
+			DrawPiece(Float3.left);
+			DrawPiece(Float3.backward);
 
-			void DrawPiece(Vector3 perpendicular)
+			void DrawPiece(Float3 perpendicular)
 			{
-				var localRotation = Quaternion.AngleAxis(angle, Vector3.Cross(Vector3.up, perpendicular));
-				Gizmos.DrawLine(end, end + rotation * localRotation * Vector3.up * arrowSize);
+				var localRotation = Quaternion.AngleAxis(angle, Float3.Cross(Float3.up, perpendicular));
+				Gizmos.DrawLine(end, (Vector3)end + rotation * localRotation * Float3.up * arrowSize);
 			}
 		}
 	}

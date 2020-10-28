@@ -1,6 +1,3 @@
-#if CODEHELPERS_UNITY //NOTE: Will be rewritten with CodeHelper vector library
-
-using UnityEngine;
 using System;
 using System.Collections.Generic;
 using CodeHelpers.Vectors;
@@ -31,22 +28,16 @@ namespace CodeHelpers
 			}
 		}
 
-		public MinMax(Vector4 vector)
+		public MinMax(Float3 vector)
 		{
-			min = vector.MinValue();
-			max = vector.MaxValue();
+			min = vector.MinComponent;
+			max = vector.MaxComponent;
 		}
 
-		public MinMax(Vector3 vector)
+		public MinMax(Float2 vector)
 		{
-			min = vector.MinValue();
-			max = vector.MaxValue();
-		}
-
-		public MinMax(Vector2 vector)
-		{
-			min = vector.MinValue();
-			max = vector.MaxValue();
+			min = vector.MinComponent;
+			max = vector.MaxComponent;
 		}
 
 		public readonly float min;
@@ -56,28 +47,28 @@ namespace CodeHelpers
 		public float Middle => (max + min) / 2f;
 		public float Range => max - min;
 
-		public float Clamp(float value) => Mathf.Clamp(value, min, max);
+		public float Clamp(float value) => value.Clamp(min, max);
 		public float Repeat(float value) => (value - min).Repeat(max - min) + min;
 		public bool Contains(float value) => min <= value && value <= max;
 
-		public float Lerp(float value) => Mathf.Lerp(min, max, value);
-		public float InverseLerp(float value) => Mathf.InverseLerp(min, max, value);
+		public float Lerp(float value) => Scalars.Lerp(min, max, value);
+		public float InverseLerp(float value) => Scalars.InverseLerp(min, max, value);
 
 		/// <summary>
 		/// Is the magnitude of <paramref name="vector"/> contains in this <see cref="MinMax"/>?
 		/// </summary>
-		public bool ContainsMagnitude(Vector3 vector)
+		public bool ContainsMagnitude(Float3 vector)
 		{
-			float squared = vector.sqrMagnitude;
+			float squared = vector.SquaredMagnitude;
 			return min * min <= squared && squared <= max * max;
 		}
 
 		/// <summary>
 		/// Is the magnitude of <paramref name="vector"/> contains in this <see cref="MinMax"/>?
 		/// </summary>
-		public bool ContainsMagnitude(Vector2 vector)
+		public bool ContainsMagnitude(Float2 vector)
 		{
-			float squared = vector.sqrMagnitude;
+			float squared = vector.SquaredMagnitude;
 			return min * min <= squared && squared <= max * max;
 		}
 
@@ -112,32 +103,32 @@ namespace CodeHelpers
 			return result;
 		}
 
-		public static MinMax operator +(MinMax minMax, MinMax other) => new MinMax(minMax.min + other.min, minMax.max + other.max);
-		public static MinMax operator -(MinMax minMax, MinMax other) => new MinMax(minMax.min - other.min, minMax.max - other.max);
-		public static MinMax operator +(MinMax minMax, float value) => new MinMax(minMax.min + value, minMax.max + value);
-		public static MinMax operator -(MinMax minMax, float value) => new MinMax(minMax.min - value, minMax.max - value);
+		public static MinMax operator +(MinMax value, MinMax other) => new MinMax(value.min + other.min, value.max + other.max);
+		public static MinMax operator -(MinMax value, MinMax other) => new MinMax(value.min - other.min, value.max - other.max);
+		public static MinMax operator +(MinMax value, float other) => new MinMax(value.min + other, value.max + other);
+		public static MinMax operator -(MinMax value, float other) => new MinMax(value.min - other, value.max - other);
 
-		public static MinMax operator *(MinMax minMax, MinMax other) => new MinMax(minMax.min * other.min, minMax.max * other.max);
-		public static MinMax operator /(MinMax minMax, MinMax other) => new MinMax(minMax.min / other.min, minMax.max / other.max);
-		public static MinMax operator *(MinMax minMax, float multiplier) => new MinMax(minMax.min * multiplier, minMax.max * multiplier);
-		public static MinMax operator /(MinMax minMax, float divider) => new MinMax(minMax.min / divider, minMax.max / divider);
+		public static MinMax operator *(MinMax value, MinMax other) => new MinMax(value.min * other.min, value.max * other.max);
+		public static MinMax operator /(MinMax value, MinMax other) => new MinMax(value.min / other.min, value.max / other.max);
+		public static MinMax operator *(MinMax value, float other) => new MinMax(value.min * other, value.max * other);
+		public static MinMax operator /(MinMax value, float other) => new MinMax(value.min / other, value.max / other);
 
-		public static bool operator ==(MinMax minMax1, MinMax minMax2) => Mathf.Approximately(minMax1.min, minMax2.min) && Mathf.Approximately(minMax1.max, minMax2.max);
-		public static bool operator !=(MinMax minMax1, MinMax minMax2) => !(minMax1 == minMax2);
+		public static bool operator ==(MinMax value, MinMax other) => value.Equals(other);
+		public static bool operator !=(MinMax value, MinMax other) => !value.Equals(other);
 
-		public static implicit operator MinMax(Vector2 vector) => new MinMax(vector);
-		public static implicit operator MinMax(Vector3 vector) => new MinMax(vector);
-		public static implicit operator MinMax(Vector4 vector) => new MinMax(vector);
-
-		public static implicit operator Vector2(MinMax minMax) => new Vector2(minMax.min, minMax.max);
+		public static implicit operator Float2(MinMax minMax) => new Float2(minMax.min, minMax.max);
 
 		public override string ToString() => $"min : {min} max : {max}";
 
 		public override bool Equals(object obj) => obj is MinMax minMax && Equals(minMax);
-		public bool Equals(MinMax other) => other == this;
+		public bool Equals(MinMax other) => Scalars.AlmostEquals(min, other.min) && Scalars.AlmostEquals(max, other.max);
 
-		public override int GetHashCode() => ((Vector2)this).GetHashCode();
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (min.GetHashCode() * 397) ^ max.GetHashCode();
+			}
+		}
 	}
 }
-
-#endif

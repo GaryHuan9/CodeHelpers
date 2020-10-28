@@ -17,7 +17,7 @@ namespace CodeHelpers.Editors
 			window.minSize = new Float2(100f, 100f);
 		}
 
-		readonly Texture2D[] textures = new Texture2D[EnumHelper<Direction>.EnumLength];
+		readonly Texture2D[] textures = new Texture2D[EnumHelper<Direction>.enumLength];
 		Texture2D FirstTexture => textures.FirstOrDefault(texture => texture != null);
 
 		void OnGUI()

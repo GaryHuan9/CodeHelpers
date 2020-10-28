@@ -141,7 +141,7 @@ namespace CodeHelpers.Vectors
 		/// <summary>
 		/// Returns this <paramref name="direction"/> but it points in the positive direction
 		/// </summary>
-		public static Direction Abs(this Direction direction) => (Direction)((int)direction / 2 * 2);
+		public static Direction Absoluted(this Direction direction) => (Direction)((int)direction / 2 * 2);
 
 		/// <summary>
 		/// Returns if the direction is a negative axis (left, down, or backward)
@@ -152,7 +152,7 @@ namespace CodeHelpers.Vectors
 		/// Gets a direction which is perpendicular to this <paramref name="direction"/>.
 		/// The returned direction is the 2d right/positive x direction if you projected the direction onto 2d (using the <see cref="Project"/> method)
 		/// </summary>
-		public static Direction Perpendicular(this Direction direction) => (Direction)((int)direction - 2).Repeat((int)EnumHelper<Direction>.EnumLength);
+		public static Direction Perpendicular(this Direction direction) => (Direction)((int)direction - 2).Repeat((int)EnumHelper<Direction>.enumLength);
 
 		/// <summary>
 		/// Projects <paramref name="point"/> onto the plane located at origin and has this <paramref name="direction"/> as its normal.
@@ -200,11 +200,11 @@ namespace CodeHelpers.Vectors
 
 		static void GenerateCrossCache()
 		{
-			var crosses = new IReadOnlyList<Direction>[EnumHelper<Direction>.EnumLength];
+			var crosses = new IReadOnlyList<Direction>[EnumHelper<Direction>.enumLength];
 
 			for (int i = 0; i < crosses.Length; i++)
 			{
-				var temporaryCrosses = new Direction[EnumHelper<Direction>.EnumLength];
+				var temporaryCrosses = new Direction[EnumHelper<Direction>.enumLength];
 
 				for (int j = 0; j < temporaryCrosses.Length; j++)
 				{

@@ -27,7 +27,7 @@ namespace CodeHelpers.Segment
 		public float Length => LengthVector.magnitude;
 		public Vector3 LengthVector => point2 - point1;
 
-		public Vector3 Direction => LengthVector.normalized;
+		public Vector3 Direction => LengthVector.Normalized;
 
 		public Vector3 RandomOnSegment => Lerp((float)RandomHelper.Value);
 
@@ -39,7 +39,7 @@ namespace CodeHelpers.Segment
 		/// </summary>
 		public Vector3 GetClosestPoint(Vector3 point)
 		{
-			Vector3 direction = LengthVector.normalized;
+			Vector3 direction = LengthVector.Normalized;
 			return point1 + direction * Mathf.Clamp01(Vector3.Dot(point - point1, direction));
 		}
 
@@ -48,7 +48,7 @@ namespace CodeHelpers.Segment
 		/// </summary>
 		public Vector3 GetClosestPointUnclamped(Vector3 point)
 		{
-			Vector3 direction = LengthVector.normalized;
+			Vector3 direction = LengthVector.Normalized;
 			return point1 + direction * Vector3.Dot(point - point1, direction);
 		}
 

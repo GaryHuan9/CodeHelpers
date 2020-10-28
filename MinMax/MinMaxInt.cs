@@ -1,11 +1,7 @@
-#if CODEHELPERS_UNITY //NOTE: Will be rewritten with CodeHelper vector library
-
-using UnityEngine;
 using System.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using CodeHelpers.Vectors;
 
 namespace CodeHelpers
@@ -19,32 +15,34 @@ namespace CodeHelpers
 		}
 
 		//Not exposing this to outside since it may be confusing
-		MinMaxInt(float min, float max) : this(Mathf.RoundToInt(min), Mathf.RoundToInt(max)) { }
+		MinMaxInt(float min, float max) : this(min.Round(), max.Round()) { }
 
 		public MinMaxInt(int value) => min = max = value;
 
 		public MinMaxInt(params int[] values)
 		{
-			min = Mathf.Min(values);
-			max = Mathf.Max(values);
-		}
+			min = int.MaxValue;
+			max = int.MinValue;
 
-		public MinMaxInt(Vector4 vector)
-		{
-			min = Mathf.RoundToInt(vector.MinValue());
-			max = Mathf.RoundToInt(vector.MaxValue());
+			for (int i = 0; i < values.Length; i++)
+			{
+				int value = values[i];
+
+				min = Math.Min(min, value);
+				max = Math.Max(max, value);
+			}
 		}
 
 		public MinMaxInt(Int3 vector)
 		{
-			min = vector.MinValue();
-			max = vector.MaxValue();
+			min = vector.MinComponent;
+			max = vector.MaxComponent;
 		}
 
 		public MinMaxInt(Int2 vector)
 		{
-			min = vector.MinValue();
-			max = vector.MaxValue();
+			min = vector.MinComponent;
+			max = vector.MaxComponent;
 		}
 
 		public readonly int min;
@@ -54,36 +52,36 @@ namespace CodeHelpers
 		public float Middle => (max + min) / 2f;
 		public int Range => max - min;
 
-		public float Clamp(float value) => Mathf.Clamp(value, min, max);
-		public int Clamp(int value) => Mathf.Clamp(value, min, max);
+		public float Clamp(float value) => value.Clamp(min, max);
+		public int Clamp(int value) => value.Clamp(min, max);
 
 		public float Repeat(float value) => (value - min).Repeat(max - min) + min;
 		public int Repeat(int value) => (value - min).Repeat(max - min) + min;
 
-		[Pure] public bool Contains(int value) => min <= value && value <= max;
-		[Pure] public bool Contains(float value) => min <= value && value <= max;
+		public bool Contains(int value) => min <= value && value <= max;
+		public bool Contains(float value) => min <= value && value <= max;
 
-		[Pure] public bool Contains(MinMaxInt minMax) => Contains(minMax.min) && Contains(minMax.max);
-		[Pure] public bool Contains(MinMax minMax) => Contains(minMax.min) && Contains(minMax.max);
+		public bool Contains(MinMaxInt minMax) => Contains(minMax.min) && Contains(minMax.max);
+		public bool Contains(MinMax minMax) => Contains(minMax.min) && Contains(minMax.max);
 
-		[Pure] public float Lerp(float value) => Mathf.Lerp(min, max, value);
-		[Pure] public float InverseLerp(float value) => Mathf.InverseLerp(min, max, value);
+		public float Lerp(float value) => Scalars.Lerp(min, max, value);
+		public float InverseLerp(float value) => Scalars.InverseLerp(min, max, value);
 
 		/// <summary>
-		/// Is the magnitude of <paramref name="vector"/> contains in this <see cref="MinMax"/>?
+		/// Is the magnitude of <paramref name="value"/> contains in this <see cref="MinMax"/>?
 		/// </summary>
-		public bool ContainsMagnitude(Vector3 vector)
+		public bool ContainsMagnitude(Float3 value)
 		{
-			float squared = vector.sqrMagnitude;
+			float squared = value.SquaredMagnitude;
 			return min * min <= squared && squared <= max * max;
 		}
 
 		/// <summary>
-		/// Is the magnitude of <paramref name="vector"/> contains in this <see cref="MinMax"/>?
+		/// Is the magnitude of <paramref name="value"/> contains in this <see cref="MinMax"/>?
 		/// </summary>
-		public bool ContainsMagnitude(Vector2 vector)
+		public bool ContainsMagnitude(Float2 value)
 		{
-			float squared = vector.sqrMagnitude;
+			float squared = value.SquaredMagnitude;
 			return min * min <= squared && squared <= max * max;
 		}
 
@@ -108,33 +106,35 @@ namespace CodeHelpers
 		public static MinMaxInt OneToOne => new MinMaxInt(-1, 1);
 		public static MinMaxInt MinToMax => new MinMaxInt(int.MinValue, int.MaxValue);
 
-		public static List<MinMaxInt> GetRangesFromValue(IEnumerable<MinMaxInt> minMaxes, float value) => minMaxes.Where(t => t.Contains(value)).ToList();
+		public static List<MinMaxInt> GetRangesFromValue(IEnumerable<MinMaxInt> ranges, float value) => ranges.Where(range => range.Contains(value)).ToList();
 
-		public static MinMaxInt operator +(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min + other.min, minMax.max + other.max);
-		public static MinMaxInt operator -(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min - other.min, minMax.max - other.max);
-		public static MinMaxInt operator +(MinMaxInt minMax, int value) => new MinMaxInt(minMax.min + value, minMax.max + value);
-		public static MinMaxInt operator -(MinMaxInt minMax, int value) => new MinMaxInt(minMax.min - value, minMax.max - value);
+		public static MinMaxInt operator +(MinMaxInt value, MinMaxInt other) => new MinMaxInt(value.min + other.min, value.max + other.max);
+		public static MinMaxInt operator -(MinMaxInt value, MinMaxInt other) => new MinMaxInt(value.min - other.min, value.max - other.max);
+		public static MinMaxInt operator +(MinMaxInt value, int other) => new MinMaxInt(value.min + other, value.max + other);
+		public static MinMaxInt operator -(MinMaxInt value, int other) => new MinMaxInt(value.min - other, value.max - other);
 
-		public static MinMaxInt operator *(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min * other.min, minMax.max * other.max);
-		public static MinMaxInt operator /(MinMaxInt minMax, MinMaxInt other) => new MinMaxInt(minMax.min / other.min, minMax.max / other.max);
-		public static MinMaxInt operator *(MinMaxInt minMax, int multiplier) => new MinMaxInt(minMax.min * multiplier, minMax.max * multiplier);
-		public static MinMaxInt operator /(MinMaxInt minMax, int divider) => new MinMaxInt(minMax.min / divider, minMax.max / divider);
+		public static MinMaxInt operator *(MinMaxInt value, MinMaxInt other) => new MinMaxInt(value.min * other.min, value.max * other.max);
+		public static MinMaxInt operator /(MinMaxInt value, MinMaxInt other) => new MinMaxInt(value.min / other.min, value.max / other.max);
+		public static MinMaxInt operator *(MinMaxInt value, int other) => new MinMaxInt(value.min * other, value.max * other);
+		public static MinMaxInt operator /(MinMaxInt value, int other) => new MinMaxInt(value.min / other, value.max / other);
 
-		public static bool operator ==(MinMaxInt minMax1, MinMaxInt minMax2) => minMax1.min == minMax2.min && minMax1.max == minMax2.max;
-		public static bool operator !=(MinMaxInt minMax1, MinMaxInt minMax2) => !(minMax1 == minMax2);
-
-		public static implicit operator MinMaxInt(Vector2 vector) => new MinMaxInt(vector);
-		public static implicit operator MinMaxInt(Vector3 vector) => new MinMaxInt(vector);
-		public static implicit operator MinMaxInt(Vector4 vector) => new MinMaxInt(vector);
+		public static bool operator ==(MinMaxInt value, MinMaxInt other) => value.Equals(other);
+		public static bool operator !=(MinMaxInt value, MinMaxInt other) => !value.Equals(other);
 
 		public static explicit operator Int2(MinMaxInt minMax) => new Int2(minMax.min, minMax.max);
 
 		public override string ToString() => $"min : {min} max : {max}";
 
 		public override bool Equals(object obj) => obj is MinMaxInt minMax && Equals(minMax);
-		public bool Equals(MinMaxInt other) => other == this;
+		public bool Equals(MinMaxInt other) => min == other.min && max == other.max;
 
-		public override int GetHashCode() => ((Int2)this).GetHashCode();
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (min.GetHashCode() * 397) ^ max.GetHashCode();
+			}
+		}
 
 		public struct LoopEnumerator : IEnumerator<int>
 		{
@@ -161,5 +161,3 @@ namespace CodeHelpers
 		}
 	}
 }
-
-#endif

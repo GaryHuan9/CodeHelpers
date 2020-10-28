@@ -28,7 +28,7 @@ namespace CodeHelpers.Segment
 		public float Length => LengthVector.magnitude;
 		public Vector2 LengthVector => point2 - point1;
 
-		public Vector2 Direction => LengthVector.normalized;
+		public Vector2 Direction => LengthVector.Normalized;
 
 		public float Slope => LengthVector.y / LengthVector.x;
 		public float YIntercept => point1.y - point1.x * Slope;
@@ -49,7 +49,7 @@ namespace CodeHelpers.Segment
 		/// </summary>
 		public Vector2 GetClosestPoint(Vector2 point)
 		{
-			Vector2 direction = LengthVector.normalized;
+			Vector2 direction = LengthVector.Normalized;
 			return point1 + direction * Mathf.Clamp01(Vector2.Dot(point - point1, direction));
 		}
 
@@ -58,7 +58,7 @@ namespace CodeHelpers.Segment
 		/// </summary>
 		public Vector2 GetClosestPointUnclamped(Vector2 point)
 		{
-			Vector2 direction = LengthVector.normalized;
+			Vector2 direction = LengthVector.Normalized;
 			return point1 + direction * Vector2.Dot(point - point1, direction);
 		}
 

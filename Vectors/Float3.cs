@@ -228,9 +228,9 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float3(Math.Abs(x), Math.Abs(y), Math.Abs(z));
 		}
 
-		public Float3 Signed
+		public Int3 Signed
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float3(x.Signed(), y.Signed(), z.Signed());
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int3(x.Sign(), y.Sign(), z.Sign());
 		}
 
 		public Float3 Normalized
@@ -345,6 +345,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Min(Float3 other) => new Float3(Math.Min(x, other.x), Math.Min(y, other.y), Math.Min(z, other.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Max(Float3 other) => new Float3(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(Float3 min, Float3 max) => new Float3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(float min, float max) => new Float3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, Float3 value) => new Float3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, float value) => new Float3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
 
@@ -353,6 +356,54 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(Float3 length) => new Float3(x.Repeat(length.x), y.Repeat(length.y), z.Repeat(length.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(float length) => new Float3(x.Repeat(length), y.Repeat(length), z.Repeat(length));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree) => CreateXY(XY.Rotate(degree), z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float2 pivot) => CreateXY(XY.Rotate(degree, pivot), z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float3 pivot) => CreateXY(XY.Rotate(degree, pivot.XY), z);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree) => CreateXZ(XZ.Rotate(degree), y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float2 pivot) => CreateXZ(XZ.Rotate(degree, pivot), y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float3 pivot) => CreateXZ(XZ.Rotate(degree, pivot.XZ), y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree) => CreateYZ(YZ.Rotate(degree), x);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float2 pivot) => CreateYZ(YZ.Rotate(degree, pivot), x);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float3 pivot) => CreateYZ(YZ.Rotate(degree, pivot.YZ), x);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float3 Damp(Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime)
+		{
+			float velocityX = velocity.x;
+			float velocityY = velocity.y;
+			float velocityZ = velocity.z;
+
+			Float3 result = new Float3
+			(
+				Scalars.Damp(x, target.x, ref velocityX, smoothTime.x, deltaTime),
+				Scalars.Damp(y, target.y, ref velocityY, smoothTime.y, deltaTime),
+				Scalars.Damp(z, target.z, ref velocityZ, smoothTime.z, deltaTime)
+			);
+
+			velocity = new Float3(velocityX, velocityY, velocityZ);
+			return result;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime)
+		{
+			float velocityX = velocity.x;
+			float velocityY = velocity.y;
+			float velocityZ = velocity.z;
+
+			Float3 result = new Float3
+			(
+				Scalars.Damp(x, target.x, ref velocityX, smoothTime, deltaTime),
+				Scalars.Damp(y, target.y, ref velocityY, smoothTime, deltaTime),
+				Scalars.Damp(z, target.z, ref velocityZ, smoothTime, deltaTime)
+			);
+
+			velocity = new Float3(velocityX, velocityY, velocityZ);
+			return result;
+		}
 
 #endregion
 
@@ -369,6 +420,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Min(Float3 first, Float3 second) => first.Min(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(Float3 first, Float3 second) => first.Max(second);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, Float3 min, Float3 max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, float min, float max) => value.Clamp(min, max);
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, Float3 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, float value) => first.Lerp(second, value);
 
@@ -377,6 +431,21 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Float3 value, Float3 length) => value.Repeat(length);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Float3 value, float length) => value.Repeat(length);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Float3 value, float degree) => value.RotateXY(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Float3 value, float degree, Float2 pivot) => value.RotateXY(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Float3 value, float degree, Float3 pivot) => value.RotateXY(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Float3 value, float degree) => value.RotateXZ(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Float3 value, float degree, Float2 pivot) => value.RotateXZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Float3 value, float degree, Float3 pivot) => value.RotateXZ(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Float3 value, float degree) => value.RotateYZ(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Float3 value, float degree, Float2 pivot) => value.RotateYZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Float3 value, float degree, Float3 pivot) => value.RotateYZ(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 
 #endregion
 
@@ -406,13 +475,37 @@ namespace CodeHelpers.Vectors
 #endif
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateX(float value) => new Float3(value, 0f, 0f);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateY(float value) => new Float3(0f, value, 0f);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateZ(float value) => new Float3(0f, 0f, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Float3 Create(int index, float value, float other)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateXY(Float2 value) => new Float3(value.x, value.y, 0f);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateYZ(Float2 value) => new Float3(0f, value.x, value.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateXZ(Float2 value) => new Float3(value.x, 0f, value.y);
+				Float3 result = new Float3(other, other, other);
+				((float*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Float3(value, other, other);
+				case 1:  return new Float3(other, value, other);
+				case 2:  return new Float3(other, other, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateX(float value, float other = 0f) => new Float3(value, other, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateY(float value, float other = 0f) => new Float3(other, value, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateZ(float value, float other = 0f) => new Float3(other, other, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateXY(Float2 value, float other = 0f) => new Float3(value.x, value.y, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateYZ(Float2 value, float other = 0f) => new Float3(other, value.x, value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float3 CreateXZ(Float2 value, float other = 0f) => new Float3(value.x, other, value.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float3 Replace(int index, float value)

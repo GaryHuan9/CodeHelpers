@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CodeHelpers.Vectors
+namespace CodeHelpers.Vectors.Enumerables
 {
 	public readonly struct EnumerableSpace3D : IEnumerable<Int3>
 	{

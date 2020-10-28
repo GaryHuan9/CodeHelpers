@@ -15,43 +15,45 @@ namespace CodeHelpers.Vectors
 		public const float RadianToDegree = (float)RadianToDegreeDouble;
 		public const float DegreeToRadian = (float)DegreeToRadianDouble;
 
-		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
-		public static int Lerp(int left, int right, int value) => (right - left) * value + left;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Lerp(float left, float right, float value) => (right - left) * value + left;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Lerp(int left, int right, int value) => (right - left) * value + left;
 
-		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
-		public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this float value, float min, float max) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this int value, float min, float max) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Clamp(this int value, int min, int max) => value < min ? min : value > max ? max : value;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.
 		/// </summary>
-		public static float ToSignedAngle(this float value) => -(180f - value).Repeat(360f) + 180f;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float ToSignedAngle(this float value) => -(180f - value).Repeat(360f) + 180f;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -179 and 180 with the same rotational value as input.
 		/// </summary>
-		public static int ToSignedAngle(this int value) => -(180 - value).Repeat(360) + 180;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int ToSignedAngle(this int value) => -(180 - value).Repeat(360) + 180;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between 0f (Inclusive) and 360f (Exclusive) with the same rotational value as input.
 		/// </summary>
-		public static float ToUnsignedAngle(this float value) => value.Repeat(360f);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float ToUnsignedAngle(this float value) => value.Repeat(360f);
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between 0 and 359 with the same rotational value as input.
 		/// </summary>
-		public static int ToUnsignedAngle(this int value) => value.Repeat(360);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int ToUnsignedAngle(this int value) => value.Repeat(360);
 
 		/// <summary>
 		/// Converts <paramref name="value"/>, a number from zero to positive one. Into a range from negative one to positive one.
 		/// </summary>
-		public static float To1To1(this float value) => value * 2f - 1f;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float To1To1(this float value) => value * 2f - 1f;
 
 		/// <summary>
 		/// Converts <paramref name="value"/>, a number from negative one to positive one. Into a range from zero to positive one.
 		/// </summary>
-		public static float To0To1(this float value) => (value + 1f) / 2f;
-
-		public static int CeilDivide(this int value, int divider) => (value - 1) / divider + 1;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float To0To1(this float value) => (value + 1f) / 2f;
 
 		public static bool IsPowerOfTwo(this int value) => (value & -value) == value;  //Or (value & (value - 1)) == 0;
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value; //Or (value & (value - 1)) == 0;
@@ -90,8 +92,8 @@ namespace CodeHelpers.Vectors
 
 		public static Int2 To2D(this int value, int height) => new Int2(value / height, value % height);
 
-		public static int Signed(this float value) => AlmostEquals(value, 0f) ? 0 : Math.Sign(value);
-		public static int Signed(this int value) => Math.Sign(value);
+		public static int Sign(this float value) => AlmostEquals(value, 0f) ? 0 : Math.Sign(value);
+		public static int Sign(this int value) => Math.Sign(value);
 
 		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
 		public static float Repeat(this float value, float length)
@@ -121,12 +123,14 @@ namespace CodeHelpers.Vectors
 			return result < 0L ? result + length : result;
 		}
 
-		public static int Floored(this float value) => (int)Math.Floor(value);
-		public static int Ceiled(this float value) => (int)Math.Ceiling(value);
-		public static int Rounded(this float value) => (int)Math.Round(value);
+		public static int Floor(this float value) => (int)Math.Floor(value);
+		public static int Ceil(this float value) => (int)Math.Ceiling(value);
+		public static int Round(this float value) => (int)Math.Round(value);
 
 		public static int FlooredDivide(this int value, int divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
 		public static long FlooredDivide(this long value, long divisor) => value / divisor - Convert.ToInt64((value < 0) ^ (divisor < 0) && value % divisor != 0);
+
+		public static int CeilDivide(this int value, int divider) => (value - 1) / divider + 1;
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
@@ -165,6 +169,23 @@ namespace CodeHelpers.Vectors
 			[System.Runtime.InteropServices.FieldOffset(0)] public readonly int intValue;
 		}
 #endif
+
+		public static float Damp(float current, float target, ref float velocity, float smoothTime, float deltaTime)
+		{
+			//Implementation based on Game Programming Gems 4 Chapter 1.10
+
+			float omega = 2f / smoothTime;  //The smooth coefficient
+			float delta = current - target; //Change in position/value
+
+			float exp = ApproximateExp(omega * deltaTime);
+			float number = (velocity + omega * delta) * deltaTime;
+
+			velocity = (velocity - omega * number) * exp;
+			return target + (delta + number) * exp;
+
+			//Uses Taylor Polynomials to approximate 1/exp; acceptable accuracy when domain: 0 < x < 1
+			float ApproximateExp(float value) => 1f / (1f + value + 0.48f * value * value + 0.235f * value * value * value);
+		}
 
 		/// <summary>
 		/// Format the integer to their abbreviations using metric suffixes

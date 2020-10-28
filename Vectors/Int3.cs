@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
@@ -95,6 +97,52 @@ namespace CodeHelpers.Vectors
 
 		public static readonly Int3 maxValue = new Int3(int.MaxValue, int.MaxValue, int.MaxValue);
 		public static readonly Int3 minValue = new Int3(int.MinValue, int.MinValue, int.MinValue);
+
+		//NOTE: These collections are not in any guaranteed order!
+
+		public static readonly ReadOnlyCollection<Int3> units8 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(0, 0, 0), new Int3(1, 0, 0), new Int3(0, 0, 1), new Int3(1, 0, 1),
+				new Int3(0, 1, 0), new Int3(1, 1, 0), new Int3(0, 1, 1), new Int3(1, 1, 1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> faces6 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(1, 0, 0), new Int3(-1, 0, 0),
+				new Int3(0, 1, 0), new Int3(0, -1, 0),
+				new Int3(0, 0, 1), new Int3(0, 0, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> vertices8 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(1, 1, 1), new Int3(-1, 1, 1), new Int3(1, 1, -1), new Int3(-1, 1, -1),
+				new Int3(1, -1, 1), new Int3(-1, -1, 1), new Int3(1, -1, -1), new Int3(-1, -1, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> edges12 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(1, 1, 0), new Int3(0, 1, 1), new Int3(-1, 1, 0), new Int3(0, 1, -1),
+				new Int3(1, 0, 1), new Int3(-1, 0, 1), new Int3(-1, 0, -1), new Int3(1, 0, -1),
+				new Int3(1, -1, 0), new Int3(0, -1, 1), new Int3(-1, -1, 0), new Int3(0, -1, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> facesVertices14 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).ToArray());
+		public static readonly ReadOnlyCollection<Int3> facesEdges18 = new ReadOnlyCollection<Int3>(faces6.Concat(edges12).ToArray());
+		public static readonly ReadOnlyCollection<Int3> verticesEdges20 = new ReadOnlyCollection<Int3>(vertices8.Concat(edges12).ToArray());
+
+		public static readonly ReadOnlyCollection<Int3> facesVerticesEdges26 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).Concat(edges12).ToArray());
 
 #endregion
 
@@ -222,7 +270,7 @@ namespace CodeHelpers.Vectors
 
 		public Int3 Signed
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int3(x.Signed(), y.Signed(), z.Signed());
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int3(x.Sign(), y.Sign(), z.Sign());
 		}
 
 		public Float3 Normalized
@@ -307,6 +355,12 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Min(Int3 other) => new Int3(Math.Min(x, other.x), Math.Min(y, other.y), Math.Min(z, other.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Max(Int3 other) => new Int3(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Clamp(Int3 min, Int3 max) => new Int3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Clamp(int min, int max) => new Int3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(Float3 min, Float3 max) => new Float3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(float min, float max) => new Float3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Lerp(Int3 other, Int3 value) => new Int3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Lerp(Int3 other, int value) => new Int3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
 
@@ -328,6 +382,21 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 FlooredDivide(Int3 divisor) => new Int3(x.FlooredDivide(divisor.x), y.FlooredDivide(divisor.y), z.FlooredDivide(divisor.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 FlooredDivide(int divisor) => new Int3(x.FlooredDivide(divisor), y.FlooredDivide(divisor), z.FlooredDivide(divisor));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree) => Float3.CreateXY(XY.Rotate(degree), z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float2 pivot) => Float3.CreateXY(XY.Rotate(degree, pivot), z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float3 pivot) => Float3.CreateXY(XY.Rotate(degree, pivot.XY), z);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree) => Float3.CreateXZ(XZ.Rotate(degree), y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float2 pivot) => Float3.CreateXZ(XZ.Rotate(degree, pivot), y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float3 pivot) => Float3.CreateXZ(XZ.Rotate(degree, pivot.XZ), y);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree) => Float3.CreateYZ(YZ.Rotate(degree), x);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float2 pivot) => Float3.CreateYZ(YZ.Rotate(degree, pivot), x);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float3 pivot) => Float3.CreateYZ(YZ.Rotate(degree, pivot.YZ), x);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => Float3.Damp(this, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(this, target, ref velocity, smoothTime, deltaTime);
+
 #endregion
 
 #region Static
@@ -342,6 +411,12 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Min(Int3 first, Int3 second) => first.Min(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Max(Int3 first, Int3 second) => first.Max(second);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Clamp(Int3 value, Int3 min, Int3 max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Clamp(Int3 value, int min, int max) => value.Clamp(min, max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, Float3 min, Float3 max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, float min, float max) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Lerp(Int3 first, Int3 second, Int3 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Lerp(Int3 first, Int3 second, int value) => first.Lerp(second, value);
@@ -363,6 +438,21 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 FlooredDivide(Int3 value, Int3 divisor) => value.FlooredDivide(divisor);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 FlooredDivide(Int3 value, int divisor) => value.FlooredDivide(divisor);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Int3 value, float degree) => value.RotateXY(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Int3 value, float degree, Float2 pivot) => value.RotateXY(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Int3 value, float degree, Float3 pivot) => value.RotateXY(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Int3 value, float degree) => value.RotateXZ(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Int3 value, float degree, Float2 pivot) => value.RotateXZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Int3 value, float degree, Float3 pivot) => value.RotateXZ(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Int3 value, float degree) => value.RotateYZ(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Int3 value, float degree, Float2 pivot) => value.RotateYZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Int3 value, float degree, Float3 pivot) => value.RotateYZ(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
 
 #endregion
 
@@ -392,13 +482,37 @@ namespace CodeHelpers.Vectors
 #endif
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateX(int value) => new Int3(value, 0, 0);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateY(int value) => new Int3(0, value, 0);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateZ(int value) => new Int3(0, 0, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int3 Create(int index, int value, int other)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateXY(Int2 value) => new Int3(value.x, value.y, 0);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateYZ(Int2 value) => new Int3(0, value.x, value.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateXZ(Int2 value) => new Int3(value.x, 0, value.y);
+				Int3 result = new Int3(other, other, other);
+				((int*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Int3(value, other, other);
+				case 1:  return new Int3(other, value, other);
+				case 2:  return new Int3(other, other, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateX(int value, int other = 0) => new Int3(value, other, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateY(int value, int other = 0) => new Int3(other, value, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateZ(int value, int other = 0) => new Int3(other, other, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateXY(Int2 value, int other = 0) => new Int3(value.x, value.y, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateYZ(Int2 value, int other = 0) => new Int3(other, value.x, value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Int3 CreateXZ(Int2 value, int other = 0) => new Int3(value.x, other, value.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int3 Replace(int index, int value)
@@ -528,7 +642,7 @@ namespace CodeHelpers.Vectors
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Int3(UnityEngine.Vector3Int value) => new Int3(value.x, value.y, value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3Int(Int3 value) => new UnityEngine.Vector3Int(value.x, value.y, value.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator UnityEngine.Vector3(Int3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3(Int3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);
 #endif
 
 #endregion
@@ -607,8 +721,7 @@ namespace CodeHelpers.Vectors
 			{
 				internal LoopEnumerator(Int3 size, bool zeroAsOne)
 				{
-					direction = (size.x < 0 ? 0b0001 : 0) | (size.y < 0 ? 0b0010 : 0) | (size.z < 0 ? 0b0100 : 0);
-
+					direction = size.Signed;
 					size = size.Absoluted;
 
 					this.size = zeroAsOne ? Max(one, size) : size;
@@ -617,35 +730,24 @@ namespace CodeHelpers.Vectors
 					current = -1;
 				}
 
-				/// <summary>
-				/// Bit vector indicating whether an axis should be negated or not.
-				/// Using int because byte will be allocated into four bytes anyways
-				/// </summary>
-				readonly int direction;
-
+				readonly Int3 direction;
 				readonly Int3 size;
-				readonly int product;
 
+				readonly int product;
 				int current;
 
 				object IEnumerator.Current => Current;
 
 				public Int3 Current => new Int3
 				(
-					current / (size.y * size.z) * ((direction & 0b0001) == 0 ? 1 : -1),
-					current / size.z % size.y * ((direction & 0b0010) == 0 ? 1 : -1),
-					current % size.z * ((direction & 0b0100) == 0 ? 1 : -1)
+					current / (size.y * size.z) * direction.x,
+					current / size.z % size.y * direction.y,
+					current % size.z * direction.z
 				);
 
-				public bool MoveNext()
-				{
-					if (current + 1 >= product) return false;
-					current++;
-					return true;
-				}
+				public bool MoveNext() => ++current < product;
 
 				public void Reset() => current = -1;
-
 				public void Dispose() { }
 			}
 		}

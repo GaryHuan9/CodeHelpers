@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using CodeHelpers.Vectors;
 
@@ -183,5 +184,25 @@ namespace CodeHelpers.Collections
 	public interface IDoubleComparer<in T1, in T2>
 	{
 		int CompareTo(T1 first, T2 second);
+	}
+
+	public struct SingleEnumerator<T> : IEnumerator<T>
+	{
+		public SingleEnumerator(T value)
+		{
+			this.value = value;
+			state = -1;
+		}
+
+		readonly T value;
+		int state;
+
+		public bool MoveNext() => ++state < 1;
+
+		public T Current => state == 0 ? value : default;
+		object IEnumerator.Current => Current;
+
+		public void Reset() => state = -1;
+		public void Dispose() { }
 	}
 }

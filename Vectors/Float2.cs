@@ -200,9 +200,9 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2(Math.Abs(x), Math.Abs(y));
 		}
 
-		public Float2 Signed
+		public Int2 Signed
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2(x.Signed(), y.Signed());
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(x.Sign(), y.Sign());
 		}
 
 		public Float2 Normalized
@@ -273,6 +273,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Min(Float2 other) => new Float2(Math.Min(x, other.x), Math.Min(y, other.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Max(Float2 other) => new Float2(Math.Max(x, other.x), Math.Max(y, other.y));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(Float2 min, Float2 max) => new Float2(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(float min, float max) => new Float2(x.Clamp(min, max), y.Clamp(min, max));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Lerp(Float2 other, Float2 value) => new Float2(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Lerp(Float2 other, float value) => new Float2(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value));
 
@@ -281,6 +284,63 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Repeat(Float2 length) => new Float2(x.Repeat(length.x), y.Repeat(length.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Repeat(float length) => new Float2(x.Repeat(length), y.Repeat(length));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 Rotate(float degree)
+		{
+			float angle = degree * Scalars.DegreeToRadian;
+
+			float sin = (float)Math.Sin(angle);
+			float cos = (float)Math.Cos(angle);
+
+			return new Float2(cos * x - sin * y, sin * x + cos * y);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 Rotate(float degree, Float2 pivot)
+		{
+			float angle = degree * Scalars.DegreeToRadian;
+
+			float sin = (float)Math.Sin(angle);
+			float cos = (float)Math.Cos(angle);
+
+			float offsetX = x - pivot.x;
+			float offsetY = y - pivot.y;
+
+			return new Float2(cos * offsetX - sin * offsetY + pivot.x, sin * offsetX + cos * offsetY + pivot.y);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 Damp(Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime)
+		{
+			float velocityX = velocity.x;
+			float velocityY = velocity.y;
+
+			Float2 result = new Float2
+			(
+				Scalars.Damp(x, target.x, ref velocityX, smoothTime.x, deltaTime),
+				Scalars.Damp(y, target.y, ref velocityY, smoothTime.y, deltaTime)
+			);
+
+			velocity = new Float2(velocityX, velocityY);
+			return result;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 Damp(Float2 target, ref Float2 velocity, float smoothTime, float deltaTime)
+		{
+			float velocityX = velocity.x;
+			float velocityY = velocity.y;
+
+			Float2 result = new Float2
+			(
+				Scalars.Damp(x, target.x, ref velocityX, smoothTime, deltaTime),
+				Scalars.Damp(y, target.y, ref velocityY, smoothTime, deltaTime)
+			);
+
+			velocity = new Float2(velocityX, velocityY);
+			return result;
+		}
 
 #endregion
 
@@ -295,6 +355,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Min(Float2 first, Float2 second) => first.Min(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Max(Float2 first, Float2 second) => first.Max(second);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Float2 value, Float2 min, Float2 max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Float2 value, float min, float max) => value.Clamp(min, max);
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 first, Float2 second, Float2 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 first, Float2 second, float value) => first.Lerp(second, value);
 
@@ -303,6 +366,12 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Repeat(Float2 value, Float2 length) => value.Repeat(length);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Repeat(Float2 value, float length) => value.Repeat(length);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Float2 value, float degree) => value.Rotate(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Float2 value, float degree, Float2 pivot) => value.Rotate(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 
 #endregion
 
@@ -331,8 +400,35 @@ namespace CodeHelpers.Vectors
 #endif
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float2 CreateX(float value) => new Float2(value, 0f);
-		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float2 CreateY(float value) => new Float2(0f, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Float2 Create(int index, float value, float other)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+
+				Float2 result = new Float2(other, other);
+				((float*)&result)[index] = value;
+
+				return result;
+			}
+#else
+			switch (index)
+			{
+				case 0:  return new Float2(value, other);
+				case 1:  return new Float2(other, value);
+				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
+			}
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float2 CreateX(float value, float other = 0f) => new Float2(value, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public static Float2 CreateY(float value, float other = 0f) => new Float2(other, value);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 CreateXY(float other = 0f) => Float3.CreateXY(this, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 CreateYZ(float other = 0f) => Float3.CreateYZ(this, other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 CreateXZ(float other = 0f) => Float3.CreateXZ(this, other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float2 Replace(int index, float value)
