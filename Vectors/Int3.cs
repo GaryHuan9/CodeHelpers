@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 namespace CodeHelpers.Vectors
 {
 	[Serializable]
-	public readonly struct Int3 : IEquatable<Int3>, IEnumerable<int>, IFormattable
+	public readonly struct Int3 : IEquatable<Int3>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int3(int x, int y, int z)
@@ -677,10 +677,11 @@ namespace CodeHelpers.Vectors
 
 #region Enumerations
 
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
-
-		public Enumerator GetEnumerator() => new Enumerator(this);
+		/// <summary>
+		/// Returns an enumerable that can be put into a foreach loop.
+		/// Yields the three components of this vector in a series.
+		/// </summary>
+		public SeriesEnumerator Series() => new SeriesEnumerator(this);
 
 		/// <summary>
 		/// Returns an enumerable that can be put into a foreach loop; from (0,0,0) to (vector.x-1,vector.y-1,vector.z-1)
@@ -688,9 +689,9 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		public LoopEnumerable Loop(bool zeroAsOne = false) => new LoopEnumerable(this, zeroAsOne);
 
-		public struct Enumerator : IEnumerator<int>
+		public struct SeriesEnumerator : IEnumerator<int>
 		{
-			public Enumerator(Int3 source)
+			public SeriesEnumerator(Int3 source)
 			{
 				this.source = source;
 				index = -1;
