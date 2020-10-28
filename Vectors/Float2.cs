@@ -216,6 +216,11 @@ namespace CodeHelpers.Vectors
 			}
 		}
 
+		public Float2 Perpendicular
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2(-y, x);
+		}
+
 		public Float2 Sorted
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => x < y ? XY : YX;
@@ -275,6 +280,16 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(Float2 min, Float2 max) => new Float2(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(float min, float max) => new Float2(x.Clamp(min, max), y.Clamp(min, max));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float2 ClampMagnitude(float max)
+		{
+			double squared = SquaredMagnitudeDouble;
+			if (squared <= (double)max * max) return this;
+
+			float scale = max / (float)Math.Sqrt(squared);
+			return new Float2(x * scale, y * scale);
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Lerp(Float2 other, Float2 value) => new Float2(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Lerp(Float2 other, float value) => new Float2(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value));
@@ -357,6 +372,8 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Float2 value, Float2 min, Float2 max) => value.Clamp(min, max);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Float2 value, float min, float max) => value.Clamp(min, max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 ClampMagnitude(Float2 value, float max) => value.ClampMagnitude(max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 first, Float2 second, Float2 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Lerp(Float2 first, Float2 second, float value) => first.Lerp(second, value);

@@ -1,13 +1,11 @@
-﻿#if CODEHELPERS_UNITY //NOTE: Will be rewritten with CodeHelper vector library
-
-using System;
-using UnityEngine;
+﻿using System;
+using CodeHelpers.Vectors;
 
 namespace CodeHelpers.Segment
 {
 	public readonly struct Segment2 : IEquatable<Segment2>
 	{
-		public Segment2(Vector2 point1, Vector2 point2)
+		public Segment2(Float2 point1, Float2 point2)
 		{
 			this.point1 = point1;
 			this.point2 = point2;
@@ -15,88 +13,91 @@ namespace CodeHelpers.Segment
 
 		public Segment2(float point1X, float point1Y, float point2X, float point2Y)
 		{
-			point1 = new Vector2(point1X, point1Y);
-			point2 = new Vector2(point2X, point2Y);
+			point1 = new Float2(point1X, point1Y);
+			point2 = new Float2(point2X, point2Y);
 		}
 
-		public readonly Vector2 point1;
-		public readonly Vector2 point2;
+		public readonly Float2 point1;
+		public readonly Float2 point2;
 
-		public Vector2 Min => Vector2.Min(point1, point2);
-		public Vector2 Max => Vector2.Max(point1, point2);
+		public Float2 Min => Float2.Min(point1, point2);
+		public Float2 Max => Float2.Max(point1, point2);
 
-		public float Length => LengthVector.magnitude;
-		public Vector2 LengthVector => point2 - point1;
+		public float Length => LengthVector.Magnitude;
+		public Float2 LengthVector => point2 - point1;
 
-		public Vector2 Direction => LengthVector.Normalized;
+		public Float2 Direction => LengthVector.Normalized;
 
 		public float Slope => LengthVector.y / LengthVector.x;
 		public float YIntercept => point1.y - point1.x * Slope;
 
-		public Vector2 RandomOnSegment => Lerp((float)RandomHelper.Value);
+		public Float2 RandomOnSegment => Lerp((float)RandomHelper.Value);
 
-		public Vector2 Lerp(float value) => Vector2.Lerp(point1, point2, value);
-		public Vector2 LerpUnclamped(float value) => Vector2.LerpUnclamped(point1, point2, value);
+		public Float2 Lerp(float value) => Float2.Lerp(point1, point2, value);
+		public Float2 LerpUnclamped(float value) => Float2.Lerp(point1, point2, value);
 
-		public Vector2 GetPointFromX(float x) => GetPointFromXUnclamped(Mathf.Clamp(x, Min.x, Max.x));
-		public Vector2 GetPointFromXUnclamped(float x) => new Vector2(x, Slope * x + YIntercept);
+		public Float2 GetPointFromX(float x) => GetPointFromXUnclamped(x.Clamp(Math.Min(point1.x, point2.x), Math.Max(point1.x, point2.x)));
+		public Float2 GetPointFromXUnclamped(float x) => new Float2(x, Slope * x + YIntercept);
 
-		public Vector2 GetPointFromY(float y) => GetPointFromYUnclamped(Mathf.Clamp(y, Min.x, Max.x));
-		public Vector2 GetPointFromYUnclamped(float y) => new Vector2((y - YIntercept) / Slope, y);
+		public Float2 GetPointFromY(float y) => GetPointFromYUnclamped(y.Clamp(Math.Min(point1.y, point2.y), Math.Max(point1.y, point2.y)));
+		public Float2 GetPointFromYUnclamped(float y) => new Float2((y - YIntercept) / Slope, y);
 
 		/// <summary>
 		/// Get a point on this line that is the closest to <paramref name="point"/>. This value is clamped.
 		/// </summary>
-		public Vector2 GetClosestPoint(Vector2 point)
+		public Float2 GetClosestPoint(Float2 point)
 		{
-			Vector2 direction = LengthVector.Normalized;
-			return point1 + direction * Mathf.Clamp01(Vector2.Dot(point - point1, direction));
+			Float2 direction = LengthVector.Normalized;
+			return point1 + direction * Float2.Dot(point - point1, direction).Clamp(0f, 1f);
 		}
 
 		/// <summary>
 		/// Get a point on this line that is the closest to <paramref name="point"/>. This point is unclamped.
 		/// </summary>
-		public Vector2 GetClosestPointUnclamped(Vector2 point)
+		public Float2 GetClosestPointUnclamped(Float2 point)
 		{
-			Vector2 direction = LengthVector.Normalized;
-			return point1 + direction * Vector2.Dot(point - point1, direction);
+			Float2 direction = LengthVector.Normalized;
+			return point1 + direction * Float2.Dot(point - point1, direction);
 		}
 
 		/// <summary>
-		/// Get the unlerp that is the closest to <paramref name="point"/>. This point is clamped.
+		/// Get the inverse lerp point that is the closest to <paramref name="point"/>. This point is clamped.
 		/// </summary>
-		public float ClosestUnlerp(Vector2 point) => Mathf.Clamp01(ClosestUnlerpUnclamped(point));
+		public float ClosestInverseLerp(Float2 point) => ClosestInverseLerpUnclamped(point).Clamp(0f, 1f);
 
 		/// <summary>
-		/// Get the unlerp that is the closest to <paramref name="point"/>. This point is unclamped.
+		/// Get the inverse lerp point that is the closest to <paramref name="point"/>. This point is unclamped.
 		/// </summary>
-		public float ClosestUnlerpUnclamped(Vector2 point)
+		public float ClosestInverseLerpUnclamped(Float2 point)
 		{
 			float length = Length; //Use this so we don't need to calculate it twice.
-			return Vector2.Dot(point - point1, LengthVector / length) / length;
+			return Float2.Dot(point - point1, LengthVector / length) / length;
 		}
 
 		/// <summary>
-		/// Get the intersection point of the current segment to <paramref name="segment"/>. <paramref name="success"/> will be false and return will be (0,0) if the two segments do not intersect.
+		/// Tries to intersect <paramref name="other"/> with this.
+		/// Returns true if intersection found, otherwise false.
 		/// </summary>
-		public Vector2 GetIntersection(Segment2 segment, out bool success)
+		public bool TryIntersect(Segment2 other, out Float2 intersection)
 		{
-			if (Equals(segment))
+			if (Equals(other))
 			{
-				success = false;
-				return Vector2.zero;
+				intersection = default;
+				return false;
 			}
 
-			float x = (segment.YIntercept - YIntercept) / (Slope - segment.Slope);
+			float x = (other.YIntercept - YIntercept) / (Slope - other.Slope);
+			bool successful = Math.Min(point1.x, point2.x) <= x && x <= Math.Max(point1.x, point2.x);
 
-			success = Min.x <= x && x <= Max.x;
-			return success ? GetPointFromX(x) : Vector2.zero;
+			intersection = successful ? GetPointFromX(x) : default;
+			return successful;
 		}
 
 		/// <summary>
-		/// Get the intersection point of the current segment to <paramref name="segment"/>. Return will be (0,0) if the two segments do not intersect.
+		/// Intersects <paramref name="other"/> with this.
+		/// Throws exception if no intersection found.
 		/// </summary>
-		public Vector2 GetIntersection(Segment2 segment) => GetIntersection(segment, out bool successfulness);
+		public Float2 Intersect(Segment2 other) => TryIntersect(other, out Float2 intersection) ? intersection : throw ExceptionHelper.Invalid(nameof(other), other, "does not intersect with this!");
 
 		public override int GetHashCode()
 		{
@@ -117,5 +118,3 @@ namespace CodeHelpers.Segment
 		public override string ToString() => $"(Point1: {point1}, Point2: {point2})";
 	}
 }
-
-#endif

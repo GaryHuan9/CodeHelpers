@@ -348,6 +348,16 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(Float3 min, Float3 max) => new Float3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(float min, float max) => new Float3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public Float3 ClampMagnitude(float max)
+		{
+			double squared = SquaredMagnitudeDouble;
+			if (squared <= (double)max * max) return this;
+
+			float scale = max / (float)Math.Sqrt(squared);
+			return new Float3(x * scale, y * scale, z * scale);
+		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, Float3 value) => new Float3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, float value) => new Float3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
 
@@ -422,6 +432,8 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, Float3 min, Float3 max) => value.Clamp(min, max);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, float min, float max) => value.Clamp(min, max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 ClampMagnitude(Float3 value, float max) => value.ClampMagnitude(max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, Float3 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, float value) => first.Lerp(second, value);

@@ -123,7 +123,12 @@ namespace CodeHelpers.Unity.Debugs
 			}
 
 			StringBuilder builder = stringBuilderPoolerLocal.Value.GetObject();
-			for (int i = 0; i < length; i++) builder.AppendFormat($"{DebugHelper.ToString(buffer[i])}; ");
+
+			for (int i = 0; i < length; i++)
+			{
+				builder.Append(DebugHelper.ToString(buffer[i]));
+				builder.Append("; ");
+			}
 
 			logActions[buffer.logType](builder.ToString());
 			stringBuilderPoolerLocal.Value.ReleaseObject(builder);

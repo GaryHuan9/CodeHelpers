@@ -90,8 +90,6 @@ namespace CodeHelpers.Vectors
 			return difference < epsilon * Math.Min(sum, double.MaxValue);
 		}
 
-		public static Int2 To2D(this int value, int height) => new Int2(value / height, value % height);
-
 		public static int Sign(this float value) => AlmostEquals(value, 0f) ? 0 : Math.Sign(value);
 		public static int Sign(this int value) => Math.Sign(value);
 

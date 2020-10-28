@@ -1,5 +1,6 @@
 ﻿#if CODEHELPERS_UNITY
 
+using CodeHelpers.Vectors;
 using UnityEngine;
 
 namespace CodeHelpers.Unity
@@ -11,11 +12,11 @@ namespace CodeHelpers.Unity
 		/// Imagine a random plane that is created aligned to <paramref name="direction"/>, then this method
 		/// will rotate <paramref name="direction"/> by <paramref name="angle"/>.
 		/// </summary>
-		public static Vector3 RandomTilt(Vector3 direction, float angle)
+		public static Float3 RandomTilt(Float3 direction, float angle)
 		{
 			if (Mathf.Approximately(angle, 0f)) return direction;
 
-			var axis = Quaternion.FromToRotation(Vector3.forward, direction) * Vector2.right.Rotate(RandomHelper.Range(360f));
+			var axis = Quaternion.FromToRotation(Float3.forward, direction) * Float2.right.Rotate(RandomHelper.Range(360f)).U();
 			return Quaternion.AngleAxis(angle, axis) * direction;
 		}
 	}
