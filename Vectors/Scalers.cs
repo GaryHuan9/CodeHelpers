@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using CodeHelpers.ObjectPooling;
-using UnityEngine;
 
 namespace CodeHelpers.Vectors
 {

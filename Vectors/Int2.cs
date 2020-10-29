@@ -486,8 +486,8 @@ namespace CodeHelpers.Vectors
 #else
 			switch (index)
 			{
-				case 0:  return new Float3(value, y);
-				case 1:  return new Float3(x, value);
+				case 0:  return new Float2(value, y);
+				case 1:  return new Float2(x, value);
 				default: throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 			}
 #endif
