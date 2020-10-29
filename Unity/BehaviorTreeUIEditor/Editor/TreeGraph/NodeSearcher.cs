@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using CodeHelpers.AI.BehaviorTrees;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;

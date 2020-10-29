@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeHelpers.AI.BehaviorTrees;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;

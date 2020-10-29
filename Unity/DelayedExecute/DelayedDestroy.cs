@@ -1,8 +1,9 @@
+#if CODEHELPERS_UNITY
+
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 
-namespace CodeHelpers.DelayedExecution
+namespace CodeHelpers.Unity.DelayedExecute
 {
 	public static class DelayedDestroy
 	{
@@ -104,3 +105,5 @@ namespace CodeHelpers.DelayedExecution
 		}
 	}
 }
+
+#endif

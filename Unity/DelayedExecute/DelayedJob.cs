@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿#if CODEHELPERS_UNITY
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CodeHelpers.DelayedExecution
+namespace CodeHelpers.Unity.DelayedExecute
 {
 	public class DelayedJob
 	{
@@ -79,3 +80,5 @@ namespace CodeHelpers.DelayedExecution
 		}
 	}
 }
+
+#endif

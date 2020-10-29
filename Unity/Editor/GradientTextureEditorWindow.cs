@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿#if CODEHELPERS_UNITY && UNITY_EDITOR
+
+using System.IO;
 using CodeHelpers.Vectors;
 using UnityEditor;
 using UnityEngine;
@@ -52,3 +54,5 @@ namespace CodeHelpers.Editors
 		}
 	}
 }
+
+#endif

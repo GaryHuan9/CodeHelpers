@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using CodeHelpers.AI.BehaviorTrees;
 using CodeHelpers.Vectors;
 using UnityEngine;
 using UnityEngine.Assertions;

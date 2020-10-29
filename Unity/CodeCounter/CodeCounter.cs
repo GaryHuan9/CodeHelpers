@@ -1,3 +1,5 @@
+#if CODEHELPERS_UNITY
+
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
@@ -74,14 +76,16 @@ namespace CodeHelpers.CodeCounters
 			else theseInfo.Clear();
 
 			totalCount = 0;
-			Utility.ForEachSourceFile(Application.dataPath + scriptsPath, path =>
-			{
-				if (!countCodeHelpers && path.Contains("CodeHelpers")) return;
+			Utility.ForEachSourceFile(
+				Application.dataPath + scriptsPath, path =>
+													{
+														if (!countCodeHelpers && path.Contains("CodeHelpers")) return;
 
-				int lineCount = File.ReadAllLines(path).Length;
-				totalCount += lineCount;
-				theseInfo.Add(new ScriptInfo(Path.GetFileName(path), lineCount));
-			});
+														int lineCount = File.ReadAllLines(path).Length;
+														totalCount += lineCount;
+														theseInfo.Add(new ScriptInfo(Path.GetFileName(path), lineCount));
+													}
+			);
 
 			theseInfo = theseInfo.OrderBy(thisInfo => thisInfo.name).ToList();
 
@@ -139,3 +143,5 @@ namespace CodeHelpers.CodeCounters
 	}
 
 }
+
+#endif

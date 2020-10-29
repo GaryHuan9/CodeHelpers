@@ -1,5 +1,3 @@
-using CodeHelpers.Unity.BehaviorTreeUIEditor;
-
 namespace CodeHelpers.AI.BehaviorTrees
 {
 	public interface INodeType { }

@@ -1,13 +1,9 @@
-#if CODEHELPERS_UNITY
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using CodeHelpers.Unity.Debugs;
 
-namespace CodeHelpers.Unity.BehaviorTreeUIEditor
+namespace CodeHelpers.AI.BehaviorTrees
 {
 	[AttributeUsage(AttributeTargets.Method)]
 	public class BehaviorActionAttribute : Attribute
@@ -42,8 +38,6 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			serializedNameToAttribute.Clear();
 			serializedNameToType.Clear();
 
-			var stopwatch = Stopwatch.StartNew();
-
 			foreach ((BehaviorTreeNodeAttribute attribute, Type type) in from assembly in AppDomain.CurrentDomain.GetAssemblies()
 																		 from type in assembly.GetTypes()
 																		 where type.IsValueType && IsDefined(type, typeof(BehaviorTreeNodeAttribute))
@@ -53,14 +47,9 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 				serializedNameToType.Add(attribute.serializedName, type);
 			}
 
-			stopwatch.Stop();
-			DebugHelperUnity.Log($"Rescanned Behavior Tree Node attributes in {stopwatch.Elapsed.TotalMilliseconds} ms");
-
 			scannedAttributes = true;
 		}
 
 		static Exception GetNotScanned() => new Exception($"You have not scanned for attributes before! Scan them using the {nameof(RescanAttributes)} method!");
 	}
 }
-
-#endif

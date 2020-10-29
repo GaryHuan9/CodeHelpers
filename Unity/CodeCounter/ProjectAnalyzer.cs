@@ -1,3 +1,5 @@
+#if CODEHELPERS_UNITY
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -418,27 +420,27 @@ namespace CodeHelpers.CodeCounters
 				CodeCounter.Utility.ForEachSourceFile
 				(
 					SourceFilePath, path =>
-					{
-						string[] lines = File.ReadAllLines(path);
-						bool isCodeHelpers = path.Contains(CodeHelpersString);
+									{
+										string[] lines = File.ReadAllLines(path);
+										bool isCodeHelpers = path.Contains(CodeHelpersString);
 
-						codeLineCount += lines.Length;
-						if (!isCodeHelpers) codeWithoutCodeHelperCount += lines.Length;
+										codeLineCount += lines.Length;
+										if (!isCodeHelpers) codeWithoutCodeHelperCount += lines.Length;
 
-						int thisClassCount = 0;
-						int thisStructCount = 0;
+										int thisClassCount = 0;
+										int thisStructCount = 0;
 
-						for (int i = 0; i < lines.Length; i++)
-						{
-							if (lines[i].Contains(ClassString1) || lines[i].Contains(ClassString2)) thisClassCount++;
-							if (lines[i].Contains(StructString1) || lines[i].Contains(StructString2)) thisStructCount++;
-						}
+										for (int i = 0; i < lines.Length; i++)
+										{
+											if (lines[i].Contains(ClassString1) || lines[i].Contains(ClassString2)) thisClassCount++;
+											if (lines[i].Contains(StructString1) || lines[i].Contains(StructString2)) thisStructCount++;
+										}
 
-						classCount += thisClassCount;
-						structCount += thisStructCount;
+										classCount += thisClassCount;
+										structCount += thisStructCount;
 
-						allInfo.Add(new RecordInfo.SourceFileInfo(lines.Length, Path.GetFileName(path), isCodeHelpers, thisClassCount, thisStructCount));
-					}
+										allInfo.Add(new RecordInfo.SourceFileInfo(lines.Length, Path.GetFileName(path), isCodeHelpers, thisClassCount, thisStructCount));
+									}
 				);
 
 				return new RecordInfo(DateTime.UtcNow.Ticks, allInfo.Count, codeLineCount, codeWithoutCodeHelperCount, classCount, structCount, allInfo.ToArray());
@@ -612,3 +614,5 @@ namespace CodeHelpers.CodeCounters
 #endif
 
 }
+
+#endif

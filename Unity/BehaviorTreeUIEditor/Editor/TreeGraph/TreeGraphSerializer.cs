@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using CodeHelpers.AI.BehaviorTrees;
 using CodeHelpers.Collections;
 using CodeHelpers.Unity.Debugs;
 using UnityEditor;

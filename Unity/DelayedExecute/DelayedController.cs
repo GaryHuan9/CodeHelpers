@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using CodeHelpers.Unity;
+﻿#if CODEHELPERS_UNITY
 
-namespace CodeHelpers.DelayedExecution
+using System;
+using System.Collections.Generic;
+
+namespace CodeHelpers.Unity.DelayedExecute
 {
 	public static class DelayedController
 	{
@@ -66,3 +67,5 @@ namespace CodeHelpers.DelayedExecution
 		}
 	}
 }
+
+#endif
