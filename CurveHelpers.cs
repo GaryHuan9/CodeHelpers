@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Xml;
 using CodeHelpers.Vectors;
-using UnityEngine;
 
 namespace CodeHelpers
 {
@@ -18,7 +16,7 @@ namespace CodeHelpers
 					break;
 
 				case InputCheckMode.clamp:
-					input = Mathf.Clamp01(input);
+					input = input.Clamp(0f, 1f);
 					break;
 
 				default: throw ExceptionHelper.NotPossible;
@@ -40,7 +38,7 @@ namespace CodeHelpers
 		public static float Sigmoid(float input)
 		{
 			CheckRange(ref input);
-			return 0.5f + 0.5f * Mathf.Sin(input * Mathf.PI - Mathf.PI * 0.5f);
+			return 0.5f + 0.5f * (float)Math.Sin(input * Math.PI - Math.PI * 0.5d);
 		}
 
 		public static float EaseIn(float input)
@@ -88,7 +86,7 @@ namespace CodeHelpers
 			if (input <= bounds) return 0f;
 			if (input >= 1f - bounds) return 1f;
 
-			return 0.5f + 0.5f * Mathf.Sin((input * Mathf.PI - Mathf.PI * 0.5f) * steepness);
+			return 0.5f + 0.5f * (float)Math.Sin((input * Math.PI - Math.PI * 0.5f) * steepness);
 		}
 
 		public enum InputCheckMode
