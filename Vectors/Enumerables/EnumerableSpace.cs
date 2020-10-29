@@ -24,8 +24,8 @@ namespace CodeHelpers.Vectors.Enumerables
 			{
 				offset = from;
 
-				Int3 difference = to - from; //Make inclusive
-				difference += difference.Signed;
+				Int3 difference = to - from;
+				difference += difference.Signed; //Make inclusive
 
 				enumerator = new Int3.LoopEnumerable.LoopEnumerator(difference, true);
 			}
@@ -64,8 +64,8 @@ namespace CodeHelpers.Vectors.Enumerables
 			{
 				offset = from;
 
-				Int2 difference = to - from; //Make inclusive
-				difference += difference.Signed;
+				Int2 difference = to - from;
+				difference += difference.Signed; //Make inclusive
 
 				enumerator = new Int2.LoopEnumerable.LoopEnumerator(difference, true);
 			}

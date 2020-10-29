@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
-	[Serializable]
 	public readonly struct Float2 : IEquatable<Float2>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -504,9 +503,11 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float2 first, in Float2 second) => first.Equals(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float2 first, in Float2 second) => !first.Equals(second);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => x == other.x && y == other.y;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool Equals(Float2 other)
 		{
 			double dx = x - other.x;
 			double dy = y - other.y;

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using CodeHelpers.Vectors;
 using UnityEngine;
 
-namespace CodeHelpers.Unity
+namespace CodeHelpers.Unity.Vectors
 {
 	public static class VectorHelper
 	{

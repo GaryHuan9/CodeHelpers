@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Vectors
 {
-	[Serializable]
 	public readonly struct Int2 : IEquatable<Int2>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -641,7 +640,7 @@ namespace CodeHelpers.Vectors
 			{
 				internal LoopEnumerator(Int2 size, bool zeroAsOne)
 				{
-					direction = size.Absoluted;
+					direction = size.Signed;
 					size = size.Absoluted;
 
 					sizeY = zeroAsOne && size.y == 0 ? 1 : size.y;
