@@ -355,6 +355,8 @@ namespace CodeHelpers.Vectors
 			velocity = new Float2(velocityX, velocityY);
 			return result;
 		}
+		
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Reflect(Float2 normal) => -2f * Dot(normal) * normal + this;
 
 #endregion
 
@@ -388,6 +390,8 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Reflect(Float2 value, Float2 normal) => value.Reflect(normal);
 
 #endregion
 

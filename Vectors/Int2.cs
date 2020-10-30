@@ -337,6 +337,8 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Damp(Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime) => Float2.Damp(this, target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Damp(Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => Float2.Damp(this, target, ref velocity, smoothTime, deltaTime);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Reflect(Int2 normal) => -2 * Dot(normal) * normal + this;
+
 #endregion
 
 #region Static
@@ -382,8 +384,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Int2 value, float degree) => value.Rotate(degree);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Int2 value, float degree, Float2 pivot) => value.Rotate(degree, pivot);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Damp(Int2 current, Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime) => Float2.Damp(current, target, ref velocity, smoothTime, deltaTime);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Damp(Int2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => Float2.Damp(current, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Int2 current, Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime) => Float2.Damp(current, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Int2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => Float2.Damp(current, target, ref velocity, smoothTime, deltaTime);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Reflect(Int2 value, Int2 normal) => value.Reflect(normal);
 
 #endregion
 

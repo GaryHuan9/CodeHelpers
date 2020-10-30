@@ -406,6 +406,8 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => Float3.Damp(this, target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(this, target, ref velocity, smoothTime, deltaTime);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Reflect(Int3 normal) => -2 * Dot(normal) * normal + this;
+		
 #endregion
 
 #region Static
@@ -462,9 +464,11 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Int3 value, float degree, Float2 pivot) => value.RotateYZ(degree, pivot);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Int3 value, float degree, Float3 pivot) => value.RotateYZ(degree, pivot);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static  Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Reflect(Int3 value, Int3 normal) => value.Reflect(normal);
+		
 #endregion
 
 #region Create

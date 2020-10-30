@@ -414,6 +414,9 @@ namespace CodeHelpers.Vectors
 			return result;
 		}
 
+		//Although this looks heavy, compared to unpacked. After the compiler's release mode optimizations there is basically no difference.
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Reflect(Float3 normal) => -2f * Dot(normal) * normal + this;
+
 #endregion
 
 #region Static
@@ -457,6 +460,8 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Reflect(Float3 value, Float3 normal) => value.Reflect(normal);
 
 #endregion
 
