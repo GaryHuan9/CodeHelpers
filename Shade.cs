@@ -5,16 +5,15 @@ namespace CodeHelpers
 {
 	public readonly struct Shade : IEquatable<Shade>
 	{
-		public Shade(byte r, byte g, byte b, byte a = byte.MaxValue) => data = r | (g << 8) | (b << 16) | (a << 24);
+		public Shade(byte r, byte g, byte b, byte a = byte.MaxValue) => data = (r << 0) | (g << 8) | (b << 16) | (a << 24);
 		public Shade(float r, float g, float b, float a = 1f) : this(ToInteger(r), ToInteger(g), ToInteger(b), ToInteger(a)) { }
 
 		/// <summary>
-		/// Raw data, stores in chunks of 8:
-		/// AAAA AAAA BBBB BBBB GGGG GGGG RRRR RRRR
+		/// Raw data, stores in chunks of 8: AABBGGRR
 		/// </summary>
 		readonly int data;
 
-		public byte R => (byte)(data & 0xFF);
+		public byte R => (byte)((data >> 0) & 0xFF);
 		public byte G => (byte)((data >> 8) & 0xFF);
 		public byte B => (byte)((data >> 16) & 0xFF);
 		public byte A => (byte)((data >> 24) & 0xFF);
@@ -40,6 +39,9 @@ namespace CodeHelpers
 
 		public static explicit operator Shade(Float3 value) => new Shade(value.x, value.y, value.z);
 		public static explicit operator Shade(Int3 value) => new Shade(value.x, value.y, value.z);
+
+		public static explicit operator Float3(Shade value) => new Float3(value.RFloat, value.GFloat, value.BFloat);
+		public static explicit operator Int3(Shade value) => new Int3(value.R, value.G, value.B);
 
 		public static bool operator ==(Shade first, Shade second) => first.Equals(second);
 		public static bool operator !=(Shade first, Shade second) => !first.Equals(second);
