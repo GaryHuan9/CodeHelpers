@@ -7,6 +7,9 @@ namespace CodeHelpers.Vectors
 	public static class Scalars
 	{
 		public const float Epsilon = 0.00001f;
+		public const float PI = (float)Math.PI;
+		public const float E = (float)Math.E;
+		public const float TAU = (float)(Math.PI * 2d);
 
 		public const double RadianToDegreeDouble = 180d / Math.PI;
 		public const double DegreeToRadianDouble = Math.PI / 180d;

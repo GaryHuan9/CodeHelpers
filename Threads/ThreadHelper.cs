@@ -10,14 +10,14 @@ namespace CodeHelpers.Threads
 		public static Thread MainThread
 		{
 			get => _mainThread ?? throw ExceptionHelper.Invalid(nameof(MainThread), null, InvalidType.semiReadonlyNoData);
-			internal set
+			set
 			{
 				if (_mainThread == null) _mainThread = value;
 				else throw ExceptionHelper.Invalid(nameof(MainThread), MainThread, InvalidType.semiReadonlyAssignment);
 			}
 		}
 
-		public static bool IsOnMainThread => MainThread == null || Thread.CurrentThread == MainThread;
+		public static bool IsOnMainThread => Thread.CurrentThread == MainThread;
 
 		/// <summary>This returns a new thread that will make sure to print out exceptions.</summary>
 		public static Thread NewThread(Action action, bool throwThreadAbortException = false, Action abortAction = null)
