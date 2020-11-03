@@ -28,12 +28,7 @@ namespace CodeHelpers
 			set
 			{
 				ExceptionHelper.InvalidIfNotMainThread();
-				int[] typeValues = (int[])Enum.GetValues(typeof(SeedType));
-
-				for (int i = 0; i < typeValues.Length; i++)
-				{
-					SetSeed((SeedType)typeValues[i], value);
-				}
+				foreach (SeedType type in EnumHelper<SeedType>.enumValues) SetSeed(type, value);
 			}
 		}
 
@@ -47,24 +42,24 @@ namespace CodeHelpers
 
 		public static void SetSeed(SeedType type, int seed)
 		{
-			if (!seeds.ContainsKey(type) || seed != GetSeed(type))
+			if (seeds.ContainsKey(type) && seed == GetSeed(type)) return;
+
+			seeds[type] = seed;
+
+			switch (type)
 			{
-				seeds[type] = seed;
+				case SeedType.noise:
 
-				switch (type)
-				{
-					case SeedType.noise:
+					NoiseController.NoiseSeed = seed;
+					break;
 
-						NoiseController.NoiseSeed = seed;
-						break;
+				case SeedType.threaded:
 
-					case SeedType.threaded:
+					Interlocked.Exchange(ref currentThreadedSeed, seed);
+					int threadSeed = Interlocked.Increment(ref currentThreadedSeed);
 
-						Interlocked.Exchange(ref currentThreadedSeed, seed);
-						threadRandom = new ThreadLocal<Random>(() => new Random(Interlocked.Increment(ref currentThreadedSeed)));
-
-						break;
-				}
+					threadRandom = new ThreadLocal<Random>(() => new Random(threadSeed));
+					break;
 			}
 		}
 
