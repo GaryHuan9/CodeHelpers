@@ -309,6 +309,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 FlooredDivide(Int2 divisor) => new Int2(x.FlooredDivide(divisor.x), y.FlooredDivide(divisor.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 FlooredDivide(int divisor) => new Int2(x.FlooredDivide(divisor), y.FlooredDivide(divisor));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 CeiledDivide(Int2 divisor) => new Int2(x.CeiledDivide(divisor.x), y.CeiledDivide(divisor.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 CeiledDivide(int divisor) => new Int2(x.CeiledDivide(divisor), y.CeiledDivide(divisor));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float2 Rotate(float degree)
 		{
@@ -380,6 +383,9 @@ namespace CodeHelpers.Vectors
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 FlooredDivide(Int2 value, Int2 divisor) => value.FlooredDivide(divisor);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 FlooredDivide(Int2 value, int divisor) => value.FlooredDivide(divisor);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 CeiledDivide(Int2 value, Int2 divisor) => value.CeiledDivide(divisor);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 CeiledDivide(Int2 value, int divisor) => value.CeiledDivide(divisor);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Int2 value, float degree) => value.Rotate(degree);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Int2 value, float degree, Float2 pivot) => value.Rotate(degree, pivot);

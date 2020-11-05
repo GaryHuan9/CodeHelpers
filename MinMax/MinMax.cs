@@ -49,7 +49,9 @@ namespace CodeHelpers
 
 		public float Clamp(float value) => value.Clamp(min, max);
 		public float Repeat(float value) => (value - min).Repeat(max - min) + min;
+
 		public bool Contains(float value) => min <= value && value <= max;
+		public bool Contains(MinMax value) => min <= value.min && value.max <= max;
 
 		public float Lerp(float value) => Scalars.Lerp(min, max, value);
 		public float InverseLerp(float value) => Scalars.InverseLerp(min, max, value);

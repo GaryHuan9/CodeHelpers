@@ -391,6 +391,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 FlooredDivide(Int3 divisor) => new Int3(x.FlooredDivide(divisor.x), y.FlooredDivide(divisor.y), z.FlooredDivide(divisor.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 FlooredDivide(int divisor) => new Int3(x.FlooredDivide(divisor), y.FlooredDivide(divisor), z.FlooredDivide(divisor));
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 CeiledDivide(Int3 divisor) => new Int3(x.CeiledDivide(divisor.x), y.CeiledDivide(divisor.y), z.CeiledDivide(divisor.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 CeiledDivide(int divisor) => new Int3(x.CeiledDivide(divisor), y.CeiledDivide(divisor), z.CeiledDivide(divisor));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree) => Float3.CreateXY(XY.Rotate(degree), z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float2 pivot) => Float3.CreateXY(XY.Rotate(degree, pivot), z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float3 pivot) => Float3.CreateXY(XY.Rotate(degree, pivot.XY), z);
@@ -407,7 +410,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(this, target, ref velocity, smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Reflect(Int3 normal) => -2 * Dot(normal) * normal + this;
-		
+
 #endregion
 
 #region Static
@@ -452,6 +455,9 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 FlooredDivide(Int3 value, Int3 divisor) => value.FlooredDivide(divisor);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 FlooredDivide(Int3 value, int divisor) => value.FlooredDivide(divisor);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 CeiledDivide(Int3 value, Int3 divisor) => value.CeiledDivide(divisor);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 CeiledDivide(Int3 value, int divisor) => value.CeiledDivide(divisor);
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Int3 value, float degree) => value.RotateXY(degree);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Int3 value, float degree, Float2 pivot) => value.RotateXY(degree, pivot);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Int3 value, float degree, Float3 pivot) => value.RotateXY(degree, pivot);
@@ -465,10 +471,10 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Int3 value, float degree, Float3 pivot) => value.RotateYZ(degree, pivot);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static  Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Int3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Float3.Damp(current, target, ref velocity, smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Reflect(Int3 value, Int3 normal) => value.Reflect(normal);
-		
+
 #endregion
 
 #region Create
