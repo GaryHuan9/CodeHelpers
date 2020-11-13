@@ -131,15 +131,22 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Inserts an item at <paramref name="index"/>; pushes everything back by one.
+		/// Inserts <paramref name="item"/> at <paramref name="index"/>; pushes everything back by one.
 		/// NOTE: The last item in the array will get removed/replaced!
 		/// </summary>
-		public static void Insert<T>(this T[] array, int index, T item)
+		public static void Insert<T>(this T[] array, int index, T item) => array.Shift(index, 1, item);
+
+		/// <summary>
+		/// Shifts everything at and behind <paramref name="index"/> back by <paramref name="space"/>.
+		/// <paramref name="item"/> will be used to fill in the gap in the middle.
+		/// NOTE: items that will be moved out of the range of <paramref name="array"/> will be dereferenced!
+		/// </summary>
+		public static void Shift<T>(this T[] array, int index, int space, T item = default)
 		{
 			if (!array.IsIndexValid(index)) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 
-			for (int i = array.Length - 1; i > index; i--) array[i] = array[i - 1];
-			array[index] = item;
+			for (int i = array.Length - 1; i > index + space; i--) array[i] = array[i - space];
+			for (int i = 0; i < space; i++) array[i + index] = item;
 		}
 
 		public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
