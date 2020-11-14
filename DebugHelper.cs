@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +31,9 @@ namespace CodeHelpers
 			var array = target.Select(item => ToString(item)).ToArray();
 			return $"{target.GetType()} + Count: {array.Length} [{string.Join(", ", array)}]";
 		}
+
+		public static string ToString<T>(ReadOnlySpan<T> span) => ToString(span.ToArray());
+		public static string ToString<T>(Span<T> span) => ToString(span.ToArray());
 
 		/// <summary>
 		/// Does <paramref name="target"/> has a custom to string method?
