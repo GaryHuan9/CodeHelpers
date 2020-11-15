@@ -6,9 +6,11 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace CodeHelpers.Vectors
 {
+	[StructLayout(LayoutKind.Sequential)]
 	public readonly struct Int2 : IEquatable<Int2>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -119,7 +121,7 @@ namespace CodeHelpers.Vectors
 
 #endregion
 
-#region Simple Properties
+#region Instance Properties
 
 #region Scaler Returns
 
@@ -519,50 +521,50 @@ namespace CodeHelpers.Vectors
 
 #region Operators
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator +(in Int2 first, in Int2 second) => new Int2(first.x + second.x, first.y + second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(in Int2 first, in Int2 second) => new Int2(first.x - second.x, first.y - second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator +(Int2 first, Int2 second) => new Int2(first.x + second.x, first.y + second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(Int2 first, Int2 second) => new Int2(first.x - second.x, first.y - second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(in Int2 first, in Float2 second) => new Float2(first.x + second.x, first.y + second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Int2 first, in Float2 second) => new Float2(first.x - second.x, first.y - second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(Int2 first, Float2 second) => new Float2(first.x + second.x, first.y + second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(Int2 first, Float2 second) => new Float2(first.x - second.x, first.y - second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(in Float2 first, in Int2 second) => new Float2(first.x + second.x, first.y + second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(in Float2 first, in Int2 second) => new Float2(first.x - second.x, first.y - second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(Float2 first, Int2 second) => new Float2(first.x + second.x, first.y + second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(Float2 first, Int2 second) => new Float2(first.x - second.x, first.y - second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(in Int2 first, in Int2 second) => new Int2(first.x * second.x, first.y * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(in Int2 first, in Int2 second) => new Int2(first.x / second.x, first.y / second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(Int2 first, Int2 second) => new Int2(first.x * second.x, first.y * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(Int2 first, Int2 second) => new Int2(first.x / second.x, first.y / second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Int2 first, in Float2 second) => new Float2(first.x * second.x, first.y * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Int2 first, in Float2 second) => new Float2(first.x / second.x, first.y / second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(Int2 first, Float2 second) => new Float2(first.x * second.x, first.y * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(Int2 first, Float2 second) => new Float2(first.x / second.x, first.y / second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Float2 first, in Int2 second) => new Float2(first.x * second.x, first.y * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Float2 first, in Int2 second) => new Float2(first.x / second.x, first.y / second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(Float2 first, Int2 second) => new Float2(first.x * second.x, first.y * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(Float2 first, Int2 second) => new Float2(first.x / second.x, first.y / second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(in Int2 first, int second) => new Int2(first.x * second, first.y * second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(in Int2 first, int second) => new Int2(first.x / second, first.y / second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(Int2 first, int second) => new Int2(first.x * second, first.y * second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(Int2 first, int second) => new Int2(first.x / second, first.y / second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(in Int2 first, float second) => new Float2(first.x * second, first.y * second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(in Int2 first, float second) => new Float2(first.x / second, first.y / second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(Int2 first, float second) => new Float2(first.x * second, first.y * second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(Int2 first, float second) => new Float2(first.x / second, first.y / second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(int first, in Int2 second) => new Int2(first * second.x, first * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(int first, in Int2 second) => new Int2(first / second.x, first / second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(int first, Int2 second) => new Int2(first * second.x, first * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(int first, Int2 second) => new Int2(first / second.x, first / second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float first, in Int2 second) => new Float2(first * second.x, first * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float first, in Int2 second) => new Float2(first / second.x, first / second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float first, Int2 second) => new Float2(first * second.x, first * second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float first, Int2 second) => new Float2(first / second.x, first / second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(in Int2 value) => new Int2(-value.x, -value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(Int2 value) => new Int2(-value.x, -value.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(in Int2 first, in Int2 second) => new Int2(first.x % second.x, first.y % second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Int2 first, in Float2 second) => new Float2(first.x % second.x, first.y % second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Float2 first, in Int2 second) => new Float2(first.x % second.x, first.y % second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(Int2 first, Int2 second) => new Int2(first.x % second.x, first.y % second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(Int2 first, Float2 second) => new Float2(first.x % second.x, first.y % second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(Float2 first, Int2 second) => new Float2(first.x % second.x, first.y % second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(in Int2 first, int second) => new Int2(first.x % second, first.y % second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(int first, in Int2 second) => new Int2(first % second.x, first % second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(Int2 first, int second) => new Int2(first.x % second, first.y % second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(int first, Int2 second) => new Int2(first % second.x, first % second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(in Int2 first, float second) => new Float2(first.x % second, first.y % second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(float first, in Int2 second) => new Float2(first % second.x, first % second.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(Int2 first, float second) => new Float2(first.x % second, first.y % second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(float first, Int2 second) => new Float2(first % second.x, first % second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Int2 first, in Int2 second) => first.Equals(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Int2 first, in Int2 second) => !first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Int2 first, Int2 second) => first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Int2 first, Int2 second) => !first.Equals(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int2 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => x == other.x && y == other.y;
