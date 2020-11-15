@@ -274,7 +274,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			f00 * point.x + f01 * point.y + f02 * point.z, f10 * point.x + f11 * point.y + f12 * point.z, f20 * point.x + f21 * point.y + f22 * point.z
 		);
 
-		public static Float4x4 Translation(Float3 position) => new Float4x4
+		public static Float4x4 Position(Float3 position) => new Float4x4
 		(
 			1f, 0f, 0f, position.x,
 			0f, 1f, 0f, position.y,
@@ -330,7 +330,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			return y * x * z; //Matrix multiplication order is reversed
 		}
 
-		public static Float4x4 Scaling(Float3 scale) => new Float4x4
+		public static Float4x4 Scale(Float3 scale) => new Float4x4
 		(
 			scale.x, 0f, 0f, 0f,
 			0f, scale.y, 0f, 0f,
@@ -341,7 +341,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 		/// <summary>
 		/// Returns a combined transformation matrix. Scaling is applied first, then rotation, finally translation.
 		/// </summary>
-		public static Float4x4 Transformation(Float3 position, Float3 rotation, Float3 scale) => Translation(position) * Rotation(rotation) * Scaling(scale);
+		public static Float4x4 Transformation(Float3 position, Float3 rotation, Float3 scale) => Position(position) * Rotation(rotation) * Scale(scale);
 
 #region Operators
 
