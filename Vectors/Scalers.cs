@@ -17,6 +17,15 @@ namespace CodeHelpers.Vectors
 		public const float RadianToDegree = (float)RadianToDegreeDouble;
 		public const float DegreeToRadian = (float)DegreeToRadianDouble;
 
+		public const float Sqrt2 = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621f;
+		public const double Sqrt2Double = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621d;
+
+		public const float Sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088f;
+		public const double Sqrt3Double = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088d;
+
+		public const float GoldenRatio = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
+		public const double GoldenRatioDouble = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890d;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Lerp(float left, float right, float value) => (right - left) * value + left;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Lerp(int left, int right, int value) => (right - left) * value + left;
 
@@ -26,6 +35,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this float value, float min, float max) => value < min ? min : value > max ? max : value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this int value, float min, float max) => value < min ? min : value > max ? max : value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Clamp(this int value, int min, int max) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double Clamp(this double value, double min, double max) => value < min ? min : value > max ? max : value;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.

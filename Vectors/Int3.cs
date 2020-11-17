@@ -201,6 +201,16 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)x + y + z;
 		}
 
+		public float Average
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)AverageDouble;
+		}
+
+		public double AverageDouble
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => ((double)x + y + z) / 3d;
+		}
+
 		public int MinComponent
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
