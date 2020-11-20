@@ -212,7 +212,7 @@ namespace CodeHelpers.Vectors
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
 #if UNSAFE_CODE_ENABLED
-				unsafe
+				unsafe //This unsafe version can be 3.75 times faster (700ms vs 200ms) compiled in release mode when the if statement is omitted
 				{
 					if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 					fixed (Float3* pointer = &this) return ((float*)pointer)[index];
