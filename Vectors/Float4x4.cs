@@ -354,6 +354,15 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			l.f30 * r.f00 + l.f31 * r.f10 + l.f32 * r.f20 + l.f33 * r.f30, l.f30 * r.f01 + l.f31 * r.f11 + l.f32 * r.f21 + l.f33 * r.f31, l.f30 * r.f02 + l.f31 * r.f12 + l.f32 * r.f22 + l.f33 * r.f32, l.f30 * r.f03 + l.f31 * r.f13 + l.f32 * r.f23 + l.f33 * r.f33
 		);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Float4 operator *(in Float4x4 first, Float4 second) => new Float4
+		(
+			first.f00 * second.x + first.f01 * second.y + first.f02 * second.z + first.f03 * second.w,
+			first.f10 * second.x + first.f11 * second.y + first.f12 * second.z + first.f13 * second.w,
+			first.f20 * second.x + first.f21 * second.y + first.f22 * second.z + first.f23 * second.w,
+			first.f30 * second.x + first.f31 * second.y + first.f32 * second.z + first.f33 * second.w
+		);
+
 		public static bool operator ==(in Float4x4 first, in Float4x4 second) => first.Equals(second);
 		public static bool operator !=(in Float4x4 first, in Float4x4 second) => !first.Equals(second);
 
