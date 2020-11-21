@@ -80,11 +80,11 @@ namespace ForceRenderer.CodeHelpers.Vectors
 					fixed (Float4x4* pointer = &this) return ((float*)pointer)[row * 4 + column];
 				}
 #else
-				switch (x)
+				switch (row)
 				{
 					case 0:
 					{
-						switch (y)
+						switch (column)
 						{
 							case 0: return f00;
 							case 1: return f01;
@@ -96,7 +96,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 					}
 					case 1:
 					{
-						switch (y)
+						switch (column)
 						{
 							case 0: return f10;
 							case 1: return f11;
@@ -108,7 +108,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 					}
 					case 2:
 					{
-						switch (y)
+						switch (column)
 						{
 							case 0: return f20;
 							case 1: return f21;
@@ -120,7 +120,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 					}
 					case 3:
 					{
-						switch (y)
+						switch (column)
 						{
 							case 0: return f30;
 							case 1: return f31;
