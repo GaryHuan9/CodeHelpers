@@ -32,8 +32,10 @@ namespace CodeHelpers
 			return $"{target.GetType()} + Count: {array.Length} [{string.Join(", ", array)}]";
 		}
 
+#if !CODEHELPERS_UNITY
 		public static string ToString<T>(ReadOnlySpan<T> span) => ToString(span.ToArray());
 		public static string ToString<T>(Span<T> span) => ToString(span.ToArray());
+#endif
 
 		/// <summary>
 		/// Does <paramref name="target"/> has a custom to string method?

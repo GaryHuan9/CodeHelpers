@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using CodeHelpers.Vectors;
 
 namespace CodeHelpers
 {
+	[StructLayout(LayoutKind.Sequential)]
 	public readonly struct Color64 : IEquatable<Color64>
 	{
 		public Color64(ushort r, ushort g, ushort b, ushort a = ushort.MaxValue)
@@ -60,13 +63,36 @@ namespace CodeHelpers
 		public static explicit operator Float3(Color64 value) => new Float3(value.RFloat, value.GFloat, value.BFloat);
 		public static explicit operator Int3(Color64 value) => new Int3(value.r, value.g, value.b);
 
+		public static explicit operator Float4(Color64 value) => new Float4(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
+		public static explicit operator Color32(Color64 value) => new Color32(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
+
+#if CODEHELPERS_UNITY
+		public static explicit operator UnityEngine.Color32(Color64 value) => new Color32(value.RFloat, value.GFloat, value.BFloat, value.AFloat); //There is an implicit cast here
+		public static implicit operator UnityEngine.Color(Color64 value) => new UnityEngine.Color(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
+
+		public static implicit operator Color64(UnityEngine.Color32 value) => (Color64)(Color32)value;
+		public static explicit operator Color64(UnityEngine.Color value) => new Color64(value.r, value.g, value.b, value.a);
+#endif
+
 		public static bool operator ==(Color64 first, Color64 second) => first.Equals(second);
 		public static bool operator !=(Color64 first, Color64 second) => !first.Equals(second);
 
 		public bool Equals(Color64 other) => r == other.r && g == other.g && b == other.b && a == other.a;
 		public override bool Equals(object obj) => obj is Color64 other && Equals(other);
 
-		public override int GetHashCode() => HashCode.Combine(r, g, b, a);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = r.GetHashCode();
+				hashCode = (hashCode * 397) ^ g.GetHashCode();
+				hashCode = (hashCode * 397) ^ b.GetHashCode();
+				hashCode = (hashCode * 397) ^ a.GetHashCode();
+				return hashCode;
+			}
+		}
+
 		public override string ToString() => $"{nameof(r)}: {r}, {nameof(g)}: {g}, {nameof(b)}: {b}, {nameof(a)}: {a}";
 	}
 }

@@ -381,35 +381,32 @@ namespace ForceRenderer.CodeHelpers.Vectors
 		public override bool Equals(object obj) => obj is Float4x4 other && EqualsFast(other);
 		public bool Equals(Float4x4 other) => EqualsFast(other);
 
-#endregion
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public override int GetHashCode()
 		{
-			var hashCode = new HashCode();
-
-			hashCode.Add(f00);
-			hashCode.Add(f01);
-			hashCode.Add(f02);
-			hashCode.Add(f03);
-
-			hashCode.Add(f10);
-			hashCode.Add(f11);
-			hashCode.Add(f12);
-			hashCode.Add(f13);
-
-			hashCode.Add(f20);
-			hashCode.Add(f21);
-			hashCode.Add(f22);
-			hashCode.Add(f23);
-
-			hashCode.Add(f30);
-			hashCode.Add(f31);
-			hashCode.Add(f32);
-			hashCode.Add(f33);
-
-			return hashCode.ToHashCode();
+			unchecked
+			{
+				int hashCode = f00.GetHashCode();
+				hashCode = (hashCode * 397) ^ f01.GetHashCode();
+				hashCode = (hashCode * 397) ^ f02.GetHashCode();
+				hashCode = (hashCode * 397) ^ f03.GetHashCode();
+				hashCode = (hashCode * 397) ^ f10.GetHashCode();
+				hashCode = (hashCode * 397) ^ f11.GetHashCode();
+				hashCode = (hashCode * 397) ^ f12.GetHashCode();
+				hashCode = (hashCode * 397) ^ f13.GetHashCode();
+				hashCode = (hashCode * 397) ^ f20.GetHashCode();
+				hashCode = (hashCode * 397) ^ f21.GetHashCode();
+				hashCode = (hashCode * 397) ^ f22.GetHashCode();
+				hashCode = (hashCode * 397) ^ f23.GetHashCode();
+				hashCode = (hashCode * 397) ^ f30.GetHashCode();
+				hashCode = (hashCode * 397) ^ f31.GetHashCode();
+				hashCode = (hashCode * 397) ^ f32.GetHashCode();
+				hashCode = (hashCode * 397) ^ f33.GetHashCode();
+				return hashCode;
+			}
 		}
+
+#endregion
 
 		public override string ToString() => ToString(string.Empty);
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);

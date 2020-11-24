@@ -933,7 +933,18 @@ namespace CodeHelpers.Vectors
 
 #endregion
 
-		public override int GetHashCode() => HashCode.Combine(x, y, z, w);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = x.GetHashCode();
+				hashCode = (hashCode * 397) ^ y.GetHashCode();
+				hashCode = (hashCode * 397) ^ z.GetHashCode();
+				hashCode = (hashCode * 397) ^ w.GetHashCode();
+				return hashCode;
+			}
+		}
 
 		public override string ToString() => $"({x}, {y}, {z}, {w})";
 

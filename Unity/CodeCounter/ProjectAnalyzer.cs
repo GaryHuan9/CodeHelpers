@@ -85,9 +85,9 @@ namespace CodeHelpers.CodeCounters
 
 		void DrawGraph(Rect target)
 		{
-			Color backgroundColor = new Color32(45, 45, 45, 255);
-			Color textColor = new Color32(185, 185, 185, 255);
-			Color highlightColor = new Color32(250, 20, 20, 255);
+			Color backgroundColor = new Color(45, 45, 45, 255);
+			Color textColor = new Color(185, 185, 185, 255);
+			Color highlightColor = new Color(250, 20, 20, 255);
 
 			EditorGUI.DrawRect(new Rect(target.position, Vector2.Scale(target.size, new Vector2(1f, -1f))), backgroundColor);
 
