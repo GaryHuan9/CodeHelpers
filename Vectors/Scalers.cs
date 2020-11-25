@@ -143,8 +143,6 @@ namespace CodeHelpers.Vectors
 		public static int CeiledDivide(this int value, int divisor) => (value - 1) / divisor + 1;
 		public static long CeiledDivide(this long value, long divisor) => (value - 1) / divisor + 1;
 
-		public static int CeilDivide(this int value, int divider) => (value - 1) / divider + 1;
-
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
 		public static int SingleToInt32Bits(float value)

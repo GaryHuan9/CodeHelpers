@@ -15,7 +15,9 @@ namespace CodeHelpers.ObjectPooling
 
 	public class StringBuilderPooler : PoolerBase<StringBuilder>
 	{
-		protected override int MaxPoolSize => 4;
+		public StringBuilderPooler(int maxPoolSize = 4) => MaxPoolSize = maxPoolSize;
+
+		protected override int MaxPoolSize { get; }
 
 		protected override StringBuilder GetNewObject() => new StringBuilder();
 		protected override void Reset(StringBuilder target) => target.Clear();
@@ -23,14 +25,15 @@ namespace CodeHelpers.ObjectPooling
 
 	public class StopwatchPooler : PoolerBase<Stopwatch>
 	{
-		protected override int MaxPoolSize => 4;
+		public StopwatchPooler(int maxPoolSize = 4) => MaxPoolSize = maxPoolSize;
+
+		protected override int MaxPoolSize { get; }
 
 		protected override Stopwatch GetNewObject() => new Stopwatch();
 		protected override void Reset(Stopwatch target) => target.Reset();
 	}
 
 #if CODEHELPERS_UNITY
-
 	public class MeshPooler : PoolerBase<UnityEngine.Mesh>
 	{
 		protected override int MaxPoolSize => 6;

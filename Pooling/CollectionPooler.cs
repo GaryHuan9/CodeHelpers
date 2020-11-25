@@ -18,7 +18,9 @@ namespace CodeHelpers.ObjectPooling
 
 	public class CollectionPoolerBase<T, TObject> : PoolerBase<T> where T : class, ICollection<TObject>, new()
 	{
-		protected override int MaxPoolSize => 6;
+		public CollectionPoolerBase(int maxPoolSize = 6) => MaxPoolSize = maxPoolSize;
+
+		protected override int MaxPoolSize { get; }
 
 		protected override T GetNewObject() => new T();
 		protected override void Reset(T target) => target.Clear();
@@ -26,7 +28,9 @@ namespace CodeHelpers.ObjectPooling
 
 	public class QueuePoolerBase<T, TObject> : PoolerBase<T> where T : Queue<TObject>, new()
 	{
-		protected override int MaxPoolSize => 6;
+		public QueuePoolerBase(int maxPoolSize = 6) => MaxPoolSize = maxPoolSize;
+
+		protected override int MaxPoolSize { get; }
 
 		protected override T GetNewObject() => new T();
 		protected override void Reset(T target) => target.Clear();
@@ -34,7 +38,9 @@ namespace CodeHelpers.ObjectPooling
 
 	public class StackPoolerBase<T, TObject> : PoolerBase<T> where T : Stack<TObject>, new()
 	{
-		protected override int MaxPoolSize => 6;
+		public StackPoolerBase(int maxPoolSize = 6) => MaxPoolSize = maxPoolSize;
+
+		protected override int MaxPoolSize { get; }
 
 		protected override T GetNewObject() => new T();
 		protected override void Reset(T target) => target.Clear();
