@@ -127,7 +127,7 @@ namespace CodeHelpers.Unity.Debugs
 			for (int i = 0; i < length; i++)
 			{
 				builder.Append(DebugHelper.ToString(buffer[i]));
-				builder.Append("; ");
+				if (i + 1 != length) builder.Append("; ");
 			}
 
 			logActions[buffer.logType](builder.ToString());
