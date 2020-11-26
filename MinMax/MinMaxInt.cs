@@ -92,7 +92,7 @@ namespace CodeHelpers
 		public MinMaxInt ToSignedAngles() => new MinMaxInt(min.ToSignedAngle(), max.ToSignedAngle());
 		public MinMaxInt ToUnsignedAngles() => new MinMaxInt(min.ToUnsignedAngle(), max.ToUnsignedAngle());
 
-		public LoopEnumerator Loop() => new LoopEnumerator(this);
+		public LoopEnumerable Loop() => new LoopEnumerable(this);
 
 		public void Deconstruct(out int min, out int max)
 		{
@@ -136,28 +136,35 @@ namespace CodeHelpers
 			}
 		}
 
-		public struct LoopEnumerator : IEnumerator<int>
+		public readonly struct LoopEnumerable : IEnumerable<int>
 		{
-			public LoopEnumerator(MinMaxInt minMax)
+			public LoopEnumerable(MinMaxInt minMax) => enumerator = new Enumerator(minMax);
+
+			readonly Enumerator enumerator;
+			public Enumerator GetEnumerator() => enumerator;
+
+			IEnumerator<int> IEnumerable<int>.GetEnumerator() => enumerator;
+			IEnumerator IEnumerable.GetEnumerator() => enumerator;
+
+			public struct Enumerator : IEnumerator<int>
 			{
-				this.minMax = minMax;
-				Current = minMax.min - 1;
+				public Enumerator(MinMaxInt minMax)
+				{
+					this.minMax = minMax;
+					Current = minMax.min - 1;
+				}
+
+				readonly MinMaxInt minMax;
+
+				object IEnumerator.Current => Current;
+				public int Current { get; private set; }
+
+				public bool MoveNext() => Current++ < minMax.max;
+
+				public void Reset() => Current = minMax.min - 1;
+
+				public void Dispose() { }
 			}
-
-			readonly MinMaxInt minMax;
-
-			object IEnumerator.Current => Current;
-			public int Current { get; private set; }
-
-			public bool MoveNext()
-			{
-				Current++;
-				return Current >= minMax.max;
-			}
-
-			public void Reset() => Current = minMax.min - 1;
-
-			public void Dispose() { }
 		}
 	}
 }
