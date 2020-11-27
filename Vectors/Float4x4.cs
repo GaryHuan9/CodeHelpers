@@ -343,6 +343,21 @@ namespace ForceRenderer.CodeHelpers.Vectors
 		/// </summary>
 		public static Float4x4 Transformation(Float3 position, Float3 rotation, Float3 scale) => Position(position) * Rotation(rotation) * Scale(scale);
 
+		/// <summary>
+		/// Creates a rotation matrix out of a quaternion.
+		/// </summary>
+		public static Float4x4 Rotation(Float4 quaternion)
+		{
+			Float4 q = quaternion.Normalized;
+			return new Float4x4
+			(
+				1f - 2f * q.y * q.y - 2f * q.z * q.z, 2f * q.x * q.y - 2f * q.z * q.w, 2f * q.x * q.z + 2f * q.y * q.w, 0f,
+				2f * q.x * q.y + 2f * q.z * q.w, 1f - 2f * q.x * q.x - 2f * q.z * q.z, 2f * q.y * q.z - 2f * q.x * q.w, 0f,
+				2f * q.x * q.z - 2f * q.y * q.w, 2f * q.y * q.z + 2f * q.x * q.w, 1f - 2f * q.x * q.x - 2f * q.y * q.y, 0f,
+				0f, 0f, 0f, 1f
+			);
+		}
+
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
