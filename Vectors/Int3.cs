@@ -758,7 +758,7 @@ namespace CodeHelpers.Vectors
 					direction = size.Signed;
 					size = size.Absoluted;
 
-					this.size = zeroAsOne ? Max(one, size) : size;
+					this.size = zeroAsOne ? one.Max(size) : size;
 					product = size.Product;
 
 					current = -1;

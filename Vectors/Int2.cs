@@ -665,7 +665,9 @@ namespace CodeHelpers.Vectors
 					direction = size.Signed;
 					size = size.Absoluted;
 
-					sizeY = zeroAsOne && size.y == 0 ? 1 : size.y;
+					if (zeroAsOne) size = size.Max(one);
+
+					sizeY = size.y;
 					product = size.Product;
 
 					current = -1;
