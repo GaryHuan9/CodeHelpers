@@ -44,6 +44,14 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			source.f30, source.f31, source.f32, source.f33
 		) { }
 
+		public Float4x4(Float4 row0, Float4 row1, Float4 row2, Float4 row3) : this
+		(
+			row0.x, row0.y, row0.z, row0.w,
+			row1.x, row1.y, row1.z, row1.w,
+			row2.x, row2.y, row2.z, row2.w,
+			row3.x, row3.y, row3.z, row3.w
+		) { }
+
 		// 00 01 02 03
 		// 10 11 12 13
 		// 20 21 22 23
@@ -137,8 +145,58 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			}
 		}
 
+		public Float4 GetRow(int row)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (row < 0 || 3 < row) throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
+				fixed (Float4x4* pointer = &this) return ((Float4*)pointer)[row];
+			}
+#else
+			switch (row)
+			{
+				case 0: return new Float4(f00, f01, f02, f03);
+				case 1: return new Float4(f10, f11, f12, f13);
+				case 2: return new Float4(f20, f21, f22, f23);
+				case 3: return new Float4(f30, f31, f32, f33);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
+#endif
+		}
+
+		public Float4 GetColumn(int column)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (column < 0 || 3 < column) throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
+
+				fixed (Float4x4* pointer = &this)
+				{
+					float* p = (float*)pointer;
+					return new Float4(p[column], p[column + 4], p[column + 8], p[column + 12]);
+				}
+			}
+#else
+			switch (column)
+			{
+				case 0: return new Float4(f00, f10, f20, f30);
+				case 1: return new Float4(f01, f11, f21, f31);
+				case 2: return new Float4(f02, f12, f22, f32);
+				case 3: return new Float4(f03, f13, f23, f33);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
+#endif
+		}
+
 #region Static Properties
 
+		/// <summary>
+		/// The idempotent <see cref="Float4x4"/> value.
+		/// </summary>
 		public static readonly Float4x4 identity = new Float4x4
 		(
 			1f, 0f, 0f, 0f,
@@ -291,43 +349,22 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			float radX = rotation.x * Scalars.DegreeToRadian;
 			float radY = rotation.y * Scalars.DegreeToRadian;
 
-			float sinZ = (float)Math.Sin(radZ);
-			float cosZ = (float)Math.Cos(radZ);
+			float sinZ = MathF.Sin(radZ);
+			float cosZ = MathF.Cos(radZ);
 
-			float sinX = (float)Math.Sin(radX);
-			float cosX = (float)Math.Cos(radX);
+			float sinX = MathF.Sin(radX);
+			float cosX = MathF.Cos(radX);
 
-			float sinY = (float)Math.Sin(radY);
-			float cosY = (float)Math.Cos(radY);
+			float sinY = MathF.Sin(radY);
+			float cosY = MathF.Cos(radY);
 
-			//NOTE: Currently rotation is implemented with 3 separate matrices then multiplying them together
-			//We can improve the performance by directly merging all 3, but I really do not want to do that right now!
-
-			Float4x4 z = new Float4x4
+			return new Float4x4 //Multiplied with order yxz because matrix multiplication order is reversed
 			(
-				cosZ, -sinZ, 0f, 0f,
-				sinZ, cosZ, 0f, 0f,
-				0f, 0f, 1f, 0f,
+				cosY * cosZ + sinY * sinX * sinZ, cosY * -sinZ + sinY * sinX * cosZ, sinY * cosX, 0f,
+				cosX * sinZ, cosX * cosZ, -sinX, 0f,
+				-sinY * cosZ + cosY * sinX * sinZ, sinY * sinZ + cosY * sinX * cosZ, cosY * cosX, 0f,
 				0f, 0f, 0f, 1f
 			);
-
-			Float4x4 x = new Float4x4
-			(
-				1f, 0f, 0f, 0f,
-				0f, cosX, -sinX, 0f,
-				0f, sinX, cosX, 0f,
-				0f, 0f, 0f, 1f
-			);
-
-			Float4x4 y = new Float4x4
-			(
-				cosY, 0f, sinY, 0f,
-				0f, 1f, 0f, 0f,
-				-sinY, 0f, cosY, 0f,
-				0f, 0f, 0f, 1f
-			);
-
-			return y * x * z; //Matrix multiplication order is reversed
 		}
 
 		public static Float4x4 Scale(Float3 scale) => new Float4x4
@@ -349,14 +386,38 @@ namespace ForceRenderer.CodeHelpers.Vectors
 		public static Float4x4 Rotation(Float4 quaternion)
 		{
 			Float4 q = quaternion.Normalized;
+
+			float xx = q.x * q.x * 2f;
+			float xy = q.x * q.y * 2f;
+			float xz = q.x * q.z * 2f;
+			float xw = q.x * q.w * 2f;
+
+			float yy = q.y * q.y * 2f;
+			float yz = q.y * q.z * 2f;
+			float yw = q.y * q.w * 2f;
+
+			float zz = q.z * q.z * 2f;
+			float zw = q.z * q.w * 2f;
+
 			return new Float4x4
 			(
-				1f - 2f * q.y * q.y - 2f * q.z * q.z, 2f * q.x * q.y - 2f * q.z * q.w, 2f * q.x * q.z + 2f * q.y * q.w, 0f,
-				2f * q.x * q.y + 2f * q.z * q.w, 1f - 2f * q.x * q.x - 2f * q.z * q.z, 2f * q.y * q.z - 2f * q.x * q.w, 0f,
-				2f * q.x * q.z - 2f * q.y * q.w, 2f * q.y * q.z + 2f * q.x * q.w, 1f - 2f * q.x * q.x - 2f * q.y * q.y, 0f,
+				1f - yy - zz, xy - zw, xz + yw, 0f,
+				xy + zw, 1f - xx - zz, yz - xw, 0f,
+				xz - yw, yz + xw, 1f - xx - yy, 0f,
 				0f, 0f, 0f, 1f
 			);
 		}
+
+		/// <summary>
+		/// Returns random matrix for debug purposes; will be removed.
+		/// </summary>
+		public static Float4x4 GetRandom() => new Float4x4
+		(
+			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f),
+			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f),
+			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f),
+			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f)
+		);
 
 #region Operators
 
@@ -378,8 +439,8 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			first.f30 * second.x + first.f31 * second.y + first.f32 * second.z + first.f33 * second.w
 		);
 
-		public static bool operator ==(in Float4x4 first, in Float4x4 second) => first.Equals(second);
-		public static bool operator !=(in Float4x4 first, in Float4x4 second) => !first.Equals(second);
+		public static bool operator ==(in Float4x4 first, in Float4x4 second) => first.EqualsFast(second); //These in parameter modifiers do not actually work with operators
+		public static bool operator !=(in Float4x4 first, in Float4x4 second) => !first.EqualsFast(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool EqualsFast(in Float4x4 other) => Scalars.AlmostEquals(f00, other.f00) && Scalars.AlmostEquals(f01, other.f01) && Scalars.AlmostEquals(f02, other.f02) && Scalars.AlmostEquals(f03, other.f03) &&
