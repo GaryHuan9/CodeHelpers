@@ -1,7 +1,7 @@
 {
     "name": "CodeHelpersEditor",
     "references": [
-        "GUID:f03440f2b6fdd4438b802c070addb0f8"
+        "GUID:46b46dbae127cd448a15ad89b5c6e8b9"
     ],
     "includePlatforms": [
         "Editor"
@@ -12,5 +12,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }
