@@ -23,7 +23,7 @@ namespace CodeHelpers.Threads
 			}
 		}
 
-		public static double Add(ref double location, double value)
+		public static double Add(ref double location, double value) //NOTE: currently does not correctly handle NaNs
 		{
 			double newCurrentValue = location;
 
@@ -32,7 +32,7 @@ namespace CodeHelpers.Threads
 				double currentValue = newCurrentValue;  //The potential value if no other thread changed location
 				double newValue = currentValue + value; //The potential result after the addition if location is unchanged
 
-				newCurrentValue = Interlocked.CompareExchange(ref location, newValue, currentValue); //Only change location is it is unchanged
+				newCurrentValue = Interlocked.CompareExchange(ref location, newValue, currentValue); //Only change location if it is unchanged
 				if (newCurrentValue == currentValue) return newValue;                                //If exchange was successful, addition finished
 			}
 		}

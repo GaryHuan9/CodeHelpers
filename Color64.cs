@@ -53,6 +53,7 @@ namespace CodeHelpers
 		}
 
 		public static readonly Color64 black = new Color64(0, 0, 0);
+		public static readonly Color64 white = new Color64(ushort.MaxValue, ushort.MaxValue, ushort.MaxValue);
 
 		static float ToDecimal(ushort value) => (float)value / ushort.MaxValue;
 		static ushort ToInteger(float value) => (ushort)(value.Clamp(0f, 1f) * ushort.MaxValue);

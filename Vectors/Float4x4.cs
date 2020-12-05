@@ -345,18 +345,18 @@ namespace ForceRenderer.CodeHelpers.Vectors
 		/// </summary>
 		public static Float4x4 Rotation(Float3 rotation)
 		{
-			float radZ = rotation.z * Scalars.DegreeToRadian;
 			float radX = rotation.x * Scalars.DegreeToRadian;
 			float radY = rotation.y * Scalars.DegreeToRadian;
+			float radZ = rotation.z * Scalars.DegreeToRadian;
 
-			float sinZ = MathF.Sin(radZ);
-			float cosZ = MathF.Cos(radZ);
+			float sinX = (float)Math.Sin(radX);
+			float cosX = (float)Math.Cos(radX);
 
-			float sinX = MathF.Sin(radX);
-			float cosX = MathF.Cos(radX);
+			float sinY = (float)Math.Sin(radY);
+			float cosY = (float)Math.Cos(radY);
 
-			float sinY = MathF.Sin(radY);
-			float cosY = MathF.Cos(radY);
+			float sinZ = (float)Math.Sin(radZ);
+			float cosZ = (float)Math.Cos(radZ);
 
 			return new Float4x4 //Multiplied with order yxz because matrix multiplication order is reversed
 			(
@@ -439,7 +439,7 @@ namespace ForceRenderer.CodeHelpers.Vectors
 			first.f30 * second.x + first.f31 * second.y + first.f32 * second.z + first.f33 * second.w
 		);
 
-		public static bool operator ==(in Float4x4 first, in Float4x4 second) => first.EqualsFast(second); //These in parameter modifiers do not actually work with operators
+		public static bool operator ==(in Float4x4 first, in Float4x4 second) => first.EqualsFast(second);
 		public static bool operator !=(in Float4x4 first, in Float4x4 second) => !first.EqualsFast(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
