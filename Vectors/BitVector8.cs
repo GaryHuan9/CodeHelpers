@@ -9,10 +9,7 @@ namespace CodeHelpers.Vectors
 	[Serializable]
 	public struct BitVector8 : IComparable<BitVector8>, IEquatable<BitVector8>
 	{
-		public BitVector8(byte data)
-		{
-			Data = data;
-		}
+		public BitVector8(byte data) => Data = data;
 
 		public byte Data { get; private set; }
 

@@ -46,6 +46,7 @@ namespace CodeHelpers
 				case InvalidType.semiReadonlyAssignment:   return "is semi-readonly (can only be assigned once).";
 				case InvalidType.semiReadonlyNoData:       return "is semi-readonly and needs an assignment before accessing.";
 				case InvalidType.alreadySealed:            return "is already sealed.";
+				case InvalidType.notFound:                 return "cannot be found in the collection.";
 			}
 
 			throw NotPossible;
@@ -64,6 +65,7 @@ namespace CodeHelpers
 		foundDuplicate,
 		semiReadonlyAssignment,
 		semiReadonlyNoData,
-		alreadySealed
+		alreadySealed,
+		notFound
 	}
 }
