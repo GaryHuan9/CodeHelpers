@@ -67,8 +67,8 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float To0To1(this float value) => (value + 1f) / 2f;
 
-		public static bool IsPowerOfTwo(this int value) => (value & -value) == value;  //Or (value & (value - 1)) == 0;
-		public static bool IsPowerOfTwo(this long value) => (value & -value) == value; //Or (value & (value - 1)) == 0;
+		public static bool IsPowerOfTwo(this int value) => (value & -value) == value; //NOTE: This returns true for 0, which is not a power of two
+		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
