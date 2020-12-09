@@ -75,6 +75,22 @@ namespace CodeHelpers.Collections
 			array.GetLength(1) > index.y && index.y >= 0 &&
 			array.GetLength(2) > index.z && index.z >= 0;
 
+		public static int IndexOf<T>(this IEnumerable<T> enumerable, T item)
+		{
+			if (enumerable is IList<T> list) return list.IndexOf(item);
+			EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+
+			int index = 0;
+
+			foreach (T value in enumerable)
+			{
+				if (comparer.Equals(value, item)) return index;
+				index++;
+			}
+
+			return -1;
+		}
+
 		public static Int2? IndexOf<T>(this T[,] array, T item) where T : IEquatable<T>
 		{
 			Int2 size = array.Size();
