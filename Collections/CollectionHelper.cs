@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using CodeHelpers.Vectors;
 
 namespace CodeHelpers.Collections
@@ -181,6 +182,12 @@ namespace CodeHelpers.Collections
 			for (int i = list.Count - 1; i > 0; i--) list.Swap(i, random.Next(i + 1));
 		}
 
+		public static void Checkerboard<T>(this IList<T> list)
+		{
+			int half = list.Count / 2;
+			for (int i = 0; i < half; i += 2) list.Swap(i, half + i);
+		}
+
 		public static void ForEach<T>(this IReadOnlyList<T> array, Action<T> action)
 		{
 			if (array == null) return;
@@ -191,13 +198,7 @@ namespace CodeHelpers.Collections
 			}
 		}
 
-		public static void Swap<T>(this T[] array, int index1, int index2)
-		{
-			T storage = array[index1];
-			array[index1] = array[index2];
-			array[index2] = storage;
-		}
-
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Swap<T>(this IList<T> list, int index1, int index2)
 		{
 			T storage = list[index1];
