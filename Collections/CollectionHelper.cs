@@ -150,7 +150,7 @@ namespace CodeHelpers.Collections
 		/// Inserts <paramref name="item"/> at <paramref name="index"/>; pushes everything back by one.
 		/// NOTE: The last item in the array will get removed/replaced!
 		/// </summary>
-		public static void Insert<T>(this T[] array, int index, T item) => array.Shift(index, 1, item);
+		public static void Insert<T>(this T[] array, int index, T item = default) => array.Shift(index, 1, item);
 
 		/// <summary>
 		/// Shifts everything at and behind <paramref name="index"/> back by <paramref name="space"/>.
@@ -161,8 +161,10 @@ namespace CodeHelpers.Collections
 		{
 			if (!array.IsIndexValid(index)) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 
-			for (int i = array.Length - 1; i > index + space; i--) array[i] = array[i - space];
-			for (int i = 0; i < space; i++) array[i + index] = item;
+			int max = space + index;
+
+			for (int i = array.Length - 1; i >= max; i--) array[i] = array[i - space];
+			for (int i = index; i < max; i++) array[i] = item;
 		}
 
 		public static TValue TryGetValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary, TKey key)
