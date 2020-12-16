@@ -1,7 +1,8 @@
 {
     "name": "CodeHelpersEditor",
+    "rootNamespace": "CodeHelpers",
     "references": [
-        "GUID:46b46dbae127cd448a15ad89b5c6e8b9"
+        "CodeHelpers"
     ],
     "includePlatforms": [
         "Editor"

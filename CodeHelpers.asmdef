@@ -1,5 +1,6 @@
 {
     "name": "CodeHelpers",
+    "rootNamespace": "CodeHelpers",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -7,6 +8,10 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": []
+    "defineConstraints": [
+        "UNSAFE_CODE_ENABLED",
+        "CODEHELPERS_UNITY"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

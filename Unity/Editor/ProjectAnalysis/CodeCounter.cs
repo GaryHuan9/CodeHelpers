@@ -7,7 +7,7 @@ using System.Linq;
 using System;
 using System.Text;
 
-namespace CodeHelpers.CodeCounters
+namespace CodeHelpers.Unity.ProjectAnalysis
 {
 
 #if UNITY_EDITOR

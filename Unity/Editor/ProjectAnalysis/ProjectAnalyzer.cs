@@ -9,7 +9,7 @@ using System.Reflection;
 using CodeHelpers.Unity.Debugs;
 using UnityEngine;
 
-namespace CodeHelpers.CodeCounters
+namespace CodeHelpers.Unity.ProjectAnalysis
 {
 
 #if UNITY_EDITOR
