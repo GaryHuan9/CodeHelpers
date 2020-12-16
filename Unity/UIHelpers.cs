@@ -1,7 +1,7 @@
 ﻿#if CODEHELPERS_UNITY
 
 using System.Linq;
-using CodeHelpers.Unity.Debugs;
+using CodeHelpers.Diagnostics;
 using UnityEngine;
 
 namespace CodeHelpers.Unity
@@ -33,7 +33,7 @@ namespace CodeHelpers.Unity
 			if (allTaggedCanvas.Length == 1) return allTaggedCanvas[0];
 			if (allTaggedCanvas.Length == 0)
 			{
-				DebugHelperUnity.LogWarning
+				DebugHelper.LogWarning
 				(
 					"There are multiple root canvas, but none of them are tagged \"" + mainCanvasTag + "\"." +
 					"\n UIHelper cannot determine which one is the main canvas. Please tag the main canvas with \"" + mainCanvasTag + "\"."
@@ -41,7 +41,7 @@ namespace CodeHelpers.Unity
 				return null;
 			}
 
-			DebugHelperUnity.LogWarning("There are multiple canvas tagged \"" + mainCanvasTag + "\". UIHelper cannot determine which one is the main canvas. Please tag only one canvas with \"" + mainCanvasTag + "\".");
+			DebugHelper.LogWarning("There are multiple canvas tagged \"" + mainCanvasTag + "\". UIHelper cannot determine which one is the main canvas. Please tag only one canvas with \"" + mainCanvasTag + "\".");
 			return null;
 		}
 

@@ -6,7 +6,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using CodeHelpers.AI.BehaviorTrees;
-using CodeHelpers.Vectors;
+using CodeHelpers.Diagnostics;
+using CodeHelpers.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -420,7 +421,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 					{
 						if (source[i].Type == actionSource[i].type) continue;
 
-						Debug.LogWarning
+						DebugHelper.LogWarning
 						(
 							$"Mismatching parameters list for {action}! Source: {source.parameters} " +
 							$"vs Action: {actionSource}! All parameters are reset to default!"
@@ -431,7 +432,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 					}
 				}
 				else
-					Debug.LogWarning
+					DebugHelper.LogWarning
 					(
 						$"Mismatching length for parameter list for {action}. Source length: {sourceLength} " +
 						$"vs Action length: {actionSourceLength}! All parameters are reset to default!"

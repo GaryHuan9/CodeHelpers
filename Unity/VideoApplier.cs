@@ -1,6 +1,6 @@
 #if CODEHELPERS_UNITY
 
-using CodeHelpers.Unity.Debugs;
+using CodeHelpers.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -41,7 +41,7 @@ namespace CodeHelpers.Unity
 		{
 			if (player.clip == null)
 			{
-				DebugHelperUnity.Log("No clip assigned to video player");
+				DebugHelper.Log("No clip assigned to video player");
 				return;
 			}
 

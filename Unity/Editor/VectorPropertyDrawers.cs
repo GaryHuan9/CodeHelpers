@@ -2,8 +2,8 @@
 
 using System.Collections.ObjectModel;
 using System.Reflection;
-using CodeHelpers.Unity.Vectors;
-using CodeHelpers.Vectors;
+using CodeHelpers.Unity.Mathematics;
+using CodeHelpers.Mathematics;
 using UnityEditor;
 using UnityEngine;
 

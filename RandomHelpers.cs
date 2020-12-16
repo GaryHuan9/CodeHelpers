@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using CodeHelpers.Mathematics;
 
 namespace CodeHelpers
 {

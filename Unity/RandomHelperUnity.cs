@@ -1,6 +1,6 @@
 ﻿#if CODEHELPERS_UNITY
 
-using CodeHelpers.Vectors;
+using CodeHelpers.Mathematics;
 using UnityEngine;
 
 namespace CodeHelpers.Unity

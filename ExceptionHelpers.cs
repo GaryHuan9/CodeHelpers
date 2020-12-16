@@ -1,4 +1,5 @@
 ﻿using System;
+using CodeHelpers.Diagnostics;
 using CodeHelpers.Threads;
 
 namespace CodeHelpers

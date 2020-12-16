@@ -2,7 +2,7 @@
 
 using System.IO;
 using System.Linq;
-using CodeHelpers.Vectors;
+using CodeHelpers.Mathematics;
 using UnityEditor;
 using UnityEngine;
 

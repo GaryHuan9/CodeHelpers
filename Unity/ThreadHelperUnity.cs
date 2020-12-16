@@ -1,9 +1,7 @@
 #if CODEHELPERS_UNITY
 
 using System;
-using System.Threading;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 namespace CodeHelpers.Unity
 {

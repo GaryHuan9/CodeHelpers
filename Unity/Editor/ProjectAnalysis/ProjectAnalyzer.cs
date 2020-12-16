@@ -5,9 +5,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using CodeHelpers.Unity.Debugs;
+using CodeHelpers.Diagnostics;
+using CodeHelpers.Mathematics;
+using CodeHelpers.Unity.Diagnostics;
 using UnityEngine;
+using Color32 = CodeHelpers.Mathematics.Color32;
 
 namespace CodeHelpers.Unity.ProjectAnalysis
 {
@@ -59,7 +61,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 					Utility.CurrentHistory.Clear();
 					Utility.WriteCurrent();
 
-					Debug.Log("All project history information cleared.");
+					DebugHelper.Log("All project history information cleared.");
 
 					clearDoubleCheck = false;
 					return;
@@ -187,7 +189,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 					Utility.CurrentHistory.RemoveAt(index);
 					Utility.WriteCurrent();
 
-					Debug.Log("Last selected information removed.");
+					DebugHelper.Log("Last selected information removed.");
 
 					CloseCurrent();
 					return;
@@ -325,7 +327,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 		static void TryRecordCurrent()
 		{
 			if (Utility.ShouldRecord) Utility.RecordWrite();
-			DebugHelperUnity.Log(Utility.ShouldRecord, Utility.LastRecordedTime);
+			DebugHelper.Log(Utility.ShouldRecord, Utility.LastRecordedTime);
 		}
 
 		static class Utility
@@ -348,7 +350,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 			static ProjectHistory TryReadHistory()
 			{
 				if (!File.Exists(HistoryFullPath)) return null;
-				DebugHelperUnity.Log("Reading project history");
+				DebugHelper.Log("Reading project history");
 
 				ProjectHistory history;
 
@@ -396,7 +398,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 				CurrentHistory.AddInfo(Record());
 				WriteCurrent();
 
-				Debug.Log("Recorded project analyzed information.");
+				DebugHelper.Log("Recorded project analyzed information.");
 			}
 
 			public static RecordInfo Record()

@@ -3,6 +3,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using CodeHelpers.Diagnostics;
+using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Unity
 {
@@ -12,13 +14,13 @@ namespace CodeHelpers.Unity
 		{
 			if (GetComponents<Component>().Length > 2)
 			{
-				Debug.LogError("This Game Object should only have the AudioController attached!!!");
+				DebugHelper.LogError("This Game Object should only have the AudioController attached!!!");
 				return;
 			}
 
 			if (instance != null)
 			{
-				//Debug.LogError("You cannot have two AudioController!\nCodeHelpers will fix this for you this time!");
+				//DebugHelper.LogError("You cannot have two AudioController!\nCodeHelpers will fix this for you this time!");
 
 				Destroy(this);
 				return;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Threads
 {
@@ -42,14 +43,7 @@ namespace CodeHelpers.Threads
 				}
 			);
 
-			void LogException(Exception exception)
-			{
-#if CODEHELPERS_UNITY
-				Unity.Debugs.DebugHelperUnity.LogError($"{exception.Message}\n{exception.StackTrace}");
-#else
-				Console.WriteLine($"Exception thrown in thread! {exception.Message}\n{exception.StackTrace}");
-#endif
-			}
+			static void LogException(Exception exception) => DebugHelper.LogError($"Exception thrown in thread! {exception.Message}\n{exception.StackTrace}");
 		}
 	}
 }

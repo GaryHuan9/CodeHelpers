@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using CodeHelpers.AI.BehaviorTrees;
+using CodeHelpers.Diagnostics;
 using CodeHelpers.Collections;
-using CodeHelpers.Unity.Debugs;
+using CodeHelpers.Unity.Diagnostics;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 
@@ -60,7 +61,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			EditorUtility.SetDirty(mainData);
 
 			stopwatch.Stop();
-			DebugHelperUnity.Log($"Serialized in {stopwatch.Elapsed.TotalMilliseconds} ms.");
+			DebugHelper.Log($"Serialized in {stopwatch.Elapsed.TotalMilliseconds} ms.");
 		}
 
 		int SerializeNode(TreeGraphNode node)
@@ -118,7 +119,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			}
 
 			stopwatch.Stop();
-			DebugHelperUnity.Log($"Deserialized in {stopwatch.Elapsed.TotalMilliseconds} ms.");
+			DebugHelper.Log($"Deserialized in {stopwatch.Elapsed.TotalMilliseconds} ms.");
 		}
 
 		TreeGraphNode DeserializeNode(TreeNodeData data)

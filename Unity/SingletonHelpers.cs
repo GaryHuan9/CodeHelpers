@@ -1,6 +1,7 @@
 ﻿#if CODEHELPERS_UNITY
 
 using System;
+using CodeHelpers.Diagnostics;
 using UnityEngine;
 using UE = UnityEngine;
 
@@ -38,7 +39,7 @@ namespace CodeHelpers.Unity
 			{
 				if (instance == null) return instance = current;
 
-				Debug.LogError(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				DebugHelper.LogError(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
 				return instance;
 			}
 		}
@@ -50,7 +51,7 @@ namespace CodeHelpers.Unity
 				if (instance == null) return instance = current;
 
 				UE.Object.Destroy(current);
-				Debug.LogError(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				DebugHelper.LogError(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
 				return instance;
 			}
 		}
@@ -62,7 +63,7 @@ namespace CodeHelpers.Unity
 				if (instance == null) return instance = current;
 
 				UE.Object.Destroy(current.gameObject);
-				Debug.LogError(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
+				DebugHelper.LogError(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
 				return instance;
 			}
 		}

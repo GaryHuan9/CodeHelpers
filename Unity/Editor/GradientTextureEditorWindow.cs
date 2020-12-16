@@ -1,7 +1,7 @@
 ﻿#if CODEHELPERS_UNITY && UNITY_EDITOR
 
 using System.IO;
-using CodeHelpers.Vectors;
+using CodeHelpers.Mathematics;
 using UnityEditor;
 using UnityEngine;
 

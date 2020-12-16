@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using CodeHelpers.Collections;
+using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Events
 {
