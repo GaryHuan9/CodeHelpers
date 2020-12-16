@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -510,6 +512,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float first, Float2 second) => new Float2(first * second.x, first * second.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float first, Float2 second) => new Float2(first / second.x, first / second.y);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(Float2 value) => value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(Float2 value) => new Float2(-value.x, -value.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(Float2 first, Float2 second) => new Float2(first.x % second.x, first.y % second.y);
@@ -553,5 +556,48 @@ namespace CodeHelpers.Vectors
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
 		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)})";
+
+#region Enumerations
+
+		/// <summary>
+		/// Returns an enumerable that can be put into a foreach loop.
+		/// Yields the two components of this vector in a series.
+		/// </summary>
+		public SeriesEnumerable Series() => new SeriesEnumerable(this);
+
+		public readonly struct SeriesEnumerable : IEnumerable<float>
+		{
+			public SeriesEnumerable(Float2 value) => enumerator = new Enumerator(value);
+
+			readonly Enumerator enumerator;
+
+			public Enumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<float> IEnumerable<float>.GetEnumerator() => GetEnumerator();
+
+			public struct Enumerator : IEnumerator<float>
+			{
+				public Enumerator(Float2 source)
+				{
+					this.source = source;
+					index = -1;
+				}
+
+				readonly Float2 source;
+				int index;
+
+				object IEnumerator.Current => Current;
+				public float Current => source[index];
+
+				public bool MoveNext() => index++ < 1;
+				public void Reset() => index = -1;
+
+				public void Dispose() { }
+			}
+		}
+
+#endregion
+
 	}
 }

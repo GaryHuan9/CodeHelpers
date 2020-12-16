@@ -651,6 +651,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(float first, Int3 second) => new Float3(first * second.x, first * second.y, first * second.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(float first, Int3 second) => new Float3(first / second.x, first / second.y, first / second.z);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator +(Int3 value) => value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator -(Int3 value) => new Int3(-value.x, -value.y, -value.z);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator %(Int3 first, Int3 second) => new Int3(first.x % second.x, first.y % second.y, first.z % second.z);
@@ -702,7 +703,7 @@ namespace CodeHelpers.Vectors
 		/// Returns an enumerable that can be put into a foreach loop.
 		/// Yields the three components of this vector in a series.
 		/// </summary>
-		public SeriesEnumerator Series() => new SeriesEnumerator(this);
+		public SeriesEnumerable Series() => new SeriesEnumerable(this);
 
 		/// <summary>
 		/// Returns an enumerable that can be put into a foreach loop; from (0,0,0) to (vector.x-1,vector.y-1,vector.z-1)
@@ -710,50 +711,52 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		public LoopEnumerable Loop(bool zeroAsOne = false) => new LoopEnumerable(this, zeroAsOne);
 
-		public struct SeriesEnumerator : IEnumerator<int>
+		public readonly struct SeriesEnumerable : IEnumerable<int>
 		{
-			public SeriesEnumerator(Int3 source)
+			public SeriesEnumerable(Int3 value) => enumerator = new Enumerator(value);
+
+			readonly Enumerator enumerator;
+
+			public Enumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+
+			public struct Enumerator : IEnumerator<int>
 			{
-				this.source = source;
-				index = -1;
+				public Enumerator(Int3 source)
+				{
+					this.source = source;
+					index = -1;
+				}
+
+				readonly Int3 source;
+				int index;
+
+				object IEnumerator.Current => Current;
+				public int Current => source[index];
+
+				public bool MoveNext() => index++ < 2;
+				public void Reset() => index = -1;
+
+				public void Dispose() { }
 			}
-
-			readonly Int3 source;
-			int index;
-
-			object IEnumerator.Current => Current;
-			public int Current => source[index];
-
-			public bool MoveNext()
-			{
-				if (index == 2) return false;
-
-				index++;
-				return true;
-			}
-
-			public void Reset() => index = -1;
-
-			public void Dispose() { }
 		}
 
 		public readonly struct LoopEnumerable : IEnumerable<Int3>
 		{
-			public LoopEnumerable(Int3 vector, bool zeroAsOne) => enumerator = new LoopEnumerator(vector, zeroAsOne);
+			public LoopEnumerable(Int3 vector, bool zeroAsOne) => enumerator = new Enumerator(vector, zeroAsOne);
 
-			readonly LoopEnumerator enumerator;
+			readonly Enumerator enumerator;
 
-			public LoopEnumerator GetEnumerator() => enumerator;
+			public Enumerator GetEnumerator() => enumerator;
 
 			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 			IEnumerator<Int3> IEnumerable<Int3>.GetEnumerator() => GetEnumerator();
 
-			/// <summary>
-			/// NOTE: Do NOT use the readonly modifier if you wish the <see cref="MoveNext"/> method would behave correctly
-			/// </summary>
-			public struct LoopEnumerator : IEnumerator<Int3>
+			public struct Enumerator : IEnumerator<Int3>
 			{
-				internal LoopEnumerator(Int3 size, bool zeroAsOne)
+				internal Enumerator(Int3 size, bool zeroAsOne)
 				{
 					direction = size.Signed;
 					size = size.Absoluted;

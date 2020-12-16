@@ -9,7 +9,7 @@ namespace CodeHelpers.Threads
 
 		public static Thread MainThread
 		{
-			get => _mainThread ?? throw ExceptionHelper.Invalid(nameof(MainThread), null, InvalidType.semiReadonlyNoData);
+			get => _mainThread;
 			set
 			{
 				if (_mainThread == null) _mainThread = value;
@@ -17,7 +17,7 @@ namespace CodeHelpers.Threads
 			}
 		}
 
-		public static bool IsOnMainThread => Thread.CurrentThread == MainThread;
+		public static bool IsOnMainThread => MainThread == null || MainThread == Thread.CurrentThread;
 
 		/// <summary>This returns a new thread that will make sure to print out exceptions.</summary>
 		public static Thread NewThread(Action action, bool throwThreadAbortException = false, Action abortAction = null)

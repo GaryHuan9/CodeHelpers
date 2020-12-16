@@ -27,11 +27,11 @@ namespace CodeHelpers.Vectors.Enumerables
 				Int3 difference = to - from;
 				difference += difference.Signed; //Make inclusive
 
-				enumerator = new Int3.LoopEnumerable.LoopEnumerator(difference, true);
+				enumerator = new Int3.LoopEnumerable.Enumerator(difference, true);
 			}
 
 			readonly Int3 offset;
-			Int3.LoopEnumerable.LoopEnumerator enumerator;
+			Int3.LoopEnumerable.Enumerator enumerator;
 
 			object IEnumerator.Current => Current;
 			public Int3 Current => enumerator.Current + offset;

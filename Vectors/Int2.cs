@@ -561,6 +561,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(float first, Int2 second) => new Float2(first * second.x, first * second.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(float first, Int2 second) => new Float2(first / second.x, first / second.y);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator +(Int2 value) => value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(Int2 value) => new Int2(-value.x, -value.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(Int2 first, Int2 second) => new Int2(first.x % second.x, first.y % second.y);
@@ -609,7 +610,7 @@ namespace CodeHelpers.Vectors
 		/// Returns an enumerable that can be put into a foreach loop.
 		/// Yields the two components of this vector in a series.
 		/// </summary>
-		public SeriesEnumerator Series() => new SeriesEnumerator(this);
+		public SeriesEnumerable Series() => new SeriesEnumerable(this);
 
 		/// <summary>
 		/// Returns an enumerable that can be put into a foreach loop; from (0,0,0) to (vector.x-1,vector.y-1,vector.z-1)
@@ -617,31 +618,36 @@ namespace CodeHelpers.Vectors
 		/// </summary>
 		public LoopEnumerable Loop(bool zeroAsOne = false) => new LoopEnumerable(this, zeroAsOne);
 
-		public struct SeriesEnumerator : IEnumerator<int>
+		public readonly struct SeriesEnumerable : IEnumerable<int>
 		{
-			public SeriesEnumerator(Int2 source)
+			public SeriesEnumerable(Int2 value) => enumerator = new Enumerator(value);
+
+			readonly Enumerator enumerator;
+
+			public Enumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<int> IEnumerable<int>.GetEnumerator() => GetEnumerator();
+
+			public struct Enumerator : IEnumerator<int>
 			{
-				this.source = source;
-				index = -1;
+				public Enumerator(Int2 source)
+				{
+					this.source = source;
+					index = -1;
+				}
+
+				readonly Int2 source;
+				int index;
+
+				object IEnumerator.Current => Current;
+				public int Current => source[index];
+
+				public bool MoveNext() => index++ < 1;
+				public void Reset() => index = -1;
+
+				public void Dispose() { }
 			}
-
-			readonly Int2 source;
-			int index;
-
-			object IEnumerator.Current => Current;
-			public int Current => source[index];
-
-			public bool MoveNext()
-			{
-				if (index == 1) return false;
-
-				index++;
-				return true;
-			}
-
-			public void Reset() => index = -1;
-
-			public void Dispose() { }
 		}
 
 		public readonly struct LoopEnumerable : IEnumerable<Int2>

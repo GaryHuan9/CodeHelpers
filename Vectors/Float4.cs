@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -674,7 +676,48 @@ namespace CodeHelpers.Vectors
 		// 		return ZYX;
 		// 	}
 		// }
+
+		// public Float4 Sorted
+		// {
+		// 	[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+		// 	{
+		// 		if (x < y)
+		// 		{
+		// 			if (y < z)
+		// 			{
+		// 				if (z < w) return XYZW;
+		// 				if (y < w) return XYWZ;
+		// 				if (x < w) return XWYZ;
 		//
+		// 				return WXYZ;
+		// 			}
+		//
+		// 			// if (x < z) {}
+		//
+		// 			if (y < w) return XZYW;
+		// 			if (z < w) return XZWY;
+		// 			if (x < w) return XWZY;
+		//
+		// 			return WXZY;
+		// 		}
+		//
+		// 		if (x < z)
+		// 		{
+		// 			if (z < w) return YXZW;
+		// 			if (x < w) return YXWZ;
+		// 			if (y < w) return YWXZ;
+		//
+		// 			return WYXZ;
+		// 		}
+		//
+		// 		if (x < w) return YZXW;
+		// 		if (z < w) return YZWX;
+		// 		if (y < w) return YWZX;
+		//
+		// 		return WYZX;
+		// 	}
+		// }
+
 		// public Float4 SortedReversed
 		// {
 		// 	[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -900,6 +943,7 @@ namespace CodeHelpers.Vectors
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator *(float first, Float4 second) => new Float4(first * second.x, first * second.y, first * second.z, first * second.w);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator /(float first, Float4 second) => new Float4(first / second.x, first / second.y, first / second.z, first / second.w);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator +(Float4 value) => value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator -(Float4 value) => new Float4(-value.x, -value.y, -value.z, -value.w);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator %(Float4 first, Float4 second) => new Float4(first.x % second.x, first.y % second.y, first.z % second.z, first.w % second.w);
@@ -950,5 +994,48 @@ namespace CodeHelpers.Vectors
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
 		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)}, {z.ToString(format, formatProvider)}, {w.ToString(format, formatProvider)})";
+
+#region Enumerations
+
+		/// <summary>
+		/// Returns an enumerable that can be put into a foreach loop.
+		/// Yields the two components of this vector in a series.
+		/// </summary>
+		public SeriesEnumerable Series() => new SeriesEnumerable(this);
+
+		public readonly struct SeriesEnumerable : IEnumerable<float>
+		{
+			public SeriesEnumerable(Float4 value) => enumerator = new Enumerator(value);
+
+			readonly Enumerator enumerator;
+
+			public Enumerator GetEnumerator() => enumerator;
+
+			IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+			IEnumerator<float> IEnumerable<float>.GetEnumerator() => GetEnumerator();
+
+			public struct Enumerator : IEnumerator<float>
+			{
+				public Enumerator(Float4 source)
+				{
+					this.source = source;
+					index = -1;
+				}
+
+				readonly Float4 source;
+				int index;
+
+				object IEnumerator.Current => Current;
+				public float Current => source[index];
+
+				public bool MoveNext() => index++ < 3;
+				public void Reset() => index = -1;
+
+				public void Dispose() { }
+			}
+		}
+
+#endregion
+
 	}
 }
