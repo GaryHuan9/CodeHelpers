@@ -1,12 +1,14 @@
 ﻿#if CODEHELPERS_UNITY
 
+using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using CodeHelpers.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeHelpers.Editors
+namespace CodeHelpers.Unity.Editors
 {
 	public class CubemapGenerator : EditorWindow
 	{
@@ -19,6 +21,8 @@ namespace CodeHelpers.Editors
 
 		readonly Texture2D[] textures = new Texture2D[EnumHelper<Direction>.enumLength];
 		Texture2D FirstTexture => textures.FirstOrDefault(texture => texture != null);
+
+		TextureType extension = TextureType.exrHalf;
 
 		void OnGUI()
 		{
@@ -94,9 +98,29 @@ namespace CodeHelpers.Editors
 			EditorGUILayout.Space();
 			EditorGUI.BeginDisabledGroup(!canGenerate);
 
+			extension = (TextureType)EditorGUILayout.EnumPopup("File Extension", extension);
+
 			if (GUILayout.Button("Generate") && canGenerate)
 			{
-				string path = EditorUtility.SaveFilePanelInProject("Save Cubemap as PNG", "Cubemap.png", "png", "");
+				string ext;
+				switch (extension)
+				{
+					case TextureType.pngHalf:
+					case TextureType.pngFull:
+					{
+						ext = "png";
+						break;
+					}
+					case TextureType.exrHalf:
+					case TextureType.exrFull:
+					{
+						ext = "exr";
+						break;
+					}
+					default: throw ExceptionHelper.Invalid(nameof(extension), extension, InvalidType.unexpected);
+				}
+
+				string path = EditorUtility.SaveFilePanelInProject($"Save Cubemap as {ext.ToUpper()}", $"Cubemap.{ext}", ext, "");
 				if (!string.IsNullOrEmpty(path) && !string.IsNullOrWhiteSpace(path)) SaveCubemap(path);
 			}
 
@@ -110,9 +134,33 @@ namespace CodeHelpers.Editors
 			Int2 singleSize = new Int2(first.width, first.height);
 			Int2 resolution = GetCubemapSize(singleSize);
 
-			Color[] colors = new Color[resolution.ProductAbsoluted];
-			Texture2D result = new Texture2D(resolution.x, resolution.y);
+			TextureFormat format;
+			switch (extension)
+			{
+				case TextureType.pngHalf:
+				{
+					format = TextureFormat.RGBA32;
+					break;
+				}
+				case TextureType.pngFull:
+				{
+					format = TextureFormat.RGBA64;
+					break;
+				}
+				case TextureType.exrHalf:
+				{
+					format = TextureFormat.RGBAHalf;
+					break;
+				}
+				case TextureType.exrFull:
+					format = TextureFormat.RGBAFloat;
+				{
+					break;
+				}
+				default: throw ExceptionHelper.Invalid(nameof(extension), extension, InvalidType.unexpected);
+			}
 
+			Color[] colors = new Color[resolution.ProductAbsoluted];
 			Color[][] sourceColors = new Color[textures.Length][];
 
 			for (int i = 0; i < textures.Length; i++)
@@ -121,32 +169,72 @@ namespace CodeHelpers.Editors
 				sourceColors[i] = textures[i].GetPixels();
 			}
 
-			foreach (Int2 pixel in resolution.Loop())
-			{
-				int regionIndex = GetPixelTextureIndex(pixel, singleSize);
-				Color color;
+			Parallel.ForEach
+			(
+				resolution.Loop(), pixel =>
+								   {
+									   int regionIndex = GetPixelTextureIndex(pixel, singleSize);
+									   Color color;
 
-				if (regionIndex >= 0)
-				{
-					Color[] source = sourceColors[regionIndex];
+									   if (regionIndex >= 0)
+									   {
+										   Color[] source = sourceColors[regionIndex];
 
-					if (source == null) color = new Color(0f, 0f, 0f, 1f); //Black for missing texture
-					else
-					{
-						Int2 region = GetPixelTextureOffset(pixel, singleSize);
-						color = source[region.y * singleSize.x + region.x];
-					}
-				}
-				else color = new Color(0f, 0f, 0f, 0f); //Transparent 
+										   if (source == null) color = Color.black; //Black for missing texture
+										   else
+										   {
+											   Int2 region = GetPixelTextureOffset(pixel, singleSize);
+											   color = source[region.y * singleSize.x + region.x];
+										   }
+									   }
+									   else color = Color.clear;
 
-				colors[pixel.y * resolution.x + pixel.x] = color;
-			}
+									   colors[pixel.y * resolution.x + pixel.x] = color;
+								   }
+			);
+
+			Release(ref sourceColors);
+
+			Texture2D result = new Texture2D(resolution.x, resolution.y, format, false);
 
 			result.SetPixels(colors);
 			result.Apply();
 
-			File.WriteAllBytes(path, result.EncodeToPNG());
+			Release(ref colors);
+
+			byte[] bytes;
+
+			switch (extension)
+			{
+				case TextureType.pngHalf:
+				case TextureType.pngFull:
+				{
+					bytes = result.EncodeToPNG();
+					break;
+				}
+				case TextureType.exrHalf:
+				{
+					bytes = result.EncodeToEXR(Texture2D.EXRFlags.CompressZIP);
+					break;
+				}
+				case TextureType.exrFull:
+				{
+					bytes = result.EncodeToEXR(Texture2D.EXRFlags.OutputAsFloat);
+					break;
+				}
+				default: throw ExceptionHelper.Invalid(nameof(extension), extension, InvalidType.unexpected);
+			}
+
 			DestroyImmediate(result);
+			Release(ref result);
+
+			File.WriteAllBytes(path, bytes);
+		}
+
+		static void Release<T>(ref T location) where T : class
+		{
+			location = null;
+			GC.Collect();
 		}
 
 		/// <summary>
@@ -155,9 +243,8 @@ namespace CodeHelpers.Editors
 		static int GetPixelTextureIndex(Int2 pixel, Int2 singleSize)
 		{
 			Int2 region = pixel / singleSize;
-			int regionId = region.x * 3 + region.y;
 
-			switch (regionId)
+			switch (region.x * 3 + region.y)
 			{
 				case 1:  return (int)Direction.left;
 				case 3:  return (int)Direction.down;
@@ -165,9 +252,8 @@ namespace CodeHelpers.Editors
 				case 5:  return (int)Direction.up;
 				case 7:  return (int)Direction.right;
 				case 10: return (int)Direction.backward;
+				default: return -1;
 			}
-
-			return -1;
 		}
 
 		/// <summary>
@@ -175,9 +261,17 @@ namespace CodeHelpers.Editors
 		/// </summary>
 		static Int2 GetPixelTextureOffset(Int2 pixel, Int2 singleSize) => pixel % singleSize;
 
-		static Int2 GetCubemapSize(Int2 sourceSize) => new Int2(sourceSize.x * 4, sourceSize.y * 3);
+		static Int2 GetCubemapSize(Int2 sourceSize) => sourceSize * new Int2(4, 3);
 
 		static string GetName(int index) => ((Direction)index).ToString().ToUpperInvariant();
+
+		enum TextureType
+		{
+			pngHalf,
+			pngFull,
+			exrHalf,
+			exrFull
+		}
 	}
 }
 

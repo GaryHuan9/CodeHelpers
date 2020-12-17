@@ -5,7 +5,7 @@ using CodeHelpers.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-namespace CodeHelpers.Editors
+namespace CodeHelpers.Unity.Editors
 {
 	public class GradientTextureEditorWindow : EditorWindow
 	{

@@ -761,9 +761,10 @@ namespace CodeHelpers.Mathematics
 					direction = size.Signed;
 					size = size.Absoluted;
 
-					this.size = zeroAsOne ? one.Max(size) : size;
-					product = size.Product;
+					if (zeroAsOne) size = one.Max(size);
+					this.size = size;
 
+					product = size.Product;
 					current = -1;
 				}
 
