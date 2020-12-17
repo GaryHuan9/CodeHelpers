@@ -658,84 +658,127 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
-		// public Float4 Sorted
-		// {
-		// 	[MethodImpl(MethodImplOptions.AggressiveInlining)] get
-		// 	{
-		// 		if (x < y)
-		// 		{
-		// 			if (y < z) return XYZ;
-		// 			if (x < z) return XZY;
-		//
-		// 			return ZXY;
-		// 		}
-		//
-		// 		if (x < z) return YXZ;
-		// 		if (y < z) return YZX;
-		//
-		// 		return ZYX;
-		// 	}
-		// }
+		public Float4 Sorted
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x < y)
+				{
+					if (y < z) //XYZ
+					{
+						if (z < w) return XYZW;
+						if (y < w) return XYWZ;
+						if (x < w) return XWYZ;
 
-		// public Float4 Sorted
-		// {
-		// 	[MethodImpl(MethodImplOptions.AggressiveInlining)] get
-		// 	{
-		// 		if (x < y)
-		// 		{
-		// 			if (y < z)
-		// 			{
-		// 				if (z < w) return XYZW;
-		// 				if (y < w) return XYWZ;
-		// 				if (x < w) return XWYZ;
-		//
-		// 				return WXYZ;
-		// 			}
-		//
-		// 			// if (x < z) {}
-		//
-		// 			if (y < w) return XZYW;
-		// 			if (z < w) return XZWY;
-		// 			if (x < w) return XWZY;
-		//
-		// 			return WXZY;
-		// 		}
-		//
-		// 		if (x < z)
-		// 		{
-		// 			if (z < w) return YXZW;
-		// 			if (x < w) return YXWZ;
-		// 			if (y < w) return YWXZ;
-		//
-		// 			return WYXZ;
-		// 		}
-		//
-		// 		if (x < w) return YZXW;
-		// 		if (z < w) return YZWX;
-		// 		if (y < w) return YWZX;
-		//
-		// 		return WYZX;
-		// 	}
-		// }
+						return WXYZ;
+					}
 
-		// public Float4 SortedReversed
-		// {
-		// 	[MethodImpl(MethodImplOptions.AggressiveInlining)] get
-		// 	{
-		// 		if (x > y)
-		// 		{
-		// 			if (y > z) return XYZ;
-		// 			if (x > z) return XZY;
-		//
-		// 			return ZXY;
-		// 		}
-		//
-		// 		if (x > z) return YXZ;
-		// 		if (y > z) return YZX;
-		//
-		// 		return ZYX;
-		// 	}
-		// }
+					if (x < z) //XZY
+					{
+						if (y < w) return XZYW;
+						if (z < w) return XZWY;
+						if (x < w) return XWZY;
+
+						return WXZY;
+					}
+
+					//ZXY
+
+					if (y < w) return ZXYW;
+					if (x < w) return ZXWY;
+					if (z < w) return ZWXY;
+
+					return WZXY;
+				}
+
+				if (x < z) //YXZ
+				{
+					if (z < w) return YXZW;
+					if (x < w) return YXWZ;
+					if (y < w) return YWXZ;
+
+					return WYXZ;
+				}
+
+				if (y < z) //YZX
+				{
+					if (x < w) return YZXW;
+					if (z < w) return YZWX;
+					if (y < w) return YWZX;
+
+					return WYZX;
+				}
+
+				//ZYX
+
+				if (x < w) return ZYXW;
+				if (y < w) return ZYWX;
+				if (z < w) return ZWYX;
+
+				return WZYX;
+			}
+		}
+
+		public Float4 SortedReversed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			{
+				if (x > y)
+				{
+					if (y > z) //XYZ
+					{
+						if (z > w) return XYZW;
+						if (y > w) return XYWZ;
+						if (x > w) return XWYZ;
+
+						return WXYZ;
+					}
+
+					if (x > z) //XZY
+					{
+						if (y > w) return XZYW;
+						if (z > w) return XZWY;
+						if (x > w) return XWZY;
+
+						return WXZY;
+					}
+
+					//ZXY
+
+					if (y > w) return ZXYW;
+					if (x > w) return ZXWY;
+					if (z > w) return ZWXY;
+
+					return WZXY;
+				}
+
+				if (x > z) //YXZ
+				{
+					if (z > w) return YXZW;
+					if (x > w) return YXWZ;
+					if (y > w) return YWXZ;
+
+					return WYXZ;
+				}
+
+				if (y > z) //YZX
+				{
+					if (x > w) return YZXW;
+					if (z > w) return YZWX;
+					if (y > w) return YWZX;
+
+					return WYZX;
+				}
+
+				//ZYX
+
+				if (x > w) return ZYXW;
+				if (y > w) return ZYWX;
+				if (z > w) return ZWYX;
+
+				return WZYX;
+			}
+		}
 
 		public Float4 FlooredFloat
 		{
