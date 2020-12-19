@@ -59,13 +59,13 @@ namespace CodeHelpers.Mathematics
 			return (Direction)(maxIndex * 2 + (vector[maxIndex] < 0f ? 1 : 0));
 		}
 
-		public static Int3 ToVector3(this Direction direction)
+		public static Int3 ToInt3(this Direction direction)
 		{
 			int value = (int)direction;
 			return Int3.Create(value / 2, RemapSign(value % 2));
 		}
 
-		public static Int2 ToVector2(this Direction direction)
+		public static Int2 ToInt2(this Direction direction)
 		{
 			switch (direction)
 			{
@@ -226,7 +226,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 		//Why write your own when you can use the library?
-		static Direction GetCross(Direction from, Direction to) => from.ToVector3().Cross(to.ToVector3()).ToDirection();
+		static Direction GetCross(Direction from, Direction to) => from.ToInt3().Cross(to.ToInt3()).ToDirection();
 
 		/// <summary>
 		/// Gets the cross value of <paramref name="from"/> and <paramref name="to"/>.

@@ -85,7 +85,7 @@ namespace CodeHelpers.Mathematics
 		public static readonly Int2 zero = new Int2(0, 0);
 		public static readonly Int2 negativeOne = new Int2(-1, -1);
 
-		public static readonly Int2 mxxValue = new Int2(int.MaxValue, int.MaxValue);
+		public static readonly Int2 maxValue = new Int2(int.MaxValue, int.MaxValue);
 		public static readonly Int2 minValue = new Int2(int.MinValue, int.MinValue);
 
 		//NOTE: These collections are not in any guaranteed order!
@@ -545,20 +545,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator +(Int2 first, Int2 second) => new Int2(first.x + second.x, first.y + second.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(Int2 first, Int2 second) => new Int2(first.x - second.x, first.y - second.y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(Int2 first, Float2 second) => new Float2(first.x + second.x, first.y + second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(Int2 first, Float2 second) => new Float2(first.x - second.x, first.y - second.y);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(Float2 first, Int2 second) => new Float2(first.x + second.x, first.y + second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator -(Float2 first, Int2 second) => new Float2(first.x - second.x, first.y - second.y);
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(Int2 first, Int2 second) => new Int2(first.x * second.x, first.y * second.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(Int2 first, Int2 second) => new Int2(first.x / second.x, first.y / second.y);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(Int2 first, Float2 second) => new Float2(first.x * second.x, first.y * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(Int2 first, Float2 second) => new Float2(first.x / second.x, first.y / second.y);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator *(Float2 first, Int2 second) => new Float2(first.x * second.x, first.y * second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator /(Float2 first, Int2 second) => new Float2(first.x / second.x, first.y / second.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator *(Int2 first, int second) => new Int2(first.x * second, first.y * second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator /(Int2 first, int second) => new Int2(first.x / second, first.y / second);
@@ -576,9 +564,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator -(Int2 value) => new Int2(-value.x, -value.y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(Int2 first, Int2 second) => new Int2(first.x % second.x, first.y % second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(Int2 first, Float2 second) => new Float2(first.x % second.x, first.y % second.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator %(Float2 first, Int2 second) => new Float2(first.x % second.x, first.y % second.y);
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(Int2 first, int second) => new Int2(first.x % second, first.y % second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator %(int first, Int2 second) => new Int2(first % second.x, first % second.y);
 
@@ -587,6 +572,12 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Int2 first, Int2 second) => first.Equals(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Int2 first, Int2 second) => !first.Equals(second);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(Int2 first, Int2 second) => first.x < second.x && first.y < second.y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(Int2 first, Int2 second) => first.x > second.x && first.y > second.y;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Int2 first, Int2 second) => first.x <= second.x && first.y <= second.y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Int2 first, Int2 second) => first.x >= second.x && first.y >= second.y;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int2 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => x == other.x && y == other.y;

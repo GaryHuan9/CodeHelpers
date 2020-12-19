@@ -24,8 +24,8 @@ namespace CodeHelpers.RotationHelpers
 		public LimitedRotation(Int3 eulerAngles) : this(eulerAngles.x, eulerAngles.y, eulerAngles.z) { }
 		public LimitedRotation(Float3 eulerAngles) : this(eulerAngles.x, eulerAngles.y, eulerAngles.z) { }
 
-		public LimitedRotation(Direction direction, int angle) : this(direction.ToVector3() * angle) { }
-		public LimitedRotation(Direction direction, float angle) : this(direction.ToVector3() * angle) { }
+		public LimitedRotation(Direction direction, int angle) : this(direction.ToInt3() * angle) { }
+		public LimitedRotation(Direction direction, float angle) : this(direction.ToInt3() * angle) { }
 
 #if CODEHELPERS_UNITY
 		public LimitedRotation(UnityEngine.Quaternion quaternion) : this(quaternion.eulerAngles) { }
@@ -90,7 +90,7 @@ namespace CodeHelpers.RotationHelpers
 				return from == Direction.up || from == Direction.down ? new LimitedRotation(0b000010) /*180, 0, 0*/ : new LimitedRotation(0b001000) /*0, 180, 0*/;
 			}
 
-			return new LimitedRotation(from.Cross(to).ToVector3() * 90);
+			return new LimitedRotation(from.Cross(to).ToInt3() * 90);
 		}
 
 		public static LimitedRotation Identity => new LimitedRotation();

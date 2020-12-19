@@ -635,20 +635,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator +(Int3 first, Int3 second) => new Int3(first.x + second.x, first.y + second.y, first.z + second.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator -(Int3 first, Int3 second) => new Int3(first.x - second.x, first.y - second.y, first.z - second.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(Int3 first, Float3 second) => new Float3(first.x + second.x, first.y + second.y, first.z + second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(Int3 first, Float3 second) => new Float3(first.x - second.x, first.y - second.y, first.z - second.z);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(Float3 first, Int3 second) => new Float3(first.x + second.x, first.y + second.y, first.z + second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(Float3 first, Int3 second) => new Float3(first.x - second.x, first.y - second.y, first.z - second.z);
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator *(Int3 first, Int3 second) => new Int3(first.x * second.x, first.y * second.y, first.z * second.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator /(Int3 first, Int3 second) => new Int3(first.x / second.x, first.y / second.y, first.z / second.z);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(Int3 first, Float3 second) => new Float3(first.x * second.x, first.y * second.y, first.z * second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(Int3 first, Float3 second) => new Float3(first.x / second.x, first.y / second.y, first.z / second.z);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(Float3 first, Int3 second) => new Float3(first.x * second.x, first.y * second.y, first.z * second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(Float3 first, Int3 second) => new Float3(first.x / second.x, first.y / second.y, first.z / second.z);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator *(Int3 first, int second) => new Int3(first.x * second, first.y * second, first.z * second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator /(Int3 first, int second) => new Int3(first.x / second, first.y / second, first.z / second);
@@ -666,9 +654,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator -(Int3 value) => new Int3(-value.x, -value.y, -value.z);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator %(Int3 first, Int3 second) => new Int3(first.x % second.x, first.y % second.y, first.z % second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(Int3 first, Float3 second) => new Float3(first.x % second.x, first.y % second.y, first.z % second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(Float3 first, Int3 second) => new Float3(first.x % second.x, first.y % second.y, first.z % second.z);
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator %(Int3 first, int second) => new Int3(first.x % second, first.y % second, first.z % second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator %(int first, Int3 second) => new Int3(first % second.x, first % second.y, first % second.z);
 
@@ -677,6 +662,12 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Int3 first, Int3 second) => first.Equals(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Int3 first, Int3 second) => !first.Equals(second);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(Int3 first, Int3 second) => first.x < second.x && first.y < second.y && first.z < second.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(Int3 first, Int3 second) => first.x > second.x && first.y > second.y && first.z > second.z;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Int3 first, Int3 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Int3 first, Int3 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int3 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int3 other) => x == other.x && y == other.y && z == other.z;

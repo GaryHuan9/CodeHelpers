@@ -182,12 +182,6 @@ namespace CodeHelpers.Collections
 			for (int i = list.Count - 1; i > 0; i--) list.Swap(i, random.Next(i + 1));
 		}
 
-		public static void Checkerboard<T>(this IList<T> list)
-		{
-			int half = list.Count / 2;
-			for (int i = 0; i < half; i += 2) list.Swap(i, half + i);
-		}
-
 		public static void ForEach<T>(this IReadOnlyList<T> array, Action<T> action)
 		{
 			if (array == null) return;

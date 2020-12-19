@@ -18,8 +18,8 @@ namespace CodeHelpers.Diagnostics
 			var foreground = Console.ForegroundColor;
 			var background = Console.BackgroundColor;
 
-			Console.ForegroundColor = ConsoleColor.Black;
-			Console.BackgroundColor = ConsoleColor.Yellow;
+			Console.ForegroundColor = ConsoleColor.Yellow;
+			Console.BackgroundColor = ConsoleColor.Black;
 
 			Console.WriteLine(text);
 
@@ -32,8 +32,8 @@ namespace CodeHelpers.Diagnostics
 			var foreground = Console.ForegroundColor;
 			var background = Console.BackgroundColor;
 
-			Console.ForegroundColor = ConsoleColor.Black;
-			Console.BackgroundColor = ConsoleColor.Red;
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.BackgroundColor = ConsoleColor.Black;
 
 			Console.WriteLine(text);
 

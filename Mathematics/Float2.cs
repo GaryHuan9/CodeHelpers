@@ -533,6 +533,12 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Float2 first, Float2 second) => first.Equals(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Float2 first, Float2 second) => !first.Equals(second);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(Float2 first, Float2 second) => first.x < second.x && first.y < second.y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(Float2 first, Float2 second) => first.x > second.x && first.y > second.y;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Float2 first, Float2 second) => first.x <= second.x && first.y <= second.y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Float2 first, Float2 second) => first.x >= second.x && first.y >= second.y;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => x == other.x && y == other.y;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
 

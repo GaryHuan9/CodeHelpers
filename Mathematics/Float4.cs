@@ -1007,6 +1007,12 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Float4 first, Float4 second) => first.Equals(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Float4 first, Float4 second) => !first.Equals(second);
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(Float4 first, Float4 second) => first.x < second.x && first.y < second.y && first.z < second.z && first.w < second.w;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(Float4 first, Float4 second) => first.x > second.x && first.y > second.y && first.z > second.z && first.w > second.w;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Float4 first, Float4 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z && first.w <= second.w;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Float4 first, Float4 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z && first.w >= second.w;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float4 other) => x == other.x && y == other.y && z == other.z && w == other.w;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float4 other && Equals(other);
 

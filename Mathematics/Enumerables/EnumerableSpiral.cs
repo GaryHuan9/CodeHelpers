@@ -10,7 +10,8 @@ namespace CodeHelpers.Mathematics.Enumerables
 		/// The positions form a square centered at (0, 0), meaning the first position will be (0, 0)
 		/// </summary>
 		/// <param name="radius">The radius (half size) of the position square returned. Radius of 1 returns square of size 3x3.</param>
-		public EnumerableSpiral2D(int radius) => enumerator = new Enumerator(from, to);
+		/// <param name="initial">The starting direction of the spiral, defaults to right.</param>
+		public EnumerableSpiral2D(int radius, Direction initial = Direction.right) => enumerator = new Enumerator(radius, initial);
 
 		readonly Enumerator enumerator;
 
@@ -21,100 +22,85 @@ namespace CodeHelpers.Mathematics.Enumerables
 
 		public struct Enumerator : IEnumerator<Int2>
 		{
-			public Enumerator(Int2 from, Int2 to)
+			public Enumerator(int radius, Direction initial = Direction.right) : this()
 			{
-				this.from = from;
-				this.to = to;
+				size = radius * 2 + 1;
+				this.initial = initial;
 
-				current = -1;
-				sample = (from - to).Absoluted.MaxComponent;
+				Reset();
 			}
 
-			readonly Int2 from;
-			readonly Int2 to;
+			readonly int size;
+			readonly Direction initial;
 
-			int current;         //Current point being sampled
-			readonly int sample; //Number of points need to be sampled
+			Int2 direction; //The current direction, rotates as we move
+			int step;       //The current step in this direction
+			int length;     //The length we step until a corner is reached
 
 			object IEnumerator.Current => Current;
-			public Int2 Current => sample == 0 ? from : from.Lerp(to, (float)current / sample).Rounded;
+			public Int2 Current { get; private set; }
 
-			public bool MoveNext() => ++current <= sample;
+			public bool MoveNext()
+			{
+				Current += direction;
+				step++;
 
-			public void Reset() => current = -1;
+				if (step == length)
+				{
+					Rotate();
+
+					if (length == size) direction = Int2.zero;
+				}
+
+				if (step == length * 2)
+				{
+					Rotate();
+
+					length++;
+					step = 0;
+				}
+
+				return direction != Int2.zero;
+			}
+
+			void Rotate() => direction = direction.Perpendicular;
+
+			public void Reset()
+			{
+				direction = initial.ToInt2();
+				Current = -direction;
+
+				step = -1;
+				length = 1;
+			}
+
 			public void Dispose() { }
 		}
-
-		// /// <summary>
-		// /// Returns an IEnumerable which will yield all the positions placed in a spiral order.
-		// /// Start direction: Right
-		// /// Will generate something like this (One layer):
-		// ///
-		// ///  567
-		// ///  4 0
-		// ///  321
-		// ///
-		// /// </summary>
-		// /// <returns>The spiral positions.</returns>
-		// /// <param name="center">The center of the spiral.</param>
-		// /// <param name="layerCount">How many layers do you want the spiral to be?</param>
-		// public static IEnumerable<Vector2Int> GetSpiralPoints(Vector2Int center, int layerCount) => GetSpiralPoints(center, layerCount, Vector2Int.right);
-		//
-		// /// <inheritdoc cref="GetSpiralPoints(Vector2Int,int)"/>
-		// /// <param name="startDirection">The direction where the spiral will start.</param>
-		// public static IEnumerable<Vector2Int> GetSpiralPoints(Vector2Int center, int layerCount, Vector2Int startDirection)
-		// {
-		// 	int index = 0;
-		//
-		// 	for (int i = 0; i < 4; i++)
-		// 	{
-		// 		if (startDirection == neighbor4Positions[index]) goto outBreak;
-		// 		index++;
-		// 	}
-		//
-		// 	throw new ArgumentException(nameof(startDirection) + " is invalid!\nIt can only be a direction inside " + nameof(neighbor4Positions));
-		//
-		// 	outBreak:
-		//
-		// 	Vector2Int position = center;
-		// 	Vector2Int direction;
-		//
-		// 	for (int size = 1; size <= layerCount; size++)
-		// 	{
-		// 		direction = neighbor4Positions[index];
-		// 		position += direction;
-		//
-		// 		RotateDirection();
-		//
-		// 		for (int j = 0; j < size; j++)
-		// 		{
-		// 			yield return position;
-		// 			position += direction;
-		// 		}
-		//
-		// 		RotateDirection();
-		//
-		// 		for (int j = 0; j < 3; j++) //For the 3 other directions
-		// 		{
-		// 			for (int k = 0; k < size * 2; k++)
-		// 			{
-		// 				yield return position;
-		// 				position += direction;
-		// 			}
-		//
-		// 			RotateDirection();
-		// 		}
-		//
-		// 		for (int j = 0; j < size; j++)
-		// 		{
-		// 			yield return position;
-		// 			position += direction;
-		// 		}
-		//
-		// 		index = (index - 1).Repeat(4);
-		// 	}
-		//
-		// 	void RotateDirection() => direction = neighbor4Positions[(++index).Repeat(4)];
-		// }
 	}
+
+	// Testing code:
+	// var dictionary = new EnumerableSpiral2D(10).Select((position, index) => (position, index)).ToDictionary(pair => pair.position, pair => pair.index);
+	//
+	// Int2 min = dictionary.Keys.Aggregate(Int2.maxValue, (current, position) => current.Min(position));
+	// Int2 max = dictionary.Keys.Aggregate(Int2.minValue, (current, position) => current.Max(position));
+	//
+	// Int2 size = max - min + Int2.one;
+	// int[,] grid = new int[size.x, size.y];
+	//
+	// foreach (Int2 position in size.Loop())
+	// {
+	// 	if (!dictionary.TryGetValue(position + min, out int index)) continue;
+	// 	grid[position.x, position.y] = index;
+	// }
+	//
+	// for (int y = size.x - 1; y >= 0; y--)
+	// {
+	// 	for (int x = 0; x < size.y; x++)
+	// 	{
+	// 		Console.Write(grid[x, y]);
+	// 		Console.Write('\t');
+	// 	}
+	//
+	// 	Console.WriteLine();
+	// }
 }
