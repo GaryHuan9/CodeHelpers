@@ -2,15 +2,14 @@
 
 using System;
 using System.Collections.Generic;
+using CodeHelpers.ObjectPooling;
 
 namespace CodeHelpers.Unity.DelayedExecute
 {
 	public static class DelayedController
 	{
 		static DelayedController() => CodeHelperMonoBehavior.UnityUpdateMethods += ConstantUpdate;
-
 		static readonly Dictionary<DelayedJob, JobInfo> allJobs = new Dictionary<DelayedJob, JobInfo>();
-		static readonly List<DelayedJob> finishedJobs = new List<DelayedJob>();
 
 		/// <summary>
 		/// Starts a job.
@@ -36,6 +35,8 @@ namespace CodeHelpers.Unity.DelayedExecute
 
 		static void ConstantUpdate()
 		{
+			var finished = CollectionPooler<DelayedJob>.list.GetObject();
+
 			foreach (var pair in allJobs)
 			{
 				JobInfo info = pair.Value;
@@ -47,11 +48,11 @@ namespace CodeHelpers.Unity.DelayedExecute
 				info.onFinished?.Invoke(job);
 				if (!info.removeAfterFinished) continue;
 
-				finishedJobs.Add(job);
+				finished.Add(job);
 			}
 
-			for (int i = 0; i < finishedJobs.Count; i++) RemoveJob(finishedJobs[i]);
-			finishedJobs.Clear();
+			foreach (DelayedJob job in finished) RemoveJob(job);
+			CollectionPooler<DelayedJob>.list.ReleaseObject(finished);
 		}
 
 		readonly struct JobInfo

@@ -21,10 +21,10 @@ namespace CodeHelpers.Unity.Mathematics
 		/// </summary>
 		public PositionRotation GetMirror(Direction direction)
 		{
-			Int3 mirror = direction.ToVector3().Absoluted * -2 + Int3.one;
+			Int3 mirror = direction.ToInt3().Absoluted * -2 + Int3.one;
 			rotation.ToAngleAxis(out float angle, out Vector3 axis);
 
-			return new PositionRotation(position * mirror, Quaternion.AngleAxis(-angle, axis * mirror));
+			return new PositionRotation(position * mirror, Quaternion.AngleAxis(-angle, axis.C() * mirror));
 		}
 	}
 }
