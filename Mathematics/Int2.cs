@@ -252,6 +252,11 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public Int2 Squared
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(x * x, y * y);
+		}
+
 		public Int2 Perpendicular
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(-y, x);
@@ -299,6 +304,9 @@ namespace CodeHelpers.Mathematics
 			float scale = max / (float)Math.Sqrt(squared);
 			return new Float2(x * scale, y * scale);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Power(Float2 value) => new Float2((float)Math.Pow(x, value.x), (float)Math.Pow(y, value.y));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Power(float value) => new Float2((float)Math.Pow(x, value), (float)Math.Pow(y, value));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Lerp(Int2 other, Int2 value) => new Int2(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Lerp(Int2 other, int value) => new Int2(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value));
@@ -374,6 +382,9 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Int2 value, float min, float max) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 ClampMagnitude(Int2 value, float max) => value.ClampMagnitude(max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Power(Float2 value, Float2 power) => value.Power(power);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Power(Float2 value, float power) => value.Power(power);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 first, Int2 second, Int2 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Lerp(Int2 first, Int2 second, int value) => first.Lerp(second, value);

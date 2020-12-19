@@ -295,6 +295,11 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public Int3 Squared
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int3(x * x, y * y, z * z);
+		}
+
 		public Int3 Sorted
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -382,6 +387,9 @@ namespace CodeHelpers.Mathematics
 			return new Float3(x * scale, y * scale, z * scale);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(Float3 value) => new Float3((float)Math.Pow(x, value.x), (float)Math.Pow(y, value.y), (float)Math.Pow(z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(float value) => new Float3((float)Math.Pow(x, value), (float)Math.Pow(y, value), (float)Math.Pow(z, value));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Lerp(Int3 other, Int3 value) => new Int3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Lerp(Int3 other, int value) => new Int3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
 
@@ -445,6 +453,9 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Int3 value, float min, float max) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 ClampMagnitude(Int3 value, float max) => value.ClampMagnitude(max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(Float3 value, Float3 power) => value.Power(power);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(Float3 value, float power) => value.Power(power);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Lerp(Int3 first, Int3 second, Int3 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Lerp(Int3 first, Int3 second, int value) => first.Lerp(second, value);

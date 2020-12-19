@@ -658,6 +658,11 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public Float4 Squared
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float4(x * x, y * y, z * z, w * w);
+		}
+
 		public Float4 Sorted
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -822,6 +827,9 @@ namespace CodeHelpers.Mathematics
 			return new Float4(x * scale, y * scale, z * scale, w * scale);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Power(Float4 value) => new Float4((float)Math.Pow(x, value.x), (float)Math.Pow(y, value.y), (float)Math.Pow(z, value.z), (float)Math.Pow(w, value.w));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Power(float value) => new Float4((float)Math.Pow(x, value), (float)Math.Pow(y, value), (float)Math.Pow(z, value), (float)Math.Pow(w, value));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Lerp(Float4 other, Float4 value) => new Float4(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z), Scalars.Lerp(w, other.w, value.w));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Lerp(Float4 other, float value) => new Float4(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value), Scalars.Lerp(w, other.w, value));
 
@@ -870,6 +878,9 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Clamp(Float4 value, float min, float max) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 ClampMagnitude(Float4 value, float max) => value.ClampMagnitude(max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Power(Float4 value, Float4 power) => value.Power(power);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Power(Float4 value, float power) => value.Power(power);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Lerp(Float4 first, Float4 second, Float4 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Lerp(Float4 first, Float4 second, float value) => first.Lerp(second, value);

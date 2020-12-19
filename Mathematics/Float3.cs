@@ -257,6 +257,11 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public Float3 Squared
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float3(x * x, y * y, z * z);
+		}
+
 		public Float3 Sorted
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -371,6 +376,9 @@ namespace CodeHelpers.Mathematics
 			return new Float3(x * scale, y * scale, z * scale);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(Float3 value) => new Float3((float)Math.Pow(x, value.x), (float)Math.Pow(y, value.y), (float)Math.Pow(z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(float value) => new Float3((float)Math.Pow(x, value), (float)Math.Pow(y, value), (float)Math.Pow(z, value));
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, Float3 value) => new Float3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, float value) => new Float3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
 
@@ -450,6 +458,9 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, float min, float max) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 ClampMagnitude(Float3 value, float max) => value.ClampMagnitude(max);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(Float3 value, Float3 power) => value.Power(power);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(Float3 value, float power) => value.Power(power);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, Float3 value) => first.Lerp(second, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, float value) => first.Lerp(second, value);
