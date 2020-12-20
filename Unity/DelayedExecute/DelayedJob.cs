@@ -44,7 +44,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 		{
 			stopwatch.Reset();
 			stopwatch.Start();
-			
+
 			int count = 0;
 
 			while (count++ != -1 && jobs.MoveNext())

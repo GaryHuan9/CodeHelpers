@@ -105,7 +105,7 @@ namespace CodeHelpers.RotationHelpers
 
 		public static Float3 operator *(LimitedRotation rotation, Float3 vector) => rotation.Quaternion * vector;
 		public static Int3 operator *(LimitedRotation rotation, Int3 vector) => ((Float3)(rotation.Quaternion * vector.U())).Rounded;
-		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToVector3()).ToDirection();
+		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToInt3()).ToDirection();
 #endif
 
 		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;
