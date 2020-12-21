@@ -630,8 +630,12 @@ namespace CodeHelpers.Mathematics
 			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float3 value) => new Int2((int)value.x, (int)value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(Float3 value) => value.XY;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(Float3 value) => new Float4(value.x, value.y, value.z, 0f);
 
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(UnityEngine.Vector3 value) => new Float3(value.x, value.y, value.z);

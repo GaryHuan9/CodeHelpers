@@ -1026,6 +1026,11 @@ namespace CodeHelpers.Mathematics
 			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz + dw * dw);
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float4 value) => new Int2((int)value.x, (int)value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float4 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(Float4 value) => value.XY;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(Float4 value) => value.XYZ;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(float value) => new Float4(value, value, value, value);
 
 #if CODEHELPERS_UNITY
