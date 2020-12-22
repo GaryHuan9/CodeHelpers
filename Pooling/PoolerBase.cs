@@ -43,5 +43,35 @@ namespace CodeHelpers.ObjectPooling
 		{
 			if (target is IDisposable disposable) disposable.Dispose();
 		}
+
+		public ReleaseHandle<T> Fetch() => new ReleaseHandle<T>(this);
+	}
+
+	public struct ReleaseHandle<T> : IDisposable where T : class
+	{
+		public ReleaseHandle(PoolerBase<T> pooler)
+		{
+			this.pooler = pooler;
+			target = pooler.GetObject();
+
+			disposed = false;
+		}
+
+		readonly PoolerBase<T> pooler;
+		readonly T target;
+
+		bool disposed;
+
+		public T Target => !disposed ? target : throw new Exception("Pooled object already released!");
+
+		public void Dispose()
+		{
+			if (disposed) return;
+
+			pooler.ReleaseObject(target);
+			disposed = true;
+		}
+
+		public static implicit operator T(ReleaseHandle<T> handle) => handle.Target;
 	}
 }
