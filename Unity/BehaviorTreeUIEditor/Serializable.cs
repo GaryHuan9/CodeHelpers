@@ -258,7 +258,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			set
 			{
 				CheckReturn(value);
-				if (Mathf.Approximately(Float1Value, value)) return;
+				if (Scalars.AlmostEquals(Float1Value, value)) return;
 
 				scaler1 = BitwiseConvert(value);
 				OnValueChangedMethods?.Invoke();

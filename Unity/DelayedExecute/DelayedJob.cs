@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Unity.DelayedExecute
 {
@@ -30,7 +30,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 			get => _maxExecutionMillisecond;
 			set
 			{
-				if (value <= 0f || Mathf.Approximately(value, 0f)) throw ExceptionHelper.Invalid(nameof(value), value, InvalidType.outOfBounds);
+				if (value <= 0f || Scalars.AlmostEquals(value, 0f)) throw ExceptionHelper.Invalid(nameof(value), value, InvalidType.outOfBounds);
 				_maxExecutionMillisecond = value;
 			}
 		}
