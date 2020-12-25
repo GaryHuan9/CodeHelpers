@@ -4,10 +4,11 @@ namespace CodeHelpers.Threads
 {
 	public static class InterlockedHelper
 	{
-		public static int Read(ref int location) => Interlocked.CompareExchange(ref location, 0, 0);
+		public static int Read(ref int location) => Interlocked.CompareExchange(ref location, default, default);
+		public static T Read<T>(ref T location) where T : class => Interlocked.CompareExchange(ref location, default, default);
 
-		public static float Read(ref float location) => Interlocked.CompareExchange(ref location, 0f, 0f);
-		public static double Read(ref double location) => Interlocked.CompareExchange(ref location, 0d, 0d);
+		public static float Read(ref float location) => Interlocked.CompareExchange(ref location, default, default);
+		public static double Read(ref double location) => Interlocked.CompareExchange(ref location, default, default);
 
 		public static float Add(ref float location, float value)
 		{
