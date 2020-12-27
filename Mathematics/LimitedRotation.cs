@@ -17,7 +17,7 @@ namespace CodeHelpers.RotationHelpers
 			int Transform(int angle) => (angle + 45).ToUnsignedAngle() / 90;
 		}
 
-		LimitedRotation(byte data) => this.data = (byte)(data & 0b00111111); //Must mask out the unnecessary bits
+		internal LimitedRotation(byte data) => this.data = (byte)(data & 0b00111111); //Must mask out the unnecessary bits
 
 		public LimitedRotation(float x, float y, float z) : this((int)x.ToUnsignedAngle(), (int)y.ToUnsignedAngle(), (int)z.ToUnsignedAngle()) { }
 
@@ -40,7 +40,7 @@ namespace CodeHelpers.RotationHelpers
 		///
 		/// rotation applied in world space as ZXY
 		/// </summary>
-		readonly byte data;
+		internal readonly byte data;
 
 		public int X => ((data & 0b00000011) >> 0) * 90;
 		public int Y => ((data & 0b00001100) >> 2) * 90;
