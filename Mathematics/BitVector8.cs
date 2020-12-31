@@ -20,44 +20,26 @@ namespace CodeHelpers.Mathematics
 		/// Access: If the bit is true, else false
 		/// Modify: Change the bit to value
 		/// </summary>
-		public bool this[int bitAt]
+		public bool this[int bits]
 		{
-			get => GetAllBits(1 << bitAt);
-			set => SetAllBits(1 << bitAt, value);
+			get => (Data & bits) == bits;
+			set
+			{
+				if (value) Data |= (byte)bits;
+				else Data &= (byte)~bits;
+			}
 		}
 
 		/// <summary>
-		/// Gets if all the <paramref name="bits"/> in this data is true
+		/// Rotate all bits by a certain <paramref name="amount"/>
 		/// </summary>
-		public bool GetAllBits(int bits) => (Data & bits) == bits;
-
-		/// <summary>
-		/// Sets the value of all the <paramref name="bits"/> in this data to <paramref name="value"/>
-		/// </summary>
-		public void SetAllBits(int bits, bool value)
+		public void Rotate(int amount)
 		{
-			if (value) Data |= (byte)bits;
-			else Data &= (byte)~bits;
+			Data = (byte)((Data << amount) | (Data >> (Length - amount)));
 		}
-
-		/// <summary>
-		/// Shift all bits a certain <paramref name="amount"/>
-		/// </summary>
-		public void Shift(int amount)
-		{
-			Data = (byte)((uint)Data << amount | (uint)Data >> (Length - amount));
-		}
-
-		/// <summary>
-		/// For every bit in this data, if the input <paramref name="bits"/> is 1, then we add the bit to our result's end.
-		/// If input is 0, then we ignore it.
-		/// </summary>
-		//public byte Extract(byte bits)
-		//{
-		//	return (byte)(bits & Data);
-		//}
 
 		public int CompareTo(BitVector8 other) => Data.CompareTo(other.Data);
+
 		public override int GetHashCode() => Data.GetHashCode();
 
 		public override bool Equals(object obj) => obj is BitVector8 other && Equals(other);
