@@ -36,8 +36,6 @@ namespace CodeHelpers.Files
 			);
 		}
 
-		public Direction ReadDirection() => (Direction)ReadByte();
-
 		public Float2 ReadFloat2() => new Float2(ReadSingle(), ReadSingle());
 		public Float3 ReadFloat3() => new Float3(ReadSingle(), ReadSingle(), ReadSingle());
 		public Float4 ReadFloat4() => new Float4(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());

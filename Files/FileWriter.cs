@@ -28,8 +28,6 @@ namespace CodeHelpers.Files
 			Write(color64.a);
 		}
 
-		public void Write(Direction direction) => Write((byte)direction);
-
 		public void Write(Float2 float2)
 		{
 			Write(float2.x);
