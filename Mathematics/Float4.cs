@@ -811,6 +811,18 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Dot(in Float4 other) => x * other.x + y * other.y + z * other.z + w * other.w;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DotDouble(in Float4 other) => (double)x * other.x + (double)y * other.y + (double)z * other.z + (double)w * other.w;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(in Float4 other)
+		{
+			double magnitude = Math.Sqrt(SquaredMagnitudeDouble * other.SquaredMagnitudeDouble);
+			return AlmostEqualsZero(magnitude) ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(in Float4 other) => (other - this).Magnitude;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DistanceDouble(in Float4 other) => (other - this).MagnitudeDouble;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SquaredDistance(in Float4 other) => (other - this).SquaredMagnitude;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double SquaredDistanceDouble(in Float4 other) => (other - this).SquaredMagnitudeDouble;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Min(in Float4 other) => new Float4(Math.Min(x, other.x), Math.Min(y, other.y), Math.Min(z, other.z), Math.Min(w, other.w));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Max(in Float4 other) => new Float4(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z), Math.Max(w, other.w));
 
@@ -869,11 +881,19 @@ namespace CodeHelpers.Mathematics
 
 #region Static
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Dot(in Float4 first, in Float4 second) => first.Dot(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DotDouble(in Float4 first, in Float4 second) => first.DotDouble(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DotDouble(in Float4 value, in Float4 other) => value.DotDouble(other);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Min(in Float4 first, in Float4 second) => first.Min(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Max(in Float4 first, in Float4 second) => first.Max(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Angle(in Float4 first, in Float4 second) => first.Angle(second);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Distance(in Float4 value, in Float4 other) => value.Distance(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DistanceDouble(in Float4 value, in Float4 other) => value.DistanceDouble(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SquaredDistance(in Float4 value, in Float4 other) => value.SquaredDistance(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double SquaredDistanceDouble(in Float4 value, in Float4 other) => value.SquaredDistanceDouble(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Min(in Float4 value, in Float4 other) => value.Min(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Max(in Float4 value, in Float4 other) => value.Max(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Clamp(in Float4 value, in Float4 min, in Float4 max) => value.Clamp(min, max);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Clamp(in Float4 value, float min, float max) => value.Clamp(min, max);
@@ -895,8 +915,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Damp(in Float4 current, in Float4 target, ref Float4 velocity, in Float4 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Damp(in Float4 current, in Float4 target, ref Float4 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Reflect(Float4 value, Float4 normal) => value.Reflect(normal);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Project(Float4 value, Float4 normal) => value.Project(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Reflect(in Float4 value, in Float4 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Project(in Float4 value, in Float4 normal) => value.Project(normal);
 
 #endregion
 

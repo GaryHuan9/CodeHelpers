@@ -338,32 +338,38 @@ namespace CodeHelpers.Mathematics
 
 #region Instance
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Dot(Float3 other) => x * other.x + y * other.y + z * other.z;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DotDouble(Float3 other) => (double)x * other.x + (double)y * other.y + (double)z * other.z;
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Cross(Float3 other) => new Float3
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Cross(in Float3 other) => new Float3
 		(
 			(float)((double)y * other.z - (double)z * other.y),
 			(float)((double)z * other.x - (double)x * other.z),
 			(float)((double)x * other.y - (double)y * other.x)
 		);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Float3 other)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Dot(in Float3 other) => x * other.x + y * other.y + z * other.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DotDouble(in Float3 other) => (double)x * other.x + (double)y * other.y + (double)z * other.z;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(in Float3 other)
 		{
 			double magnitude = Math.Sqrt(SquaredMagnitudeDouble * other.SquaredMagnitudeDouble);
 			return AlmostEqualsZero(magnitude) ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Float3 other, Float3 normal)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(in Float3 other, in Float3 normal)
 		{
 			float angle = Angle(other);
 			return Cross(other).Dot(normal) < 0f ? -angle : angle;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Min(Float3 other) => new Float3(Math.Min(x, other.x), Math.Min(y, other.y), Math.Min(z, other.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Max(Float3 other) => new Float3(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(in Float3 other) => (other - this).Magnitude;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DistanceDouble(in Float3 other) => (other - this).MagnitudeDouble;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(Float3 min, Float3 max) => new Float3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SquaredDistance(in Float3 other) => (other - this).SquaredMagnitude;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double SquaredDistanceDouble(in Float3 other) => (other - this).SquaredMagnitudeDouble;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Min(in Float3 other) => new Float3(Math.Min(x, other.x), Math.Min(y, other.y), Math.Min(z, other.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Max(in Float3 other) => new Float3(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z));
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(in Float3 min, in Float3 max) => new Float3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(float min, float max) => new Float3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -376,32 +382,32 @@ namespace CodeHelpers.Mathematics
 			return new Float3(x * scale, y * scale, z * scale);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(Float3 value) => new Float3((float)Math.Pow(x, value.x), (float)Math.Pow(y, value.y), (float)Math.Pow(z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(in Float3 value) => new Float3((float)Math.Pow(x, value.x), (float)Math.Pow(y, value.y), (float)Math.Pow(z, value.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Power(float value) => new Float3((float)Math.Pow(x, value), (float)Math.Pow(y, value), (float)Math.Pow(z, value));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, Float3 value) => new Float3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(Float3 other, float value) => new Float3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(in Float3 other, in Float3 value) => new Float3(Scalars.Lerp(x, other.x, value.x), Scalars.Lerp(y, other.y, value.y), Scalars.Lerp(z, other.z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Lerp(in Float3 other, float value) => new Float3(Scalars.Lerp(x, other.x, value), Scalars.Lerp(y, other.y, value), Scalars.Lerp(z, other.z, value));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 InverseLerp(Float3 other, Float3 value) => new Float3(Scalars.InverseLerp(x, other.x, value.x), Scalars.InverseLerp(y, other.y, value.y), Scalars.InverseLerp(z, other.z, value.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 InverseLerp(Float3 other, float value) => new Float3(Scalars.InverseLerp(x, other.x, value), Scalars.InverseLerp(y, other.y, value), Scalars.InverseLerp(z, other.z, value));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 InverseLerp(in Float3 other, in Float3 value) => new Float3(Scalars.InverseLerp(x, other.x, value.x), Scalars.InverseLerp(y, other.y, value.y), Scalars.InverseLerp(z, other.z, value.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 InverseLerp(in Float3 other, float value) => new Float3(Scalars.InverseLerp(x, other.x, value), Scalars.InverseLerp(y, other.y, value), Scalars.InverseLerp(z, other.z, value));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(Float3 length) => new Float3(x.Repeat(length.x), y.Repeat(length.y), z.Repeat(length.z));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(in Float3 length) => new Float3(x.Repeat(length.x), y.Repeat(length.y), z.Repeat(length.z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(float length) => new Float3(x.Repeat(length), y.Repeat(length), z.Repeat(length));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree) => CreateXY(XY.Rotate(degree), z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float2 pivot) => CreateXY(XY.Rotate(degree, pivot), z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float3 pivot) => CreateXY(XY.Rotate(degree, pivot.XY), z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, in Float3 pivot) => CreateXY(XY.Rotate(degree, pivot.XY), z);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree) => CreateXZ(XZ.Rotate(degree), y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float2 pivot) => CreateXZ(XZ.Rotate(degree, pivot), y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float3 pivot) => CreateXZ(XZ.Rotate(degree, pivot.XZ), y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, in Float3 pivot) => CreateXZ(XZ.Rotate(degree, pivot.XZ), y);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree) => CreateYZ(YZ.Rotate(degree), x);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float2 pivot) => CreateYZ(YZ.Rotate(degree, pivot), x);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float3 pivot) => CreateYZ(YZ.Rotate(degree, pivot.YZ), x);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, in Float3 pivot) => CreateYZ(YZ.Rotate(degree, pivot.YZ), x);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Float3 Damp(Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime)
+		public Float3 Damp(in Float3 target, ref Float3 velocity, in Float3 smoothTime, float deltaTime)
 		{
 			float velocityX = velocity.x;
 			float velocityY = velocity.y;
@@ -419,60 +425,66 @@ namespace CodeHelpers.Mathematics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Damp(target, ref velocity, (Float3)smoothTime, deltaTime);
+		public Float3 Damp(in Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Damp(target, ref velocity, (Float3)smoothTime, deltaTime);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Reflect(Float3 normal) => -2f * Dot(normal) * normal + this;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Project(Float3 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Reflect(in Float3 normal) => -2f * Dot(normal) * normal + this;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Project(in Float3 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
 
 #endregion
 
 #region Static
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Dot(Float3 first, Float3 second) => first.Dot(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DotDouble(Float3 first, Float3 second) => first.DotDouble(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Cross(in Float3 first, in Float3 second) => first.Cross(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Cross(Float3 first, Float3 second) => first.Cross(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Dot(in Float3 value, in Float3 other) => value.Dot(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DotDouble(in Float3 value, in Float3 other) => value.DotDouble(other);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Angle(Float3 first, Float3 second) => first.Angle(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SignedAngle(Float3 first, Float3 second, Float3 normal) => first.SignedAngle(second, normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Angle(in Float3 first, in Float3 second) => first.Angle(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SignedAngle(in Float3 first, in Float3 second, in Float3 normal) => first.SignedAngle(second, normal);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Min(Float3 first, Float3 second) => first.Min(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(Float3 first, Float3 second) => first.Max(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Distance(in Float3 value, in Float3 other) => value.Distance(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DistanceDouble(in Float3 value, in Float3 other) => value.DistanceDouble(other);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, Float3 min, Float3 max) => value.Clamp(min, max);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(Float3 value, float min, float max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SquaredDistance(in Float3 value, in Float3 other) => value.SquaredDistance(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double SquaredDistanceDouble(in Float3 value, in Float3 other) => value.SquaredDistanceDouble(other);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 ClampMagnitude(Float3 value, float max) => value.ClampMagnitude(max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Min(in Float3 value, in Float3 other) => value.Min(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(in Float3 value, in Float3 other) => value.Max(other);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(Float3 value, Float3 power) => value.Power(power);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(Float3 value, float power) => value.Power(power);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(in Float3 value, in Float3 min, in Float3 max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(in Float3 value, float min, float max) => value.Clamp(min, max);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, Float3 value) => first.Lerp(second, value);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(Float3 first, Float3 second, float value) => first.Lerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 ClampMagnitude(in Float3 value, float max) => value.ClampMagnitude(max);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 first, Float3 second, Float3 value) => first.InverseLerp(second, value);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(Float3 first, Float3 second, float value) => first.InverseLerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(in Float3 value, in Float3 power) => value.Power(power);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Power(in Float3 value, float power) => value.Power(power);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Float3 value, Float3 length) => value.Repeat(length);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(Float3 value, float length) => value.Repeat(length);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(in Float3 first, in Float3 second, in Float3 value) => first.Lerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Lerp(in Float3 first, in Float3 second, float value) => first.Lerp(second, value);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Float3 value, float degree) => value.RotateXY(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Float3 value, float degree, Float2 pivot) => value.RotateXY(degree, pivot);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(Float3 value, float degree, Float3 pivot) => value.RotateXY(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(in Float3 first, in Float3 second, in Float3 value) => first.InverseLerp(second, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 InverseLerp(in Float3 first, in Float3 second, float value) => first.InverseLerp(second, value);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Float3 value, float degree) => value.RotateXZ(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Float3 value, float degree, Float2 pivot) => value.RotateXZ(degree, pivot);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(Float3 value, float degree, Float3 pivot) => value.RotateXZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(in Float3 value, in Float3 length) => value.Repeat(length);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(in Float3 value, float length) => value.Repeat(length);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Float3 value, float degree) => value.RotateYZ(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Float3 value, float degree, Float2 pivot) => value.RotateYZ(degree, pivot);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(Float3 value, float degree, Float3 pivot) => value.RotateYZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degree) => value.RotateXY(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degree, Float2 pivot) => value.RotateXY(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degree, in Float3 pivot) => value.RotateXY(degree, pivot);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, Float3 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degree) => value.RotateXZ(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degree, Float2 pivot) => value.RotateXZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degree, in Float3 pivot) => value.RotateXZ(degree, pivot);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Reflect(Float3 value, Float3 normal) => value.Reflect(normal);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Project(Float3 value, Float3 normal) => value.Project(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degree) => value.RotateYZ(degree);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degree, Float2 pivot) => value.RotateYZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degree, in Float3 pivot) => value.RotateYZ(degree, pivot);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(in Float3 current, in Float3 target, ref Float3 velocity, in Float3 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(in Float3 current, in Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Reflect(in Float3 value, in Float3 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Project(in Float3 value, in Float3 normal) => value.Project(normal);
 
 #endregion
 
@@ -576,35 +588,35 @@ namespace CodeHelpers.Mathematics
 
 #region Operators
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(Float3 first, Float3 second) => new Float3(first.x + second.x, first.y + second.y, first.z + second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(Float3 first, Float3 second) => new Float3(first.x - second.x, first.y - second.y, first.z - second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(in Float3 first, in Float3 second) => new Float3(first.x + second.x, first.y + second.y, first.z + second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(in Float3 first, in Float3 second) => new Float3(first.x - second.x, first.y - second.y, first.z - second.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(Float3 first, Float3 second) => new Float3(first.x * second.x, first.y * second.y, first.z * second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(Float3 first, Float3 second) => new Float3(first.x / second.x, first.y / second.y, first.z / second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(in Float3 first, in Float3 second) => new Float3(first.x * second.x, first.y * second.y, first.z * second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(in Float3 first, in Float3 second) => new Float3(first.x / second.x, first.y / second.y, first.z / second.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(Float3 first, float second) => new Float3(first.x * second, first.y * second, first.z * second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(Float3 first, float second) => new Float3(first.x / second, first.y / second, first.z / second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(in Float3 first, float second) => new Float3(first.x * second, first.y * second, first.z * second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(in Float3 first, float second) => new Float3(first.x / second, first.y / second, first.z / second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(float first, Float3 second) => new Float3(first * second.x, first * second.y, first * second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(float first, Float3 second) => new Float3(first / second.x, first / second.y, first / second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator *(float first, in Float3 second) => new Float3(first * second.x, first * second.y, first * second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator /(float first, in Float3 second) => new Float3(first / second.x, first / second.y, first / second.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(Float3 value) => value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(Float3 value) => new Float3(-value.x, -value.y, -value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(in Float3 value) => value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator -(in Float3 value) => new Float3(-value.x, -value.y, -value.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(Float3 first, Float3 second) => new Float3(first.x % second.x, first.y % second.y, first.z % second.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(Float3 first, float second) => new Float3(first.x % second, first.y % second, first.z % second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(float first, Float3 second) => new Float3(first % second.x, first % second.y, first % second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(in Float3 first, in Float3 second) => new Float3(first.x % second.x, first.y % second.y, first.z % second.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(in Float3 first, float second) => new Float3(first.x % second, first.y % second, first.z % second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(float first, in Float3 second) => new Float3(first % second.x, first % second.y, first % second.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(Float3 first, Float3 second) => first.Equals(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(Float3 first, Float3 second) => !first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float3 first, in Float3 second) => first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float3 first, in Float3 second) => !first.Equals(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(Float3 first, Float3 second) => first.x < second.x && first.y < second.y && first.z < second.z;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(Float3 first, Float3 second) => first.x > second.x && first.y > second.y && first.z > second.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(in Float3 first, in Float3 second) => first.x < second.x && first.y < second.y && first.z < second.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(in Float3 first, in Float3 second) => first.x > second.x && first.y > second.y && first.z > second.z;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Float3 first, Float3 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Float3 first, Float3 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(in Float3 first, in Float3 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(in Float3 first, in Float3 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float3 other) => x == other.x && y == other.y && z == other.z;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(in Float3 other) => x == other.x && y == other.y && z == other.z;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => EqualsFast(other);
@@ -618,16 +630,16 @@ namespace CodeHelpers.Mathematics
 			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float3 value) => new Int2((int)value.x, (int)value.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float3 value) => new Int2((int)value.x, (int)value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(Float3 value) => value.XY;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(in Float3 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(Float3 value) => new Float4(value.x, value.y, value.z, 0f);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(in Float3 value) => new Float4(value.x, value.y, value.z, 0f);
 
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(UnityEngine.Vector3 value) => new Float3(value.x, value.y, value.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3(Float3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3(in Float3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);
 #endif
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => Scalars.AlmostEquals(squaredMagnitude, 0d);
@@ -660,7 +672,7 @@ namespace CodeHelpers.Mathematics
 
 		public readonly struct SeriesEnumerable : IEnumerable<float>
 		{
-			public SeriesEnumerable(Float3 value) => enumerator = new Enumerator(value);
+			public SeriesEnumerable(in Float3 value) => enumerator = new Enumerator(value);
 
 			readonly Enumerator enumerator;
 
@@ -671,7 +683,7 @@ namespace CodeHelpers.Mathematics
 
 			public struct Enumerator : IEnumerator<float>
 			{
-				public Enumerator(Float3 source)
+				public Enumerator(in Float3 source)
 				{
 					this.source = source;
 					index = -1;

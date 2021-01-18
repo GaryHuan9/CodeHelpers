@@ -127,10 +127,10 @@ namespace CodeHelpers.Mathematics
 
 		public float Magnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)MagnitudeLong;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)MagnitudeDouble;
 		}
 
-		public double MagnitudeLong
+		public double MagnitudeDouble
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Sqrt(SquaredMagnitudeLong);
 		}
@@ -286,6 +286,12 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Int2 other) => Math.Abs(SignedAngle(other));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Int2 other) => (float)Math.Atan2((long)x * other.y - (long)y * other.x, DotLong(other)) * Scalars.RadianToDegree;
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(Int2 other) => (other - this).Magnitude;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DistanceDouble(Int2 other) => (other - this).MagnitudeDouble;
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public int SquaredDistance(Int2 other) => (other - this).SquaredMagnitude;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public long SquaredDistanceLong(Int2 other) => (other - this).SquaredMagnitudeLong;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Min(Int2 other) => new Int2(Math.Min(x, other.x), Math.Min(y, other.y));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Max(Int2 other) => new Int2(Math.Max(x, other.x), Math.Max(y, other.y));
 
@@ -367,14 +373,20 @@ namespace CodeHelpers.Mathematics
 
 #region Static
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Dot(Int2 first, Int2 second) => first.Dot(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static long DotLong(Int2 first, Int2 second) => first.DotLong(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Dot(Int2 value, Int2 other) => value.Dot(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static long DotLong(Int2 value, Int2 other) => value.DotLong(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Angle(Int2 first, Int2 second) => first.Angle(second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float SignedAngle(Int2 first, Int2 second) => first.SignedAngle(second);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Min(Int2 first, Int2 second) => first.Min(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Max(Int2 first, Int2 second) => first.Max(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Distance(Int2 value, Int2 other) => value.Distance(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DistanceDouble(Int2 value, Int2 other) => value.DistanceDouble(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int SquaredDistance(Int2 value, Int2 other) => value.SquaredDistance(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static long SquaredDistanceDouble(Int2 value, Int2 other) => value.SquaredDistanceLong(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Min(Int2 value, Int2 other) => value.Min(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Max(Int2 value, Int2 other) => value.Max(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Clamp(Int2 value, Int2 min, Int2 max) => value.Clamp(min, max);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Clamp(Int2 value, int min, int max) => value.Clamp(min, max);
