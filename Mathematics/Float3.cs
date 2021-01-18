@@ -419,25 +419,10 @@ namespace CodeHelpers.Mathematics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime)
-		{
-			float velocityX = velocity.x;
-			float velocityY = velocity.y;
-			float velocityZ = velocity.z;
+		public Float3 Damp(Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => Damp(target, ref velocity, (Float3)smoothTime, deltaTime);
 
-			Float3 result = new Float3
-			(
-				Scalars.Damp(x, target.x, ref velocityX, smoothTime, deltaTime),
-				Scalars.Damp(y, target.y, ref velocityY, smoothTime, deltaTime),
-				Scalars.Damp(z, target.z, ref velocityZ, smoothTime, deltaTime)
-			);
-
-			velocity = new Float3(velocityX, velocityY, velocityZ);
-			return result;
-		}
-
-		//Although this looks heavy, compared to unpacked. After the compiler's release mode optimizations there is basically no difference.
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Reflect(Float3 normal) => -2f * Dot(normal) * normal + this;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Project(Float3 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
 
 #endregion
 
@@ -487,6 +472,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(Float3 current, Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Reflect(Float3 value, Float3 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Project(Float3 value, Float3 normal) => value.Project(normal);
 
 #endregion
 
@@ -619,10 +605,12 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Float3 first, Float3 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float3 other) => x == other.x && y == other.y && z == other.z;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => EqualsFast(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool Equals(Float3 other)
+		public bool EqualsFast(in Float3 other)
 		{
 			double dx = x - other.x;
 			double dy = y - other.y;

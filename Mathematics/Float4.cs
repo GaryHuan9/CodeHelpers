@@ -863,6 +863,7 @@ namespace CodeHelpers.Mathematics
 		public Float4 Damp(in Float4 target, ref Float4 velocity, float smoothTime, float deltaTime) => Damp(target, ref velocity, (Float4)smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Reflect(in Float4 normal) => -2f * Dot(normal) * normal + this;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Project(in Float4 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
 
 #endregion
 
@@ -894,7 +895,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Damp(in Float4 current, in Float4 target, ref Float4 velocity, in Float4 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Damp(in Float4 current, in Float4 target, ref Float4 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Reflect(in Float4 value, in Float4 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Reflect(Float4 value, Float4 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 Project(Float4 value, Float4 normal) => value.Project(normal);
 
 #endregion
 
@@ -1038,6 +1040,9 @@ namespace CodeHelpers.Mathematics
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Vector4 value) => new Float4(value.x, value.y, value.z, value.w);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector4(in Float4 value) => new UnityEngine.Vector4(value.x, value.y, value.z, value.w);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Quaternion value) => new Float4(value.x, value.y, value.z, value.w);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Quaternion(in Float4 value) => new UnityEngine.Quaternion(value.x, value.y, value.z, value.w);
 #endif
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => Scalars.AlmostEquals(squaredMagnitude, 0d);

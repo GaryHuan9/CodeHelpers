@@ -1,5 +1,6 @@
 #if CODEHELPERS_UNITY
 
+using System.Collections.Generic;
 using CodeHelpers.Collections;
 using CodeHelpers.ObjectPooling;
 using UnityEngine;
@@ -14,25 +15,35 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			this.filter = filter;
 		}
 
-		public RendererFilter(Component behaviour)
+		public RendererFilter(Component behaviour, bool searchChild = true)
 		{
-			var renderers = CollectionPooler<MeshRenderer>.list.GetObject();
-			var filters = CollectionPooler<MeshFilter>.list.GetObject();
+			using var renderersHandle = CollectionPooler<MeshRenderer>.list.Fetch();
+			using var filtersHandle = CollectionPooler<MeshFilter>.list.Fetch();
 
-			behaviour.GetComponentsInChildren(renderers);
-			behaviour.GetComponentsInChildren(filters);
+			List<MeshRenderer> renderers = renderersHandle.Target;
+			List<MeshFilter> filters = filtersHandle.Target;
+
+			if (searchChild)
+			{
+				behaviour.GetComponentsInChildren(renderers);
+				behaviour.GetComponentsInChildren(filters);
+			}
+			else
+			{
+				behaviour.GetComponents(renderers);
+				behaviour.GetComponents(filters);
+			}
 
 			renderer = renderers.TryGetValue(0);
 			filter = filters.TryGetValue(0);
-
-			CollectionPooler<MeshRenderer>.list.ReleaseObject(renderers);
-			CollectionPooler<MeshFilter>.list.ReleaseObject(filters);
 		}
 
-		public RendererFilter(GameObject gameObject) : this(gameObject.transform) { }
+		public RendererFilter(GameObject gameObject, bool searchChild = true) : this(gameObject.transform, searchChild) { }
 
 		public readonly MeshRenderer renderer;
 		public readonly MeshFilter filter;
+
+		public bool BothPresent => renderer != null && filter != null;
 
 		public Mesh Mesh
 		{
@@ -40,6 +51,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set
 			{
 				if (filter != null) filter.mesh = value;
+				else throw ExceptionHelper.Invalid(nameof(filter), InvalidType.isNull);
 			}
 		}
 
@@ -49,6 +61,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set
 			{
 				if (filter != null) filter.sharedMesh = value;
+				else throw ExceptionHelper.Invalid(nameof(filter), InvalidType.isNull);
 			}
 		}
 
@@ -58,6 +71,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set
 			{
 				if (renderer != null) renderer.material = value;
+				else throw ExceptionHelper.Invalid(nameof(renderer), InvalidType.isNull);
 			}
 		}
 
@@ -67,6 +81,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set
 			{
 				if (renderer != null) renderer.sharedMaterial = value;
+				else throw ExceptionHelper.Invalid(nameof(renderer), InvalidType.isNull);
 			}
 		}
 
@@ -76,6 +91,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set
 			{
 				if (renderer != null) renderer.materials = value;
+				else throw ExceptionHelper.Invalid(nameof(renderer), InvalidType.isNull);
 			}
 		}
 
@@ -85,6 +101,31 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set
 			{
 				if (renderer != null) renderer.sharedMaterials = value;
+				else throw ExceptionHelper.Invalid(nameof(renderer), InvalidType.isNull);
+			}
+		}
+
+		public MeshMaterials MeshMaterials
+		{
+			get => new MeshMaterials(Mesh, Materials);
+			set
+			{
+				Mesh = value.Mesh;
+
+				if (renderer != null) value.Materials.AssignToRenderer(renderer, false);
+				else throw ExceptionHelper.Invalid(nameof(renderer), InvalidType.isNull);
+			}
+		}
+
+		public MeshMaterials SharedMeshMaterials
+		{
+			get => new MeshMaterials(SharedMesh, SharedMaterials);
+			set
+			{
+				SharedMesh = value.Mesh;
+
+				if (renderer != null) value.Materials.AssignToRenderer(renderer, true);
+				else throw ExceptionHelper.Invalid(nameof(renderer), InvalidType.isNull);
 			}
 		}
 
@@ -115,10 +156,12 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			set => renderer.transform.localScale = value;
 		}
 
-		public void Apply(MeshMaterials model)
+		public static RendererFilter AddNew(GameObject gameObject)
 		{
-			model.Materials.AssignToRenderer(renderer);
-			filter.sharedMesh = model.Mesh;
+			MeshRenderer renderer = gameObject.AddComponent<MeshRenderer>();
+			MeshFilter filter = gameObject.AddComponent<MeshFilter>();
+
+			return new RendererFilter(renderer, filter);
 		}
 	}
 }

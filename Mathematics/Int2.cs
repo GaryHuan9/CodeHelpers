@@ -361,6 +361,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Damp(Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => Float2.Damp(this, target, ref velocity, smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Reflect(Int2 normal) => -2 * Dot(normal) * normal + this;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Project(Float2 normal) => normal * (normal.Dot(this) / normal.SquaredMagnitude);
 
 #endregion
 
@@ -417,6 +418,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Int2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => Float2.Damp(current, target, ref velocity, smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Reflect(Int2 value, Int2 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Project(Int2 value, Float2 normal) => value.Project(normal);
 
 #endregion
 

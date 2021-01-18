@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CodeHelpers.ObjectPooling;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Meshes.Combinations
@@ -54,50 +55,58 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			for (int i = 0; i < Mesh.subMeshCount; i++) GetSubMesh(i);
 		}
 
-		static readonly List<Vector3> verticesCache = new List<Vector3>();
-		static readonly List<int> trianglesCache = new List<int>();
-		static readonly List<Vector2> uvsCache = new List<Vector2>();
-
-		static readonly Dictionary<int, int> changeTrianglesCache = new Dictionary<int, int>(); //Key: old vertex index, Value: new vertex index
-
 		Mesh[] subMeshes;
 
 		public Mesh GetSubMesh(int subMeshIndex)
 		{
-			//Create the subMeshes array if hasn't
+			//Create the subMeshes array if necessary
 			if (subMeshes == null) subMeshes = new Mesh[Mesh.subMeshCount];
 			else if (subMeshes[subMeshIndex] != null) return subMeshes[subMeshIndex];
 
-			//Get info
-			Mesh.GetVertices(verticesCache);
-			Mesh.GetUVs(0, uvsCache);
-			Mesh.GetTriangles(trianglesCache, subMeshIndex);
+			//Get data
+			using var verticesHandle = CollectionPooler<Vector3>.list.Fetch();
+			using var trianglesHandle = CollectionPooler<int>.list.Fetch();
+			using var uvsHandle = CollectionPooler<Vector2>.list.Fetch();
+
+			List<Vector3> vertices = verticesHandle.Target;
+			List<int> triangles = trianglesHandle.Target;
+			List<Vector2> uvs = uvsHandle.Target;
+
+			Mesh.GetVertices(vertices);
+			Mesh.GetTriangles(triangles, subMeshIndex);
+			Mesh.GetUVs(0, uvs);
 
 			//Get all the useful vertices
-			for (int i = 0; i < trianglesCache.Count; i++)
+			using var verticesMapHandle = CollectionPooler<int, int>.dictionary.Fetch();
+			using var verticesFinalHandle = CollectionPooler<Vector3>.list.Fetch();
+			using var uvsFinalHandle = CollectionPooler<Vector2>.list.Fetch();
+
+			Dictionary<int, int> verticesMap = verticesMapHandle.Target;
+			List<Vector3> verticesFinal = verticesFinalHandle.Target;
+			List<Vector2> uvsFinal = uvsFinalHandle.Target;
+
+			for (int i = 0; i < triangles.Count; i++)
 			{
-				int index = trianglesCache[i];
+				int oldIndex = triangles[i];
 
-				if (!changeTrianglesCache.ContainsKey(index)) changeTrianglesCache[index] = changeTrianglesCache.Count;
+				if (!verticesMap.TryGetValue(oldIndex, out int newIndex))
+				{
+					newIndex = verticesFinal.Count;
+					verticesMap[oldIndex] = newIndex;
 
-				trianglesCache[i] = changeTrianglesCache[index];
-			}
+					verticesFinal.Add(vertices[oldIndex]);
+					if (uvs.Count > oldIndex) uvsFinal.Add(uvs[oldIndex]);
+				}
 
-			//Remove all the useless vertices and uvs (TODO: Maybe we can reduce these array allocations?)
-			var usefulVertices = new Vector3[changeTrianglesCache.Count];
-			var usefulUVs = new Vector2[changeTrianglesCache.Count];
-
-			foreach (var pair in changeTrianglesCache)
-			{
-				usefulVertices[pair.Value] = verticesCache[pair.Key];
-				usefulUVs[pair.Value] = uvsCache[pair.Key];
+				triangles[i] = newIndex;
 			}
 
 			//Create a new mesh
-			Mesh mesh = new Mesh {vertices = usefulVertices, uv = usefulUVs};
-			mesh.SetTriangles(trianglesCache, 0);
+			Mesh mesh = new Mesh();
 
-			changeTrianglesCache.Clear();
+			mesh.SetVertices(vertices);
+			mesh.SetTriangles(triangles, 0);
+			mesh.SetUVs(0, uvs);
 
 			mesh.RecalculateNormals();
 			mesh.RecalculateBounds();
@@ -160,13 +169,25 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 				}
 			}
 
-			public void AssignToRenderer(MeshRenderer renderer)
+			public void AssignToRenderer(MeshRenderer renderer, bool shared)
 			{
-				if (Count > 1) renderer.sharedMaterials = materials;
+				if (shared)
+				{
+					if (Count > 1) renderer.sharedMaterials = materials;
+					else
+					{
+						renderer.sharedMaterials = Array.Empty<Material>();
+						renderer.sharedMaterial = Count == 0 ? null : material;
+					}
+				}
 				else
 				{
-					renderer.sharedMaterials = Array.Empty<Material>();
-					renderer.sharedMaterial = Count == 0 ? null : material;
+					if (Count > 1) renderer.materials = materials;
+					else
+					{
+						renderer.materials = Array.Empty<Material>();
+						renderer.material = Count == 0 ? null : material;
+					}
 				}
 			}
 		}

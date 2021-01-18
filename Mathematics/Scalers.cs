@@ -195,7 +195,7 @@ namespace CodeHelpers.Mathematics
 			return target + (delta + number) * exp;
 
 			//Uses Taylor Polynomials to approximate 1/exp; acceptable accuracy when domain: 0 < x < 1
-			float ApproximateExp(float value) => 1f / (1f + value + 0.48f * value * value + 0.235f * value * value * value);
+			static float ApproximateExp(float value) => 1f / (1f + value + 0.48f * value * value + 0.235f * value * value * value);
 		}
 
 		/// <summary>

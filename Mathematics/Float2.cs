@@ -363,22 +363,10 @@ namespace CodeHelpers.Mathematics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Float2 Damp(Float2 target, ref Float2 velocity, float smoothTime, float deltaTime)
-		{
-			float velocityX = velocity.x;
-			float velocityY = velocity.y;
-
-			Float2 result = new Float2
-			(
-				Scalars.Damp(x, target.x, ref velocityX, smoothTime, deltaTime),
-				Scalars.Damp(y, target.y, ref velocityY, smoothTime, deltaTime)
-			);
-
-			velocity = new Float2(velocityX, velocityY);
-			return result;
-		}
+		public Float2 Damp(Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => Damp(target, ref velocity, (Float2)smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Reflect(Float2 normal) => -2f * Dot(normal) * normal + this;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Project(Float2 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
 
 #endregion
 
@@ -417,6 +405,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Reflect(Float2 value, Float2 normal) => value.Reflect(normal);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Project(Float2 value, Float2 normal) => value.Project(normal);
 
 #endregion
 
