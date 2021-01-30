@@ -20,17 +20,19 @@ namespace CodeHelpers
 		/// <summary>
 		/// Throws exception when the sealable is already sealed.
 		/// </summary>
-		public static void CheckSealed<T>(this T sealable) where T : ISealable
+		public static void AssertNotSealed<T>(this T sealable) where T : ISealable
 		{
-			if (sealable.IsSealed) throw new Exception("Invalid access after the object has been sealed!");
+			if (!sealable.IsSealed) return;
+			throw new Exception($"Invalid access after {sealable} has been sealed!");
 		}
 
 		/// <summary>
 		/// Throws exception when the sealable is still not sealed.
 		/// </summary>
-		public static void CheckNotSealed<T>(this T sealable) where T : ISealable
+		public static void AssertSealed<T>(this T sealable) where T : ISealable
 		{
-			if (!sealable.IsSealed) throw new Exception("Invalid access before sealing the object!");
+			if (sealable.IsSealed) return;
+			throw new Exception($"Invalid access before sealing {sealable}!");
 		}
 	}
 }

@@ -47,7 +47,7 @@ namespace CodeHelpers.Mathematics
 		public readonly int min;
 		public readonly int max;
 
-		public int RandomValue => RandomHelper.Range(min, max);
+		public int RandomValue => RandomHelper.Range(min, max + 1);
 		public float Middle => (max + min) / 2f;
 		public int Range => max - min;
 

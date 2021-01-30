@@ -52,7 +52,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 		public void Seal()
 		{
-			this.CheckSealed();
+			this.AssertNotSealed();
 
 			for (int i = 0; i < NodeCount; i++) nodes[i].Seal();
 			nodes.TrimExcess();
@@ -168,7 +168,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			public void Seal()
 			{
-				this.CheckSealed();
+				this.AssertNotSealed();
 
 				var sealResult = CanSeal();
 				if (sealResult != SealResult.success) throw new Exception(sealResult.ToErrorMessage());
@@ -181,7 +181,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			public StatusToken Next(StatusToken from, T context)
 			{
-				this.CheckNotSealed();
+				this.AssertSealed();
 				if (from.result == Result.running) throw ExceptionHelper.Invalid(nameof(from), from, "is running, which indicates the tree should stop and cache but not try to get the next token.");
 
 				return GetNext(from, context);
@@ -195,7 +195,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			void SetParent()
 			{
-				this.CheckSealed();
+				this.AssertNotSealed();
 
 				_parentIndex = -1;
 				_indexInParent = -1;
@@ -203,7 +203,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			protected virtual void SetParent(int parentIndex, int indexInParent)
 			{
-				this.CheckSealed();
+				this.AssertNotSealed();
 				if (blueprint[parentIndex]?[indexInParent] != this) throw new Exception($"Invalid {nameof(parentIndex)} ({parentIndex}) or {nameof(indexInParent)} ({indexInParent})! The indices does not point to this node.");
 
 				_parentIndex = parentIndex;
@@ -212,7 +212,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			public void InsertChild(int positionIndex, int childIndex)
 			{
-				this.CheckSealed();
+				this.AssertNotSealed();
 				if (ChildCount >= MaxChildCount) throw new Exception($"Cannot add more children because {nameof(ChildCount)} ({ChildCount}) is already equals {nameof(MaxChildCount)} ({ChildCount})!");
 
 				Children = Children ?? new List<int>(); //Create list if null
@@ -224,7 +224,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			public Node RemoveChild(int positionIndex)
 			{
-				this.CheckSealed();
+				this.AssertNotSealed();
 				if (Children == null || !Children.IsIndexValid(positionIndex)) throw new Exception($"No child at {nameof(positionIndex)} ({positionIndex})");
 
 				var child = this[positionIndex];

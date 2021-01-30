@@ -105,28 +105,40 @@ namespace CodeHelpers.Mathematics
 		public static int Sign(this float value) => AlmostEquals(value, 0f) ? 0 : Math.Sign(value);
 		public static int Sign(this int value) => Math.Sign(value);
 
-		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
+		/// <summary>
+		/// Wraps <paramref name="value"/> between 0 (inclusive) and <paramref name="length"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
 		public static float Repeat(this float value, float length)
 		{
 			float result = value % length;
 			return result < 0f ? result + length : result;
 		}
 
-		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
+		/// <summary>
+		/// Wraps <paramref name="value"/> between 0 (inclusive) and <paramref name="length"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
 		public static int Repeat(this int value, int length)
 		{
 			int result = value % length;
 			return result < 0 ? result + length : result;
 		}
 
-		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
+		/// <summary>
+		/// Wraps <paramref name="value"/> between 0 (inclusive) and <paramref name="length"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
 		public static double Repeat(this double value, double length)
 		{
 			double result = value % length;
 			return result < 0d ? result + length : result;
 		}
 
-		/// <summary>Another implementation of Unity's Mathf.Repeat method. Slightly faster.</summary>
+		/// <summary>
+		/// Wraps <paramref name="value"/> between 0 (inclusive) and <paramref name="length"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
 		public static long Repeat(this long value, long length)
 		{
 			long result = value % length;
