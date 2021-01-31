@@ -76,11 +76,11 @@ namespace CodeHelpers.Collections
 			array.GetLength(1) > index.y && index.y >= 0 &&
 			array.GetLength(2) > index.z && index.z >= 0;
 
+		public static int IndexOf<T>(this IList<T> list, T item) => list.IndexOf(item);
+
 		public static int IndexOf<T>(this IEnumerable<T> enumerable, T item)
 		{
-			if (enumerable is IList<T> list) return list.IndexOf(item);
 			EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-
 			int index = 0;
 
 			foreach (T value in enumerable)
