@@ -154,6 +154,12 @@ namespace CodeHelpers.Unity
 			return cache = behaviour.GetComponentInParent<T>();
 		}
 
+		public static T FindObjectOfType<T>(ref T cache) where T : UnityEngine.Object
+		{
+			if (cache != null) return cache;
+			return cache = UnityEngine.Object.FindObjectOfType<T>();
+		}
+
 		public static float GetHorizontalFieldOfView(this Camera camera)
 		{
 			var tan = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad / 2f);

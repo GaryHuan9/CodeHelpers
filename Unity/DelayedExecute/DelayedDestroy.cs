@@ -67,7 +67,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 			if (mustDestroy) mustDestroyList.Add(target);
 			else destroyQueue.Enqueue(target);
 
-			if (!destroyJob.IsJobExecuting) DelayedController.StartJob(destroyJob);
+			if (!destroyJob.IsJobExecuting) DelayedController.Start(destroyJob);
 		}
 
 		/// <summary>

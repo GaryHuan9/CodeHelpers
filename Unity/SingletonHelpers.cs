@@ -15,7 +15,7 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
 				UE.Object.Destroy(current);
 				return instance;
@@ -26,7 +26,7 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
 				UE.Object.Destroy(current.gameObject);
 				return instance;
@@ -37,9 +37,9 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
-				DebugHelper.LogError(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				DebugHelper.LogError(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
 				return instance;
 			}
 		}
@@ -48,10 +48,10 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
 				UE.Object.Destroy(current);
-				DebugHelper.LogError(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				DebugHelper.LogError(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
 				return instance;
 			}
 		}
@@ -60,7 +60,7 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
 				UE.Object.Destroy(current.gameObject);
 				DebugHelper.LogError(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
@@ -72,8 +72,8 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
-				throw new Exception(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				if (instance == null || instance == current) return instance = current;
+				throw new Exception(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
 			}
 		}
 
@@ -81,10 +81,10 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
 				UE.Object.Destroy(current);
-				throw new Exception(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				throw new Exception(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
 			}
 		}
 
@@ -92,10 +92,10 @@ namespace CodeHelpers.Unity
 		{
 			lock (locker)
 			{
-				if (instance == null) return instance = current;
+				if (instance == null || instance == current) return instance = current;
 
 				UE.Object.Destroy(current.gameObject);
-				throw new Exception(customString ?? ("There is already a " + nameof(T) + " instance! But you created another one!"));
+				throw new Exception(customString ?? $"There is already a {nameof(T)} instance! But you created another one!");
 			}
 		}
 	}

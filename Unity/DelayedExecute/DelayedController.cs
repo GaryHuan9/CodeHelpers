@@ -16,7 +16,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 		/// </summary>
 		/// <param name="onFinished">An event that will be invoked when this job is done</param>
 		/// <param name="removeAfterFinished">If set to <c>true</c> remove after the job is finished.</param>
-		public static void StartJob(DelayedJob job, Action<DelayedJob> onFinished = null, bool removeAfterFinished = true)
+		public static void Start(DelayedJob job, Action<DelayedJob> onFinished = null, bool removeAfterFinished = true)
 		{
 			if (IsJobExecuting(job)) throw new Exception("Job already executing!");
 			allJobs.Add(job, new JobInfo(removeAfterFinished, onFinished));
@@ -25,7 +25,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 		/// <summary>
 		/// Stops and removes a job.
 		/// </summary>
-		public static void RemoveJob(DelayedJob job)
+		public static void Remove(DelayedJob job)
 		{
 			if (IsJobExecuting(job)) allJobs.Remove(job);
 			else throw new Exception("Job is not executing!");
@@ -51,7 +51,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 				finished.Add(job);
 			}
 
-			foreach (DelayedJob job in finished) RemoveJob(job);
+			foreach (DelayedJob job in finished) Remove(job);
 			CollectionPooler<DelayedJob>.list.ReleaseObject(finished);
 		}
 

@@ -13,7 +13,7 @@ namespace CodeHelpers.Threads
 			get => _mainThread;
 			set
 			{
-				if (_mainThread == null) _mainThread = value;
+				if (_mainThread == null || _mainThread == value) _mainThread = value;
 				else throw ExceptionHelper.Invalid(nameof(MainThread), MainThread, InvalidType.semiReadonlyAssignment);
 			}
 		}

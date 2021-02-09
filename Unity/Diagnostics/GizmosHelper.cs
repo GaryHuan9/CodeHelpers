@@ -1,4 +1,4 @@
-#if CODEHELPERS_UNITY && UNITY_EDITOR
+#if CODEHELPERS_UNITY
 
 using CodeHelpers.Mathematics;
 using UnityEngine;
