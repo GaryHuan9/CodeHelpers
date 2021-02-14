@@ -72,7 +72,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			}
 		}
 
-		public float CompareToKeyword(string keyword) => StringHelper.CalculateSimilarity(keyword, namePath);
+		public int CompareToKeyword(string keyword) => string.Compare(keyword, namePath, StringComparison.Ordinal);
 
 		public override string ToString()
 		{
