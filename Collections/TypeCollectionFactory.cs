@@ -144,7 +144,7 @@ namespace CodeHelpers.Collections
 			/// NOTE: Only objects with types added through <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}(System.Func{T})"/> or <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}()"/>
 			/// will be generated. No modification will be done to other objects.
 			/// </summary>
-			public void InstantiatedAll(Action<TBase> action = null)
+			public void InstantiateAll(Action<TBase> action = null)
 			{
 				for (int i = 0; i < Count; i++)
 				{
