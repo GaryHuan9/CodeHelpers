@@ -23,7 +23,9 @@ namespace CodeHelpers.Unity.DelayedExecute
 
 		public static void Destroy(Object target)
 		{
-			if (target == null) throw ExceptionHelper.Invalid(nameof(target), target, InvalidType.isNull);
+			if (target is null) throw ExceptionHelper.Invalid(nameof(target), InvalidType.isNull);
+			if (target == null) return; //These two null comparison are actually different to unity types
+
 			if (target is Transform transform) target = transform.gameObject;
 
 			bool mustDestroy = false;
