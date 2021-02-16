@@ -9,7 +9,7 @@ namespace CodeHelpers.Unity.Diagnostics
 	{
 		public void Write(string text) => Debug.Log(text);
 		public void WriteWarning(string text) => Debug.LogWarning(text);
-		public void WriteError(string text) => Debug.LogWarning(text);
+		public void WriteError(string text) => Debug.LogError(text);
 	}
 }
 

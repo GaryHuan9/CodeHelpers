@@ -85,6 +85,8 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			List<Vector3> verticesFinal = verticesFinalHandle.Target;
 			List<Vector2> uvsFinal = uvsFinalHandle.Target;
 
+			if (uvs.Count == 0) uvsFinal = null;
+
 			for (int i = 0; i < triangles.Count; i++)
 			{
 				int oldIndex = triangles[i];
@@ -95,7 +97,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 					verticesMap[oldIndex] = newIndex;
 
 					verticesFinal.Add(vertices[oldIndex]);
-					if (uvs.Count > oldIndex) uvsFinal.Add(uvs[oldIndex]);
+					uvsFinal?.Add(uvs[oldIndex]);
 				}
 
 				triangles[i] = newIndex;
@@ -104,9 +106,9 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			//Create a new mesh
 			Mesh mesh = new Mesh();
 
-			mesh.SetVertices(vertices);
+			mesh.SetVertices(verticesFinal);
 			mesh.SetTriangles(triangles, 0);
-			mesh.SetUVs(0, uvs);
+			if (uvsFinal != null) mesh.SetUVs(0, uvsFinal);
 
 			mesh.RecalculateNormals();
 			mesh.RecalculateBounds();

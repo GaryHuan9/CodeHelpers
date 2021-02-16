@@ -32,8 +32,8 @@ namespace CodeHelpers.Unity.Meshes
 				for (int j = 0; j < model.Materials.Count; j++)
 				{
 					Mesh subMesh = model.GetSubMesh(j);
-
 					Material material = model.Materials[j];
+
 					List<CombineInstance> list;
 
 					if (!dictionary.ContainsKey(material))
@@ -262,7 +262,7 @@ namespace CodeHelpers.Unity.Meshes
 			CollectionPooler<Vector3>.list.ReleaseObject(vertices);
 			return totalVolume;
 
-			float GetSignedVolumeOfTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
+			static float GetSignedVolumeOfTriangle(Vector3 point1, Vector3 point2, Vector3 point3)
 			{
 				//Returns the signed volume of a tetrahedral formed with the 3 points and the origin
 

@@ -10,7 +10,7 @@ namespace CodeHelpers.ObjectPooling
 	/// </summary>
 	public abstract class RecyclingPoolerBase<T> : PoolerBase<T> where T : class
 	{
-		readonly Queue<T> roaming = new Queue<T>();
+		protected readonly Queue<T> roaming = new Queue<T>();
 
 		public override T GetObject()
 		{
