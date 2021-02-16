@@ -23,12 +23,12 @@ namespace CodeHelpers
 		{
 			get
 			{
-				ExceptionHelper.InvalidIfNotMainThread();
+				ExceptionHelper.AssertMainThread();
 				return seeds[SeedType.normal];
 			}
 			set
 			{
-				ExceptionHelper.InvalidIfNotMainThread();
+				ExceptionHelper.AssertMainThread();
 				foreach (SeedType type in EnumHelper<SeedType>.enumValues) SetSeed(type, value);
 			}
 		}

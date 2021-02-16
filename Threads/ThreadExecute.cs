@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Collections.Concurrent;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace CodeHelpers.Threads
 {
@@ -50,6 +51,8 @@ namespace CodeHelpers.Threads
 					ExecutingId = execution.id;
 
 					execution.action();
+					execution.action = null;
+
 					ExecutingId = 0;
 				}
 			}
@@ -57,7 +60,7 @@ namespace CodeHelpers.Threads
 
 		public void AddExecution(Action action, int id = 0)
 		{
-			if (!ThreadHelper.IsOnMainThread) throw new Exception("You only call this in the main thread.");
+			ExceptionHelper.AssertMainThread();
 			executionQueue.Enqueue(new Execution(action, id));
 
 			resetEvent.Set();
@@ -103,7 +106,7 @@ namespace CodeHelpers.Threads
 			disposed = true;
 		}
 
-		readonly struct Execution
+		struct Execution
 		{
 			public Execution(Action action, int id = 0)
 			{
@@ -112,7 +115,7 @@ namespace CodeHelpers.Threads
 				useId = true;
 			}
 
-			public readonly Action action;
+			public Action action;
 
 			public readonly bool useId;
 			public readonly int id;
