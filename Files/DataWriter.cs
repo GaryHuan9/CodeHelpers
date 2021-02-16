@@ -4,11 +4,9 @@ using CodeHelpers.RotationHelpers;
 
 namespace CodeHelpers.Files
 {
-	public class FileWriter : BinaryWriter
+	public class DataWriter : BinaryWriter
 	{
-		public FileWriter(string filePath) : base(File.Open(filePath, FileMode.Create)) => this.filePath = filePath;
-
-		readonly string filePath;
+		public DataWriter(Stream output) : base(output) { }
 
 		public void Write(BitVector8 bitVector8) => Write(bitVector8.Data);
 
@@ -34,14 +32,14 @@ namespace CodeHelpers.Files
 			Write(float2.y);
 		}
 
-		public void Write(Float3 float3)
+		public void Write(in Float3 float3)
 		{
 			Write(float3.x);
 			Write(float3.y);
 			Write(float3.z);
 		}
 
-		public void Write(Float4 float4)
+		public void Write(in Float4 float4)
 		{
 			Write(float4.x);
 			Write(float4.y);
@@ -78,7 +76,7 @@ namespace CodeHelpers.Files
 			Write(int2.y);
 		}
 
-		public void Write(Int3 int3)
+		public void Write(in Int3 int3)
 		{
 			Write(int3.x);
 			Write(int3.y);
@@ -96,16 +94,16 @@ namespace CodeHelpers.Files
 		public void Write(MinMaxInt minMax)
 		{
 			Write(minMax.min);
-			Write7BitEncodedInt(minMax.Range);
+			Write(minMax.max);
 		}
 
-		public void Write(Segment2 segment2)
+		public void Write(in Segment2 segment2)
 		{
 			Write(segment2.point1);
 			Write(segment2.point2);
 		}
 
-		public void Write(Segment3 segment3)
+		public void Write(in Segment3 segment3)
 		{
 			Write(segment3.point1);
 			Write(segment3.point2);

@@ -20,7 +20,7 @@ namespace CodeHelpers.Collections
 			int minIndex = 0;
 			int maxIndex = list.Count - 1;
 
-			int index = (minIndex + maxIndex) / 2;
+			int index = maxIndex / 2;
 			var current = list[index];
 
 			while (true)

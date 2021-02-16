@@ -4,11 +4,20 @@ using CodeHelpers.RotationHelpers;
 
 namespace CodeHelpers.Files
 {
-	public class FileReader : BinaryReader
+	public class DataReader : BinaryReader
 	{
-		public FileReader(string filePath) : base(File.Open(filePath, FileMode.Open)) => this.filePath = filePath;
+		public DataReader(Stream output) : base(output) { }
 
-		readonly string filePath;
+		VersionedReaders versionedReaders;
+
+		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders) => versionedReaders = new VersionedReaders(version, this, compiledReaders);
+		public void ClearVersionedReaders() => versionedReaders = null;
+
+		public T Read<T>()
+		{
+			if (versionedReaders != null) return versionedReaders.Read<T>();
+			throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
+		}
 
 		public BitVector8 BitVector8() => new BitVector8(ReadByte());
 
@@ -58,9 +67,9 @@ namespace CodeHelpers.Files
 		public MinMaxInt ReadMinMaxInt()
 		{
 			int min = ReadInt32();
-			int range = Read7BitEncodedInt();
+			int max = ReadInt32();
 
-			return new MinMaxInt(min, min + range);
+			return new MinMaxInt(min, max);
 		}
 
 		public Segment2 ReadSegment2() => new Segment2(ReadFloat2(), ReadFloat2());

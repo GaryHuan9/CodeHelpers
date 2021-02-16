@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CodeHelpers.ObjectPooling
 {
@@ -14,10 +15,12 @@ namespace CodeHelpers.ObjectPooling
 
 		public override T GetObject()
 		{
-			while (pool.Count == 0)
+			if (pool.Count == 0)
 			{
 				if (roaming.Count < MaxPoolSize) pool.Push(GetNewObject());
 				else ReleaseObject(roaming.Dequeue()); //Release the oldest item
+
+				Debug.Assert(pool.Count > 0);
 			}
 
 			T item = base.GetObject();
