@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeHelpers.AI.BehaviorTrees;
+using CodeHelpers.Diagnostics;
 using UnityEditor;
 using UnityEditor.Compilation;
 using UnityEngine;
-using UnityEngine.Assertions;
 using Assembly = System.Reflection.Assembly;
 
 namespace CodeHelpers.Unity.BehaviorTreeUIEditor

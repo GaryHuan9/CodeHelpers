@@ -41,7 +41,6 @@ namespace CodeHelpers.Files
 
 			//Finalize
 			foreach (var pair in compiledReaders) pair.Value.TrimExcess();
-			compiledReaders.TrimExcess();
 		}
 
 		readonly Dictionary<Type, List<ReaderPair>> compiledReaders;

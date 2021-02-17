@@ -9,7 +9,6 @@ using CodeHelpers.AI.BehaviorTrees;
 using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 {

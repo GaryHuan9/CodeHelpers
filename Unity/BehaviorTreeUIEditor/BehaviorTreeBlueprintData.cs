@@ -6,8 +6,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using CodeHelpers.AI.BehaviorTrees;
 using CodeHelpers.Collections;
+using CodeHelpers.Diagnostics;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 {
