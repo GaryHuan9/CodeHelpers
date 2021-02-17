@@ -71,7 +71,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			}
 		}
 
-		public int CompareToKeyword(string keyword) => string.Compare(keyword, namePath, StringComparison.Ordinal);
+		public int CompareToKeyword(string keyword) => namePath.IndexOf(keyword, StringComparison.InvariantCultureIgnoreCase);
 
 		public override string ToString()
 		{
