@@ -382,11 +382,9 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 
 			void SortMethodPaths(IEnumerable<SerializableMethod> paths = null)
 			{
-				sortedKeyword = searchingKeyword;
+				sortedKeyword = searchingKeyword ?? "";
 				methodPaths = (from method in paths ?? methodPaths
-							   let rank = method.CompareToKeyword(searchingKeyword)
-							   where rank >= 0
-							   orderby rank descending
+							   orderby method.CompareToKeyword(sortedKeyword) descending
 							   select method).ToArray();
 			}
 

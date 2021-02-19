@@ -409,12 +409,12 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Returns random matrix for debug purposes; will be removed.
 		/// </summary>
-		public static Float4x4 GetRandom() => new Float4x4
+		public static Float4x4 GetRandom(float min = -1000f, float max = 1000f) => new Float4x4
 		(
-			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f),
-			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f),
-			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f),
-			RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f), RandomHelper.Range(-1000f, 1000f)
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max)
 		);
 
 #region Operators
