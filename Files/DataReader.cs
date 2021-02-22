@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
 using CodeHelpers.RotationHelpers;
 
@@ -9,6 +12,35 @@ namespace CodeHelpers.Files
 		public DataReader(Stream output) : base(output) { }
 
 		VersionedReaders versionedReaders;
+		Stack<object> contexts;
+
+		/// <summary>
+		/// Assigns or retrieves the context of the current read operation. This property is implemented using a
+		/// stack that dynamically grows and shrinks. The idea is that the parent read operation should control
+		/// the context of the children read operations. After the children are finished, the parent should assign
+		/// the context to null which will pop the stack and revert it back to the state for the parent.
+		/// </summary>
+		public object Context
+		{
+			set
+			{
+				if (value == null)
+				{
+					if (contexts != null && contexts.Count > 0) contexts.Pop();
+					else throw new Exception($"Cannot remove {nameof(Context)} when the stack is empty!");
+				}
+				else
+				{
+					contexts ??= new Stack<object>();
+					contexts.Push(value);
+				}
+			}
+			get
+			{
+				if (contexts != null && contexts.Count > 0) return contexts.Peek();
+				throw new Exception($"Attempting to retrieve {nameof(Context)} before assigning any!");
+			}
+		}
 
 		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders) => versionedReaders = new VersionedReaders(version, this, compiledReaders);
 		public void ClearVersionedReaders() => versionedReaders = null;
@@ -19,7 +51,7 @@ namespace CodeHelpers.Files
 			throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
 		}
 
-		public BitVector8 BitVector8() => new BitVector8(ReadByte());
+		public BitVector8 ReadBitVector8() => new BitVector8(ReadByte());
 
 		public Color32 ReadColor32()
 		{

@@ -38,6 +38,22 @@ namespace CodeHelpers.ObjectPooling
 	{
 		protected override int MaxPoolSize => 6;
 
+		public override UnityEngine.Mesh GetObject()
+		{
+			UnityEngine.Mesh mesh;
+
+			do mesh = base.GetObject();
+			while (mesh == null);
+
+			return mesh;
+		}
+
+		public override void ReleaseObject(UnityEngine.Mesh target)
+		{
+			if (target == null) return;
+			base.ReleaseObject(target);
+		}
+
 		protected override UnityEngine.Mesh GetNewObject() => new UnityEngine.Mesh();
 		protected override void Reset(UnityEngine.Mesh target) => target.Clear();
 	}
