@@ -145,6 +145,30 @@ namespace CodeHelpers.Mathematics
 			return result < 0L ? result + length : result;
 		}
 
+		/// <summary>
+		/// Wraps <paramref name="value"/> between <paramref name="min"/> (inclusive) and <paramref name="max"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
+		public static float Repeat(this float value, float min, float max) => (value - min).Repeat(max - min) + min;
+
+		/// <summary>
+		/// Wraps <paramref name="value"/> between <paramref name="min"/> (inclusive) and <paramref name="max"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
+		public static int Repeat(this int value, int min, int max) => (value - min).Repeat(max - min) + min;
+
+		/// <summary>
+		/// Wraps <paramref name="value"/> between <paramref name="min"/> (inclusive) and <paramref name="max"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
+		public static double Repeat(this double value, double min, double max) => (value - min).Repeat(max - min) + min;
+
+		/// <summary>
+		/// Wraps <paramref name="value"/> between <paramref name="min"/> (inclusive) and <paramref name="max"/> (exclusive).
+		/// <paramref name="value"/> is repeated across the domain. Works for negative numbers.
+		/// </summary>
+		public static long Repeat(this long value, long min, long max) => (value - min).Repeat(max - min) + min;
+
 		public static int Floor(this float value) => (int)Math.Floor(value);
 		public static int Ceil(this float value) => (int)Math.Ceiling(value);
 		public static int Round(this float value) => (int)Math.Round(value);
