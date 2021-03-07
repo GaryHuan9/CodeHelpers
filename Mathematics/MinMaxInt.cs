@@ -54,8 +54,8 @@ namespace CodeHelpers.Mathematics
 		public float Clamp(float value) => value.Clamp(min, max);
 		public int Clamp(int value) => value.Clamp(min, max);
 
-		public float Repeat(float value) => (value - min).Repeat(max - min) + min;
-		public int Repeat(int value) => (value - min).Repeat(max - min) + min;
+		public float Repeat(float value) => value.Repeat(min, max);
+		public int Repeat(int value) => value.Repeat(min, max);
 
 		public bool Contains(int value) => min <= value && value <= max;
 		public bool Contains(float value) => min <= value && value <= max;
