@@ -222,7 +222,7 @@ namespace CodeHelpers
 		}
 
 		/// <summary>
-		/// A class that will generate values based on your input. Same output gurarnteed if the input is identical.
+		/// A class that will generate values based on your input. Same output guaranteed if the input is identical.
 		/// </summary>
 		static class NoiseController
 		{
@@ -295,7 +295,7 @@ namespace CodeHelpers
 		{
 			/// Returns a random number based on <paramref name="value"/> between 0f (inclusive) and 1f (exclusive).
 			/// The number returned will only change if <paramref name="value"/> is different.
-			public static float Evaluate<T>(T value) => unchecked(NoiseController.GetSource((uint)value.GetHashCode()));
+			public static float Evaluate<T>(T value) => NoiseController.GetSource(unchecked((uint)value.GetHashCode()));
 		}
 	}
 }
