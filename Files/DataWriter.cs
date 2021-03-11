@@ -99,14 +99,14 @@ namespace CodeHelpers.Files
 
 		public void Write(in Segment2 segment2)
 		{
+			Write(segment2.point0);
 			Write(segment2.point1);
-			Write(segment2.point2);
 		}
 
 		public void Write(in Segment3 segment3)
 		{
+			Write(segment3.point0);
 			Write(segment3.point1);
-			Write(segment3.point2);
 		}
 	}
 }
