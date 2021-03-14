@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using CodeHelpers.ObjectPooling;
 
@@ -182,8 +181,91 @@ namespace CodeHelpers.Mathematics
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
-		public static int SingleToInt32Bits(float value) => Unsafe.As<float, int>(ref value);
-		public static float Int32BitsToSingle(int value) => Unsafe.As<int, float>(ref value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int SingleToInt32Bits(float value)
+		{
+#if !CODEHELPERS_UNITY
+			return Unsafe.As<float, int>(ref value);
+#elif UNSAFE_CODE_ENABLED
+			unsafe { return *(int*)&value; }
+#else
+			return new BitsConverter32(value).intValue;
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint SingleToUInt32Bits(float value)
+		{
+#if !CODEHELPERS_UNITY
+			return Unsafe.As<float, uint>(ref value);
+#elif UNSAFE_CODE_ENABLED
+			unsafe { return *(uint*)&value; }
+#else
+			return new BitsConverter32(value).uintValue;
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float Int32ToSingleBits(int value)
+		{
+#if !CODEHELPERS_UNITY
+			return Unsafe.As<int, float>(ref value);
+#elif UNSAFE_CODE_ENABLED
+			unsafe { return *(float*)&value; }
+#else
+			return new BitsConverter32(value).floatValue;
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint Int32ToUInt32Bits(int value)
+		{
+#if !CODEHELPERS_UNITY
+			return Unsafe.As<int, uint>(ref value);
+#elif UNSAFE_CODE_ENABLED
+			unsafe { return *(uint*)&value; }
+#else
+			return new BitsConverter32(value).uintValue;
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static float UInt32ToSingleBits(uint value)
+		{
+#if !CODEHELPERS_UNITY
+			return Unsafe.As<uint, float>(ref value);
+#elif UNSAFE_CODE_ENABLED
+			unsafe { return *(float*)&value; }
+#else
+			return new BitsConverter32(value).floatValue;
+#endif
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int UInt32ToInt32Bits(uint value)
+		{
+#if !CODEHELPERS_UNITY
+			return Unsafe.As<uint, int>(ref value);
+#elif UNSAFE_CODE_ENABLED
+			unsafe { return *(int*)&value; }
+#else
+			return new BitsConverter32(value).intValue;
+#endif
+		}
+
+#if CODEHELPERS_UNITY && UNSAFE_CODE_ENABLED
+		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
+		readonly struct BitsConverter32
+		{
+			public BitsConverter32(float floatValue) : this() => this.floatValue = floatValue;
+			public BitsConverter32(int intValue) : this() => this.intValue = intValue;
+			public BitsConverter32(uint uintValue) : this() => this.uintValue = uintValue;
+
+			[System.Runtime.InteropServices.FieldOffset(0)] public readonly float floatValue;
+			[System.Runtime.InteropServices.FieldOffset(0)] public readonly int intValue;
+			[System.Runtime.InteropServices.FieldOffset(0)] public readonly uint uintValue;
+		}
+#endif
 
 		public static float Damp(float current, float target, ref float velocity, float smoothTime, float deltaTime)
 		{

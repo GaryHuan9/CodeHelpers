@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Collections
 {
@@ -16,6 +17,10 @@ namespace CodeHelpers.Collections
 		}
 
 		readonly List<uint>[] buckets;
+
+		static readonly Func<uint, uint> uintToUIntConverter = value => value;
+		static readonly Func<uint, int> uintToIntConverter = Scalars.UInt32ToInt32Bits;
+		static readonly Func<uint, float> uintToFloatConverter = Scalars.UInt32ToSingleBits;
 
 		/// <summary>
 		/// Sorts the input uint array using radix sort.
@@ -36,7 +41,7 @@ namespace CodeHelpers.Collections
 					hasRemain |= remain != 0;
 				}
 
-				Copy(array);
+				Copy(array, uintToUIntConverter);
 				Clear();
 
 				if (!hasRemain) break;
@@ -54,7 +59,7 @@ namespace CodeHelpers.Collections
 
 				for (int j = 0; j < array.Length; j++)
 				{
-					uint number = Unsafe.As<int, uint>(ref array[j]);
+					uint number = Scalars.Int32ToUInt32Bits(array[j]);
 
 					uint remain = number >> i;
 					uint digit = remain & 0b1111;
@@ -65,7 +70,7 @@ namespace CodeHelpers.Collections
 					hasRemain |= remain != 0;
 				}
 
-				Copy(array);
+				Copy(array, uintToIntConverter);
 				Clear();
 
 				if (!hasRemain) break;
@@ -83,7 +88,7 @@ namespace CodeHelpers.Collections
 
 				for (int j = 0; j < array.Length; j++)
 				{
-					uint number = Unsafe.As<float, uint>(ref array[j]);
+					uint number = Scalars.SingleToUInt32Bits(array[j]);
 
 					uint remain = number >> i;
 					uint digit = remain & 0b1111;
@@ -103,8 +108,7 @@ namespace CodeHelpers.Collections
 
 						for (int k = bucket.Count - 1; k >= 0; k--)
 						{
-							uint number = bucket[k];
-							array[index++] = Unsafe.As<uint, float>(ref number);
+							array[index++] = Scalars.UInt32ToSingleBits(bucket[k]);
 						}
 					}
 
@@ -114,12 +118,11 @@ namespace CodeHelpers.Collections
 
 						for (int k = 0; k < bucket.Count; k++)
 						{
-							uint number = bucket[k];
-							array[index++] = Unsafe.As<uint, float>(ref number);
+							array[index++] = Scalars.UInt32ToSingleBits(bucket[k]);
 						}
 					}
 				}
-				else Copy(array);
+				else Copy(array, uintToFloatConverter);
 
 				Clear();
 
@@ -127,7 +130,7 @@ namespace CodeHelpers.Collections
 			}
 		}
 
-		void Copy<T>(IList<T> array) where T : struct
+		void Copy<T>(IList<T> array, Func<uint, T> converter) where T : struct
 		{
 			int bucketIndex = 0;
 			int numberIndex = 0;
@@ -140,9 +143,7 @@ namespace CodeHelpers.Collections
 					numberIndex = 0;
 				}
 
-				uint value = buckets[bucketIndex][numberIndex];
-				array[j] = Unsafe.As<uint, T>(ref value);
-
+				array[j] = converter(buckets[bucketIndex][numberIndex]);
 				numberIndex++;
 			}
 		}
