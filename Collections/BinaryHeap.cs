@@ -52,23 +52,6 @@ namespace CodeHelpers.Collections
 			}
 		}
 
-		//NOTE: Returns negative number if index out of bounds
-		static int GetParentIndex(int index) => index == 0 ? -1 : (index - 1) / 2;
-
-		//NOTE: Returns negative number if index out of bounds
-		int GetChild1Index(int index)
-		{
-			int result = index * 2 + 1;
-			return result >= Count ? -1 : result;
-		}
-
-		//NOTE: Returns negative number if index out of bounds
-		int GetChild2Index(int index)
-		{
-			int result = index * 2 + 2;
-			return result >= Count ? -1 : result;
-		}
-
 		public void Enqueue(T item, int priority)
 		{
 			if (items == null)
@@ -141,14 +124,61 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Returns if <see cref="item"/> exists in the collection.
-		/// This overload requires more information than <see cref="Contains(T)"/> but is much faster.
+		/// Removes an arbitrary <paramref name="item"/> in the heap. Returns whether the operation was successful.
+		/// This overload requires more information than <see cref="Remove(T)"/> but is much faster.
 		/// </summary>
-		public bool Contains(int priority, T item) => GetIndex(priority, item) >= 0;
+		public bool Remove(T item, int priority)
+		{
+			int index = GetIndex(item, priority);
+			if (index < 0) return false;
+
+			Remove(index);
+			return true;
+		}
+
+		/// <summary>
+		/// Removes an arbitrary <paramref name="item"/> in the heap. Returns whether the operation was successful.
+		/// This overload requires less information than <see cref="Remove(T)"/> but is much slower.
+		/// </summary>
+		public bool Remove(T item)
+		{
+			int index = GetIndex(item);
+			if (index < 0) return false;
+
+			Remove(index);
+			return true;
+		}
+
+		void Remove(int index)
+		{
+			int count = Count - 1; //Need to cache because Count will change when we modify the lists
+
+			if (count == index)
+			{
+				items.RemoveAt(count);
+				priorities.RemoveAt(count);
+			}
+			else
+			{
+				Swap(index, count);
+
+				items.RemoveAt(count);
+				priorities.RemoveAt(count);
+
+				SortUp(index);
+				SortDown(index);
+			}
+		}
 
 		/// <summary>
 		/// Returns if <see cref="item"/> exists in the collection.
-		/// This overload requires less information than <see cref="Contains(int,T)"/> but is much slower.
+		/// This overload requires more information than <see cref="Contains(T)"/> but is much faster.
+		/// </summary>
+		public bool Contains(T item, int priority) => GetIndex(item, priority) >= 0;
+
+		/// <summary>
+		/// Returns if <see cref="item"/> exists in the collection.
+		/// This overload requires less information than <see cref="Contains(T,int)"/> but is much slower.
 		/// </summary>
 		public bool Contains(T item) => GetIndex(item) >= 0;
 
@@ -156,9 +186,9 @@ namespace CodeHelpers.Collections
 		/// Reassigns <paramref name="item"/> to a new priority.
 		/// This overload requires more information than <see cref="Recalculate(T,int)"/> but is much faster.
 		/// </summary>
-		public void Recalculate(int oldPriority, T item, int newPriority)
+		public void Recalculate(T item, int oldPriority, int newPriority)
 		{
-			int index = GetIndex(oldPriority, item);
+			int index = GetIndex(item, oldPriority);
 			if (index < 0) throw ExceptionHelper.Invalid(nameof(item), item, "does not exist in this collection!");
 
 			Recalculate(index, newPriority);
@@ -166,7 +196,7 @@ namespace CodeHelpers.Collections
 
 		/// <summary>
 		/// Reassigns <paramref name="item"/> to a new priority.
-		/// This overload requires less information than <see cref="Recalculate(int,T,int)"/> but is much slower.
+		/// This overload requires less information than <see cref="Recalculate(T,int,int)"/> but is much slower.
 		/// </summary>
 		public void Recalculate(T item, int newPriority)
 		{
@@ -184,10 +214,28 @@ namespace CodeHelpers.Collections
 			SortDown(index);
 		}
 
+		//NOTE: Returns negative number if index out of bounds
+		static int GetParentIndex(int index) => index == 0 ? -1 : (index - 1) / 2;
+
+		//NOTE: Returns negative number if index out of bounds
+		int GetChild1Index(int index)
+		{
+			int result = index * 2 + 1;
+			return result >= Count ? -1 : result;
+		}
+
+		//NOTE: Returns negative number if index out of bounds
+		int GetChild2Index(int index)
+		{
+			int result = index * 2 + 2;
+			return result >= Count ? -1 : result;
+		}
+
+
 		/// <summary>
 		/// Faster implementation
 		/// </summary>
-		int GetIndex(int priority, T item)
+		int GetIndex(T item, int priority)
 		{
 			if (Count == 0) return -1;
 			return Search(0);
