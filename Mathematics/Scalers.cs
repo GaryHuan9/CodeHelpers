@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using CodeHelpers.ObjectPooling;
 
@@ -181,41 +182,8 @@ namespace CodeHelpers.Mathematics
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
-		public static int SingleToInt32Bits(float value)
-		{
-#if UNSAFE_CODE_ENABLED
-			unsafe
-			{
-				return *(int*)&value;
-			}
-#else
-			return new FloatIntConverter(value).intValue;
-#endif
-		}
-
-		public static float Int32BitsToSingle(int value)
-		{
-#if UNSAFE_CODE_ENABLED
-			unsafe
-			{
-				return *(float*)&value;
-			}
-#else
-			return new FloatIntConverter(value).floatValue;
-#endif
-		}
-
-#if !UNSAFE_CODE_ENABLED
-		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
-		readonly struct FloatIntConverter
-		{
-			public FloatIntConverter(float floatValue) : this() => this.floatValue = floatValue;
-			public FloatIntConverter(int intValue) : this() => this.intValue = intValue;
-
-			[System.Runtime.InteropServices.FieldOffset(0)] public readonly float floatValue;
-			[System.Runtime.InteropServices.FieldOffset(0)] public readonly int intValue;
-		}
-#endif
+		public static int SingleToInt32Bits(float value) => Unsafe.As<float, int>(ref value);
+		public static float Int32BitsToSingle(int value) => Unsafe.As<int, float>(ref value);
 
 		public static float Damp(float current, float target, ref float velocity, float smoothTime, float deltaTime)
 		{
