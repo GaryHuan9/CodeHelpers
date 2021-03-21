@@ -126,8 +126,8 @@ namespace CodeHelpers.Collections
 			return null;
 		}
 
-		public static ReadOnlyCollection<T> AsReadonly<T>(IList<T> list) => new(list);
-		public static ReadOnlyDictionary<TKey, TValue> AsReadonly<TKey, TValue>(IDictionary<TKey, TValue> dictionary) => new(dictionary);
+		public static ReadOnlyCollection<T> AsReadonly<T>(IList<T> list) => new ReadOnlyCollection<T>(list);
+		public static ReadOnlyDictionary<TKey, TValue> AsReadonly<TKey, TValue>(IDictionary<TKey, TValue> dictionary) => new ReadOnlyDictionary<TKey, TValue>(dictionary);
 
 		public static Int2 Size<T>(this T[,] array) => new Int2(array.GetLength(0), array.GetLength(1));
 		public static Int3 Size<T>(this T[,,] array) => new Int3(array.GetLength(0), array.GetLength(1), array.GetLength(2));

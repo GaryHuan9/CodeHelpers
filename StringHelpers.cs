@@ -22,6 +22,7 @@ namespace CodeHelpers
 			return builder;
 		}
 
+#if !CODEHELPERS_UNITY
 		public static string ToStringBinary(this int number) => ToStringBinary((uint)number);
 
 		public static string ToStringBinary(this uint number) => ToStringBinary(number, sizeof(uint) * 8);
@@ -54,5 +55,8 @@ namespace CodeHelpers
 
 			return new string(chars[^index..]);
 		}
+
+#endif
+
 	}
 }
