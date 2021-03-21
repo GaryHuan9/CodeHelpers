@@ -22,7 +22,6 @@ namespace CodeHelpers
 			return builder;
 		}
 
-#if !CODEHELPERS_UNITY
 		public static string ToStringBinary(this int number) => ToStringBinary((uint)number);
 
 		public static string ToStringBinary(this uint number) => ToStringBinary(number, sizeof(uint) * 8);
@@ -34,29 +33,36 @@ namespace CodeHelpers
 		static string ToStringBinary(this ulong number, int length)
 		{
 			//Total allocated: bits length + bits length / 4 - 1 division characters
-			Span<char> chars = stackalloc char[length * 8 + length * 8 / 4 - 1];
+			int total = length * 8 + length * 8 / 4 - 1;
+
+#if CODEHELPERS_UNITY
+			char[] chars = new char[total];
+#else
+			Span<char> chars = stackalloc char[total];
+#endif
 
 			int index = 0;
 			int bit = 0;
 
 			while (number != 0)
 			{
-				bool enabled = (number & 1) == 1;
-				chars[^++index] = enabled ? '1' : '0';
-
-				if (++bit < length)
-				{
-					if (bit % 8 == 0) chars[^++index] = ' ';
-					else if (bit % 4 == 0) chars[^++index] = '_';
-				}
+				chars[total - ++index] = (number & 1) == 0 ? '0' : '1';
 
 				number >>= 1;
+
+				if (++bit < length && number != 0)
+				{
+					if (bit % 8 == 0) chars[total - ++index] = ' ';
+					else if (bit % 4 == 0) chars[total - ++index] = '_';
+				}
 			}
 
+#if CODEHELPERS_UNITY
+			return new string(chars, total - index, index);
+#else
 			return new string(chars[^index..]);
-		}
-
 #endif
+		}
 
 	}
 }
