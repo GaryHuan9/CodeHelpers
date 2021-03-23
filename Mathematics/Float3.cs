@@ -632,6 +632,7 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float3 value) => new Int2((int)value.x, (int)value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Float3 value) => new Int4((int)value.x, (int)value.y, (int)value.z, 0);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(in Float3 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(float value) => new Float3(value, value, value);

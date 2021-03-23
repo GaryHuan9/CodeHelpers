@@ -88,8 +88,6 @@ namespace CodeHelpers.Mathematics
 		public static readonly Int2 maxValue = new Int2(int.MaxValue, int.MaxValue);
 		public static readonly Int2 minValue = new Int2(int.MinValue, int.MinValue);
 
-		//NOTE: These collections are not in any guaranteed order!
-
 		public static readonly ReadOnlyCollection<Int2> units4 = new ReadOnlyCollection<Int2>
 		(
 			new[]
@@ -598,6 +596,7 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(int value) => new Int2(value, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Int2 value) => value.XY_;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(Int2 value) => new Int4(value.x, value.y, 0, 0);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float2(Int2 value) => new Float2(value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(Int2 value) => new Float3(value.x, value.y, 0f);

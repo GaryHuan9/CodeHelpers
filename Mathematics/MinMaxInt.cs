@@ -63,6 +63,8 @@ namespace CodeHelpers.Mathematics
 		public bool Contains(MinMaxInt value) => min <= value.min && value.max <= max;
 		public bool Contains(MinMax value) => min <= value.min && value.max <= max;
 
+		public bool Overlaps(MinMax value) => min <= value.max && value.min <= max;
+
 		public float Lerp(float value) => Scalars.Lerp(min, max, value);
 		public float InverseLerp(float value) => Scalars.InverseLerp(min, max, value);
 

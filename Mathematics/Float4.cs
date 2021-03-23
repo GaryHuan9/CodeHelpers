@@ -647,6 +647,11 @@ namespace CodeHelpers.Mathematics
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float4(Math.Abs(x), Math.Abs(y), Math.Abs(z), Math.Abs(w));
 		}
 
+		public Int4 Signed
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int4(x.Sign(), y.Sign(), z.Sign(), w.Sign());
+		}
+
 		public Float4 Normalized
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
@@ -785,14 +790,29 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public Int4 Floored
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int4((int)Math.Floor(x), (int)Math.Floor(y), (int)Math.Floor(z), (int)Math.Floor(w));
+		}
+
 		public Float4 FlooredFloat
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float4((float)Math.Floor(x), (float)Math.Floor(y), (float)Math.Floor(z), (float)Math.Floor(w));
 		}
 
+		public Int4 Ceiled
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int4((int)Math.Ceiling(x), (int)Math.Ceiling(y), (int)Math.Ceiling(z), (int)Math.Ceiling(w));
+		}
+
 		public Float4 CeiledFloat
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float4((float)Math.Ceiling(x), (float)Math.Ceiling(y), (float)Math.Ceiling(z), (float)Math.Ceiling(w));
+		}
+
+		public Int4 Rounded
+		{
+			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int4((int)Math.Round(x), (int)Math.Round(y), (int)Math.Round(z), (int)Math.Round(w));
 		}
 
 		public Float4 RoundedFloat
@@ -1052,6 +1072,7 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float4 value) => new Int2((int)value.x, (int)value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float4 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Float4 value) => new Int4((int)value.x, (int)value.y, (int)value.z, (int)value.w);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(in Float4 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(in Float4 value) => value.XYZ;

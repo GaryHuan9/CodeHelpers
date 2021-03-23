@@ -99,8 +99,6 @@ namespace CodeHelpers.Mathematics
 		public static readonly Int3 maxValue = new Int3(int.MaxValue, int.MaxValue, int.MaxValue);
 		public static readonly Int3 minValue = new Int3(int.MinValue, int.MinValue, int.MinValue);
 
-		//NOTE: These collections are not in any guaranteed order!
-
 		public static readonly ReadOnlyCollection<Int3> units8 = new ReadOnlyCollection<Int3>
 		(
 			new[]
@@ -454,7 +452,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double DistanceDouble(in Int3 value, in Int3 other) => value.DistanceDouble(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int SquaredDistance(in Int3 value, in Int3 other) => value.SquaredDistance(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static long SquaredDistanceDouble(in Int3 value, in Int3 other) => value.SquaredDistanceLong(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static long SquaredDistanceLong(in Int3 value, in Int3 other) => value.SquaredDistanceLong(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Min(in Int3 value, in Int3 other) => value.Min(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 Max(in Int3 value, in Int3 other) => value.Max(other);
@@ -690,6 +688,7 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Int3 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(int value) => new Int3(value, value, value);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Int3 value) => new Int4(value.x, value.y, value.z, 0);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(in Int3 value) => new Float2(value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(in Int3 value) => new Float3(value.x, value.y, value.z);
