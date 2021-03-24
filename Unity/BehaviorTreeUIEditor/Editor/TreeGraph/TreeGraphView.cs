@@ -15,7 +15,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 		public TreeGraphView(TreeGraphEditorWindow editorWindow)
 		{
 			this.editorWindow = editorWindow;
-			SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+			SetupZoom(0.1f, 4f);
 
 			this.AddManipulator(new ContentDragger());
 			this.AddManipulator(new SelectionDragger());
