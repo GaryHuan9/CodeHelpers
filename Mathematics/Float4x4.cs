@@ -455,6 +455,24 @@ namespace CodeHelpers.Mathematics
 		public override bool Equals(object obj) => obj is Float4x4 other && EqualsFast(other);
 		public bool Equals(Float4x4 other) => EqualsFast(other);
 
+#if CODEHELPERS_UNITY
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4x4(in UnityEngine.Matrix4x4 value) => new Float4x4
+		(
+			value.m00, value.m01, value.m02, value.m03,
+			value.m10, value.m11, value.m12, value.m13,
+			value.m20, value.m21, value.m22, value.m23,
+			value.m30, value.m31, value.m32, value.m33
+		);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Matrix4x4(in Float4x4 value) => new UnityEngine.Matrix4x4
+		(
+			new UnityEngine.Vector4(value.f00, value.f10, value.f20, value.f30),
+			new UnityEngine.Vector4(value.f01, value.f11, value.f21, value.f31),
+			new UnityEngine.Vector4(value.f02, value.f12, value.f22, value.f32),
+			new UnityEngine.Vector4(value.f03, value.f13, value.f23, value.f33)
+		);
+#endif
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public override int GetHashCode()
 		{
