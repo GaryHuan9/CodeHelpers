@@ -270,6 +270,7 @@ namespace CodeHelpers.Mathematics
 		public static float Damp(float current, float target, ref float velocity, float smoothTime, float deltaTime)
 		{
 			//Implementation based on Game Programming Gems 4 Chapter 1.10
+			smoothTime = Math.Max(smoothTime, Epsilon);
 
 			float omega = 2f / smoothTime;  //The smooth coefficient
 			float delta = current - target; //Change in position/value
