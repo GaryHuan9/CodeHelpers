@@ -108,5 +108,26 @@ namespace CodeHelpers.Files
 			Write(segment3.point0);
 			Write(segment3.point1);
 		}
+
+		public void WriteCompact(int value) => Write7BitEncodedInt(value);
+
+		public void WriteCompact(Int2 int2)
+		{
+			WriteCompact(int2.x);
+			WriteCompact(int2.y);
+		}
+
+		public void WriteCompact(in Int3 int3)
+		{
+			WriteCompact(int3.x);
+			WriteCompact(int3.y);
+			WriteCompact(int3.z);
+		}
+
+		public void WriteCompact(MinMaxInt minMax)
+		{
+			WriteCompact(minMax.min);
+			WriteCompact(minMax.max);
+		}
 	}
 }

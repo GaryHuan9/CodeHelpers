@@ -42,8 +42,19 @@ namespace CodeHelpers.Files
 			}
 		}
 
-		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders) => versionedReaders = new VersionedReaders(version, this, compiledReaders);
-		public void ClearVersionedReaders() => versionedReaders = null;
+		public int Version { get; private set; }
+
+		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders)
+		{
+			Version = version;
+			versionedReaders = new VersionedReaders(version, this, compiledReaders);
+		}
+
+		public void ClearVersionedReaders()
+		{
+			Version = 0;
+			versionedReaders = null;
+		}
 
 		public T Read<T>()
 		{
@@ -106,5 +117,18 @@ namespace CodeHelpers.Files
 
 		public Segment2 ReadSegment2() => new Segment2(ReadFloat2(), ReadFloat2());
 		public Segment3 ReadSegment3() => new Segment3(ReadFloat3(), ReadFloat3());
+
+		public int ReadInt32Compact() => Read7BitEncodedInt();
+
+		public Int2 ReadInt2Compact() => new Int2(ReadInt32Compact(), ReadInt32Compact());
+		public Int3 ReadInt3Compact() => new Int3(ReadInt32Compact(), ReadInt32Compact(), ReadInt32Compact());
+
+		public MinMaxInt ReadMinMaxIntCompact()
+		{
+			int min = ReadInt32Compact();
+			int max = ReadInt32Compact();
+
+			return new MinMaxInt(min, max);
+		}
 	}
 }

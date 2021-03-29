@@ -8,6 +8,9 @@ namespace CodeHelpers.Files
 	{
 		public ReaderAttribute(int version) => this.version = version;
 
+		/// <summary>
+		/// This reader supports all versions above or equals this number.
+		/// </summary>
 		public readonly int version;
 
 		/// <summary>
