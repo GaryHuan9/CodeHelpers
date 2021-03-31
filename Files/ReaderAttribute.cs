@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Files
 {
@@ -14,24 +15,22 @@ namespace CodeHelpers.Files
 		public readonly int version;
 
 		/// <summary>
-		/// Checks whether <paramref name="info"/> is a valid method for <see cref="ReaderAttribute"/>.
-		/// If so, returns the type that is can read. Otherwise exceptions are thrown.
+		/// Checks whether <paramref name="method"/> is a valid method for <see cref="ReaderAttribute"/>.
+		/// If so, returns the type that it can read. Otherwise exceptions are thrown.
 		/// </summary>
-		public static Type CheckMethod(MethodInfo info)
+		public static Type CheckMethod(MethodInfo method)
 		{
-			Type returnType = info.ReturnType;
+			Type readType = method.IsStatic ? method.ReturnType : method.DeclaringType ?? throw ExceptionHelper.NotPossible;
 
-			if (returnType == typeof(void)) throw new Exception($"Method '{info}' must return something to use {nameof(ReaderAttribute)}.");
-			if (returnType.IsValueType) throw new Exception($"Method '{info}' must return a reference type to use {nameof(ReaderAttribute)}.");
+			if (readType == typeof(void)) throw new Exception($"Method '{method}' must target something to use {nameof(ReaderAttribute)}.");
+			if (readType.IsValueType) throw new Exception($"Method '{method}' must target a reference type to use {nameof(ReaderAttribute)}.");
 
-			ParameterInfo[] parameters = info.GetParameters();
+			ParameterInfo[] parameters = method.GetParameters();
 
-			if (parameters.Length != 1) throw new Exception($"Method '{info}' must contain exactly one parameter to use {nameof(ReaderAttribute)}.");
-			if (parameters[0].ParameterType != typeof(DataReader)) throw new Exception($"Method '{info}' must have a {nameof(DataReader)} parameter to use {nameof(ReaderAttribute)}.");
+			if (parameters.Length != 1) throw new Exception($"Method '{method}' must contain exactly one parameter to use {nameof(ReaderAttribute)}.");
+			if (parameters[0].ParameterType != typeof(DataReader)) throw new Exception($"Method '{method}' must have a {nameof(DataReader)} parameter to use {nameof(ReaderAttribute)}.");
 
-			return returnType;
+			return readType;
 		}
 	}
-
-	public delegate object ReaderDelegate(DataReader dataReader);
 }

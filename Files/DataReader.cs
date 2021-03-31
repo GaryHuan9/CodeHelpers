@@ -42,24 +42,25 @@ namespace CodeHelpers.Files
 			}
 		}
 
-		public int Version { get; private set; }
+		public int Version => versionedReaders?.version ?? 0;
 
 		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders)
 		{
-			Version = version;
 			versionedReaders = new VersionedReaders(version, this, compiledReaders);
 		}
 
-		public void ClearVersionedReaders()
-		{
-			Version = 0;
-			versionedReaders = null;
-		}
+		public void ClearVersionedReaders() => versionedReaders = null;
 
 		public T Read<T>()
 		{
 			if (versionedReaders != null) return versionedReaders.Read<T>();
 			throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
+		}
+
+		public void Read<T>(T value)
+		{
+			if (versionedReaders != null) versionedReaders.Read(value);
+			else throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
 		}
 
 		public BitVector8 ReadBitVector8() => new BitVector8(ReadByte());
