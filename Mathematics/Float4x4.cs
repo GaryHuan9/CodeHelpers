@@ -235,6 +235,14 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public Float4x4 Absoluted => new Float4x4
+		(
+			Math.Abs(f00), Math.Abs(f01), Math.Abs(f02), Math.Abs(f03),
+			Math.Abs(f10), Math.Abs(f11), Math.Abs(f12), Math.Abs(f13),
+			Math.Abs(f20), Math.Abs(f21), Math.Abs(f22), Math.Abs(f23),
+			Math.Abs(f30), Math.Abs(f31), Math.Abs(f32), Math.Abs(f33)
+		);
+
 		public Float4x4 Transposed => new Float4x4
 		(
 			f00, f10, f20, f30,
@@ -325,9 +333,9 @@ namespace CodeHelpers.Mathematics
 			f00 * point.x + f01 * point.y + f02 * point.z + f03, f10 * point.x + f11 * point.y + f12 * point.z + f13, f20 * point.x + f21 * point.y + f22 * point.z + f23
 		);
 
-		public Float3 MultiplyDirection(Float3 point) => new Float3
+		public Float3 MultiplyDirection(Float3 direction) => new Float3
 		(
-			f00 * point.x + f01 * point.y + f02 * point.z, f10 * point.x + f11 * point.y + f12 * point.z, f20 * point.x + f21 * point.y + f22 * point.z
+			f00 * direction.x + f01 * direction.y + f02 * direction.z, f10 * direction.x + f11 * direction.y + f12 * direction.z, f20 * direction.x + f21 * direction.y + f22 * direction.z
 		);
 
 		public static Float4x4 Position(Float3 position) => new Float4x4
