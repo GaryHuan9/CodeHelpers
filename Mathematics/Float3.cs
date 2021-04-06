@@ -28,38 +28,82 @@ namespace CodeHelpers.Mathematics
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXX => new Float3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXY => new Float3(x, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXZ => new Float3(x, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XX_ => new Float3(x, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYX => new Float3(x, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYY => new Float3(x, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYZ => new Float3(x, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XY_ => new Float3(x, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZX => new Float3(x, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZY => new Float3(x, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZZ => new Float3(x, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XZ_ => new Float3(x, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X_X => new Float3(x, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X_Y => new Float3(x, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X_Z => new Float3(x, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X__ => new Float3(x, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXX => new Float3(y, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXY => new Float3(y, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXZ => new Float3(y, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YX_ => new Float3(y, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYX => new Float3(y, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYY => new Float3(y, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYZ => new Float3(y, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YY_ => new Float3(y, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZX => new Float3(y, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZY => new Float3(y, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZZ => new Float3(y, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YZ_ => new Float3(y, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y_X => new Float3(y, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y_Y => new Float3(y, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y_Z => new Float3(y, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y__ => new Float3(y, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZXX => new Float3(z, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZXY => new Float3(z, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZXZ => new Float3(z, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZX_ => new Float3(z, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZYX => new Float3(z, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZYY => new Float3(z, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZYZ => new Float3(z, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZY_ => new Float3(z, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZX => new Float3(z, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZY => new Float3(z, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZZ => new Float3(z, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ZZ_ => new Float3(z, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Z_X => new Float3(z, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Z_Y => new Float3(z, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Z_Z => new Float3(z, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Z__ => new Float3(z, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _XX => new Float3(0f, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _XY => new Float3(0f, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _XZ => new Float3(0f, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _X_ => new Float3(0f, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _YX => new Float3(0f, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _YY => new Float3(0f, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _YZ => new Float3(0f, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _Y_ => new Float3(0f, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _ZX => new Float3(0f, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _ZY => new Float3(0f, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _ZZ => new Float3(0f, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _Z_ => new Float3(0f, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 __X => new Float3(0f, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 __Y => new Float3(0f, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 __Z => new Float3(0f, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ___ => new Float3(0f, 0f, 0f);
 
 #endregion
 

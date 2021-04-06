@@ -31,321 +31,751 @@ namespace CodeHelpers.Mathematics
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXY => new Float4(x, x, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXZ => new Float4(x, x, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXW => new Float4(x, x, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXX_ => new Float4(x, x, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXYX => new Float4(x, x, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXYY => new Float4(x, x, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXYZ => new Float4(x, x, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXYW => new Float4(x, x, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXY_ => new Float4(x, x, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXZX => new Float4(x, x, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXZY => new Float4(x, x, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXZZ => new Float4(x, x, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXZW => new Float4(x, x, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXZ_ => new Float4(x, x, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXWX => new Float4(x, x, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXWY => new Float4(x, x, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXWZ => new Float4(x, x, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXWW => new Float4(x, x, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXW_ => new Float4(x, x, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX_X => new Float4(x, x, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX_Y => new Float4(x, x, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX_Z => new Float4(x, x, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX_W => new Float4(x, x, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX__ => new Float4(x, x, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYXX => new Float4(x, y, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYXY => new Float4(x, y, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYXZ => new Float4(x, y, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYXW => new Float4(x, y, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYX_ => new Float4(x, y, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYYX => new Float4(x, y, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYYY => new Float4(x, y, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYYZ => new Float4(x, y, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYYW => new Float4(x, y, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYY_ => new Float4(x, y, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYZX => new Float4(x, y, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYZY => new Float4(x, y, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYZZ => new Float4(x, y, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYZW => new Float4(x, y, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYZ_ => new Float4(x, y, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYWX => new Float4(x, y, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYWY => new Float4(x, y, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYWZ => new Float4(x, y, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYWW => new Float4(x, y, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYW_ => new Float4(x, y, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY_X => new Float4(x, y, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY_Y => new Float4(x, y, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY_Z => new Float4(x, y, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY_W => new Float4(x, y, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY__ => new Float4(x, y, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZXX => new Float4(x, z, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZXY => new Float4(x, z, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZXZ => new Float4(x, z, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZXW => new Float4(x, z, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZX_ => new Float4(x, z, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZYX => new Float4(x, z, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZYY => new Float4(x, z, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZYZ => new Float4(x, z, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZYW => new Float4(x, z, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZY_ => new Float4(x, z, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZZX => new Float4(x, z, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZZY => new Float4(x, z, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZZZ => new Float4(x, z, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZZW => new Float4(x, z, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZZ_ => new Float4(x, z, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZWX => new Float4(x, z, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZWY => new Float4(x, z, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZWZ => new Float4(x, z, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZWW => new Float4(x, z, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZW_ => new Float4(x, z, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZ_X => new Float4(x, z, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZ_Y => new Float4(x, z, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZ_Z => new Float4(x, z, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZ_W => new Float4(x, z, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XZ__ => new Float4(x, z, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWXX => new Float4(x, w, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWXY => new Float4(x, w, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWXZ => new Float4(x, w, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWXW => new Float4(x, w, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWX_ => new Float4(x, w, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWYX => new Float4(x, w, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWYY => new Float4(x, w, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWYZ => new Float4(x, w, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWYW => new Float4(x, w, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWY_ => new Float4(x, w, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWZX => new Float4(x, w, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWZY => new Float4(x, w, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWZZ => new Float4(x, w, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWZW => new Float4(x, w, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWZ_ => new Float4(x, w, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWWX => new Float4(x, w, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWWY => new Float4(x, w, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWWZ => new Float4(x, w, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWWW => new Float4(x, w, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XWW_ => new Float4(x, w, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XW_X => new Float4(x, w, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XW_Y => new Float4(x, w, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XW_Z => new Float4(x, w, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XW_W => new Float4(x, w, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XW__ => new Float4(x, w, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_XX => new Float4(x, 0f, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_XY => new Float4(x, 0f, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_XZ => new Float4(x, 0f, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_XW => new Float4(x, 0f, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_X_ => new Float4(x, 0f, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_YX => new Float4(x, 0f, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_YY => new Float4(x, 0f, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_YZ => new Float4(x, 0f, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_YW => new Float4(x, 0f, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_Y_ => new Float4(x, 0f, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_ZX => new Float4(x, 0f, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_ZY => new Float4(x, 0f, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_ZZ => new Float4(x, 0f, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_ZW => new Float4(x, 0f, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_Z_ => new Float4(x, 0f, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_WX => new Float4(x, 0f, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_WY => new Float4(x, 0f, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_WZ => new Float4(x, 0f, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_WW => new Float4(x, 0f, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_W_ => new Float4(x, 0f, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X__X => new Float4(x, 0f, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X__Y => new Float4(x, 0f, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X__Z => new Float4(x, 0f, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X__W => new Float4(x, 0f, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X___ => new Float4(x, 0f, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXXX => new Float4(y, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXXY => new Float4(y, x, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXXZ => new Float4(y, x, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXXW => new Float4(y, x, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXX_ => new Float4(y, x, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXYX => new Float4(y, x, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXYY => new Float4(y, x, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXYZ => new Float4(y, x, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXYW => new Float4(y, x, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXY_ => new Float4(y, x, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXZX => new Float4(y, x, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXZY => new Float4(y, x, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXZZ => new Float4(y, x, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXZW => new Float4(y, x, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXZ_ => new Float4(y, x, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXWX => new Float4(y, x, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXWY => new Float4(y, x, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXWZ => new Float4(y, x, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXWW => new Float4(y, x, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXW_ => new Float4(y, x, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX_X => new Float4(y, x, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX_Y => new Float4(y, x, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX_Z => new Float4(y, x, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX_W => new Float4(y, x, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX__ => new Float4(y, x, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYXX => new Float4(y, y, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYXY => new Float4(y, y, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYXZ => new Float4(y, y, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYXW => new Float4(y, y, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYX_ => new Float4(y, y, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYYX => new Float4(y, y, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYYY => new Float4(y, y, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYYZ => new Float4(y, y, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYYW => new Float4(y, y, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYY_ => new Float4(y, y, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYZX => new Float4(y, y, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYZY => new Float4(y, y, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYZZ => new Float4(y, y, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYZW => new Float4(y, y, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYZ_ => new Float4(y, y, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYWX => new Float4(y, y, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYWY => new Float4(y, y, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYWZ => new Float4(y, y, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYWW => new Float4(y, y, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYW_ => new Float4(y, y, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY_X => new Float4(y, y, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY_Y => new Float4(y, y, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY_Z => new Float4(y, y, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY_W => new Float4(y, y, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY__ => new Float4(y, y, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZXX => new Float4(y, z, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZXY => new Float4(y, z, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZXZ => new Float4(y, z, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZXW => new Float4(y, z, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZX_ => new Float4(y, z, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZYX => new Float4(y, z, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZYY => new Float4(y, z, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZYZ => new Float4(y, z, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZYW => new Float4(y, z, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZY_ => new Float4(y, z, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZZX => new Float4(y, z, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZZY => new Float4(y, z, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZZZ => new Float4(y, z, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZZW => new Float4(y, z, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZZ_ => new Float4(y, z, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZWX => new Float4(y, z, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZWY => new Float4(y, z, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZWZ => new Float4(y, z, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZWW => new Float4(y, z, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZW_ => new Float4(y, z, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZ_X => new Float4(y, z, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZ_Y => new Float4(y, z, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZ_Z => new Float4(y, z, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZ_W => new Float4(y, z, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YZ__ => new Float4(y, z, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWXX => new Float4(y, w, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWXY => new Float4(y, w, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWXZ => new Float4(y, w, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWXW => new Float4(y, w, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWX_ => new Float4(y, w, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWYX => new Float4(y, w, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWYY => new Float4(y, w, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWYZ => new Float4(y, w, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWYW => new Float4(y, w, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWY_ => new Float4(y, w, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWZX => new Float4(y, w, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWZY => new Float4(y, w, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWZZ => new Float4(y, w, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWZW => new Float4(y, w, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWZ_ => new Float4(y, w, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWWX => new Float4(y, w, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWWY => new Float4(y, w, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWWZ => new Float4(y, w, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWWW => new Float4(y, w, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YWW_ => new Float4(y, w, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YW_X => new Float4(y, w, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YW_Y => new Float4(y, w, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YW_Z => new Float4(y, w, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YW_W => new Float4(y, w, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YW__ => new Float4(y, w, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_XX => new Float4(y, 0f, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_XY => new Float4(y, 0f, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_XZ => new Float4(y, 0f, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_XW => new Float4(y, 0f, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_X_ => new Float4(y, 0f, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_YX => new Float4(y, 0f, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_YY => new Float4(y, 0f, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_YZ => new Float4(y, 0f, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_YW => new Float4(y, 0f, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_Y_ => new Float4(y, 0f, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_ZX => new Float4(y, 0f, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_ZY => new Float4(y, 0f, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_ZZ => new Float4(y, 0f, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_ZW => new Float4(y, 0f, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_Z_ => new Float4(y, 0f, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_WX => new Float4(y, 0f, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_WY => new Float4(y, 0f, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_WZ => new Float4(y, 0f, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_WW => new Float4(y, 0f, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_W_ => new Float4(y, 0f, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y__X => new Float4(y, 0f, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y__Y => new Float4(y, 0f, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y__Z => new Float4(y, 0f, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y__W => new Float4(y, 0f, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y___ => new Float4(y, 0f, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXXX => new Float4(z, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXXY => new Float4(z, x, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXXZ => new Float4(z, x, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXXW => new Float4(z, x, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXX_ => new Float4(z, x, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXYX => new Float4(z, x, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXYY => new Float4(z, x, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXYZ => new Float4(z, x, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXYW => new Float4(z, x, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXY_ => new Float4(z, x, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXZX => new Float4(z, x, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXZY => new Float4(z, x, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXZZ => new Float4(z, x, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXZW => new Float4(z, x, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXZ_ => new Float4(z, x, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXWX => new Float4(z, x, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXWY => new Float4(z, x, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXWZ => new Float4(z, x, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXWW => new Float4(z, x, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZXW_ => new Float4(z, x, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZX_X => new Float4(z, x, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZX_Y => new Float4(z, x, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZX_Z => new Float4(z, x, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZX_W => new Float4(z, x, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZX__ => new Float4(z, x, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYXX => new Float4(z, y, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYXY => new Float4(z, y, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYXZ => new Float4(z, y, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYXW => new Float4(z, y, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYX_ => new Float4(z, y, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYYX => new Float4(z, y, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYYY => new Float4(z, y, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYYZ => new Float4(z, y, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYYW => new Float4(z, y, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYY_ => new Float4(z, y, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYZX => new Float4(z, y, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYZY => new Float4(z, y, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYZZ => new Float4(z, y, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYZW => new Float4(z, y, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYZ_ => new Float4(z, y, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYWX => new Float4(z, y, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYWY => new Float4(z, y, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYWZ => new Float4(z, y, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYWW => new Float4(z, y, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZYW_ => new Float4(z, y, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZY_X => new Float4(z, y, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZY_Y => new Float4(z, y, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZY_Z => new Float4(z, y, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZY_W => new Float4(z, y, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZY__ => new Float4(z, y, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZXX => new Float4(z, z, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZXY => new Float4(z, z, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZXZ => new Float4(z, z, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZXW => new Float4(z, z, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZX_ => new Float4(z, z, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZYX => new Float4(z, z, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZYY => new Float4(z, z, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZYZ => new Float4(z, z, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZYW => new Float4(z, z, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZY_ => new Float4(z, z, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZZX => new Float4(z, z, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZZY => new Float4(z, z, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZZZ => new Float4(z, z, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZZW => new Float4(z, z, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZZ_ => new Float4(z, z, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZWX => new Float4(z, z, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZWY => new Float4(z, z, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZWZ => new Float4(z, z, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZWW => new Float4(z, z, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZW_ => new Float4(z, z, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZ_X => new Float4(z, z, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZ_Y => new Float4(z, z, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZ_Z => new Float4(z, z, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZ_W => new Float4(z, z, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZZ__ => new Float4(z, z, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWXX => new Float4(z, w, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWXY => new Float4(z, w, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWXZ => new Float4(z, w, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWXW => new Float4(z, w, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWX_ => new Float4(z, w, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWYX => new Float4(z, w, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWYY => new Float4(z, w, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWYZ => new Float4(z, w, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWYW => new Float4(z, w, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWY_ => new Float4(z, w, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWZX => new Float4(z, w, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWZY => new Float4(z, w, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWZZ => new Float4(z, w, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWZW => new Float4(z, w, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWZ_ => new Float4(z, w, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWWX => new Float4(z, w, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWWY => new Float4(z, w, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWWZ => new Float4(z, w, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWWW => new Float4(z, w, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZWW_ => new Float4(z, w, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZW_X => new Float4(z, w, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZW_Y => new Float4(z, w, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZW_Z => new Float4(z, w, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZW_W => new Float4(z, w, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ZW__ => new Float4(z, w, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_XX => new Float4(z, 0f, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_XY => new Float4(z, 0f, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_XZ => new Float4(z, 0f, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_XW => new Float4(z, 0f, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_X_ => new Float4(z, 0f, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_YX => new Float4(z, 0f, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_YY => new Float4(z, 0f, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_YZ => new Float4(z, 0f, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_YW => new Float4(z, 0f, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_Y_ => new Float4(z, 0f, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_ZX => new Float4(z, 0f, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_ZY => new Float4(z, 0f, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_ZZ => new Float4(z, 0f, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_ZW => new Float4(z, 0f, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_Z_ => new Float4(z, 0f, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_WX => new Float4(z, 0f, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_WY => new Float4(z, 0f, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_WZ => new Float4(z, 0f, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_WW => new Float4(z, 0f, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z_W_ => new Float4(z, 0f, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z__X => new Float4(z, 0f, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z__Y => new Float4(z, 0f, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z__Z => new Float4(z, 0f, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z__W => new Float4(z, 0f, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Z___ => new Float4(z, 0f, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXXX => new Float4(w, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXXY => new Float4(w, x, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXXZ => new Float4(w, x, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXXW => new Float4(w, x, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXX_ => new Float4(w, x, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXYX => new Float4(w, x, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXYY => new Float4(w, x, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXYZ => new Float4(w, x, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXYW => new Float4(w, x, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXY_ => new Float4(w, x, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXZX => new Float4(w, x, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXZY => new Float4(w, x, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXZZ => new Float4(w, x, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXZW => new Float4(w, x, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXZ_ => new Float4(w, x, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXWX => new Float4(w, x, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXWY => new Float4(w, x, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXWZ => new Float4(w, x, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXWW => new Float4(w, x, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WXW_ => new Float4(w, x, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WX_X => new Float4(w, x, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WX_Y => new Float4(w, x, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WX_Z => new Float4(w, x, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WX_W => new Float4(w, x, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WX__ => new Float4(w, x, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYXX => new Float4(w, y, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYXY => new Float4(w, y, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYXZ => new Float4(w, y, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYXW => new Float4(w, y, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYX_ => new Float4(w, y, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYYX => new Float4(w, y, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYYY => new Float4(w, y, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYYZ => new Float4(w, y, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYYW => new Float4(w, y, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYY_ => new Float4(w, y, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYZX => new Float4(w, y, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYZY => new Float4(w, y, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYZZ => new Float4(w, y, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYZW => new Float4(w, y, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYZ_ => new Float4(w, y, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYWX => new Float4(w, y, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYWY => new Float4(w, y, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYWZ => new Float4(w, y, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYWW => new Float4(w, y, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WYW_ => new Float4(w, y, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WY_X => new Float4(w, y, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WY_Y => new Float4(w, y, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WY_Z => new Float4(w, y, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WY_W => new Float4(w, y, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WY__ => new Float4(w, y, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZXX => new Float4(w, z, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZXY => new Float4(w, z, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZXZ => new Float4(w, z, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZXW => new Float4(w, z, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZX_ => new Float4(w, z, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZYX => new Float4(w, z, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZYY => new Float4(w, z, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZYZ => new Float4(w, z, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZYW => new Float4(w, z, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZY_ => new Float4(w, z, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZZX => new Float4(w, z, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZZY => new Float4(w, z, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZZZ => new Float4(w, z, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZZW => new Float4(w, z, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZZ_ => new Float4(w, z, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZWX => new Float4(w, z, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZWY => new Float4(w, z, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZWZ => new Float4(w, z, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZWW => new Float4(w, z, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZW_ => new Float4(w, z, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZ_X => new Float4(w, z, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZ_Y => new Float4(w, z, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZ_Z => new Float4(w, z, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZ_W => new Float4(w, z, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WZ__ => new Float4(w, z, 0f, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWXX => new Float4(w, w, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWXY => new Float4(w, w, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWXZ => new Float4(w, w, x, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWXW => new Float4(w, w, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWX_ => new Float4(w, w, x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWYX => new Float4(w, w, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWYY => new Float4(w, w, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWYZ => new Float4(w, w, y, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWYW => new Float4(w, w, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWY_ => new Float4(w, w, y, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWZX => new Float4(w, w, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWZY => new Float4(w, w, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWZZ => new Float4(w, w, z, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWZW => new Float4(w, w, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWZ_ => new Float4(w, w, z, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWWX => new Float4(w, w, w, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWWY => new Float4(w, w, w, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWWZ => new Float4(w, w, w, z);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWWW => new Float4(w, w, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WWW_ => new Float4(w, w, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WW_X => new Float4(w, w, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WW_Y => new Float4(w, w, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WW_Z => new Float4(w, w, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WW_W => new Float4(w, w, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 WW__ => new Float4(w, w, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_XX => new Float4(w, 0f, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_XY => new Float4(w, 0f, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_XZ => new Float4(w, 0f, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_XW => new Float4(w, 0f, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_X_ => new Float4(w, 0f, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_YX => new Float4(w, 0f, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_YY => new Float4(w, 0f, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_YZ => new Float4(w, 0f, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_YW => new Float4(w, 0f, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_Y_ => new Float4(w, 0f, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_ZX => new Float4(w, 0f, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_ZY => new Float4(w, 0f, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_ZZ => new Float4(w, 0f, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_ZW => new Float4(w, 0f, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_Z_ => new Float4(w, 0f, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_WX => new Float4(w, 0f, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_WY => new Float4(w, 0f, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_WZ => new Float4(w, 0f, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_WW => new Float4(w, 0f, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W_W_ => new Float4(w, 0f, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W__X => new Float4(w, 0f, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W__Y => new Float4(w, 0f, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W__Z => new Float4(w, 0f, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W__W => new Float4(w, 0f, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 W___ => new Float4(w, 0f, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XXX => new Float4(0f, x, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XXY => new Float4(0f, x, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XXZ => new Float4(0f, x, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XXW => new Float4(0f, x, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XX_ => new Float4(0f, x, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XYX => new Float4(0f, x, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XYY => new Float4(0f, x, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XYZ => new Float4(0f, x, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XYW => new Float4(0f, x, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XY_ => new Float4(0f, x, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XZX => new Float4(0f, x, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XZY => new Float4(0f, x, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XZZ => new Float4(0f, x, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XZW => new Float4(0f, x, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XZ_ => new Float4(0f, x, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XWX => new Float4(0f, x, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XWY => new Float4(0f, x, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XWZ => new Float4(0f, x, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XWW => new Float4(0f, x, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XW_ => new Float4(0f, x, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X_X => new Float4(0f, x, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X_Y => new Float4(0f, x, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X_Z => new Float4(0f, x, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X_W => new Float4(0f, x, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X__ => new Float4(0f, x, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YXX => new Float4(0f, y, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YXY => new Float4(0f, y, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YXZ => new Float4(0f, y, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YXW => new Float4(0f, y, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YX_ => new Float4(0f, y, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YYX => new Float4(0f, y, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YYY => new Float4(0f, y, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YYZ => new Float4(0f, y, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YYW => new Float4(0f, y, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YY_ => new Float4(0f, y, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YZX => new Float4(0f, y, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YZY => new Float4(0f, y, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YZZ => new Float4(0f, y, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YZW => new Float4(0f, y, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YZ_ => new Float4(0f, y, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YWX => new Float4(0f, y, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YWY => new Float4(0f, y, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YWZ => new Float4(0f, y, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YWW => new Float4(0f, y, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YW_ => new Float4(0f, y, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y_X => new Float4(0f, y, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y_Y => new Float4(0f, y, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y_Z => new Float4(0f, y, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y_W => new Float4(0f, y, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y__ => new Float4(0f, y, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZXX => new Float4(0f, z, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZXY => new Float4(0f, z, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZXZ => new Float4(0f, z, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZXW => new Float4(0f, z, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZX_ => new Float4(0f, z, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZYX => new Float4(0f, z, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZYY => new Float4(0f, z, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZYZ => new Float4(0f, z, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZYW => new Float4(0f, z, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZY_ => new Float4(0f, z, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZZX => new Float4(0f, z, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZZY => new Float4(0f, z, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZZZ => new Float4(0f, z, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZZW => new Float4(0f, z, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZZ_ => new Float4(0f, z, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZWX => new Float4(0f, z, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZWY => new Float4(0f, z, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZWZ => new Float4(0f, z, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZWW => new Float4(0f, z, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _ZW_ => new Float4(0f, z, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Z_X => new Float4(0f, z, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Z_Y => new Float4(0f, z, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Z_Z => new Float4(0f, z, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Z_W => new Float4(0f, z, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Z__ => new Float4(0f, z, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WXX => new Float4(0f, w, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WXY => new Float4(0f, w, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WXZ => new Float4(0f, w, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WXW => new Float4(0f, w, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WX_ => new Float4(0f, w, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WYX => new Float4(0f, w, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WYY => new Float4(0f, w, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WYZ => new Float4(0f, w, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WYW => new Float4(0f, w, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WY_ => new Float4(0f, w, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WZX => new Float4(0f, w, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WZY => new Float4(0f, w, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WZZ => new Float4(0f, w, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WZW => new Float4(0f, w, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WZ_ => new Float4(0f, w, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WWX => new Float4(0f, w, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WWY => new Float4(0f, w, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WWZ => new Float4(0f, w, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WWW => new Float4(0f, w, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _WW_ => new Float4(0f, w, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _W_X => new Float4(0f, w, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _W_Y => new Float4(0f, w, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _W_Z => new Float4(0f, w, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _W_W => new Float4(0f, w, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _W__ => new Float4(0f, w, 0f, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __XX => new Float4(0f, 0f, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __XY => new Float4(0f, 0f, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __XZ => new Float4(0f, 0f, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __XW => new Float4(0f, 0f, x, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __X_ => new Float4(0f, 0f, x, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __YX => new Float4(0f, 0f, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __YY => new Float4(0f, 0f, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __YZ => new Float4(0f, 0f, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __YW => new Float4(0f, 0f, y, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __Y_ => new Float4(0f, 0f, y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __ZX => new Float4(0f, 0f, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __ZY => new Float4(0f, 0f, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __ZZ => new Float4(0f, 0f, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __ZW => new Float4(0f, 0f, z, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __Z_ => new Float4(0f, 0f, z, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __WX => new Float4(0f, 0f, w, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __WY => new Float4(0f, 0f, w, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __WZ => new Float4(0f, 0f, w, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __WW => new Float4(0f, 0f, w, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __W_ => new Float4(0f, 0f, w, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ___X => new Float4(0f, 0f, 0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ___Y => new Float4(0f, 0f, 0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ___Z => new Float4(0f, 0f, 0f, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ___W => new Float4(0f, 0f, 0f, w);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ____ => new Float4(0f, 0f, 0f, 0f);
 
 #endregion
 

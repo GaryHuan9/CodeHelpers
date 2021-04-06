@@ -30,38 +30,82 @@ namespace CodeHelpers.Mathematics
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXX => new Int3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXY => new Int3(x, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXZ => new Int3(x, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XX_ => new Int3(x, x, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XYX => new Int3(x, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XYY => new Int3(x, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XYZ => new Int3(x, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XY_ => new Int3(x, y, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XZX => new Int3(x, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XZY => new Int3(x, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XZZ => new Int3(x, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XZ_ => new Int3(x, z, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 X_X => new Int3(x, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 X_Y => new Int3(x, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 X_Z => new Int3(x, 0, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 X__ => new Int3(x, 0, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YXX => new Int3(y, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YXY => new Int3(y, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YXZ => new Int3(y, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YX_ => new Int3(y, x, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YYX => new Int3(y, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YYY => new Int3(y, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YYZ => new Int3(y, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YY_ => new Int3(y, y, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YZX => new Int3(y, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YZY => new Int3(y, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YZZ => new Int3(y, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 YZ_ => new Int3(y, z, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Y_X => new Int3(y, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Y_Y => new Int3(y, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Y_Z => new Int3(y, 0, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Y__ => new Int3(y, 0, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZXX => new Int3(z, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZXY => new Int3(z, x, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZXZ => new Int3(z, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZX_ => new Int3(z, x, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZYX => new Int3(z, y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZYY => new Int3(z, y, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZYZ => new Int3(z, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZY_ => new Int3(z, y, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZZX => new Int3(z, z, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZZY => new Int3(z, z, y);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZZZ => new Int3(z, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ZZ_ => new Int3(z, z, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Z_X => new Int3(z, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Z_Y => new Int3(z, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Z_Z => new Int3(z, 0, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 Z__ => new Int3(z, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _XX => new Int3(0, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _XY => new Int3(0, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _XZ => new Int3(0, x, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _X_ => new Int3(0, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _YX => new Int3(0, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _YY => new Int3(0, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _YZ => new Int3(0, y, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _Y_ => new Int3(0, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _ZX => new Int3(0, z, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _ZY => new Int3(0, z, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _ZZ => new Int3(0, z, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 _Z_ => new Int3(0, z, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 __X => new Int3(0, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 __Y => new Int3(0, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 __Z => new Int3(0, 0, z);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 ___ => new Int3(0, 0, 0);
 
 #endregion
 

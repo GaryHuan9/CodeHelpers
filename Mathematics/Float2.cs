@@ -65,9 +65,15 @@ namespace CodeHelpers.Mathematics
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XX => new Float2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XY => new Float2(x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 X_ => new Float2(x, 0f);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YX => new Float2(y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YY => new Float2(y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 Y_ => new Float2(y, 0f);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 _X => new Float2(0f, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 _Y => new Float2(0f, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 __ => new Float2(0f, 0f);
 
 #endregion
 

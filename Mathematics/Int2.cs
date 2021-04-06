@@ -67,9 +67,15 @@ namespace CodeHelpers.Mathematics
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XX => new Int2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XY => new Int2(x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 X_ => new Int2(x, 0);
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 YX => new Int2(y, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 YY => new Int2(y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 Y_ => new Int2(y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 _X => new Int2(0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 _Y => new Int2(0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 __ => new Int2(0, 0);
 
 #endregion
 
