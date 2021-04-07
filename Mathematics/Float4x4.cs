@@ -42,7 +42,7 @@ namespace CodeHelpers.Mathematics
 			source.f30, source.f31, source.f32, source.f33
 		) { }
 
-		public Float4x4(Float4 row0, Float4 row1, Float4 row2, Float4 row3) : this
+		public Float4x4(in Float4 row0, in Float4 row1, in Float4 row2, in Float4 row3) : this
 		(
 			row0.x, row0.y, row0.z, row0.w,
 			row1.x, row1.y, row1.z, row1.w,
@@ -328,17 +328,17 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public Float3 MultiplyPoint(Float3 point) => new Float3
+		public Float3 MultiplyPoint(in Float3 point) => new Float3
 		(
 			f00 * point.x + f01 * point.y + f02 * point.z + f03, f10 * point.x + f11 * point.y + f12 * point.z + f13, f20 * point.x + f21 * point.y + f22 * point.z + f23
 		);
 
-		public Float3 MultiplyDirection(Float3 direction) => new Float3
+		public Float3 MultiplyDirection(in Float3 direction) => new Float3
 		(
 			f00 * direction.x + f01 * direction.y + f02 * direction.z, f10 * direction.x + f11 * direction.y + f12 * direction.z, f20 * direction.x + f21 * direction.y + f22 * direction.z
 		);
 
-		public static Float4x4 Position(Float3 position) => new Float4x4
+		public static Float4x4 Position(in Float3 position) => new Float4x4
 		(
 			1f, 0f, 0f, position.x,
 			0f, 1f, 0f, position.y,
@@ -349,7 +349,7 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Returns a rotational matrix that applies in ZXY order.
 		/// </summary>
-		public static Float4x4 Rotation(Float3 rotation)
+		public static Float4x4 Rotation(in Float3 rotation)
 		{
 			float radX = rotation.x * Scalars.DegreeToRadian;
 			float radY = rotation.y * Scalars.DegreeToRadian;
@@ -373,7 +373,7 @@ namespace CodeHelpers.Mathematics
 			);
 		}
 
-		public static Float4x4 Scale(Float3 scale) => new Float4x4
+		public static Float4x4 Scale(in Float3 scale) => new Float4x4
 		(
 			scale.x, 0f, 0f, 0f,
 			0f, scale.y, 0f, 0f,
@@ -384,12 +384,12 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Returns a combined transformation matrix. Scaling is applied first, then rotation, finally translation.
 		/// </summary>
-		public static Float4x4 Transformation(Float3 position, Float3 rotation, Float3 scale) => Position(position) * Rotation(rotation) * Scale(scale);
+		public static Float4x4 Transformation(in Float3 position, in Float3 rotation, in Float3 scale) => Position(position) * Rotation(rotation) * Scale(scale);
 
 		/// <summary>
 		/// Creates a rotation matrix out of a quaternion.
 		/// </summary>
-		public static Float4x4 Rotation(Float4 quaternion)
+		public static Float4x4 Rotation(in Float4 quaternion)
 		{
 			Float4 q = quaternion.Normalized;
 
@@ -428,16 +428,16 @@ namespace CodeHelpers.Mathematics
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Float4x4 operator *(in Float4x4 l, in Float4x4 r) => new Float4x4
+		public static Float4x4 operator *(in Float4x4 first, in Float4x4 second) => new Float4x4
 		(
-			l.f00 * r.f00 + l.f01 * r.f10 + l.f02 * r.f20 + l.f03 * r.f30, l.f00 * r.f01 + l.f01 * r.f11 + l.f02 * r.f21 + l.f03 * r.f31, l.f00 * r.f02 + l.f01 * r.f12 + l.f02 * r.f22 + l.f03 * r.f32, l.f00 * r.f03 + l.f01 * r.f13 + l.f02 * r.f23 + l.f03 * r.f33,
-			l.f10 * r.f00 + l.f11 * r.f10 + l.f12 * r.f20 + l.f13 * r.f30, l.f10 * r.f01 + l.f11 * r.f11 + l.f12 * r.f21 + l.f13 * r.f31, l.f10 * r.f02 + l.f11 * r.f12 + l.f12 * r.f22 + l.f13 * r.f32, l.f10 * r.f03 + l.f11 * r.f13 + l.f12 * r.f23 + l.f13 * r.f33,
-			l.f20 * r.f00 + l.f21 * r.f10 + l.f22 * r.f20 + l.f23 * r.f30, l.f20 * r.f01 + l.f21 * r.f11 + l.f22 * r.f21 + l.f23 * r.f31, l.f20 * r.f02 + l.f21 * r.f12 + l.f22 * r.f22 + l.f23 * r.f32, l.f20 * r.f03 + l.f21 * r.f13 + l.f22 * r.f23 + l.f23 * r.f33,
-			l.f30 * r.f00 + l.f31 * r.f10 + l.f32 * r.f20 + l.f33 * r.f30, l.f30 * r.f01 + l.f31 * r.f11 + l.f32 * r.f21 + l.f33 * r.f31, l.f30 * r.f02 + l.f31 * r.f12 + l.f32 * r.f22 + l.f33 * r.f32, l.f30 * r.f03 + l.f31 * r.f13 + l.f32 * r.f23 + l.f33 * r.f33
+			first.f00 * second.f00 + first.f01 * second.f10 + first.f02 * second.f20 + first.f03 * second.f30, first.f00 * second.f01 + first.f01 * second.f11 + first.f02 * second.f21 + first.f03 * second.f31, first.f00 * second.f02 + first.f01 * second.f12 + first.f02 * second.f22 + first.f03 * second.f32, first.f00 * second.f03 + first.f01 * second.f13 + first.f02 * second.f23 + first.f03 * second.f33,
+			first.f10 * second.f00 + first.f11 * second.f10 + first.f12 * second.f20 + first.f13 * second.f30, first.f10 * second.f01 + first.f11 * second.f11 + first.f12 * second.f21 + first.f13 * second.f31, first.f10 * second.f02 + first.f11 * second.f12 + first.f12 * second.f22 + first.f13 * second.f32, first.f10 * second.f03 + first.f11 * second.f13 + first.f12 * second.f23 + first.f13 * second.f33,
+			first.f20 * second.f00 + first.f21 * second.f10 + first.f22 * second.f20 + first.f23 * second.f30, first.f20 * second.f01 + first.f21 * second.f11 + first.f22 * second.f21 + first.f23 * second.f31, first.f20 * second.f02 + first.f21 * second.f12 + first.f22 * second.f22 + first.f23 * second.f32, first.f20 * second.f03 + first.f21 * second.f13 + first.f22 * second.f23 + first.f23 * second.f33,
+			first.f30 * second.f00 + first.f31 * second.f10 + first.f32 * second.f20 + first.f33 * second.f30, first.f30 * second.f01 + first.f31 * second.f11 + first.f32 * second.f21 + first.f33 * second.f31, first.f30 * second.f02 + first.f31 * second.f12 + first.f32 * second.f22 + first.f33 * second.f32, first.f30 * second.f03 + first.f31 * second.f13 + first.f32 * second.f23 + first.f33 * second.f33
 		);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Float4 operator *(in Float4x4 first, Float4 second) => new Float4
+		public static Float4 operator *(in Float4x4 first, in Float4 second) => new Float4
 		(
 			first.f00 * second.x + first.f01 * second.y + first.f02 * second.z + first.f03 * second.w,
 			first.f10 * second.x + first.f11 * second.y + first.f12 * second.z + first.f13 * second.w,
