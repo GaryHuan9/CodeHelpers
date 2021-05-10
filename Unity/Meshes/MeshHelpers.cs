@@ -59,7 +59,7 @@ namespace CodeHelpers.Unity.Meshes
 				Mesh subMesh = CommonPooler.mesh.GetObject();
 				if (totalVertexCount >= Mesh16BitSize) subMesh.indexFormat = IndexFormat.UInt32;
 
-				subMesh.CombineMeshes(pair.Value.ToArray(), true, true, false);
+				subMesh.CombineMeshes(pair.Value.ToArray(), true, true);
 				CollectionPooler<CombineInstance>.list.ReleaseObject(pair.Value); //Clean list
 
 				instances[loopIndex] = new CombineInstance {mesh = subMesh, subMeshIndex = 0};
@@ -73,10 +73,10 @@ namespace CodeHelpers.Unity.Meshes
 			else baseMesh.Clear();
 
 			baseMesh.indexFormat = totalVertexCount < Mesh16BitSize ? IndexFormat.UInt16 : IndexFormat.UInt32;
-			baseMesh.CombineMeshes(instances, false, false, false);
+			baseMesh.CombineMeshes(instances, false, false);
 
 			CollectionPooler<Material, List<CombineInstance>>.dictionary.ReleaseObject(dictionary);        //Release pooled dictionary
-			for (int i = 0; i < instances.Length; i++) CommonPooler.mesh.ReleaseObject(instances[i].mesh); //Release pooled submeshes
+			for (int i = 0; i < instances.Length; i++) CommonPooler.mesh.ReleaseObject(instances[i].mesh); //Release pooled sub meshes
 
 			return new MeshMaterials(baseMesh, materials);
 		}

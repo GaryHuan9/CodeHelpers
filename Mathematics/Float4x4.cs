@@ -338,6 +338,12 @@ namespace CodeHelpers.Mathematics
 			f00 * direction.x + f01 * direction.y + f02 * direction.z, f10 * direction.x + f11 * direction.y + f12 * direction.z, f20 * direction.x + f21 * direction.y + f22 * direction.z
 		);
 
+		public void MultiplyBounds(ref Float3 center, ref Float3 extend)
+		{
+			center = MultiplyPoint(center);
+			extend = Absoluted.MultiplyDirection(extend);
+		}
+
 		public static Float4x4 Position(in Float3 position) => new Float4x4
 		(
 			1f, 0f, 0f, position.x,
