@@ -277,7 +277,7 @@ namespace CodeHelpers.Mathematics
 
 				float determinant = f00 * m00 - f01 * m01 + f02 * m02 - f03 * m03;
 
-				if (Scalars.AlmostEquals(determinant, 0f))
+				if (determinant.AlmostEquals(0f))
 				{
 					//Invalid inverse
 					return new Float4x4
@@ -455,10 +455,10 @@ namespace CodeHelpers.Mathematics
 		public static bool operator !=(in Float4x4 first, in Float4x4 second) => !first.EqualsFast(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool EqualsFast(in Float4x4 other) => Scalars.AlmostEquals(f00, other.f00) && Scalars.AlmostEquals(f01, other.f01) && Scalars.AlmostEquals(f02, other.f02) && Scalars.AlmostEquals(f03, other.f03) &&
-													 Scalars.AlmostEquals(f10, other.f10) && Scalars.AlmostEquals(f11, other.f11) && Scalars.AlmostEquals(f12, other.f12) && Scalars.AlmostEquals(f13, other.f13) &&
-													 Scalars.AlmostEquals(f20, other.f20) && Scalars.AlmostEquals(f21, other.f21) && Scalars.AlmostEquals(f22, other.f22) && Scalars.AlmostEquals(f23, other.f23) &&
-													 Scalars.AlmostEquals(f30, other.f30) && Scalars.AlmostEquals(f31, other.f31) && Scalars.AlmostEquals(f32, other.f32) && Scalars.AlmostEquals(f33, other.f33);
+		public bool EqualsFast(in Float4x4 other) => f00.AlmostEquals(other.f00) && f01.AlmostEquals(other.f01) && f02.AlmostEquals(other.f02) && f03.AlmostEquals(other.f03) &&
+													 f10.AlmostEquals(other.f10) && f11.AlmostEquals(other.f11) && f12.AlmostEquals(other.f12) && f13.AlmostEquals(other.f13) &&
+													 f20.AlmostEquals(other.f20) && f21.AlmostEquals(other.f21) && f22.AlmostEquals(other.f22) && f23.AlmostEquals(other.f23) &&
+													 f30.AlmostEquals(other.f30) && f31.AlmostEquals(other.f31) && f32.AlmostEquals(other.f32) && f33.AlmostEquals(other.f33);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool EqualsExact(in Float4x4 other) => f00 == other.f00 && f01 == other.f01 && f02 == other.f02 && f03 == other.f03 &&

@@ -124,7 +124,7 @@ namespace CodeHelpers.Mathematics
 		public override string ToString() => $"min : {min} max : {max}";
 
 		public override bool Equals(object obj) => obj is MinMax minMax && Equals(minMax);
-		public bool Equals(MinMax other) => Scalars.AlmostEquals(min, other.min) && Scalars.AlmostEquals(max, other.max);
+		public bool Equals(MinMax other) => min.AlmostEquals(other.min) && max.AlmostEquals(other.max);
 
 		public override int GetHashCode()
 		{

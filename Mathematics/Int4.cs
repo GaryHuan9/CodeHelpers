@@ -1225,7 +1225,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(in Int4 other)
 		{
 			double magnitude = Math.Sqrt(SquaredMagnitudeLong * other.SquaredMagnitudeLong);
-			return Scalars.AlmostEquals(magnitude, 0d) ? 0f : (float)Math.Acos(DotLong(other) / magnitude) * Scalars.RadianToDegree;
+			return magnitude.AlmostEquals(0d) ? 0f : (float)Math.Acos(DotLong(other) / magnitude) * Scalars.RadianToDegree;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(in Int4 other) => (other - this).Magnitude;

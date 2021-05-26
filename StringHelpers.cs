@@ -22,18 +22,18 @@ namespace CodeHelpers
 			return builder;
 		}
 
-		public static string ToStringBinary(this int number) => ToStringBinary((uint)number);
+		public static string ToStringBinary(this int number, bool padding = true) => ToStringBinary((uint)number, padding);
 
-		public static string ToStringBinary(this uint number) => ToStringBinary(number, sizeof(uint) * 8);
+		public static string ToStringBinary(this uint number, bool padding = true) => ToStringBinary(number, sizeof(uint) * 8, padding);
 
-		public static string ToStringBinary(this long number) => ToStringBinary((ulong)number);
+		public static string ToStringBinary(this long number, bool padding = true) => ToStringBinary((ulong)number, padding);
 
-		public static string ToStringBinary(this ulong number) => ToStringBinary(number, sizeof(ulong) * 8);
+		public static string ToStringBinary(this ulong number, bool padding = true) => ToStringBinary(number, sizeof(ulong) * 8, padding);
 
-		static string ToStringBinary(this ulong number, int length)
+		static string ToStringBinary(this ulong number, int bitLength, bool padding)
 		{
 			//Total allocated: bits length + bits length / 4 - 1 division characters
-			int total = length * 8 + length * 8 / 4 - 1;
+			int total = bitLength + bitLength / 4 - 1;
 
 #if CODEHELPERS_UNITY
 			char[] chars = new char[total];
@@ -44,13 +44,16 @@ namespace CodeHelpers
 			int index = 0;
 			int bit = 0;
 
-			while (number != 0)
+			while (padding ? index < total : number != 0)
 			{
 				chars[total - ++index] = (number & 1) == 0 ? '0' : '1';
 
 				number >>= 1;
+				++bit;
 
-				if (++bit < length && number != 0)
+				if (index >= total) break;
+
+				if (padding || number != 0)
 				{
 					if (bit % 8 == 0) chars[total - ++index] = ' ';
 					else if (bit % 4 == 0) chars[total - ++index] = '_';
@@ -63,6 +66,5 @@ namespace CodeHelpers
 			return new string(chars[^index..]);
 #endif
 		}
-
 	}
 }

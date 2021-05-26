@@ -71,34 +71,34 @@ namespace CodeHelpers.Mathematics
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool AlmostEquals(float left, float right, float epsilon = 0.00001f)
+		public static bool AlmostEquals(this float value, float other, float epsilon = 0.00001f)
 		{
-			if (left == right) return true;                  //Handles absolute equals and degenerate cases
+			if (value == other) return true;                 //Handles absolute equals and degenerate cases
 			const float Normal = (1L << 23) * float.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a float
 
-			float difference = Math.Abs(left - right);
+			float difference = Math.Abs(value - other);
 
 			//If too close to zero to use relative comparison
-			if (left == 0f || right == 0f || difference < Normal) return difference < epsilon * Normal;
+			if (value == 0f || other == 0f || difference < Normal) return difference < epsilon * Normal;
 
 			//Relative comparison
-			float sum = Math.Abs(left) + Math.Abs(right);
+			float sum = Math.Abs(value) + Math.Abs(other);
 			return difference < epsilon * Math.Min(sum, float.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool AlmostEquals(double left, double right, double epsilon = 0.00000001d)
+		public static bool AlmostEquals(this double value, double other, double epsilon = 0.00000001d)
 		{
-			if (left == right) return true;                    //Handles absolute equals and degenerate cases
+			if (value == other) return true;                   //Handles absolute equals and degenerate cases
 			const double Normal = (1L << 52) * double.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a double
 
-			double difference = Math.Abs(left - right);
+			double difference = Math.Abs(value - other);
 
 			//If too close to zero to use relative comparison
-			if (left == 0d || right == 0d || difference < Normal) return difference < epsilon * Normal;
+			if (value == 0d || other == 0d || difference < Normal) return difference < epsilon * Normal;
 
 			//Relative comparison
-			double sum = Math.Abs(left) + Math.Abs(right);
+			double sum = Math.Abs(value) + Math.Abs(other);
 			return difference < epsilon * Math.Min(sum, double.MaxValue);
 		}
 
