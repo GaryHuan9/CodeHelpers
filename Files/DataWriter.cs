@@ -83,6 +83,14 @@ namespace CodeHelpers.Files
 			Write(int3.z);
 		}
 
+		public void Write(in Int4 int4)
+		{
+			Write(int4.x);
+			Write(int4.y);
+			Write(int4.z);
+			Write(int4.w);
+		}
+
 		public void Write(LimitedRotation limitedRotation) => Write(limitedRotation.data);
 
 		public void Write(MinMax minMax)
@@ -109,7 +117,10 @@ namespace CodeHelpers.Files
 			Write(segment3.point1);
 		}
 
-		public void WriteCompact(int value) => Write7BitEncodedInt(value);
+		public void WriteCompact(int value)
+		{
+			Write7BitEncodedInt(value);
+		}
 
 		public void WriteCompact(Int2 int2)
 		{
@@ -122,6 +133,14 @@ namespace CodeHelpers.Files
 			WriteCompact(int3.x);
 			WriteCompact(int3.y);
 			WriteCompact(int3.z);
+		}
+
+		public void WriteCompact(in Int4 int4)
+		{
+			WriteCompact(int4.x);
+			WriteCompact(int4.y);
+			WriteCompact(int4.z);
+			WriteCompact(int4.w);
 		}
 
 		public void WriteCompact(MinMaxInt minMax)

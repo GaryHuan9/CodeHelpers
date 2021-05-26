@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
 using CodeHelpers.RotationHelpers;
 
@@ -9,7 +8,7 @@ namespace CodeHelpers.Files
 {
 	public class DataReader : BinaryReader
 	{
-		public DataReader(Stream output) : base(output) { }
+		public DataReader(Stream input) : base(input) { }
 
 		VersionedReaders versionedReaders;
 		Stack<object> contexts;
@@ -46,17 +45,25 @@ namespace CodeHelpers.Files
 
 		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders)
 		{
-			versionedReaders = new VersionedReaders(version, this, compiledReaders);
+			versionedReaders = new VersionedReaders(this, version, compiledReaders);
 		}
 
 		public void ClearVersionedReaders() => versionedReaders = null;
 
+		/// <summary>
+		/// Reads information to create an object of type <typeparamref name="T"/> through
+		/// <see cref="versionedReaders"/> created from <see cref="CreateVersionedReaders"/>.
+		/// </summary>
 		public T Read<T>()
 		{
 			if (versionedReaders != null) return versionedReaders.Read<T>();
 			throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
 		}
 
+		/// <summary>
+		/// Reads information directly into instanced object <paramref name="value"/> through
+		/// <see cref="versionedReaders"/> created from <see cref="CreateVersionedReaders"/>.
+		/// </summary>
 		public void Read<T>(T value)
 		{
 			if (versionedReaders != null) versionedReaders.Read(value);
@@ -67,26 +74,22 @@ namespace CodeHelpers.Files
 
 		public Color32 ReadColor32()
 		{
-			int data = ReadInt32();
-			return new Color32
-			(
-				(byte)(data >> 0),
-				(byte)(data >> 8),
-				(byte)(data >> 16),
-				(byte)(data >> 24)
-			);
+			byte r = ReadByte();
+			byte g = ReadByte();
+			byte b = ReadByte();
+			byte a = ReadByte();
+
+			return new Color32(r, g, b, a);
 		}
 
 		public Color64 ReadColor64()
 		{
-			long data = ReadInt64();
-			return new Color64
-			(
-				(ushort)(data >> 0),
-				(ushort)(data >> 16),
-				(ushort)(data >> 32),
-				(ushort)(data >> 48)
-			);
+			ushort r = ReadUInt16();
+			ushort g = ReadUInt16();
+			ushort b = ReadUInt16();
+			ushort a = ReadUInt16();
+
+			return new Color64(r, g, b, a);
 		}
 
 		public Float2 ReadFloat2() => new Float2(ReadSingle(), ReadSingle());

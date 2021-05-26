@@ -6,17 +6,17 @@ namespace CodeHelpers.Files
 {
 	public class VersionedReaders
 	{
-		public VersionedReaders(int version, DataReader dataReader, CompiledReaders compiledReaders)
+		public VersionedReaders(DataReader dataReader, int version, CompiledReaders compiledReaders)
 		{
-			this.version = version;
 			this.dataReader = dataReader;
+			this.version = version;
 
 			compiledReaders.FillStaticReaders(version, staticReaders);
 			compiledReaders.FillInstanceReaders(version, instanceReaders);
 		}
 
+		readonly DataReader dataReader;
 		public readonly int version;
-		public readonly DataReader dataReader;
 
 		readonly Dictionary<Type, object> staticReaders = new Dictionary<Type, object>();
 		readonly Dictionary<Type, object> instanceReaders = new Dictionary<Type, object>();

@@ -35,7 +35,8 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public void Rotate(int amount)
 		{
-			Data = (byte)((Data << amount) | (Data >> (Length - amount)));
+			uint data = Data;
+			Data = (byte)((data << amount) | (data >> (Length - amount)));
 		}
 
 		public int CompareTo(BitVector8 other) => Data.CompareTo(other.Data);
