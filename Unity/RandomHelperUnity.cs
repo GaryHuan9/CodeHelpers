@@ -14,7 +14,7 @@ namespace CodeHelpers.Unity
 		/// </summary>
 		public static Float3 RandomTilt(Float3 direction, float angle)
 		{
-			if (Scalars.AlmostEquals(angle, 0f)) return direction;
+			if (angle.AlmostEquals(0f)) return direction;
 
 			var axis = Quaternion.FromToRotation(Float3.forward, direction) * Float2.right.Rotate(RandomHelper.Range(360f)).U();
 			return Quaternion.AngleAxis(angle, axis) * direction;
