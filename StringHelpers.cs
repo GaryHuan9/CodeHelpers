@@ -22,18 +22,26 @@ namespace CodeHelpers
 			return builder;
 		}
 
-		public static string ToStringBinary(this int number, bool padding = true) => ToStringBinary((uint)number, padding);
+		public static string ToStringBinary(this sbyte value, bool padding = true) => ToStringBinary((byte)value, padding);
 
-		public static string ToStringBinary(this uint number, bool padding = true) => ToStringBinary(number, sizeof(uint) * 8, padding);
+		public static string ToStringBinary(this byte value, bool padding = true) => ToStringBinary(value, padding, sizeof(byte));
 
-		public static string ToStringBinary(this long number, bool padding = true) => ToStringBinary((ulong)number, padding);
+		public static string ToStringBinary(this short value, bool padding = true) => ToStringBinary((ushort)value, padding);
 
-		public static string ToStringBinary(this ulong number, bool padding = true) => ToStringBinary(number, sizeof(ulong) * 8, padding);
+		public static string ToStringBinary(this ushort value, bool padding = true) => ToStringBinary(value, padding, sizeof(ushort));
 
-		static string ToStringBinary(this ulong number, int bitLength, bool padding)
+		public static string ToStringBinary(this int value, bool padding = true) => ToStringBinary((uint)value, padding);
+
+		public static string ToStringBinary(this uint value, bool padding = true) => ToStringBinary(value, padding, sizeof(uint));
+
+		public static string ToStringBinary(this long value, bool padding = true) => ToStringBinary((ulong)value, padding);
+
+		public static string ToStringBinary(this ulong value, bool padding = true) => ToStringBinary(value, padding, sizeof(ulong));
+
+		static string ToStringBinary(this ulong number, bool padding, int byteLength)
 		{
 			//Total allocated: bits length + bits length / 4 - 1 division characters
-			int total = bitLength + bitLength / 4 - 1;
+			int total = byteLength * 8 + byteLength * 8 / 4 - 1;
 
 #if CODEHELPERS_UNITY
 			char[] chars = new char[total];

@@ -122,7 +122,29 @@ namespace CodeHelpers.Files
 		public Segment2 ReadSegment2() => new Segment2(ReadFloat2(), ReadFloat2());
 		public Segment3 ReadSegment3() => new Segment3(ReadFloat3(), ReadFloat3());
 
-		public int ReadInt32Compact() => Read7BitEncodedInt();
+		/// <summary>
+		/// Reads in a compact Int32 encoded with <see cref="DataWriter.WriteCompact(int)"/>
+		/// </summary>
+		public int ReadInt32Compact()
+		{
+			ulong read = 0ul;
+
+			const byte Mask = 0b0111_1111;
+
+			for (int i = 0; i < 5 * 7; i += 7)
+			{
+				byte part = ReadByte();
+
+				read |= (ulong)(part & Mask) << i;
+				if ((part & ~Mask) == 0) break;
+			}
+
+			bool negative = (read & 0b1) == 1;
+
+			read >>= 1;
+
+			return negative ? (int)-(long)read : (int)read;
+		}
 
 		public Int2 ReadInt2Compact() => new Int2(ReadInt32Compact(), ReadInt32Compact());
 		public Int3 ReadInt3Compact() => new Int3(ReadInt32Compact(), ReadInt32Compact(), ReadInt32Compact());

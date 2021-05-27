@@ -117,9 +117,32 @@ namespace CodeHelpers.Files
 			Write(segment3.point1);
 		}
 
+		/// <summary>
+		/// Write <paramref name="value"/> as a variable length quantity with the following rules:
+		/// The first byte: 0bNVVV_VVVS (N: true if have next byte, V: actual value, S: sign)
+		/// 2nd to 5th bytes: 0bNVVV_VVVV (N: true if have next byte, V: actual value)
+		/// NOTE: Negative numbers are negated to their positive counterparts
+		/// </summary>
 		public void WriteCompact(int value)
 		{
-			Write7BitEncodedInt(value);
+			ulong write;
+
+			if (value < 0)
+			{
+				long longer = -(long)value << 1;
+				write = (ulong)longer | 0b1ul;
+			}
+			else write = (ulong)value << 1;
+
+			const ulong Mask = 0b0111_1111ul;
+
+			while (write > Mask)
+			{
+				Write((byte)(write | ~Mask));
+				write >>= 7;
+			}
+
+			Write((byte)write);
 		}
 
 		public void WriteCompact(Int2 int2)
