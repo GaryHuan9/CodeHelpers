@@ -9,6 +9,7 @@ using CodeHelpers.AI.BehaviorTrees;
 using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 {
@@ -175,9 +176,9 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 		[SerializeField] string behaviorActionGuid;
 		[NonSerialized] BehaviorAction behaviorAction;
 
-		[SerializeField] int scaler1;
-		[SerializeField] int scaler2;
-		[SerializeField] int scaler3;
+		[SerializeField, FormerlySerializedAs("scaler1")] int scalar1;
+		[SerializeField, FormerlySerializedAs("scaler2")] int scalar2;
+		[SerializeField, FormerlySerializedAs("scaler3")] int scalar3;
 
 		public virtual BehaviorAction BehaviorActionValue
 		{
@@ -196,40 +197,40 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 
 		public bool BooleanValue
 		{
-			get => CheckReturn(scaler1 == 1);
+			get => CheckReturn(scalar1 == 1);
 			set
 			{
 				CheckReturn(value);
 				if (BooleanValue == value) return;
 
-				scaler1 = value ? 1 : 0;
+				scalar1 = value ? 1 : 0;
 				OnValueChangedMethods?.Invoke();
 			}
 		}
 
 		public int Integer1Value
 		{
-			get => CheckReturn(scaler1);
+			get => CheckReturn(scalar1);
 			set
 			{
 				CheckReturn(value);
 				if (Integer1Value == value) return;
 
-				scaler1 = value;
+				scalar1 = value;
 				OnValueChangedMethods?.Invoke();
 			}
 		}
 
 		public Vector2Int Integer2Value
 		{
-			get => CheckReturn(new Vector2Int(scaler1, scaler2));
+			get => CheckReturn(new Vector2Int(scalar1, scalar2));
 			set
 			{
 				CheckReturn(value);
 				if (Integer2Value == value) return;
 
-				scaler1 = value.x;
-				scaler2 = value.y;
+				scalar1 = value.x;
+				scalar2 = value.y;
 
 				OnValueChangedMethods?.Invoke();
 			}
@@ -237,15 +238,15 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 
 		public Vector3Int Integer3Value
 		{
-			get => CheckReturn(new Vector3Int(scaler1, scaler2, scaler3));
+			get => CheckReturn(new Vector3Int(scalar1, scalar2, scalar3));
 			set
 			{
 				CheckReturn(value);
 				if (Integer3Value == value) return;
 
-				scaler1 = value.x;
-				scaler2 = value.y;
-				scaler3 = value.z;
+				scalar1 = value.x;
+				scalar2 = value.y;
+				scalar3 = value.z;
 
 				OnValueChangedMethods?.Invoke();
 			}
@@ -253,27 +254,27 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 
 		public float Float1Value
 		{
-			get => CheckReturn(BitwiseConvert(scaler1));
+			get => CheckReturn(BitwiseConvert(scalar1));
 			set
 			{
 				CheckReturn(value);
 				if (Float1Value.AlmostEquals(value)) return;
 
-				scaler1 = BitwiseConvert(value);
+				scalar1 = BitwiseConvert(value);
 				OnValueChangedMethods?.Invoke();
 			}
 		}
 
 		public Vector2 Float2Value
 		{
-			get => CheckReturn(new Vector2(BitwiseConvert(scaler1), BitwiseConvert(scaler2)));
+			get => CheckReturn(new Vector2(BitwiseConvert(scalar1), BitwiseConvert(scalar2)));
 			set
 			{
 				CheckReturn(value);
 				if (Float2Value == value) return;
 
-				scaler1 = BitwiseConvert(value.x);
-				scaler2 = BitwiseConvert(value.y);
+				scalar1 = BitwiseConvert(value.x);
+				scalar2 = BitwiseConvert(value.y);
 
 				OnValueChangedMethods?.Invoke();
 			}
@@ -281,15 +282,15 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 
 		public Vector3 Float3Value
 		{
-			get => CheckReturn(new Vector3(BitwiseConvert(scaler1), BitwiseConvert(scaler2), BitwiseConvert(scaler3)));
+			get => CheckReturn(new Vector3(BitwiseConvert(scalar1), BitwiseConvert(scalar2), BitwiseConvert(scalar3)));
 			set
 			{
 				CheckReturn(value);
 				if (Float3Value == value) return;
 
-				scaler1 = BitwiseConvert(value.x);
-				scaler2 = BitwiseConvert(value.y);
-				scaler3 = BitwiseConvert(value.z);
+				scalar1 = BitwiseConvert(value.x);
+				scalar2 = BitwiseConvert(value.y);
+				scalar3 = BitwiseConvert(value.z);
 
 				OnValueChangedMethods?.Invoke();
 			}
@@ -303,9 +304,9 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 
 			behaviorActionGuid = parameter.behaviorActionGuid;
 
-			scaler1 = parameter.scaler1;
-			scaler2 = parameter.scaler2;
-			scaler3 = parameter.scaler3;
+			scalar1 = parameter.scalar1;
+			scalar2 = parameter.scalar2;
+			scalar3 = parameter.scalar3;
 		}
 
 		public void LoadBehaviorAction(ActionImportData data)

@@ -127,7 +127,7 @@ namespace CodeHelpers.Mathematics
 
 #region Instance Properties
 
-#region Scaler Returns
+#region Scalar Returns
 
 		public float Magnitude
 		{
