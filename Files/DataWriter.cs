@@ -118,7 +118,7 @@ namespace CodeHelpers.Files
 		}
 
 		/// <summary>
-		/// Write <paramref name="value"/> as a variable length quantity with the following rules:
+		/// Writes <paramref name="value"/> as a variable length quantity with the following rules:
 		/// The first byte: 0bNVVV_VVVS (N: true if have next byte, V: actual value, S: sign)
 		/// 2nd to 5th bytes: 0bNVVV_VVVV (N: true if have next byte, V: actual value)
 		/// NOTE: Negative numbers are negated to their positive counterparts
@@ -134,15 +134,41 @@ namespace CodeHelpers.Files
 			}
 			else write = (ulong)value << 1;
 
-			const ulong Mask = 0b0111_1111ul;
+			WriteCompact(write);
+		}
 
-			while (write > Mask)
+		/// <summary>
+		/// Writes <paramref name="value"/> as a variable length quantity
+		/// with the most significant bit indicating for the next block
+		/// </summary>
+		public void WriteCompact(uint value)
+		{
+			const uint Mask = 0b0111_1111u;
+
+			while (value > Mask)
 			{
-				Write((byte)(write | ~Mask));
-				write >>= 7;
+				Write((byte)(value | ~Mask));
+				value >>= 7;
 			}
 
-			Write((byte)write);
+			Write((byte)value);
+		}
+
+		/// <summary>
+		/// Writes <paramref name="value"/> as a variable length quantity
+		/// with the most significant bit indicating for the next block
+		/// </summary>
+		public void WriteCompact(ulong value)
+		{
+			const ulong Mask = 0b0111_1111ul;
+
+			while (value > Mask)
+			{
+				Write((byte)(value | ~Mask));
+				value >>= 7;
+			}
+
+			Write((byte)value);
 		}
 
 		public void WriteCompact(Int2 int2)

@@ -127,23 +127,52 @@ namespace CodeHelpers.Files
 		/// </summary>
 		public int ReadInt32Compact()
 		{
-			ulong read = 0ul;
+			ulong value = ReadUInt64Compact();
+			bool negative = (value & 0b1) == 1;
+
+			value >>= 1;
+
+			return negative ? (int)-(long)value : (int)value;
+		}
+
+		/// <summary>
+		/// Reads in a compact UInt32 encoded with <see cref="DataWriter.WriteCompact(uint)"/>
+		/// </summary>
+		public uint ReadUInt32Compact()
+		{
+			uint value = 0u;
 
 			const byte Mask = 0b0111_1111;
 
-			for (int i = 0; i < 5 * 7; i += 7)
+			for (int i = 0;; i += 7)
 			{
 				byte part = ReadByte();
 
-				read |= (ulong)(part & Mask) << i;
+				value |= (uint)(part & Mask) << i;
 				if ((part & ~Mask) == 0) break;
 			}
 
-			bool negative = (read & 0b1) == 1;
+			return value;
+		}
 
-			read >>= 1;
+		/// <summary>
+		/// Reads in a compact UInt64 encoded with <see cref="DataWriter.WriteCompact(ulong)"/>
+		/// </summary>
+		public ulong ReadUInt64Compact()
+		{
+			ulong value = 0u;
 
-			return negative ? (int)-(long)read : (int)read;
+			const byte Mask = 0b0111_1111;
+
+			for (int i = 0;; i += 7)
+			{
+				byte part = ReadByte();
+
+				value |= (ulong)(part & Mask) << i;
+				if ((part & ~Mask) == 0) break;
+			}
+
+			return value;
 		}
 
 		public Int2 ReadInt2Compact() => new Int2(ReadInt32Compact(), ReadInt32Compact());
