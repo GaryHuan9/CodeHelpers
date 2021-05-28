@@ -15,11 +15,6 @@ namespace CodeHelpers.Mathematics
 
 		public const int Length = 8;
 
-		/// <summary>
-		/// Access and modify only ONE bit of the data.
-		/// Access: If the bit is true, else false
-		/// Modify: Change the bit to value
-		/// </summary>
 		public bool this[int bits]
 		{
 			get => (Data & bits) == bits;

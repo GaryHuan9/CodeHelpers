@@ -31,7 +31,7 @@ namespace CodeHelpers.Files
 
 		public void Read<T>(T value)
 		{
-			object reader = staticReaders.TryGetValue(typeof(T));
+			object reader = instanceReaders.TryGetValue(typeof(T));
 
 			if (reader != null) ((Action<DataReader, T>)reader)(dataReader, value);
 			else throw new Exception($"No reader supports reading type {typeof(T)}.");
