@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CodeHelpers.Collections;
-using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Files
 {
@@ -18,21 +17,28 @@ namespace CodeHelpers.Files
 										  select method)
 			{
 				var attribute = method.GetCustomAttribute<ReaderAttribute>();
-				Type readType = ReaderAttribute.CheckMethod(method);
+				Type readType = attribute.CheckMethod(method);
 
 				var compiledReaders = method.IsStatic ? staticReaders : instanceReaders;
-				List<ReaderPair> readerList = compiledReaders.TryGetValue(readType);
+				List<ReaderGroup> readerList = compiledReaders.TryGetValue(readType);
 
 				if (readerList == null)
 				{
-					readerList = new List<ReaderPair>();
+					readerList = new List<ReaderGroup>();
 					compiledReaders.Add(readType, readerList);
 				}
 
 				//Find location
-				int index = readerList.BinarySearch(attribute.version, PairComparer.comparer);
+				int index = readerList.BinarySearch(attribute.version, GroupComparer.comparer);
 
-				if (index < 0) readerList.Insert(~index, new ReaderPair(attribute.version, CreateReader(method)));
+				if (index < 0)
+				{
+					int version = attribute.version;
+					bool root = attribute.InheritanceRoot;
+					object reader = CreateReader(method);
+
+					readerList.Insert(~index, new ReaderGroup(version, root, reader, readType));
+				}
 				else throw ExceptionHelper.Invalid(nameof(method), method, InvalidType.foundDuplicate);
 			}
 
@@ -41,68 +47,84 @@ namespace CodeHelpers.Files
 			foreach (var pair in instanceReaders) pair.Value.TrimExcess();
 		}
 
-		readonly Dictionary<Type, List<ReaderPair>> staticReaders = new Dictionary<Type, List<ReaderPair>>();
-		readonly Dictionary<Type, List<ReaderPair>> instanceReaders = new Dictionary<Type, List<ReaderPair>>();
+		public CompiledReaders() : this(Assembly.GetCallingAssembly()) { }
 
-		public void FillStaticReaders(int version, Dictionary<Type, object> target) => FillReaders(version, staticReaders, target);
-		public void FillInstanceReaders(int version, Dictionary<Type, object> target) => FillReaders(version, instanceReaders, target);
+		readonly Dictionary<Type, List<ReaderGroup>> staticReaders = new Dictionary<Type, List<ReaderGroup>>();
+		readonly Dictionary<Type, List<ReaderGroup>> instanceReaders = new Dictionary<Type, List<ReaderGroup>>();
 
-		public static object CreateReader(MethodInfo method)
+		public Dictionary<Type, object> GetStaticReaders(int version) => GetGroups(version, staticReaders).ToDictionary(group => group.readType, group => group.reader);
+		public Dictionary<Type, object> GetInstanceReaders(int version) => GetGroups(version, instanceReaders).ToDictionary(group => group.readType, group => group.reader);
+
+		public HashSet<Type> GetInheritanceRoots(int version) => new HashSet<Type>
+		(
+			from @group in GetGroups(version, staticReaders)
+			where @group.root
+			select @group.readType
+		);
+
+		static object CreateReader(MethodInfo method)
 		{
 			if (method.IsStatic)
 			{
 				Type funcType = Expression.GetFuncType(typeof(DataReader), method.ReturnType);
-				return Delegate.CreateDelegate(funcType, method);
+				return Delegate.CreateDelegate(funcType, method); //Compiles into Func<DataReader, object>
 			}
 
 			//Build instance reader using expression trees
 			Type readType = method.DeclaringType ?? throw ExceptionHelper.NotPossible;
 
-			ParameterExpression dataReader = Expression.Parameter(typeof(DataReader));
-			ParameterExpression readInstance = Expression.Parameter(readType);
+			ParameterExpression readerParameter = Expression.Parameter(typeof(DataReader));
+			ParameterExpression objectParameter = Expression.Parameter(typeof(object));
+			UnaryExpression castExpression = Expression.Convert(objectParameter, readType);
 
-			MethodCallExpression call = Expression.Call(readInstance, method, dataReader);
-			LambdaExpression lambda = Expression.Lambda(call, dataReader, readInstance);
+			MethodCallExpression call = Expression.Call(castExpression, method, readerParameter);
+			LambdaExpression lambda = Expression.Lambda(call, readerParameter, objectParameter);
 
-			return lambda.Compile();
+			return lambda.Compile(); //Compiles into Action<DataReader, object>
 		}
 
-		static void FillReaders(int version, IReadOnlyDictionary<Type, List<ReaderPair>> source, Dictionary<Type, object> target)
+		static IEnumerable<ReaderGroup> GetGroups(int version, IReadOnlyDictionary<Type, List<ReaderGroup>> source)
 		{
-			foreach (KeyValuePair<Type, List<ReaderPair>> pair in source)
+			foreach (KeyValuePair<Type, List<ReaderGroup>> pair in source)
 			{
 				Type type = pair.Key;
 				var list = source[type];
 
-				target.Add(type, GetReader(version, type, list));
+				yield return GetGroup(version, type, list);
 			}
 		}
 
-		static object GetReader(int version, Type type, List<ReaderPair> list)
+		static ReaderGroup GetGroup(int version, Type type, IList<ReaderGroup> list)
 		{
 			//Reader versions are forward compatible until the next version
-			int index = list.BinarySearch(version, PairComparer.comparer);
+			int index = list.BinarySearch(version, GroupComparer.comparer);
+			if (index != ~0) return list[index < 0 ? ~index - 1 : index];
 
-			if (index != ~0) return list[index < 0 ? ~index - 1 : index].reader;
 			throw new Exception($"No reader supported for {type} on version '{version}'.");
 		}
 
-		readonly struct ReaderPair
+		class ReaderGroup
 		{
-			public ReaderPair(int version, object reader)
+			public ReaderGroup(int version, bool root, object reader, Type readType)
 			{
 				this.version = version;
+				this.root = root;
+
 				this.reader = reader;
+				this.readType = readType;
 			}
 
 			public readonly int version;
+			public readonly bool root;
+
+			public readonly Type readType;
 			public readonly object reader;
 		}
 
-		class PairComparer : IDoubleComparer<ReaderPair, int>
+		class GroupComparer : IDoubleComparer<ReaderGroup, int>
 		{
-			public static readonly PairComparer comparer = new PairComparer();
-			public int CompareTo(ReaderPair first, int second) => first.version.CompareTo(second);
+			public static readonly GroupComparer comparer = new GroupComparer();
+			public int CompareTo(ReaderGroup first, int second) => first.version.CompareTo(second);
 		}
 	}
 }

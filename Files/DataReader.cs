@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
 using CodeHelpers.RotationHelpers;
 
@@ -10,7 +11,6 @@ namespace CodeHelpers.Files
 	{
 		public DataReader(Stream input) : base(input) { }
 
-		VersionedReaders versionedReaders;
 		Stack<object> contexts;
 
 		/// <summary>
@@ -18,10 +18,16 @@ namespace CodeHelpers.Files
 		/// stack that dynamically grows and shrinks. The idea is that the parent read operation should control
 		/// the context of the children read operations. After the children are finished, the parent should assign
 		/// the context to null which will pop the stack and revert it back to the state for the parent.
+		/// NOTE: Use <see cref="PushContext"/> and the dispose pattern to push and pop contexts onto this property/stack.
 		/// </summary>
 		public object Context
 		{
-			set
+			get
+			{
+				if (contexts != null && contexts.Count > 0) return contexts.Peek();
+				throw new Exception($"Attempting to retrieve {nameof(Context)} before assigning any!");
+			}
+			private set
 			{
 				if (value == null)
 				{
@@ -34,40 +40,23 @@ namespace CodeHelpers.Files
 					contexts.Push(value);
 				}
 			}
-			get
-			{
-				if (contexts != null && contexts.Count > 0) return contexts.Peek();
-				throw new Exception($"Attempting to retrieve {nameof(Context)} before assigning any!");
-			}
 		}
 
-		public int Version => versionedReaders?.version ?? 0;
+		public VersionedReaders VersionedReaders { get; set; }
+		public InheritanceMapper InheritanceMapper { get; set; }
 
-		public void CreateVersionedReaders(int version, CompiledReaders compiledReaders)
-		{
-			versionedReaders = new VersionedReaders(this, version, compiledReaders);
-		}
-
-		public void ClearVersionedReaders() => versionedReaders = null;
+		public int Version => VersionedReaders?.version ?? 0;
 
 		/// <summary>
-		/// Reads information to create an object of type <typeparamref name="T"/> through
-		/// <see cref="versionedReaders"/> created from <see cref="CreateVersionedReaders"/>.
+		/// Pushes <paramref name="context"/> onto the <see cref="Context"/> stack. See <see cref="Context"/> for more.
+		/// Use the dispose pattern to pop this <paramref name="context"/> back off when leaving the scope.
 		/// </summary>
-		public T Read<T>()
+		public ContextHandle PushContext(object context)
 		{
-			if (versionedReaders != null) return versionedReaders.Read<T>();
-			throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
-		}
+			Assert.IsNotNull(context);
+			Context = context;
 
-		/// <summary>
-		/// Reads information directly into instanced object <paramref name="value"/> through
-		/// <see cref="versionedReaders"/> created from <see cref="CreateVersionedReaders"/>.
-		/// </summary>
-		public void Read<T>(T value)
-		{
-			if (versionedReaders != null) versionedReaders.Read(value);
-			else throw ExceptionHelper.Invalid(nameof(versionedReaders), InvalidType.isNull);
+			return new ContextHandle(this);
 		}
 
 		public BitVector8 ReadBitVector8() => new BitVector8(ReadByte());
@@ -121,6 +110,23 @@ namespace CodeHelpers.Files
 
 		public Segment2 ReadSegment2() => new Segment2(ReadFloat2(), ReadFloat2());
 		public Segment3 ReadSegment3() => new Segment3(ReadFloat3(), ReadFloat3());
+
+		public Guid ReadGuid()
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				Guid guid = default;
+				byte* pointer = (byte*)&guid;
+
+				for (int i = 0; i < 16; i++) pointer[i] = ReadByte();
+
+				return guid;
+			}
+#else
+			return new Guid(ReadBytes(16));
+#endif
+		}
 
 		/// <summary>
 		/// Reads in a compact Int32 encoded with <see cref="DataWriter.WriteCompact(int)"/>
@@ -184,6 +190,51 @@ namespace CodeHelpers.Files
 			int max = ReadInt32Compact();
 
 			return new MinMaxInt(min, max);
+		}
+
+		/// <summary>
+		/// Reads a <see cref="CodeHelpers.Files.InheritanceMapper"/> and assign it to the property <see cref="InheritanceMapper"/>.
+		/// </summary>
+		public void ReadInheritanceMapper(ITypeSerializer serializer)
+		{
+			InheritanceMapper ??= new InheritanceMapper();
+			InheritanceMapper.Read(this, serializer);
+		}
+
+		/// <summary>
+		/// Reads information to create an object of type <typeparamref name="T"/> through <see cref="VersionedReaders"/>.
+		/// </summary>
+		public T Read<T>()
+		{
+			if (VersionedReaders == null) throw ExceptionHelper.Invalid(nameof(VersionedReaders), InvalidType.isNull);
+
+			Type type = typeof(T);
+
+			if (InheritanceMapper != null && VersionedReaders.IsInheritanceRoot(type))
+			{
+				uint token = ReadUInt32Compact();
+				type = InheritanceMapper.GetDerivedType(token, type);
+			}
+
+			return (T)VersionedReaders.Read(type, this);
+		}
+
+		/// <summary>
+		/// Reads information directly into instanced object <paramref name="value"/> through <see cref="VersionedReaders"/>.
+		/// </summary>
+		public void Read<T>(T value)
+		{
+			if (VersionedReaders != null) VersionedReaders.Read(typeof(T), this, value);
+			else throw ExceptionHelper.Invalid(nameof(VersionedReaders), InvalidType.isNull);
+		}
+
+		public readonly struct ContextHandle : IDisposable
+		{
+			public ContextHandle(DataReader reader) => this.reader = reader;
+
+			readonly DataReader reader;
+
+			public void Dispose() => reader.Context = null;
 		}
 	}
 }

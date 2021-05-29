@@ -21,12 +21,21 @@ namespace CodeHelpers.Files
 		public readonly int version;
 
 		/// <summary>
+		/// If this value is true, this reader becomes the root for readers of other derived types.
+		/// This means: The inheritance token will be read first to determine the actual derived type.
+		/// Then instead of invoking this reader, the reader of that derived type will be used.
+		/// NOTE: Inheritance tokens are written with <see cref="DataWriter.WriteInheritance{T}"/>.
+		/// </summary>
+		public bool InheritanceRoot { get; set; }
+
+		/// <summary>
 		/// Checks whether <paramref name="method"/> is a valid method for <see cref="ReaderAttribute"/>.
 		/// If so, returns the type that it can read. Otherwise exceptions are thrown.
 		/// </summary>
-		public static Type CheckMethod(MethodInfo method)
+		public Type CheckMethod(MethodInfo method)
 		{
 			Type readType = method.IsStatic ? method.ReturnType : method.DeclaringType ?? throw ExceptionHelper.NotPossible;
+			if (!method.IsStatic && InheritanceRoot) throw new Exception($"Method {method} cannot be an {nameof(InheritanceRoot)} if it is an instance method.");
 
 			if (readType == typeof(void)) throw new Exception($"Method '{method}' must target something to use {nameof(ReaderAttribute)}.");
 			if (readType.IsValueType) throw new Exception($"Method '{method}' must target a reference type to use {nameof(ReaderAttribute)}.");

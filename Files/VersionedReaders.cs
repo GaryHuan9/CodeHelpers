@@ -6,35 +6,40 @@ namespace CodeHelpers.Files
 {
 	public class VersionedReaders
 	{
-		public VersionedReaders(DataReader dataReader, int version, CompiledReaders compiledReaders)
+		public VersionedReaders(int version, CompiledReaders compiledReaders)
 		{
-			this.dataReader = dataReader;
 			this.version = version;
 
-			compiledReaders.FillStaticReaders(version, staticReaders);
-			compiledReaders.FillInstanceReaders(version, instanceReaders);
+			staticReaders = compiledReaders.GetStaticReaders(version);
+			instanceReaders = compiledReaders.GetInstanceReaders(version);
+			inheritanceRoots = compiledReaders.GetInheritanceRoots(version);
 		}
 
-		readonly DataReader dataReader;
 		public readonly int version;
 
-		readonly Dictionary<Type, object> staticReaders = new Dictionary<Type, object>();
-		readonly Dictionary<Type, object> instanceReaders = new Dictionary<Type, object>();
+		readonly Dictionary<Type, object> staticReaders;
+		readonly Dictionary<Type, object> instanceReaders;
+		readonly HashSet<Type> inheritanceRoots;
 
-		public T Read<T>()
+		public object Read(Type type, DataReader dataReader)
 		{
-			object reader = staticReaders.TryGetValue(typeof(T));
+			object reader = staticReaders.TryGetValue(type);
 
-			if (reader != null) return ((Func<DataReader, T>)reader)(dataReader);
-			throw new Exception($"No reader supports reading type {typeof(T)}.");
+			if (reader != null) return ((Func<DataReader, object>)reader)(dataReader);
+			throw new Exception($"No reader supports type {type} on version {version}.");
 		}
 
-		public void Read<T>(T value)
+		public void Read(Type type, DataReader dataReader, object value)
 		{
-			object reader = instanceReaders.TryGetValue(typeof(T));
+			object reader = instanceReaders.TryGetValue(type);
 
-			if (reader != null) ((Action<DataReader, T>)reader)(dataReader, value);
-			else throw new Exception($"No reader supports reading type {typeof(T)}.");
+			if (reader != null) ((Action<DataReader, object>)reader)(dataReader, value);
+			else throw new Exception($"No reader supports type {type} on version {version}.");
 		}
+
+		/// <summary>
+		/// Returns whether the reader for <paramref name="type"/> is marked with <see cref="ReaderAttribute.InheritanceRoot"/>.
+		/// </summary>
+		public bool IsInheritanceRoot(Type type) => inheritanceRoots.Contains(type);
 	}
 }

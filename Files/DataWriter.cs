@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using CodeHelpers.Mathematics;
 using CodeHelpers.RotationHelpers;
 
@@ -7,6 +8,8 @@ namespace CodeHelpers.Files
 	public class DataWriter : BinaryWriter
 	{
 		public DataWriter(Stream output) : base(output) { }
+
+		public InheritanceMapper InheritanceMapper { get; set; }
 
 		public void Write(BitVector8 bitVector8) => Write(bitVector8.Data);
 
@@ -117,6 +120,21 @@ namespace CodeHelpers.Files
 			Write(segment3.point1);
 		}
 
+		public void Write(in Guid guid)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				Guid copy = guid;
+				byte* pointer = (byte*)&copy;
+
+				for (int i = 0; i < 16; i++) Write(pointer[i]);
+			}
+#else
+			Write(guid.ToByteArray());
+#endif
+		}
+
 		/// <summary>
 		/// Writes <paramref name="value"/> as a variable length quantity with the following rules:
 		/// The first byte: 0bNVVV_VVVS (N: true if have next byte, V: actual value, S: sign)
@@ -196,6 +214,29 @@ namespace CodeHelpers.Files
 		{
 			WriteCompact(minMax.min);
 			WriteCompact(minMax.max);
+		}
+
+		public void WriteInheritanceMapper(ITypeSerializer serializer)
+		{
+			if (InheritanceMapper != null) InheritanceMapper.Write(this, serializer);
+			else throw ExceptionHelper.Invalid(nameof(InheritanceMapper), InvalidType.isNull);
+		}
+
+		/// <summary>
+		/// Records the fact that <paramref name="derived"/> inherits <typeparamref name="T"/> inside <see cref="InheritanceMapper"/>.
+		/// <see cref="InheritanceMapper"/> must be assigned before invoking this method or an exception will be thrown!
+		/// NOTE: The actual data of <paramref name="derived"/> is not recorded. Only a token that indicates it inherits from <typeparamref name="T"/> is written.
+		/// </summary>
+		/// <param name="derived">The inherited object type to write</param>
+		/// <typeparam name="T">The root type of the inheritance</typeparam>
+		public void WriteInheritance<T>(T derived)
+		{
+			if (InheritanceMapper == null) throw ExceptionHelper.Invalid(nameof(InheritanceMapper), InvalidType.isNull);
+
+			Type derivedType = derived.GetType();
+			Type baseType = typeof(T);
+
+			WriteCompact(InheritanceMapper.GetToken(derivedType, baseType));
 		}
 	}
 }
