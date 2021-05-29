@@ -9,7 +9,7 @@ namespace CodeHelpers.Files
 	{
 		public DataWriter(Stream output) : base(output) { }
 
-		public InheritanceMapper InheritanceMapper { get; set; }
+		public TypeMapper TypeMapper { get; set; }
 
 		public void Write(BitVector8 bitVector8) => Write(bitVector8.Data);
 
@@ -216,27 +216,20 @@ namespace CodeHelpers.Files
 			WriteCompact(minMax.max);
 		}
 
-		public void WriteInheritanceMapper(ITypeSerializer serializer)
+		public void WriteTypeMapper(ITypeSerializer serializer)
 		{
-			if (InheritanceMapper != null) InheritanceMapper.Write(this, serializer);
-			else throw ExceptionHelper.Invalid(nameof(InheritanceMapper), InvalidType.isNull);
+			if (TypeMapper != null) TypeMapper.Write(this, serializer);
+			else throw ExceptionHelper.Invalid(nameof(TypeMapper), InvalidType.isNull);
 		}
 
 		/// <summary>
-		/// Records the fact that <paramref name="derived"/> inherits <typeparamref name="T"/> inside <see cref="InheritanceMapper"/>.
-		/// <see cref="InheritanceMapper"/> must be assigned before invoking this method or an exception will be thrown!
-		/// NOTE: The actual data of <paramref name="derived"/> is not recorded. Only a token that indicates it inherits from <typeparamref name="T"/> is written.
+		/// Writes <paramref name="type"/> using the <see cref="TypeMapper"/>. This type could be read using <see cref="DataReader.ReadType"/>.
+		/// Alternatively, this type will be implicitly read when you want to use a reader marked with <see cref="ReaderAttribute.ReadType"/>.
 		/// </summary>
-		/// <param name="derived">The inherited object type to write</param>
-		/// <typeparam name="T">The root type of the inheritance</typeparam>
-		public void WriteInheritance<T>(T derived)
+		public void Write(Type type)
 		{
-			if (InheritanceMapper == null) throw ExceptionHelper.Invalid(nameof(InheritanceMapper), InvalidType.isNull);
-
-			Type derivedType = derived.GetType();
-			Type baseType = typeof(T);
-
-			WriteCompact(InheritanceMapper.GetToken(derivedType, baseType));
+			if (TypeMapper != null) WriteCompact(TypeMapper[type]);
+			else throw ExceptionHelper.Invalid(nameof(TypeMapper), InvalidType.isNull);
 		}
 	}
 }

@@ -21,21 +21,19 @@ namespace CodeHelpers.Files
 		public readonly int version;
 
 		/// <summary>
-		/// If this value is true, this reader becomes the root for readers of other derived types.
-		/// This means: The inheritance token will be read first to determine the actual derived type.
-		/// Then instead of invoking this reader, the reader of that derived type will be used.
-		/// NOTE: Inheritance tokens are written with <see cref="DataWriter.WriteInheritance{T}"/>.
+		/// If this value is true, before trying to use this reader, <see cref="DataReader"/> will first try to read the type written by <see cref="DataWriter.Write(System.Type)"/>.
+		/// After then, the reader for that specified type that we just read will be invoked and used, which may or may not be this reader.
+		/// NOTE: This value must be enabled if you write the type through <see cref="DataWriter.Write(System.Type)"/> or the bytes will not line up!
 		/// </summary>
-		public bool InheritanceRoot { get; set; }
+		public bool ReadType { get; set; }
 
 		/// <summary>
 		/// Checks whether <paramref name="method"/> is a valid method for <see cref="ReaderAttribute"/>.
 		/// If so, returns the type that it can read. Otherwise exceptions are thrown.
 		/// </summary>
-		public Type CheckMethod(MethodInfo method)
+		public static Type CheckMethod(MethodInfo method)
 		{
 			Type readType = method.IsStatic ? method.ReturnType : method.DeclaringType ?? throw ExceptionHelper.NotPossible;
-			if (!method.IsStatic && InheritanceRoot) throw new Exception($"Method {method} cannot be an {nameof(InheritanceRoot)} if it is an instance method.");
 
 			if (readType == typeof(void)) throw new Exception($"Method '{method}' must target something to use {nameof(ReaderAttribute)}.");
 			if (readType.IsValueType) throw new Exception($"Method '{method}' must target a reference type to use {nameof(ReaderAttribute)}.");

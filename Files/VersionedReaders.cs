@@ -12,14 +12,14 @@ namespace CodeHelpers.Files
 
 			staticReaders = compiledReaders.GetStaticReaders(version);
 			instanceReaders = compiledReaders.GetInstanceReaders(version);
-			inheritanceRoots = compiledReaders.GetInheritanceRoots(version);
+			readTypes = compiledReaders.GetReadTypes(version);
 		}
 
 		public readonly int version;
 
 		readonly Dictionary<Type, object> staticReaders;
 		readonly Dictionary<Type, object> instanceReaders;
-		readonly HashSet<Type> inheritanceRoots;
+		readonly HashSet<Type> readTypes;
 
 		public object Read(Type type, DataReader dataReader)
 		{
@@ -38,8 +38,8 @@ namespace CodeHelpers.Files
 		}
 
 		/// <summary>
-		/// Returns whether the reader for <paramref name="type"/> is marked with <see cref="ReaderAttribute.InheritanceRoot"/>.
+		/// Returns whether the reader for <paramref name="type"/> is marked with <see cref="ReaderAttribute.ReadType"/>.
 		/// </summary>
-		public bool IsInheritanceRoot(Type type) => inheritanceRoots.Contains(type);
+		public bool ReadType(Type type) => readTypes.Contains(type);
 	}
 }

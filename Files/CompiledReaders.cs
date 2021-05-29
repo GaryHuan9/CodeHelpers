@@ -17,15 +17,15 @@ namespace CodeHelpers.Files
 										  select method)
 			{
 				var attribute = method.GetCustomAttribute<ReaderAttribute>();
-				Type readType = attribute.CheckMethod(method);
+				Type type = ReaderAttribute.CheckMethod(method);
 
 				var compiledReaders = method.IsStatic ? staticReaders : instanceReaders;
-				List<ReaderGroup> readerList = compiledReaders.TryGetValue(readType);
+				List<ReaderGroup> readerList = compiledReaders.TryGetValue(type);
 
 				if (readerList == null)
 				{
 					readerList = new List<ReaderGroup>();
-					compiledReaders.Add(readType, readerList);
+					compiledReaders.Add(type, readerList);
 				}
 
 				//Find location
@@ -33,11 +33,8 @@ namespace CodeHelpers.Files
 
 				if (index < 0)
 				{
-					int version = attribute.version;
-					bool root = attribute.InheritanceRoot;
 					object reader = CreateReader(method);
-
-					readerList.Insert(~index, new ReaderGroup(version, root, reader, readType));
+					readerList.Insert(~index, new ReaderGroup(attribute, reader, type));
 				}
 				else throw ExceptionHelper.Invalid(nameof(method), method, InvalidType.foundDuplicate);
 			}
@@ -52,14 +49,17 @@ namespace CodeHelpers.Files
 		readonly Dictionary<Type, List<ReaderGroup>> staticReaders = new Dictionary<Type, List<ReaderGroup>>();
 		readonly Dictionary<Type, List<ReaderGroup>> instanceReaders = new Dictionary<Type, List<ReaderGroup>>();
 
-		public Dictionary<Type, object> GetStaticReaders(int version) => GetGroups(version, staticReaders).ToDictionary(group => group.readType, group => group.reader);
-		public Dictionary<Type, object> GetInstanceReaders(int version) => GetGroups(version, instanceReaders).ToDictionary(group => group.readType, group => group.reader);
+		public Dictionary<Type, object> GetStaticReaders(int version) => GetGroups(version, staticReaders).ToDictionary(group => group.type, group => group.reader);
+		public Dictionary<Type, object> GetInstanceReaders(int version) => GetGroups(version, instanceReaders).ToDictionary(group => group.type, group => group.reader);
 
-		public HashSet<Type> GetInheritanceRoots(int version) => new HashSet<Type>
+		/// <summary>
+		/// Returns all of the types that are marked with <see cref="ReaderAttribute.ReadType"/>.
+		/// </summary>
+		public HashSet<Type> GetReadTypes(int version) => new HashSet<Type>
 		(
-			from @group in GetGroups(version, staticReaders)
-			where @group.root
-			select @group.readType
+			from @group in GetGroups(version, staticReaders).Concat(GetGroups(version, instanceReaders))
+			where @group.readType
+			select @group.type
 		);
 
 		static object CreateReader(MethodInfo method)
@@ -105,19 +105,19 @@ namespace CodeHelpers.Files
 
 		class ReaderGroup
 		{
-			public ReaderGroup(int version, bool root, object reader, Type readType)
+			public ReaderGroup(ReaderAttribute attribute, object reader, Type type)
 			{
-				this.version = version;
-				this.root = root;
+				version = attribute.version;
+				readType = attribute.ReadType;
 
 				this.reader = reader;
-				this.readType = readType;
+				this.type = type;
 			}
 
 			public readonly int version;
-			public readonly bool root;
+			public readonly bool readType;
 
-			public readonly Type readType;
+			public readonly Type type;
 			public readonly object reader;
 		}
 

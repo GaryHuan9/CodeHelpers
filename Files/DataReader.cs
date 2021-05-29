@@ -43,7 +43,7 @@ namespace CodeHelpers.Files
 		}
 
 		public VersionedReaders VersionedReaders { get; set; }
-		public InheritanceMapper InheritanceMapper { get; set; }
+		public TypeMapper TypeMapper { get; set; }
 
 		public int Version => VersionedReaders?.version ?? 0;
 
@@ -193,12 +193,21 @@ namespace CodeHelpers.Files
 		}
 
 		/// <summary>
-		/// Reads a <see cref="CodeHelpers.Files.InheritanceMapper"/> and assign it to the property <see cref="InheritanceMapper"/>.
+		/// Reads a <see cref="CodeHelpers.Files.TypeMapper"/> and assign it to the property <see cref="TypeMapper"/>.
 		/// </summary>
-		public void ReadInheritanceMapper(ITypeSerializer serializer)
+		public void ReadTypeMapper(ITypeSerializer serializer)
 		{
-			InheritanceMapper ??= new InheritanceMapper();
-			InheritanceMapper.Read(this, serializer);
+			TypeMapper ??= new TypeMapper();
+			TypeMapper.Read(this, serializer);
+		}
+
+		/// <summary>
+		/// Reads a type written with <see cref="DataWriter.Write(System.Type)"/>.
+		/// </summary>
+		public Type ReadType()
+		{
+			if (TypeMapper != null) return TypeMapper[ReadUInt32Compact()];
+			throw ExceptionHelper.Invalid(nameof(TypeMapper), InvalidType.isNull);
 		}
 
 		/// <summary>
@@ -206,15 +215,10 @@ namespace CodeHelpers.Files
 		/// </summary>
 		public T Read<T>()
 		{
-			if (VersionedReaders == null) throw ExceptionHelper.Invalid(nameof(VersionedReaders), InvalidType.isNull);
-
 			Type type = typeof(T);
 
-			if (InheritanceMapper != null && VersionedReaders.IsInheritanceRoot(type))
-			{
-				uint token = ReadUInt32Compact();
-				type = InheritanceMapper.GetDerivedType(token, type);
-			}
+			if (VersionedReaders == null) throw ExceptionHelper.Invalid(nameof(VersionedReaders), InvalidType.isNull);
+			if (TypeMapper != null && VersionedReaders.ReadType(type)) type = ReadType();
 
 			return (T)VersionedReaders.Read(type, this);
 		}
@@ -224,8 +228,12 @@ namespace CodeHelpers.Files
 		/// </summary>
 		public void Read<T>(T value)
 		{
-			if (VersionedReaders != null) VersionedReaders.Read(typeof(T), this, value);
-			else throw ExceptionHelper.Invalid(nameof(VersionedReaders), InvalidType.isNull);
+			Type type = typeof(T);
+
+			if (VersionedReaders == null) throw ExceptionHelper.Invalid(nameof(VersionedReaders), InvalidType.isNull);
+			if (TypeMapper != null && VersionedReaders.ReadType(type)) type = ReadType();
+
+			VersionedReaders.Read(type, this, value);
 		}
 
 		public readonly struct ContextHandle : IDisposable
