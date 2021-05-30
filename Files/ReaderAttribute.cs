@@ -7,7 +7,7 @@ namespace CodeHelpers.Files
 	/// <summary>
 	/// An attribute that tags a method the ability to read/deserialize a type from a <see cref="DataReader"/>.
 	/// A reader method can either be instanced or static:
-	/// Static methods must return the targeting type and accept <see cref="DataReader"/> as its only parameter. The deserialized method should be returned from the method.
+	/// Static methods must return the targeting type and accept <see cref="DataReader"/> as its only parameter. The deserialized type should be returned from the method.
 	/// Instance methods must return type void and accept <see cref="DataReader"/> as its only parameter. The method should deserialize the information directly into the instance.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Method)]
