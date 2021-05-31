@@ -164,9 +164,6 @@ namespace CodeHelpers.Unity
 
 			return maxHeight;
 		}
-
-		public static implicit operator Vector4(NoiseInfo info) => new Vector4(info.spread, info.layerCount, info.persistence, info.lacunarity);
-		public static implicit operator NoiseInfo(Vector4 vector) => new NoiseInfo(vector.x, Mathf.RoundToInt(vector.y), vector.z, vector.w);
 	}
 }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace CodeHelpers.Mathematics
+namespace CodeHelpers.Mathematics.Noises
 {
 	/// <summary>
 	/// Standard simplex gradient noise generator
@@ -37,6 +37,7 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Retrieves the value of the noise at <paramref name="position"/>.
+		/// Returned values are always between the range of 0 and 1.
 		/// </summary>
 		public float Sample(Float2 position)
 		{
