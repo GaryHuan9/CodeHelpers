@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace CodeHelpers.Mathematics
 {
-	[StructLayout(LayoutKind.Sequential)]
+	[StructLayout(LayoutKind.Explicit), Serializable]
 	public readonly struct Int2 : IEquatable<Int2>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -20,8 +20,8 @@ namespace CodeHelpers.Mathematics
 			this.y = y;
 		}
 
-		public readonly int x;
-		public readonly int y;
+		[FieldOffset(0)] public readonly int x;
+		[FieldOffset(4)] public readonly int y;
 
 #region Swizzled3
 
