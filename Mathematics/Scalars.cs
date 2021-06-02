@@ -179,7 +179,7 @@ namespace CodeHelpers.Mathematics
 		public static int CeiledDivide(this int value, int divisor) => value / divisor + Convert.ToInt32((value < 0) ^ (divisor > 0) && value % divisor != 0);
 		public static long CeiledDivide(this long value, long divisor) => value / divisor + Convert.ToInt64((value < 0) ^ (divisor > 0) && value % divisor != 0);
 
-		public static float Remap(this float value, float fromLow, float fromHigh, float toLow, float toHigh) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
+		public static float Remap(this float value, float fromLow, float fromHigh, float toLow = 0f, float toHigh = 1f) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int SingleToInt32Bits(float value)

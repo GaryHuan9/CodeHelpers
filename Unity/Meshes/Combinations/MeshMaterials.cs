@@ -11,9 +11,8 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 	public struct MeshMaterials
 	{
 		public MeshMaterials(Mesh mesh, Material material) : this(mesh, new MaterialCollection(material)) { }
-		public MeshMaterials(Mesh mesh) : this(mesh, new MaterialCollection()) { }
 
-		public MeshMaterials(Mesh mesh, Material[] materials)
+		public MeshMaterials(Mesh mesh, params Material[] materials)
 		{
 			Mesh = mesh;
 			Materials = materials.Length == 1 ? new MaterialCollection(materials[0]) : new MaterialCollection(materials);
@@ -21,7 +20,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 			subMeshes = null;
 		}
 
-		public MeshMaterials(Mesh mesh, MaterialCollection materials)
+		public MeshMaterials(Mesh mesh, MaterialCollection materials = new MaterialCollection())
 		{
 			Mesh = mesh;
 			Materials = materials;
@@ -32,7 +31,7 @@ namespace CodeHelpers.Unity.Meshes.Combinations
 		public MeshMaterials(MeshMaterials source, Mesh mesh) : this(mesh, source.Materials) { }
 
 		public MeshMaterials(MeshMaterials source, Material material) : this(source.Mesh, material) => subMeshes = source.subMeshes;
-		public MeshMaterials(MeshMaterials source, Material[] materials) : this(source.Mesh, materials) => subMeshes = source.subMeshes;
+		public MeshMaterials(MeshMaterials source, params Material[] materials) : this(source.Mesh, materials) => subMeshes = source.subMeshes;
 		public MeshMaterials(MeshMaterials source, MaterialCollection materials) : this(source.Mesh, materials) => subMeshes = source.subMeshes;
 
 		public Mesh Mesh { get; }
