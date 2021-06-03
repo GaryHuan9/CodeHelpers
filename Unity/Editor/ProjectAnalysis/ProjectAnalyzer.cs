@@ -1,13 +1,12 @@
 #if CODEHELPERS_UNITY
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CodeHelpers.Diagnostics;
+using CodeHelpers.Files;
 using CodeHelpers.Mathematics;
-using CodeHelpers.Unity.Diagnostics;
 using UnityEngine;
 using Color32 = CodeHelpers.Mathematics.Color32;
 
@@ -71,7 +70,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 			}
 			else clearDoubleCheck |= GUILayout.Button("Clear All History");
 
-			if (GUILayout.Button("Reveal Info File")) EditorUtility.RevealInFinder(Utility.HistoryFullPath);
+			if (GUILayout.Button("Reveal Info File")) EditorUtility.RevealInFinder(Utility.HistoryPathNew);
 
 			GUILayout.FlexibleSpace();
 			EditorGUILayout.EndHorizontal();
@@ -110,7 +109,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 
 			for (int i = 0; i < recordCount; i++)
 			{
-				RecordInfo info = Utility.CurrentHistory[i];
+				ProjectHistory.RecordInfo info = Utility.CurrentHistory[i];
 				bool showingInfo = Math.Abs(GetPercent(i) * infoCount % 1f) < Math.Abs(GetPercent(i + 1) * infoCount % 1f) &&
 								   Math.Abs(GetPercent(i) * infoCount % 1f) < Math.Abs(GetPercent(i - 1) * infoCount % 1f);
 
@@ -171,11 +170,11 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 		int currentSourceIndex = -1; //-1 means null, the current index of the source file info we are viewing
 
 		Vector2 currentScrollPosition;
-		List<RecordInfo.SourceFileInfo> currentSourceInfo; //List will be copied
+		List<ProjectHistory.SourceInfo> currentSourceInfo; //List will be copied
 
 		void DrawInfo(Rect area, int index)
 		{
-			RecordInfo info = Utility.CurrentHistory[index];
+			ProjectHistory.RecordInfo info = Utility.CurrentHistory[index];
 
 			GUILayout.BeginArea(area);
 
@@ -207,12 +206,14 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 			if (GUILayout.Button("<"))
 			{
 				currentIndex = range.Clamp(currentIndex - 1);
+				currentSourceInfo = null;
 				return;
 			}
 
 			if (GUILayout.Button(">"))
 			{
 				currentIndex = range.Clamp(currentIndex + 1);
+				currentSourceInfo = null;
 				return;
 			}
 
@@ -244,7 +245,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 
 			//Source files
 
-			if (currentSourceInfo == null) currentSourceInfo = new List<RecordInfo.SourceFileInfo>(info.allSourceFileInfo);
+			currentSourceInfo ??= new List<ProjectHistory.SourceInfo>(info.sourceInfos);
 
 			EditorGUILayout.BeginHorizontal();
 
@@ -337,47 +338,55 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 
 			public static ProjectHistory CurrentHistory
 			{
-				get => _currentHistory ?? (_currentHistory = TryReadHistory() ?? new ProjectHistory());
+				get => _currentHistory ??= TryReadHistory() ?? new ProjectHistory();
 				private set => _currentHistory = value ?? throw ExceptionHelper.Invalid(nameof(value), InvalidType.isNull);
 			}
 
 			public static DateTime LastRecordedTime => _lastRecordedTime ?? (_lastRecordedTime = TryReadLastRecordedTime()).Value;
 			public static bool ShouldRecord => DateTime.Compare(DateTime.UtcNow, LastRecordedTime + recordGap) >= 0;
 
-			public static string HistoryFullPath => Path.Combine(Application.dataPath.Remove(Application.dataPath.Length - 7), "ProjectHistory.prjhis");
-			public static string SourceFilePath => Path.Combine(Application.dataPath, "Scripts");
+			static string AssetPath => Application.dataPath;
+			static string ProjectPath => Directory.GetParent(AssetPath).FullName;
 
-			static ProjectHistory TryReadHistory()
-			{
-				if (!File.Exists(HistoryFullPath)) return null;
-				DebugHelper.Log("Reading project history");
-
-				ProjectHistory history;
-
-				using (BinaryReader reader = new BinaryReader(File.Open(HistoryFullPath, FileMode.Open)))
-				{
-					history = new ProjectHistory(reader);
-				}
-
-				return history;
-			}
+			public static string HistoryPathNew => Path.Combine(ProjectPath, "ProjectHistory");
+			public static string HistoryPathLegacy => Path.Combine(ProjectPath, "ProjectHistory.prjhis");
+			public static string SourceFilePath => Path.Combine(AssetPath, "Scripts");
 
 			static DateTime TryReadLastRecordedTime()
 			{
-				if (!File.Exists(HistoryFullPath)) return default;
+				string path;
 
-				using (BinaryReader reader = new BinaryReader(File.Open(HistoryFullPath, FileMode.Open)))
+				if (File.Exists(HistoryPathNew)) path = HistoryPathNew;
+				else if (File.Exists(HistoryPathLegacy)) path = HistoryPathLegacy;
+				else return default;
+
+				using DataReader reader = new DataReader(File.OpenRead(path));
+				return new DateTime(reader.ReadInt64(), DateTimeKind.Utc);
+			}
+
+			static ProjectHistory TryReadHistory()
+			{
+				DebugHelper.Log("Reading project history");
+
+				if (File.Exists(HistoryPathNew))
 				{
-					return new DateTime(reader.ReadInt64(), DateTimeKind.Utc);
+					using DataReader reader = new DataReader(File.OpenRead(HistoryPathNew));
+					return new ProjectHistory(reader);
 				}
+
+				if (File.Exists(HistoryPathLegacy))
+				{
+					using DataReader reader = new DataReader(File.OpenRead(HistoryPathLegacy));
+					return new ProjectHistory((BinaryReader)reader);
+				}
+
+				return null;
 			}
 
 			static void WriteHistory(ProjectHistory history)
 			{
-				using (BinaryWriter writer = new BinaryWriter(File.Open(HistoryFullPath, FileMode.Create)))
-				{
-					history.Write(writer);
-				}
+				using DataWriter writer = new DataWriter(File.Open(HistoryPathNew, FileMode.Create));
+				history.Write(writer);
 			}
 
 			/// <summary>
@@ -401,7 +410,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 				DebugHelper.Log("Recorded project analyzed information.");
 			}
 
-			public static RecordInfo Record()
+			public static ProjectHistory.RecordInfo Record()
 			{
 				int codeLineCount = 0;
 				int codeWithoutCodeHelperCount = 0;
@@ -417,7 +426,7 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 
 				const string CodeHelpersString = "CodeHelpers";
 
-				List<RecordInfo.SourceFileInfo> allInfo = new List<RecordInfo.SourceFileInfo>();
+				List<ProjectHistory.SourceInfo> allInfo = new List<ProjectHistory.SourceInfo>();
 
 				CodeCounter.Utility.ForEachSourceFile
 				(
@@ -441,176 +450,13 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 										classCount += thisClassCount;
 										structCount += thisStructCount;
 
-										allInfo.Add(new RecordInfo.SourceFileInfo(lines.Length, Path.GetFileName(path), isCodeHelpers, thisClassCount, thisStructCount));
+										allInfo.Add(new ProjectHistory.SourceInfo(lines.Length, Path.GetFileName(path), isCodeHelpers, thisClassCount, thisStructCount));
 									}
 				);
 
-				return new RecordInfo(DateTime.UtcNow.Ticks, allInfo.Count, codeLineCount, codeWithoutCodeHelperCount, classCount, structCount, allInfo.ToArray());
+				return new ProjectHistory.RecordInfo(DateTime.UtcNow.Ticks, allInfo.Count, codeLineCount, codeWithoutCodeHelperCount, classCount, structCount, allInfo.ToArray());
 			}
 		}
-	}
-
-	public class RecordInfo
-	{
-		public RecordInfo(long recordTime, int sourceFileCount, int codeLineCount, int codeWithoutCodeHelperCount, int classCount, int structCount, SourceFileInfo[] allSourceFileInfo)
-		{
-			this.recordTime = recordTime;
-
-			this.sourceFileCount = sourceFileCount;
-			this.codeLineCount = codeLineCount;
-			this.codeWithoutCodeHelperCount = codeWithoutCodeHelperCount;
-
-			this.classCount = classCount;
-			this.structCount = structCount;
-
-			this.allSourceFileInfo = allSourceFileInfo;
-		}
-
-		/// <summary>
-		/// Creates an info by reading from the reader
-		/// </summary>
-		public RecordInfo(BinaryReader reader)
-		{
-			recordTime = reader.ReadInt64();
-
-			sourceFileCount = reader.ReadInt32();
-			codeLineCount = reader.ReadInt32();
-			codeWithoutCodeHelperCount = reader.ReadInt32();
-
-			classCount = reader.ReadInt32();
-			structCount = reader.ReadInt32();
-
-			int length = reader.ReadInt32();
-			allSourceFileInfo = new SourceFileInfo[length];
-
-			for (int i = 0; i < length; i++) allSourceFileInfo[i] = new SourceFileInfo(reader);
-		}
-
-		readonly long recordTime;
-		public DateTime RecordTime => new DateTime(recordTime, DateTimeKind.Utc);
-
-		//Info
-		public readonly int sourceFileCount;
-		public readonly int codeLineCount;
-		public readonly int codeWithoutCodeHelperCount;
-
-		public readonly int classCount;
-		public readonly int structCount;
-
-		public readonly SourceFileInfo[] allSourceFileInfo;
-
-		public void Write(BinaryWriter writer)
-		{
-			writer.Write(recordTime);
-
-			writer.Write(sourceFileCount);
-			writer.Write(codeLineCount);
-			writer.Write(codeWithoutCodeHelperCount);
-
-			writer.Write(classCount);
-			writer.Write(structCount);
-
-			writer.Write(allSourceFileInfo.Length);
-			for (int i = 0; i < allSourceFileInfo.Length; i++) allSourceFileInfo[i].Write(writer);
-		}
-
-		public class SourceFileInfo
-		{
-			public SourceFileInfo(int lineCount, string name, bool isCodeHelper, int classContains, int structContains)
-			{
-				this.lineCount = lineCount;
-				this.name = name;
-
-				this.isCodeHelper = isCodeHelper;
-
-				this.classContains = classContains;
-				this.structContains = structContains;
-			}
-
-			/// <summary>
-			/// Creates an info by reading from the reader
-			/// </summary>
-			public SourceFileInfo(BinaryReader reader)
-			{
-				lineCount = reader.ReadInt32();
-				name = reader.ReadString();
-
-				isCodeHelper = reader.ReadBoolean();
-
-				classContains = reader.ReadInt32();
-				structContains = reader.ReadInt32();
-			}
-
-			public readonly int lineCount;
-			public readonly string name;
-
-			public readonly bool isCodeHelper;
-
-			public readonly int classContains; //Lol cant change this typo because of json
-			public readonly int structContains;
-
-			public void Write(BinaryWriter writer)
-			{
-				writer.Write(lineCount);
-				writer.Write(name);
-
-				writer.Write(isCodeHelper);
-
-				writer.Write(classContains);
-				writer.Write(structContains);
-			}
-		}
-	}
-
-	public class ProjectHistory : IReadOnlyList<RecordInfo>
-	{
-		/// <summary>
-		/// Creates a history by reading from the reader
-		/// </summary>
-		public ProjectHistory(BinaryReader reader)
-		{
-			reader.ReadInt64(); //Read out the last recorded time
-
-			int count = reader.ReadInt32();
-			infoHistory = new List<RecordInfo>(count);
-
-			for (int i = 0; i < count; i++) infoHistory.Add(new RecordInfo(reader));
-		}
-
-		public ProjectHistory() => infoHistory = new List<RecordInfo>();
-
-		readonly List<RecordInfo> infoHistory; //Ordered by time, NOTE: We will try to not load this list when possible
-
-		public DateTime LastRecordTime => Count == 0 ? new DateTime() : this[Count - 1].RecordTime;
-
-		public RecordInfo this[int index] => infoHistory[index];
-		public int Count => infoHistory.Count;
-
-		public void AddInfo(RecordInfo info)
-		{
-			if (info.RecordTime <= LastRecordTime) throw new Exception($"Cannot add {nameof(info)}({info})! Its recorded time is before history's last record time");
-			infoHistory.Add(info);
-		}
-
-		public void RemoveAt(int index) => infoHistory.RemoveAt(index);
-
-		public void Clear()
-		{
-			infoHistory.Clear();
-		}
-
-		public void Write(BinaryWriter writer)
-		{
-			writer.Write(LastRecordTime.Ticks);
-			writer.Write(infoHistory.Count);
-
-			for (int i = 0; i < infoHistory.Count; i++) infoHistory[i].Write(writer);
-		}
-
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-		IEnumerator<RecordInfo> IEnumerable<RecordInfo>.GetEnumerator() => GetEnumerator();
-
-		public List<RecordInfo>.Enumerator GetEnumerator() => infoHistory.GetEnumerator();
 	}
 
 #endif
