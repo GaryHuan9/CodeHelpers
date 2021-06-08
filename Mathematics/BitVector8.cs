@@ -38,6 +38,9 @@ namespace CodeHelpers.Mathematics
 
 		public override int GetHashCode() => Data.GetHashCode();
 
+		public static bool operator ==(BitVector8 value, BitVector8 other) => value.Equals(other);
+		public static bool operator !=(BitVector8 value, BitVector8 other) => !value.Equals(other);
+
 		public override bool Equals(object obj) => obj is BitVector8 other && Equals(other);
 		public bool Equals(BitVector8 other) => Data == other.Data;
 

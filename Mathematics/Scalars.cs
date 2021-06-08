@@ -71,7 +71,7 @@ namespace CodeHelpers.Mathematics
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool AlmostEquals(this float value, float other, float epsilon = 0.00001f)
+		public static bool AlmostEquals(this float value, float other, float epsilon = 1e-5f)
 		{
 			if (value == other) return true;                 //Handles absolute equals and degenerate cases
 			const float Normal = (1L << 23) * float.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a float
@@ -87,7 +87,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool AlmostEquals(this double value, double other, double epsilon = 0.00000001d)
+		public static bool AlmostEquals(this double value, double other, double epsilon = 1e-10d)
 		{
 			if (value == other) return true;                   //Handles absolute equals and degenerate cases
 			const double Normal = (1L << 52) * double.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a double
@@ -276,10 +276,10 @@ namespace CodeHelpers.Mathematics
 			float delta = current - target; //Change in position/value
 
 			float exp = ApproximateExp(omega * deltaTime);
-			float number = (velocity + omega * delta) * deltaTime;
+			float value = (velocity + omega * delta) * deltaTime;
 
-			velocity = (velocity - omega * number) * exp;
-			return target + (delta + number) * exp;
+			velocity = (velocity - omega * value) * exp;
+			return target + (delta + value) * exp;
 
 			//Uses Taylor Polynomials to approximate 1/exp; acceptable accuracy when domain: 0 < x < 1
 			static float ApproximateExp(float value) => 1f / (1f + value + 0.48f * value * value + 0.235f * value * value * value);
