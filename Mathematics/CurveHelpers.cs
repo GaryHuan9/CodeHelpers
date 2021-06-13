@@ -11,13 +11,15 @@ namespace CodeHelpers.Mathematics
 			switch (CheckMode)
 			{
 				case InputCheckMode.exception:
+				{
 					if (input < 0f || input > 1f) throw ExceptionHelper.Invalid(nameof(input), input, InvalidType.outOfBounds);
 					break;
-
+				}
 				case InputCheckMode.clamp:
+				{
 					input = input.Clamp(0f, 1f);
 					break;
-
+				}
 				default: throw ExceptionHelper.NotPossible;
 			}
 		}
