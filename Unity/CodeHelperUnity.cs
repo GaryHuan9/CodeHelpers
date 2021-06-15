@@ -159,12 +159,6 @@ namespace CodeHelpers.Unity
 			if (cache != null) return cache;
 			return cache = UnityEngine.Object.FindObjectOfType<T>();
 		}
-
-		public static float GetHorizontalFieldOfView(this Camera camera)
-		{
-			var tan = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad / 2f);
-			return Mathf.Rad2Deg * 2f * Mathf.Atan(tan * camera.aspect);
-		}
 	}
 }
 

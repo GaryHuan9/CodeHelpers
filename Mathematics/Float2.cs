@@ -557,7 +557,6 @@ namespace CodeHelpers.Mathematics
 			return AlmostEqualsZero(dx * dx + dy * dy);
 		}
 
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float2 value) => new Int2((int)value.x, (int)value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float2 value) => new Int3((int)value.x, (int)value.y, 0);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(Float2 value) => new Int4((int)value.x, (int)value.y, 0, 0);
