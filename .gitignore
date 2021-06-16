@@ -1,1 +1,5 @@
 *.meta
+
+!Unity/VideoApplier.cs.meta
+!Unity/CodeHelperMonoBehavior.cs.meta
+!Unity/AudioController.cs.meta
