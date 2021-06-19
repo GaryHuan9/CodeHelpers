@@ -14,7 +14,7 @@ namespace CodeHelpers.Threads
 			set
 			{
 				if (_mainThread == null || _mainThread == value) _mainThread = value;
-				else throw ExceptionHelper.Invalid(nameof(MainThread), MainThread, InvalidType.semiReadonlyAssignment);
+				else throw ExceptionHelper.Invalid(nameof(MainThread), MainThread, InvalidType.readonlyAssignment);
 			}
 		}
 

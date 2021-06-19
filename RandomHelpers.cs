@@ -124,7 +124,7 @@ namespace CodeHelpers
 		/// <param name="percentage">The array of percentages.</param>
 		public static int EvaluatePercentage(int[] percentage)
 		{
-			if (percentage.Length == 0) throw ExceptionHelper.Invalid(nameof(percentage), InvalidType.collectionCountIs0);
+			if (percentage.Length == 0) throw ExceptionHelper.Invalid(nameof(percentage), InvalidType.countIsZero);
 
 			int sum = 0;
 
@@ -146,7 +146,7 @@ namespace CodeHelpers
 		/// <param name="source">The array ValueTuples.</param>
 		public static int EvaluatePercentage((int index, int percentage)[] source)
 		{
-			if (source.Length == 0) throw ExceptionHelper.Invalid(nameof(source), InvalidType.collectionCountIs0);
+			if (source.Length == 0) throw ExceptionHelper.Invalid(nameof(source), InvalidType.countIsZero);
 
 			int sum = 0;
 

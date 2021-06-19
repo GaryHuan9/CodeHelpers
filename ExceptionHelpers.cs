@@ -36,17 +36,17 @@ namespace CodeHelpers
 		{
 			switch (type)
 			{
-				case InvalidType.isNull:                   return "is null.";
-				case InvalidType.unexpected:               return "is unexpected.";
-				case InvalidType.outOfBounds:              return "is out of bounds.";
-				case InvalidType.minLargerThanMax:         return "is larger than max.";
-				case InvalidType.collectionCountIs0:       return "has a count/length of 0, which is unexpected.";
-				case InvalidType.unexpectedIdentification: return "is an unexpected identification.";
-				case InvalidType.indistinctCollection:     return "is a collection with items that are not distinctive.";
-				case InvalidType.foundDuplicate:           return "is already present and a duplicate of a current object.";
-				case InvalidType.semiReadonlyAssignment:   return "is semi-readonly (can only be assigned once).";
-				case InvalidType.semiReadonlyNoData:       return "is semi-readonly and needs an assignment before accessing.";
-				case InvalidType.notFound:                 return "cannot be found in the collection.";
+				case InvalidType.isNull:             return "is null.";
+				case InvalidType.unexpected:         return "is unexpected.";
+				case InvalidType.outOfBounds:        return "is out of bounds.";
+				case InvalidType.minLargerThanMax:   return "is larger than max.";
+				case InvalidType.countIsZero:        return "has a count/length of 0, which is unexpected.";
+				case InvalidType.unexpectedId:       return "is an unexpected identification.";
+				case InvalidType.indistinctItems:    return "does not contain indistinct items.";
+				case InvalidType.foundDuplicate:     return "is already present and a duplicate of a current object.";
+				case InvalidType.readonlyAssignment: return "is semi-readonly (can only be assigned once).";
+				case InvalidType.readonlyNoData:     return "is semi-readonly and needs an assignment before accessing.";
+				case InvalidType.notFound:           return "cannot be found in the collection.";
 			}
 
 			throw NotPossible;
@@ -59,12 +59,12 @@ namespace CodeHelpers
 		unexpected,
 		outOfBounds,
 		minLargerThanMax,
-		collectionCountIs0,
-		unexpectedIdentification,
-		indistinctCollection,
+		countIsZero,
+		unexpectedId,
+		indistinctItems,
 		foundDuplicate,
-		semiReadonlyAssignment,
-		semiReadonlyNoData,
+		readonlyAssignment,
+		readonlyNoData,
 		notFound
 	}
 }
