@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if CODEHELPERS_UNITY
+
+using System;
 using CodeHelpers.Mathematics;
 using UnityEngine;
 
@@ -112,3 +114,5 @@ namespace CodeHelpers.Unity.Mathematics
 		instant
 	}
 }
+
+#endif
