@@ -180,6 +180,18 @@ namespace CodeHelpers.Collections
 
 		public static T TryGetValue<T>(this IReadOnlyList<T> list, int index) => list.IsIndexValid(index) ? list[index] : default;
 
+		public static bool TryGetValue<T>(this IReadOnlyList<T> list, int index, out T value)
+		{
+			if (list.IsIndexValid(index))
+			{
+				value = list[index];
+				return true;
+			}
+
+			value = default;
+			return false;
+		}
+
 		public static int Clamp<T>(this IReadOnlyCollection<T> collection, int index) => index.Clamp(0, collection.Count - 1);
 		public static T ClampedGet<T>(this IReadOnlyList<T> list, int index) => list[list.Clamp(index)];
 
