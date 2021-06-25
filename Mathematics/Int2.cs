@@ -698,14 +698,14 @@ namespace CodeHelpers.Mathematics
 
 					if (zeroAsOne) size = size.Max(one);
 
-					sizeY = size.y;
+					sizeX = size.x;
 					product = size.Product;
 
 					current = -1;
 				}
 
 				readonly Int2 direction;
-				readonly int sizeY;
+				readonly int sizeX;
 
 				readonly int product;
 				int current;
@@ -714,8 +714,8 @@ namespace CodeHelpers.Mathematics
 
 				public Int2 Current => new Int2
 				(
-					current / sizeY * direction.x,
-					current % sizeY * direction.y
+					current % sizeX * direction.x,
+					current / sizeX * direction.y
 				);
 
 				public bool MoveNext() => ++current < product;
