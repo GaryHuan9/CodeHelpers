@@ -44,6 +44,22 @@ namespace CodeHelpers.ObjectPooling
 			if (target is IDisposable disposable) disposable.Dispose();
 		}
 
+		/// <summary>
+		/// Gets the <see cref="ReleaseHandle{T}"/> of a pooled object. Object is stored in <paramref name="value"/>.
+		/// NOTE: Remember to use the using statement to release/dispose the pooled object when you are done with it!
+		/// </summary>
+		public ReleaseHandle<T> Fetch(out T value)
+		{
+			ReleaseHandle<T> handle = Fetch();
+
+			value = handle;
+			return handle;
+		}
+
+		/// <summary>
+		/// Gets the <see cref="ReleaseHandle{T}"/> of a pooled object. Access the object through <see cref="ReleaseHandle{T}.Target"/>.
+		/// NOTE: Remember to use the using statement to release/dispose the pooled object when you are done with it!
+		/// </summary>
 		public ReleaseHandle<T> Fetch() => new ReleaseHandle<T>(this);
 	}
 
