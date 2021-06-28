@@ -34,7 +34,7 @@ namespace CodeHelpers.Mathematics
 		public Float3 GetClosestPoint(Float3 point)
 		{
 			Float3 direction = LengthVector.Normalized;
-			return point0 + direction * Float3.Dot(point - point0, direction).Clamp(0f, 1f);
+			return point0 + direction * Float3.Dot(point - point0, direction).Clamp();
 		}
 
 		/// <summary>
@@ -49,7 +49,7 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Get the inverse lerp point that is the closest to <paramref name="point"/>. This point is clamped.
 		/// </summary>
-		public float ClosestInverseLerp(Float3 point) => ClosestInverseLerpUnclamped(point).Clamp(0f, 1f);
+		public float ClosestInverseLerp(Float3 point) => ClosestInverseLerpUnclamped(point).Clamp();
 
 		/// <summary>
 		/// Get the inverse lerp point that is the closest to <paramref name="point"/>. This point is unclamped.

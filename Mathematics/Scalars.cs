@@ -32,10 +32,10 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this float value, float min, float max) => value < min ? min : value > max ? max : value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this int value, float min, float max) => value < min ? min : value > max ? max : value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Clamp(this int value, int min, int max) => value < min ? min : value > max ? max : value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double Clamp(this double value, double min, double max) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this float value, float min = 0f, float max = 1f) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Clamp(this int value, int min = 0, int max = 1) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this int value, float min, float max = 1f) => value < min ? min : value > max ? max : value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double Clamp(this double value, double min = 0d, double max = 1d) => value < min ? min : value > max ? max : value;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.

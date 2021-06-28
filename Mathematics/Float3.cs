@@ -414,7 +414,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Max(in Float3 other) => new Float3(Math.Max(x, other.x), Math.Max(y, other.y), Math.Max(z, other.z));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(in Float3 min, in Float3 max) => new Float3(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y), z.Clamp(min.z, max.z));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(float min, float max) => new Float3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Clamp(float min = 0f, float max = 1f) => new Float3(x.Clamp(min, max), y.Clamp(min, max), z.Clamp(min, max));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float3 ClampMagnitude(float max)
@@ -496,7 +496,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Max(in Float3 value, in Float3 other) => value.Max(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(in Float3 value, in Float3 min, in Float3 max) => value.Clamp(min, max);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(in Float3 value, float min, float max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Clamp(in Float3 value, float min = 0f, float max = 1f) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 ClampMagnitude(in Float3 value, float max) => value.ClampMagnitude(max);
 

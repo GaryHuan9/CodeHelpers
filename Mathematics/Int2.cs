@@ -300,10 +300,10 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Max(Int2 other) => new Int2(Math.Max(x, other.x), Math.Max(y, other.y));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Clamp(Int2 min, Int2 max) => new Int2(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Clamp(int min, int max) => new Int2(x.Clamp(min, max), y.Clamp(min, max));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Clamp(int min = 0, int max = 1) => new Int2(x.Clamp(min, max), y.Clamp(min, max));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(Float2 min, Float2 max) => new Float2(x.Clamp(min.x, max.x), y.Clamp(min.y, max.y));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(float min, float max) => new Float2(x.Clamp(min, max), y.Clamp(min, max));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Clamp(float min, float max = 1f) => new Float2(x.Clamp(min, max), y.Clamp(min, max));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float2 ClampMagnitude(float max)
@@ -393,10 +393,10 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Max(Int2 value, Int2 other) => value.Max(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Clamp(Int2 value, Int2 min, Int2 max) => value.Clamp(min, max);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Clamp(Int2 value, int min, int max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 Clamp(Int2 value, int min = 0, int max = 1) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Int2 value, Float2 min, Float2 max) => value.Clamp(min, max);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Int2 value, float min, float max) => value.Clamp(min, max);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Clamp(Int2 value, float min, float max = 1f) => value.Clamp(min, max);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 ClampMagnitude(Int2 value, float max) => value.ClampMagnitude(max);
 

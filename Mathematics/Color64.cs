@@ -55,7 +55,7 @@ namespace CodeHelpers.Mathematics
 		public static readonly Color64 white = new Color64(ushort.MaxValue, ushort.MaxValue, ushort.MaxValue);
 
 		static float ToDecimal(ushort value) => (float)value / ushort.MaxValue;
-		static ushort ToInteger(float value) => (ushort)(value.Clamp(0f, 1f) * ushort.MaxValue);
+		static ushort ToInteger(float value) => (ushort)(value.Clamp() * ushort.MaxValue);
 
 		public static explicit operator Color64(Float3 value) => new Color64(value.x, value.y, value.z);
 		public static explicit operator Color64(Int3 value) => new Color64(value.x, value.y, value.z);

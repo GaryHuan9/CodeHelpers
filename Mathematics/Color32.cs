@@ -54,7 +54,7 @@ namespace CodeHelpers.Mathematics
 		public static readonly Color32 white = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue);
 
 		static float ToDecimal(byte value) => (float)value / byte.MaxValue;
-		static byte ToInteger(float value) => (byte)(value.Clamp(0f, 1f) * byte.MaxValue);
+		static byte ToInteger(float value) => (byte)(value.Clamp() * byte.MaxValue);
 
 		public static explicit operator Color32(Float3 value) => new Color32(value.x, value.y, value.z);
 		public static explicit operator Color32(Int3 value) => new Color32(value.x, value.y, value.z);

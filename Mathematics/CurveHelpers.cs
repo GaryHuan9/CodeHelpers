@@ -17,7 +17,7 @@ namespace CodeHelpers.Mathematics
 				}
 				case InputCheckMode.clamp:
 				{
-					input = input.Clamp(0f, 1f);
+					input = input.Clamp();
 					break;
 				}
 				default: throw ExceptionHelper.NotPossible;
