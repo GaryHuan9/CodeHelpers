@@ -24,7 +24,7 @@ namespace CodeHelpers.Mathematics
 
 		static int GetSign(float value)
 		{
-			if (value.AlmostEquals(0f)) return 0b00;
+			if (value.AlmostEquals()) return 0b00;
 			return value < 0f ? 0b11 : 0b01;
 		}
 	}

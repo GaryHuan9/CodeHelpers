@@ -71,7 +71,7 @@ namespace CodeHelpers.Mathematics
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool AlmostEquals(this float value, float other, float epsilon = 1e-5f)
+		public static bool AlmostEquals(this float value, float other = 0f, float epsilon = 1e-5f)
 		{
 			if (value == other) return true;                 //Handles absolute equals and degenerate cases
 			const float Normal = (1L << 23) * float.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a float
@@ -87,7 +87,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static bool AlmostEquals(this double value, double other, double epsilon = 1e-10d)
+		public static bool AlmostEquals(this double value, double other = 0d, double epsilon = 1e-10d)
 		{
 			if (value == other) return true;                   //Handles absolute equals and degenerate cases
 			const double Normal = (1L << 52) * double.Epsilon; //The smallest positive (non-zero) normal value that can be stored in a double
@@ -102,7 +102,7 @@ namespace CodeHelpers.Mathematics
 			return difference < epsilon * Math.Min(sum, double.MaxValue);
 		}
 
-		public static int Sign(this float value) => AlmostEquals(value, 0f) ? 0 : Math.Sign(value);
+		public static int Sign(this float value) => AlmostEquals(value) ? 0 : Math.Sign(value);
 		public static int Sign(this int value) => Math.Sign(value);
 
 		/// <summary>

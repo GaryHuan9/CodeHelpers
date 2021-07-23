@@ -277,7 +277,7 @@ namespace CodeHelpers.Mathematics
 
 				float determinant = f00 * m00 - f01 * m01 + f02 * m02 - f03 * m03;
 
-				if (determinant.AlmostEquals(0f))
+				if (determinant.AlmostEquals())
 				{
 					//Invalid inverse
 					return new Float4x4
