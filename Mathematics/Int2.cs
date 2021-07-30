@@ -600,6 +600,14 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int2 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => x == other.x && y == other.y;
 
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (x.GetHashCode() * 397) ^ y.GetHashCode();
+			}
+		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(int value) => new Int2(value, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Int2 value) => value.XY_;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(Int2 value) => new Int4(value.x, value.y, 0, 0);
@@ -616,18 +624,10 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				return (x.GetHashCode() * 397) ^ y.GetHashCode();
-			}
-		}
-
 		public override string ToString() => $"({x}, {y})";
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)})";
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)})";
 
 #region Enumerations
 

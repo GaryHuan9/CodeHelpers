@@ -716,8 +716,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(in Int3 first, float second) => new Float3(first.x % second, first.y % second, first.z % second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator %(float first, in Int3 second) => new Float3(first % second.x, first % second.y, first % second.z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Int3 first, in Int3 second) => first.Equals(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Int3 first, in Int3 second) => !first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Int3 first, in Int3 second) => first.EqualsFast(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Int3 first, in Int3 second) => !first.EqualsFast(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(in Int3 first, in Int3 second) => first.x < second.x && first.y < second.y && first.z < second.z;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(in Int3 first, in Int3 second) => first.x > second.x && first.y > second.y && first.z > second.z;
@@ -729,6 +729,17 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int3 other) => EqualsFast(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsFast(in Int3 other) => x == other.x && y == other.y && z == other.z;
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = x.GetHashCode();
+				hashCode = (hashCode * 397) ^ y.GetHashCode();
+				hashCode = (hashCode * 397) ^ z.GetHashCode();
+				return hashCode;
+			}
+		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Int3 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(int value) => new Int3(value, value, value);
@@ -746,21 +757,10 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = x.GetHashCode();
-				hashCode = (hashCode * 397) ^ y.GetHashCode();
-				hashCode = (hashCode * 397) ^ z.GetHashCode();
-				return hashCode;
-			}
-		}
-
 		public override string ToString() => $"({x}, {y}, {z})";
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)}, {z.ToString(format, formatProvider)})";
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)})";
 
 #region Enumerations
 

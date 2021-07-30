@@ -1476,8 +1476,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator %(in Float4 first, float second) => new Float4(first.x % second, first.y % second, first.z % second, first.w % second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator %(float first, in Float4 second) => new Float4(first % second.x, first % second.y, first % second.z, first % second.w);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float4 first, in Float4 second) => first.Equals(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float4 first, in Float4 second) => !first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float4 first, in Float4 second) => first.EqualsFast(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float4 first, in Float4 second) => !first.EqualsFast(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(in Float4 first, in Float4 second) => first.x < second.x && first.y < second.y && first.z < second.z && first.w < second.w;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(in Float4 first, in Float4 second) => first.x > second.x && first.y > second.y && first.z > second.z && first.w > second.w;
@@ -1500,27 +1500,6 @@ namespace CodeHelpers.Mathematics
 			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz + dw * dw);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float4 value) => new Int2((int)value.x, (int)value.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float4 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Float4 value) => new Int4((int)value.x, (int)value.y, (int)value.z, (int)value.w);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(in Float4 value) => value.XY;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(in Float4 value) => value.XYZ;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(float value) => new Float4(value, value, value, value);
-
-#if CODEHELPERS_UNITY
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Vector4 value) => new Float4(value.x, value.y, value.z, value.w);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector4(in Float4 value) => new UnityEngine.Vector4(value.x, value.y, value.z, value.w);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Quaternion value) => new Float4(value.x, value.y, value.z, value.w);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Quaternion(in Float4 value) => new UnityEngine.Quaternion(value.x, value.y, value.z, value.w);
-#endif
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => squaredMagnitude.AlmostEquals();
-
-#endregion
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public override int GetHashCode()
 		{
 			unchecked
@@ -1533,10 +1512,27 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float4 value) => new Int2((int)value.x, (int)value.y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float4 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Float4 value) => new Int4((int)value.x, (int)value.y, (int)value.z, (int)value.w);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(in Float4 value) => value.XY;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(in Float4 value) => value.XYZ;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(float value) => new Float4(value, value, value, value);
+
+#if CODEHELPERS_UNITY
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Vector4 value) => new Float4(value.x, value.y, value.z, value.w);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector4(in Float4 value) => new UnityEngine.Vector4(value.x, value.y, value.z, value.w);
+#endif
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => squaredMagnitude.AlmostEquals();
+
+#endregion
+
 		public override string ToString() => $"({x}, {y}, {z}, {w})";
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider formatProvider) => $"({x.ToString(format, formatProvider)}, {y.ToString(format, formatProvider)}, {z.ToString(format, formatProvider)}, {w.ToString(format, formatProvider)})";
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)}, {w.ToString(format, provider)})";
 
 #region Enumerations
 

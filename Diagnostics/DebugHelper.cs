@@ -121,7 +121,7 @@ namespace CodeHelpers.Diagnostics
 
 		public static string ToString<T>(IEnumerable<T> target)
 		{
-			var array = target.Select(item => ToString(item)).ToArray();
+			string[] array = target.Select(item => ToString(item)).ToArray();
 			return $"{target.GetType()} + Count: {array.Length} [{string.Join(", ", array)}]";
 		}
 

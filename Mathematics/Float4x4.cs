@@ -357,18 +357,18 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static Float4x4 Rotation(in Float3 rotation)
 		{
-			float radX = rotation.x * Scalars.DegreeToRadian;
-			float radY = rotation.y * Scalars.DegreeToRadian;
-			float radZ = rotation.z * Scalars.DegreeToRadian;
+			float radiansX = rotation.x * Scalars.DegreeToRadian;
+			float radiansY = rotation.y * Scalars.DegreeToRadian;
+			float radiansZ = rotation.z * Scalars.DegreeToRadian;
 
-			float sinX = (float)Math.Sin(radX);
-			float cosX = (float)Math.Cos(radX);
+			float sinX = (float)Math.Sin(radiansX);
+			float cosX = (float)Math.Cos(radiansX);
 
-			float sinY = (float)Math.Sin(radY);
-			float cosY = (float)Math.Cos(radY);
+			float sinY = (float)Math.Sin(radiansY);
+			float cosY = (float)Math.Cos(radiansY);
 
-			float sinZ = (float)Math.Sin(radZ);
-			float cosZ = (float)Math.Cos(radZ);
+			float sinZ = (float)Math.Sin(radiansZ);
+			float cosZ = (float)Math.Cos(radiansZ);
 
 			return new Float4x4 //Multiplied with order yxz because matrix multiplication order is reversed
 			(
@@ -455,12 +455,6 @@ namespace CodeHelpers.Mathematics
 		public static bool operator !=(in Float4x4 first, in Float4x4 second) => !first.EqualsFast(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool EqualsFast(in Float4x4 other) => f00.AlmostEquals(other.f00) && f01.AlmostEquals(other.f01) && f02.AlmostEquals(other.f02) && f03.AlmostEquals(other.f03) &&
-													 f10.AlmostEquals(other.f10) && f11.AlmostEquals(other.f11) && f12.AlmostEquals(other.f12) && f13.AlmostEquals(other.f13) &&
-													 f20.AlmostEquals(other.f20) && f21.AlmostEquals(other.f21) && f22.AlmostEquals(other.f22) && f23.AlmostEquals(other.f23) &&
-													 f30.AlmostEquals(other.f30) && f31.AlmostEquals(other.f31) && f32.AlmostEquals(other.f32) && f33.AlmostEquals(other.f33);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool EqualsExact(in Float4x4 other) => f00 == other.f00 && f01 == other.f01 && f02 == other.f02 && f03 == other.f03 &&
 													  f10 == other.f10 && f11 == other.f11 && f12 == other.f12 && f13 == other.f13 &&
 													  f20 == other.f20 && f21 == other.f21 && f22 == other.f22 && f23 == other.f23 &&
@@ -469,25 +463,12 @@ namespace CodeHelpers.Mathematics
 		public override bool Equals(object obj) => obj is Float4x4 other && EqualsFast(other);
 		public bool Equals(Float4x4 other) => EqualsFast(other);
 
-#if CODEHELPERS_UNITY
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4x4(in UnityEngine.Matrix4x4 value) => new Float4x4
-		(
-			value.m00, value.m01, value.m02, value.m03,
-			value.m10, value.m11, value.m12, value.m13,
-			value.m20, value.m21, value.m22, value.m23,
-			value.m30, value.m31, value.m32, value.m33
-		);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Matrix4x4(in Float4x4 value) => new UnityEngine.Matrix4x4
-		(
-			new UnityEngine.Vector4(value.f00, value.f10, value.f20, value.f30),
-			new UnityEngine.Vector4(value.f01, value.f11, value.f21, value.f31),
-			new UnityEngine.Vector4(value.f02, value.f12, value.f22, value.f32),
-			new UnityEngine.Vector4(value.f03, value.f13, value.f23, value.f33)
-		);
-#endif
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool EqualsFast(in Float4x4 other) => f00.AlmostEquals(other.f00) && f01.AlmostEquals(other.f01) && f02.AlmostEquals(other.f02) && f03.AlmostEquals(other.f03) &&
+													 f10.AlmostEquals(other.f10) && f11.AlmostEquals(other.f11) && f12.AlmostEquals(other.f12) && f13.AlmostEquals(other.f13) &&
+													 f20.AlmostEquals(other.f20) && f21.AlmostEquals(other.f21) && f22.AlmostEquals(other.f22) && f23.AlmostEquals(other.f23) &&
+													 f30.AlmostEquals(other.f30) && f31.AlmostEquals(other.f31) && f32.AlmostEquals(other.f32) && f33.AlmostEquals(other.f33);
+
 		public override int GetHashCode()
 		{
 			unchecked
@@ -512,15 +493,33 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+#if CODEHELPERS_UNITY
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4x4(in UnityEngine.Matrix4x4 value) => new Float4x4
+		(
+			value.m00, value.m01, value.m02, value.m03,
+			value.m10, value.m11, value.m12, value.m13,
+			value.m20, value.m21, value.m22, value.m23,
+			value.m30, value.m31, value.m32, value.m33
+		);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Matrix4x4(in Float4x4 value) => new UnityEngine.Matrix4x4
+		(
+			new UnityEngine.Vector4(value.f00, value.f10, value.f20, value.f30),
+			new UnityEngine.Vector4(value.f01, value.f11, value.f21, value.f31),
+			new UnityEngine.Vector4(value.f02, value.f12, value.f22, value.f32),
+			new UnityEngine.Vector4(value.f03, value.f13, value.f23, value.f33)
+		);
+#endif
+
 #endregion
 
 		public override string ToString() => ToString(string.Empty);
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
 
-		public string ToString(string format, IFormatProvider formatProvider) =>
-			$"{f00.ToString(format, formatProvider)}\t{f01.ToString(format, formatProvider)}\t{f02.ToString(format, formatProvider)}\t{f03.ToString(format, formatProvider)}\n" +
-			$"{f10.ToString(format, formatProvider)}\t{f11.ToString(format, formatProvider)}\t{f12.ToString(format, formatProvider)}\t{f13.ToString(format, formatProvider)}\n" +
-			$"{f20.ToString(format, formatProvider)}\t{f21.ToString(format, formatProvider)}\t{f22.ToString(format, formatProvider)}\t{f23.ToString(format, formatProvider)}\n" +
-			$"{f30.ToString(format, formatProvider)}\t{f31.ToString(format, formatProvider)}\t{f32.ToString(format, formatProvider)}\t{f33.ToString(format, formatProvider)}\n";
+		public string ToString(string format, IFormatProvider provider) =>
+			$"{f00.ToString(format, provider)}\t{f01.ToString(format, provider)}\t{f02.ToString(format, provider)}\t{f03.ToString(format, provider)}\n" +
+			$"{f10.ToString(format, provider)}\t{f11.ToString(format, provider)}\t{f12.ToString(format, provider)}\t{f13.ToString(format, provider)}\n" +
+			$"{f20.ToString(format, provider)}\t{f21.ToString(format, provider)}\t{f22.ToString(format, provider)}\t{f23.ToString(format, provider)}\n" +
+			$"{f30.ToString(format, provider)}\t{f31.ToString(format, provider)}\t{f32.ToString(format, provider)}\t{f33.ToString(format, provider)}\n";
 	}
 }
