@@ -679,7 +679,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXZ(Float2 value) => new Float3(value.x, y, value.y);
 
 #if CODEHELPERS_UNITY
-		public UnityEngine.Vector3Int U() => new UnityEngine.Vector3Int(x, y, z);
+		public UnityEngine.Vector3Int U() => this;
 #endif
 
 #endregion

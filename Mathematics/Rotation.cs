@@ -110,6 +110,10 @@ namespace CodeHelpers.Mathematics
 			return new Rotation(result);
 		}
 
+#if CODEHELPERS_UNITY
+		public UnityEngine.Quaternion U() => this;
+#endif
+
 		public static Rotation operator *(in Rotation first, in Rotation second)
 		{
 			Float3 xyz0 = first.d.XYZ;

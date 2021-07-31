@@ -551,7 +551,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceY(float value) => new Float2(x, value);
 
 #if CODEHELPERS_UNITY
-		public UnityEngine.Vector2Int U() => new UnityEngine.Vector2Int(x, y);
+		public UnityEngine.Vector2Int U() => this;
 #endif
 
 #endregion

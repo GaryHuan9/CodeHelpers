@@ -1448,7 +1448,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 #if CODEHELPERS_UNITY
-		public UnityEngine.Vector4 U() => new UnityEngine.Vector4(x, y, z, w);
+		public UnityEngine.Vector4 U() => this;
 #endif
 
 #endregion
