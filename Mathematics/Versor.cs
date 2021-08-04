@@ -157,6 +157,9 @@ namespace CodeHelpers.Mathematics
 			);
 		}
 
+		public static bool operator ==(Versor left, Versor right) => left.Equals(right);
+		public static bool operator !=(Versor left, Versor right) => !left.Equals(right);
+
 		public override bool Equals(object obj) => obj is Versor other && Equals(other);
 		public bool Equals(Versor other) => d.Equals(other.d);
 		public override int GetHashCode() => d.GetHashCode();

@@ -23,6 +23,118 @@ namespace CodeHelpers.Mathematics
 		[FieldOffset(0)] public readonly int x;
 		[FieldOffset(4)] public readonly int y;
 
+#region Swizzled4
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXX => new Int4(x, x, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXY => new Int4(x, x, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXX_ => new Int4(x, x, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXYX => new Int4(x, x, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXYY => new Int4(x, x, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXY_ => new Int4(x, x, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XX_X => new Int4(x, x, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XX_Y => new Int4(x, x, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XX__ => new Int4(x, x, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XYXX => new Int4(x, y, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XYXY => new Int4(x, y, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XYX_ => new Int4(x, y, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XYYX => new Int4(x, y, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XYYY => new Int4(x, y, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XYY_ => new Int4(x, y, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XY_X => new Int4(x, y, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XY_Y => new Int4(x, y, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XY__ => new Int4(x, y, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X_XX => new Int4(x, 0, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X_XY => new Int4(x, 0, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X_X_ => new Int4(x, 0, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X_YX => new Int4(x, 0, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X_YY => new Int4(x, 0, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X_Y_ => new Int4(x, 0, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X__X => new Int4(x, 0, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X__Y => new Int4(x, 0, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 X___ => new Int4(x, 0, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YXXX => new Int4(y, x, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YXXY => new Int4(y, x, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YXX_ => new Int4(y, x, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YXYX => new Int4(y, x, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YXYY => new Int4(y, x, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YXY_ => new Int4(y, x, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YX_X => new Int4(y, x, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YX_Y => new Int4(y, x, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YX__ => new Int4(y, x, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YYXX => new Int4(y, y, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YYXY => new Int4(y, y, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YYX_ => new Int4(y, y, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YYYX => new Int4(y, y, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YYYY => new Int4(y, y, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YYY_ => new Int4(y, y, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YY_X => new Int4(y, y, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YY_Y => new Int4(y, y, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 YY__ => new Int4(y, y, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y_XX => new Int4(y, 0, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y_XY => new Int4(y, 0, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y_X_ => new Int4(y, 0, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y_YX => new Int4(y, 0, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y_YY => new Int4(y, 0, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y_Y_ => new Int4(y, 0, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y__X => new Int4(y, 0, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y__Y => new Int4(y, 0, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 Y___ => new Int4(y, 0, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _XXX => new Int4(0, x, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _XXY => new Int4(0, x, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _XX_ => new Int4(0, x, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _XYX => new Int4(0, x, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _XYY => new Int4(0, x, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _XY_ => new Int4(0, x, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _X_X => new Int4(0, x, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _X_Y => new Int4(0, x, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _X__ => new Int4(0, x, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _YXX => new Int4(0, y, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _YXY => new Int4(0, y, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _YX_ => new Int4(0, y, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _YYX => new Int4(0, y, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _YYY => new Int4(0, y, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _YY_ => new Int4(0, y, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _Y_X => new Int4(0, y, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _Y_Y => new Int4(0, y, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 _Y__ => new Int4(0, y, 0, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 __XX => new Int4(0, 0, x, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 __XY => new Int4(0, 0, x, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 __X_ => new Int4(0, 0, x, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 __YX => new Int4(0, 0, y, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 __YY => new Int4(0, 0, y, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 __Y_ => new Int4(0, 0, y, 0);
+
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 ___X => new Int4(0, 0, 0, x);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 ___Y => new Int4(0, 0, 0, y);
+		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 ____ => new Int4(0, 0, 0, 0);
+
+#endregion
+
 #region Swizzled3
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXX => new Int3(x, x, x);
