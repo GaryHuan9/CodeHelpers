@@ -297,7 +297,7 @@ namespace CodeHelpers.Mathematics
 				double squared = SquaredMagnitudeDouble;
 				if (AlmostEqualsZero(squared)) return zero;
 
-				return this / (float)Math.Sqrt(squared);
+				return 1f / (float)Math.Sqrt(squared) * this;
 			}
 		}
 

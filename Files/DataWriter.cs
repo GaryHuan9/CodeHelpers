@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using CodeHelpers.Mathematics;
-using CodeHelpers.RotationHelpers;
 
 namespace CodeHelpers.Files
 {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
-using CodeHelpers.RotationHelpers;
 
 namespace CodeHelpers.Files
 {

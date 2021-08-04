@@ -16,7 +16,7 @@ namespace CodeHelpers.Unity.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 C(this Vector3Int value) => value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 C(this Vector2Int value) => value;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Rotation C(this Quaternion value) => value;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Versor C(this Quaternion value) => value;
 	}
 }
 

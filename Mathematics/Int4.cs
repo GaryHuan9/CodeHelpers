@@ -1080,7 +1080,7 @@ namespace CodeHelpers.Mathematics
 				long squared = SquaredMagnitudeLong;
 				if (squared == 0) return Float4.zero;
 
-				return this / (float)Math.Sqrt(squared);
+				return 1f / (float)Math.Sqrt(squared) * this;
 			}
 		}
 

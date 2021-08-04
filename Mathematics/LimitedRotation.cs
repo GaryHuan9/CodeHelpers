@@ -1,56 +1,74 @@
 using System;
-using CodeHelpers.Mathematics;
 
-namespace CodeHelpers.RotationHelpers
+namespace CodeHelpers.Mathematics
 {
 	/// <summary>
 	/// A rotation struct that only exists in 90-degree increments.
 	/// </summary>
-	[Serializable]
-	public readonly struct LimitedRotation : IEquatable<LimitedRotation>, IComparable<LimitedRotation> //Immutable
+	public readonly struct LimitedRotation : IEquatable<LimitedRotation>
 	{
 		//NOTE: We maybe should remove some of the implementation using unity's quaternion
 
 		public LimitedRotation(int x, int y, int z)
 		{
 			data = (byte)((Transform(x) << 0) | (Transform(y) << 2) | (Transform(z) << 4));
-			int Transform(int angle) => (angle + 45).ToUnsignedAngle() / 90;
+			static int Transform(int angle) => (angle + 45).ToUnsignedAngle() / 90;
 		}
 
 		internal LimitedRotation(byte data) => this.data = (byte)(data & 0b00111111); //Must mask out the unnecessary bits
 
 		public LimitedRotation(float x, float y, float z) : this((int)x.ToUnsignedAngle(), (int)y.ToUnsignedAngle(), (int)z.ToUnsignedAngle()) { }
 
-		public LimitedRotation(Int3 eulerAngles) : this(eulerAngles.x, eulerAngles.y, eulerAngles.z) { }
-		public LimitedRotation(Float3 eulerAngles) : this(eulerAngles.x, eulerAngles.y, eulerAngles.z) { }
+		public LimitedRotation(Int3 angles) : this(angles.x, angles.y, angles.z) { }
+		public LimitedRotation(Float3 angles) : this(angles.x, angles.y, angles.z) { }
 
 		public LimitedRotation(Direction direction, int angle) : this(direction.ToInt3() * angle) { }
 		public LimitedRotation(Direction direction, float angle) : this(direction.ToInt3() * angle) { }
 
-#if CODEHELPERS_UNITY
-		public LimitedRotation(UnityEngine.Quaternion quaternion) : this(quaternion.eulerAngles) { }
-#endif
+		public LimitedRotation(Versor rotation) : this(rotation.Angles) { }
 
 		/// <summary>
 		/// Bit representation: 0000 0000
 		/// Only uses the first 6 bits
 		/// X axis (roll) uses the first and second bits: 	0000 00XX
 		/// Y axis (pitch) uses the third and fourth bits: 	0000 YY00
-		/// Y axis (yaw) uses the fifth and sixth bits:  	00ZZ 0000
+		/// Z axis (yaw) uses the fifth and sixth bits:  	00ZZ 0000
 		///
 		/// rotation applied in world space as ZXY
 		/// </summary>
 		internal readonly byte data;
 
-		public int X => ((data & 0b00000011) >> 0) * 90;
-		public int Y => ((data & 0b00001100) >> 2) * 90;
-		public int Z => ((data & 0b00110000) >> 4) * 90;
+		int RawX => (data & 0b00000011) >> 0;
+		int RawY => (data & 0b00001100) >> 2;
+		int RawZ => (data & 0b00110000) >> 4;
 
-		public Int3 EulerAngles => new Int3(X, Y, Z);
+		public int X => RawX * 90;
+		public int Y => RawY * 90;
+		public int Z => RawZ * 90;
 
-#if CODEHELPERS_UNITY
-		public UnityEngine.Quaternion Quaternion => UnityEngine.Quaternion.Euler(X, Y, Z);
-#endif
+		public Int3 Angles => new Int3(X, Y, Z);
+
+		public static readonly LimitedRotation identity = default;
+
+		static readonly float[] sinValues = {0f, Scalars.Sqrt2 / 2f, 1f, Scalars.Sqrt2 / 2f};
+		static readonly float[] cosValues = {1f, Scalars.Sqrt2 / 2f, 0f, Scalars.Sqrt2 / -2f};
+
+		public Versor Versor
+		{
+			get
+			{
+				Int3 raw = new Int3(RawX, RawY, RawZ);
+
+				return new Versor
+				(
+					new Float3(GetSin(raw.x), GetSin(raw.y), GetSin(raw.z)),
+					new Float3(GetCos(raw.x), GetCos(raw.y), GetCos(raw.z))
+				);
+
+				static float GetSin(int raw) => sinValues[raw];
+				static float GetCos(int raw) => cosValues[raw];
+			}
+		}
 
 		/// <summary>
 		/// Returns the inverse of this rotation
@@ -93,27 +111,27 @@ namespace CodeHelpers.RotationHelpers
 			return new LimitedRotation(from.Cross(to).ToInt3() * 90);
 		}
 
-		public static LimitedRotation Identity => new LimitedRotation();
-
 		public static bool operator ==(LimitedRotation first, LimitedRotation second) => first.Equals(second);
 		public static bool operator !=(LimitedRotation first, LimitedRotation second) => !first.Equals(second);
 
-#if CODEHELPERS_UNITY
 		// NOTE: Cannot just add/subtract the two euler angles because gimbal lock might occur
-		public static LimitedRotation operator *(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Quaternion);
-		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Quaternion * first.Inverted.Quaternion);
+		public static LimitedRotation operator *(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Versor * first.Versor);
+		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Versor / first.Versor);
 
-		public static Float3 operator *(LimitedRotation rotation, Float3 vector) => rotation.Quaternion * vector;
-		public static Int3 operator *(LimitedRotation rotation, Int3 vector) => ((Float3)(rotation.Quaternion * vector.U())).Rounded;
+		public static Float3 operator *(LimitedRotation rotation, Float3 value) => rotation.Versor * value;
+		public static Float3 operator /(LimitedRotation rotation, Float3 value) => rotation.Versor / value;
+
+		public static Int3 operator *(LimitedRotation rotation, Int3 value) => (rotation.Versor * value).Rounded;
+		public static Int3 operator /(LimitedRotation rotation, Int3 value) => (rotation.Versor / value).Rounded;
+
 		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToInt3()).ToDirection();
-#endif
+		public static Direction operator /(LimitedRotation rotation, Direction direction) => (rotation / direction.ToInt3()).ToDirection();
 
 		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;
 
 		public bool Equals(LimitedRotation other) => data.Equals(other.data);
 		public override bool Equals(object obj) => obj is LimitedRotation rotation && Equals(rotation);
 
-		public int CompareTo(LimitedRotation other) => data.CompareTo(other.data);
 		public override int GetHashCode() => data;
 
 		public override string ToString() => $"{nameof(LimitedRotation)}: {nameof(X)}: {X}, {nameof(Y)}: {Y}, {nameof(Z)}: {Z}";
