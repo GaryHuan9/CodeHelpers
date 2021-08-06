@@ -40,8 +40,10 @@ namespace CodeHelpers.AI.BehaviorTrees
 
 			foreach ((BehaviorTreeNodeAttribute attribute, Type type) in from assembly in AppDomain.CurrentDomain.GetAssemblies()
 																		 from type in assembly.GetTypes()
-																		 where type.IsValueType && IsDefined(type, typeof(BehaviorTreeNodeAttribute))
-																		 select (type.GetCustomAttribute<BehaviorTreeNodeAttribute>(), type))
+																		 where type.IsValueType
+																		 let attribute = type.GetCustomAttribute<BehaviorTreeNodeAttribute>()
+																		 where attribute != null
+																		 select (attribute, type))
 			{
 				serializedNameToAttribute.Add(attribute.serializedName, attribute);
 				serializedNameToType.Add(attribute.serializedName, type);

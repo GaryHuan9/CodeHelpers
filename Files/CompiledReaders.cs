@@ -11,12 +11,12 @@ namespace CodeHelpers.Files
 	{
 		public CompiledReaders(Assembly assembly)
 		{
-			foreach (MethodInfo method in from type in assembly.GetTypes()
-										  from method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
-										  where method.GetCustomAttribute<ReaderAttribute>() != null
-										  select method)
+			foreach ((MethodInfo method, ReaderAttribute attribute) in from type in assembly.GetTypes()
+																	   from method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
+																	   let attribute = method.GetCustomAttribute<ReaderAttribute>()
+																	   where attribute != null
+																	   select (method, attribute))
 			{
-				var attribute = method.GetCustomAttribute<ReaderAttribute>();
 				Type type = ReaderAttribute.CheckMethod(method);
 
 				var compiledReaders = method.IsStatic ? staticReaders : instanceReaders;
