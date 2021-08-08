@@ -117,9 +117,6 @@ namespace CodeHelpers
 		/// </summary>
 		public static double Range(double max) => Range(0d, max);
 
-		public static float RangeEpsilon(float min, float max, float epsilon = float.Epsilon) => Range(min + epsilon, max - epsilon);
-		public static double RangeEpsilon(double min, double max, double epsilon = double.Epsilon) => Range(min + epsilon, max - epsilon);
-
 		/// <summary>Gets random index based on their percentage of chosen.</summary>
 		/// <param name="percentage">The array of percentages.</param>
 		public static int EvaluatePercentage(int[] percentage)
