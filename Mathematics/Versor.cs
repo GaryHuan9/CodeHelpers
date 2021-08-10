@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
 
 namespace CodeHelpers.Mathematics
 {
@@ -28,8 +29,8 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal Versor(in Float3 sin, in Float3 cos) => d = new Float4
 														 (
-															 sin.x * cos.y * cos.z - cos.x * sin.y * sin.z,
-															 cos.x * sin.y * cos.z + sin.x * cos.y * sin.z,
+															 sin.x * cos.y * cos.z + cos.x * sin.y * sin.z,
+															 cos.x * sin.y * cos.z - sin.x * cos.y * sin.z,
 															 cos.x * cos.y * sin.z - sin.x * sin.y * cos.z,
 															 cos.x * cos.y * cos.z + sin.x * sin.y * sin.z
 														 );
@@ -173,15 +174,25 @@ namespace CodeHelpers.Mathematics
 		{
 			ref readonly Float4 d = ref value.d;
 
-			Float4 x = d.x * 2f * d.XYZW;
-			Float3 y = d.y * 2f * d.YZW;
-			Float2 z = d.z * 2f * d.ZW;
+			Float3 d2 = d.XYZ * 2f;
+
+			float xx = d2.x * d.x;
+			float xy = d2.x * d.y;
+			float xz = d2.x * d.z;
+			float xw = d2.x * d.w;
+
+			float yy = d2.y * d.y;
+			float yz = d2.y * d.z;
+			float yw = d2.y * d.w;
+
+			float zz = d2.z * d.z;
+			float zw = d2.z * d.w;
 
 			return new Float4x4
 			(
-				1f - y.x - z.x, x.y - z.y, x.z + y.z, 0f,
-				x.y + z.y, 1f - x.x - z.x, y.y - x.w, 0f,
-				x.z - y.z, y.y + x.w, 1f - x.x - y.x, 0f,
+				1f - yy - zz, xy - zw, xz + yw, 0f,
+				xy + zw, 1f - xx - zz, yz - xw, 0f,
+				xz - yw, yz + xw, 1f - xx - yy, 0f,
 				0f, 0f, 0f, 1f
 			);
 		}

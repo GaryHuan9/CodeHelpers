@@ -619,7 +619,7 @@ namespace CodeHelpers.Mathematics
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
 				double squared = SquaredMagnitudeDouble;
-				if (AlmostEqualsZero(squared)) return zero;
+				if (squared.AlmostEquals()) return zero;
 
 				return 1f / (float)Math.Sqrt(squared) * this;
 			}
@@ -719,7 +719,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(in Float3 other)
 		{
 			double magnitude = Math.Sqrt(SquaredMagnitudeDouble * other.SquaredMagnitudeDouble);
-			return AlmostEqualsZero(magnitude) ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
+			return magnitude.AlmostEquals() ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(in Float3 other, in Float3 normal)
@@ -990,13 +990,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => EqualsFast(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool EqualsFast(in Float3 other)
-		{
-			double dx = x - other.x;
-			double dy = y - other.y;
-			double dz = z - other.z;
-			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz);
-		}
+		public bool EqualsFast(in Float3 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y) && z.AlmostEquals(other.z);
 
 		public override int GetHashCode()
 		{
@@ -1021,8 +1015,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(UnityEngine.Vector3 value) => new Float3(value.x, value.y, value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3(in Float3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);
 #endif
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => squaredMagnitude.AlmostEquals();
 
 #endregion
 

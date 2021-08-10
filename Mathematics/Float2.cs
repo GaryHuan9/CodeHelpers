@@ -341,7 +341,7 @@ namespace CodeHelpers.Mathematics
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
 				double squared = SquaredMagnitudeDouble;
-				if (AlmostEqualsZero(squared)) return zero;
+				if (squared.AlmostEquals()) return zero;
 
 				return 1f / (float)Math.Sqrt(squared) * this;
 			}
@@ -662,12 +662,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool Equals(Float2 other)
-		{
-			double dx = x - other.x;
-			double dy = y - other.y;
-			return AlmostEqualsZero(dx * dx + dy * dy);
-		}
+		public bool Equals(Float2 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y);
 
 		public override int GetHashCode()
 		{
@@ -690,8 +685,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float2(UnityEngine.Vector2 value) => new Float2(value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector2(Float2 value) => new UnityEngine.Vector2(value.x, value.y);
 #endif
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => squaredMagnitude.AlmostEquals();
 
 #endregion
 

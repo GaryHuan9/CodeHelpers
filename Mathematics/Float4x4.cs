@@ -344,6 +344,9 @@ namespace CodeHelpers.Mathematics
 			extend = Absoluted.MultiplyDirection(extend);
 		}
 
+		/// <summary>
+		/// Creates and returns a positional matrix.
+		/// </summary>
 		public static Float4x4 Position(in Float3 position) => new Float4x4
 		(
 			1f, 0f, 0f, position.x,
@@ -353,32 +356,13 @@ namespace CodeHelpers.Mathematics
 		);
 
 		/// <summary>
-		/// Returns a rotational matrix that applies in ZXY order.
+		/// Creates and returns a rotational matrix that applies in ZXY order.
 		/// </summary>
-		public static Float4x4 Rotation(in Float3 rotation)
-		{
-			float radiansX = rotation.x * Scalars.DegreeToRadian;
-			float radiansY = rotation.y * Scalars.DegreeToRadian;
-			float radiansZ = rotation.z * Scalars.DegreeToRadian;
+		public static Float4x4 Rotation(in Float3 rotation) => new Versor(rotation);
 
-			float sinX = (float)Math.Sin(radiansX);
-			float cosX = (float)Math.Cos(radiansX);
-
-			float sinY = (float)Math.Sin(radiansY);
-			float cosY = (float)Math.Cos(radiansY);
-
-			float sinZ = (float)Math.Sin(radiansZ);
-			float cosZ = (float)Math.Cos(radiansZ);
-
-			return new Float4x4 //Multiplied with order yxz because matrix multiplication order is reversed
-			(
-				cosY * cosZ + sinY * sinX * sinZ, cosY * -sinZ + sinY * sinX * cosZ, sinY * cosX, 0f,
-				cosX * sinZ, cosX * cosZ, -sinX, 0f,
-				-sinY * cosZ + cosY * sinX * sinZ, sinY * sinZ + cosY * sinX * cosZ, cosY * cosX, 0f,
-				0f, 0f, 0f, 1f
-			);
-		}
-
+		/// <summary>
+		/// Creates and returns a scaling matrix.
+		/// </summary>
 		public static Float4x4 Scale(in Float3 scale) => new Float4x4
 		(
 			scale.x, 0f, 0f, 0f,

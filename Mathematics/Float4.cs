@@ -1087,7 +1087,7 @@ namespace CodeHelpers.Mathematics
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
 				double squared = SquaredMagnitudeDouble;
-				if (AlmostEqualsZero(squared)) return zero;
+				if (squared.AlmostEquals()) return zero;
 
 				return 1f / (float)Math.Sqrt(squared) * this;
 			}
@@ -1264,7 +1264,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(in Float4 other)
 		{
 			double magnitude = Math.Sqrt(SquaredMagnitudeDouble * other.SquaredMagnitudeDouble);
-			return AlmostEqualsZero(magnitude) ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
+			return magnitude.AlmostEquals() ? 0f : (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(in Float4 other) => (other - this).Magnitude;
@@ -1491,14 +1491,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float4 other) => EqualsFast(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool EqualsFast(in Float4 other)
-		{
-			double dx = x - other.x;
-			double dy = y - other.y;
-			double dz = z - other.z;
-			double dw = w - other.w;
-			return AlmostEqualsZero(dx * dx + dy * dy + dz * dz + dw * dw);
-		}
+		public bool EqualsFast(in Float4 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y) && z.AlmostEquals(other.z) && w.AlmostEquals(other.w);
 
 		public override int GetHashCode()
 		{
@@ -1524,8 +1517,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Vector4 value) => new Float4(value.x, value.y, value.z, value.w);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector4(in Float4 value) => new UnityEngine.Vector4(value.x, value.y, value.z, value.w);
 #endif
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] static bool AlmostEqualsZero(double squaredMagnitude) => squaredMagnitude.AlmostEquals();
 
 #endregion
 
