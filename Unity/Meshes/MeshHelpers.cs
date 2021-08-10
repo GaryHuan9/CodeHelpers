@@ -19,17 +19,21 @@ namespace CodeHelpers.Unity.Meshes
 		/// </summary>
 		public static MeshMaterials CombineMeshes(IList<MeshMaterials> models, IList<Matrix4x4> matrices, Mesh baseMesh = null)
 		{
-			if (models.Count != matrices.Count) throw new Exception($"Different length of array for mesh combine. {nameof(models)} Length = {models.Count} {nameof(matrices)} Length = {matrices.Count}");
+			int modelCount = models.Count;
+			int matrixCount = matrices.Count;
+
+			if (modelCount != matrixCount) throw new Exception($"Different length of array for mesh combine. {nameof(models)} Length = {modelCount} {nameof(matrices)} Length = {matrixCount}");
 
 			var dictionary = CollectionPooler<Material, List<CombineInstance>>.dictionary.GetObject();
 			uint totalVertexCount = 0;
 
-			for (int i = 0; i < models.Count; i++)
+			for (int i = 0; i < modelCount; i++)
 			{
 				MeshMaterials model = models[i];
 
 				//Loop through all the materials
-				for (int j = 0; j < model.Materials.Count; j++)
+				int materialCount = model.Materials.Count;
+				for (int j = 0; j < materialCount; j++)
 				{
 					Mesh subMesh = model.GetSubMesh(j);
 					Material material = model.Materials[j];

@@ -169,6 +169,23 @@ namespace CodeHelpers.Mathematics
 		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.x, value.d.y, value.d.z, value.d.w);
 #endif
 
+		public static implicit operator Float4x4(in Versor value)
+		{
+			ref readonly Float4 d = ref value.d;
+
+			Float4 x = d.x * 2f * d.XYZW;
+			Float3 y = d.y * 2f * d.YZW;
+			Float2 z = d.z * 2f * d.ZW;
+
+			return new Float4x4
+			(
+				1f - y.x - z.x, x.y - z.y, x.z + y.z, 0f,
+				x.y + z.y, 1f - x.x - z.x, y.y - x.w, 0f,
+				x.z - y.z, y.y + x.w, 1f - x.x - y.x, 0f,
+				0f, 0f, 0f, 1f
+			);
+		}
+
 		public override string ToString() => d.ToString();
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);

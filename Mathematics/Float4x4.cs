@@ -390,35 +390,12 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Returns a combined transformation matrix. Scaling is applied first, then rotation, finally translation.
 		/// </summary>
-		public static Float4x4 Transformation(in Float3 position, in Float3 rotation, in Float3 scale) => Position(position) * Rotation(rotation) * Scale(scale);
+		public static Float4x4 Transformation(in Float3 position, in Float3 rotation, in Float3 scale) => Transformation(position, new Versor(rotation), scale);
 
 		/// <summary>
-		/// Creates a rotation matrix out of a quaternion.
+		/// Returns a combined transformation matrix. Scaling is applied first, then rotation, finally translation.
 		/// </summary>
-		public static Float4x4 Rotation(in Float4 quaternion)
-		{
-			Float4 q = quaternion.Normalized;
-
-			float xx = q.x * q.x * 2f;
-			float xy = q.x * q.y * 2f;
-			float xz = q.x * q.z * 2f;
-			float xw = q.x * q.w * 2f;
-
-			float yy = q.y * q.y * 2f;
-			float yz = q.y * q.z * 2f;
-			float yw = q.y * q.w * 2f;
-
-			float zz = q.z * q.z * 2f;
-			float zw = q.z * q.w * 2f;
-
-			return new Float4x4
-			(
-				1f - yy - zz, xy - zw, xz + yw, 0f,
-				xy + zw, 1f - xx - zz, yz - xw, 0f,
-				xz - yw, yz + xw, 1f - xx - yy, 0f,
-				0f, 0f, 0f, 1f
-			);
-		}
+		public static Float4x4 Transformation(in Float3 position, in Versor rotation, in Float3 scale) => Position(position) * rotation * Scale(scale);
 
 		/// <summary>
 		/// Returns random matrix for debug purposes; will be removed.
