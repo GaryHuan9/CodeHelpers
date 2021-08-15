@@ -86,12 +86,19 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
-		public float RotationAngle => 2f * (float)Math.Acos(d.w);
+		public float Dot(in Versor other) => d.Dot(other.d);
+		public double DotDouble(in Versor other) => d.DotDouble(other.d);
 
 		/// <summary>
 		/// Returns the smallest angle between this <see cref="Versor"/> and <paramref name="other"/>.
 		/// </summary>
-		public float Angle(in Versor other) => (this / other).RotationAngle;
+		public float Angle(in Versor other)
+		{
+			float dot = Math.Abs(Dot(other));
+			if (dot.AlmostEquals()) return 0f;
+
+			return (float)Math.Acos(dot) * 2f * Scalars.RadianToDegree;
+		}
 
 		public Versor Damp(in Versor target, ref Float4 velocity, float smoothTime, float deltaTime) => Damp(this, target, ref velocity, smoothTime, deltaTime);
 
@@ -99,6 +106,9 @@ namespace CodeHelpers.Mathematics
 		/// Returns the smallest angle between this <see cref="Versor"/> and <paramref name="other"/>.
 		/// </summary>
 		public static float Angle(in Versor value, in Versor other) => value.Angle(other);
+
+		public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
+		public static double DotDouble(in Float4 value, in Float4 other) => value.DotDouble(other);
 
 		public static Versor Damp(in Versor current, in Versor target, ref Float4 velocity, float smoothTime, float deltaTime)
 		{
@@ -173,7 +183,7 @@ namespace CodeHelpers.Mathematics
 		public static bool operator !=(Versor left, Versor right) => !left.Equals(right);
 
 		public override bool Equals(object obj) => obj is Versor other && Equals(other);
-		public bool Equals(Versor other) => Angle(other).AlmostEquals();
+		public bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
 		public override int GetHashCode() => d.GetHashCode();
 
 #if CODEHELPERS_UNITY
