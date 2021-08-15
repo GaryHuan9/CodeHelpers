@@ -322,10 +322,13 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		/// <inheritdoc cref="CountBits(uint)"/>
+		public static uint CountBits(this int value) => CountBits((uint)value);
+
 		/// <summary>
 		/// Counts and returns the number of bits flipped on in <paramref name="value"/>.
 		/// </summary>
-		public static int CountBits(this int value)
+		public static uint CountBits(this uint value)
 		{
 			//Code based on: http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
 
