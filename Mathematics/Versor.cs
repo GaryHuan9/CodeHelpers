@@ -69,20 +69,39 @@ namespace CodeHelpers.Mathematics
 		{
 			get
 			{
-				float wx_yz = d.w * d.x + d.y * d.z;
-				float xx_yy = d.x * d.x + d.y * d.y;
+				Float3 d2 = d.XYZ * 2f;
 
-				float wy_zx = d.w * d.y - d.z * d.x;
+				float xx = d2.x * d.x;
+				float xy = d2.x * d.y;
+				float xz = d2.x * d.z;
+				float xw = d2.x * d.w;
 
-				float wz_xy = d.w * d.z + d.x * d.y;
-				float yy_zz = d.y * d.y + d.z * d.z;
+				float yy = d2.y * d.y;
+				float yz = d2.y * d.z;
+				float yw = d2.y * d.w;
 
-				return new Float3
-					   (
-						   (float)Math.Atan2(2f * wx_yz, 1f - 2f * xx_yy),
-						   (float)Math.Asin(wy_zx.Clamp(-0.5f, 0.5f) * 2f),
-						   (float)Math.Atan2(2f * wz_xy, 1f - 2f * yy_zz)
-					   ) * Scalars.RadianToDegree;
+				float zz = d2.z * d.z;
+				float zw = d2.z * d.w;
+
+				float xw_yz = xw - yz;
+				float abs = Math.Abs(xw_yz);
+
+				float x = abs >= 1f ? 90f * Math.Sign(xw_yz) : (float)Math.Asin(xw_yz) * Scalars.RadianToDegree;
+
+				if (abs.AlmostEquals(1f))
+				{
+					//Singularity
+					float y = (float)Math.Atan2(yw - xz, 1f - yy - zz);
+					return new Float3(x, y * Scalars.RadianToDegree, 0f);
+				}
+				else
+				{
+					//General cases
+					float y = (float)Math.Atan2(xz + yw, 1f - xx - yy) * Scalars.RadianToDegree;
+					float z = (float)Math.Atan2(xy + zw, 1f - xx - zz) * Scalars.RadianToDegree;
+
+					return new Float3(x, y, z);
+				}
 			}
 		}
 
