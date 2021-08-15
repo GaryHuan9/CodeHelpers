@@ -48,7 +48,7 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		static int RemapSign(int sign) => sign * -2 + 1;
 
-		public static Direction ToDirection(this Int3 vector) => ToDirection((Float3)vector.XYZ);
+		public static Direction ToDirection(this Int3 vector) => ToDirection((Float3)vector);
 		public static Direction ToDirection(this Int2 vector) => ToDirection(vector.XY_);
 
 		public static Direction ToDirection(this Float3 vector)
@@ -152,7 +152,7 @@ namespace CodeHelpers.Mathematics
 		/// Gets a direction which is perpendicular to this <paramref name="direction"/>.
 		/// The returned direction is the 2d right/positive x direction if you projected the direction onto 2d (using the <see cref="Project"/> method)
 		/// </summary>
-		public static Direction Perpendicular(this Direction direction) => (Direction)((int)direction - 2).Repeat((int)EnumHelper<Direction>.enumLength);
+		public static Direction Perpendicular(this Direction direction) => (Direction)((int)direction - 2).Repeat(EnumHelper<Direction>.enumLength);
 
 		/// <summary>
 		/// Projects <paramref name="point"/> onto the plane located at origin and has this <paramref name="direction"/> as its normal.

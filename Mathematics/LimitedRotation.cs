@@ -115,8 +115,8 @@ namespace CodeHelpers.Mathematics
 		public static bool operator !=(LimitedRotation first, LimitedRotation second) => !first.Equals(second);
 
 		// NOTE: Cannot just add/subtract the two euler angles because gimbal lock might occur
-		public static LimitedRotation operator *(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Versor * first.Versor);
-		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(second.Versor / first.Versor);
+		public static LimitedRotation operator *(LimitedRotation first, LimitedRotation second) => new LimitedRotation(first.Versor * second.Versor);
+		public static LimitedRotation operator /(LimitedRotation first, LimitedRotation second) => new LimitedRotation(first.Versor / second.Versor);
 
 		public static Float3 operator *(LimitedRotation rotation, Float3 value) => rotation.Versor * value;
 		public static Float3 operator /(LimitedRotation rotation, Float3 value) => rotation.Versor / value;
@@ -129,7 +129,7 @@ namespace CodeHelpers.Mathematics
 
 		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;
 
-		public bool Equals(LimitedRotation other) => data.Equals(other.data);
+		public bool Equals(LimitedRotation other) => Versor.Equals(other.Versor);
 		public override bool Equals(object obj) => obj is LimitedRotation rotation && Equals(rotation);
 
 		public override int GetHashCode() => data;

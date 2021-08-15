@@ -321,5 +321,21 @@ namespace CodeHelpers.Mathematics
 				return result;
 			}
 		}
+
+		/// <summary>
+		/// Counts and returns the number of bits flipped on in <paramref name="value"/>.
+		/// </summary>
+		public static int CountBits(this int value)
+		{
+			//Code based on: http://graphics.stanford.edu/~seander/bithacks.html#CountBitsSetParallel
+
+			value = (value & 0x55555555) + ((value >> 01) & 0x55555555);
+			value = (value & 0x33333333) + ((value >> 02) & 0x33333333);
+			value = (value & 0x0F0F0F0F) + ((value >> 04) & 0x0F0F0F0F);
+			value = (value & 0x00FF00FF) + ((value >> 08) & 0x00FF00FF);
+			value = (value & 0x0000FFFF) + ((value >> 16) & 0x0000FFFF);
+
+			return value;
+		}
 	}
 }

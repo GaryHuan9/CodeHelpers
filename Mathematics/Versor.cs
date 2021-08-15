@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
 
 namespace CodeHelpers.Mathematics
 {
@@ -87,7 +86,19 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public float RotationAngle => 2f * (float)Math.Acos(d.w);
+
+		/// <summary>
+		/// Returns the smallest angle between this <see cref="Versor"/> and <paramref name="other"/>.
+		/// </summary>
+		public float Angle(in Versor other) => (this / other).RotationAngle;
+
 		public Versor Damp(in Versor target, ref Float4 velocity, float smoothTime, float deltaTime) => Damp(this, target, ref velocity, smoothTime, deltaTime);
+
+		/// <summary>
+		/// Returns the smallest angle between this <see cref="Versor"/> and <paramref name="other"/>.
+		/// </summary>
+		public static float Angle(in Versor value, in Versor other) => value.Angle(other);
 
 		public static Versor Damp(in Versor current, in Versor target, ref Float4 velocity, float smoothTime, float deltaTime)
 		{
@@ -162,7 +173,7 @@ namespace CodeHelpers.Mathematics
 		public static bool operator !=(Versor left, Versor right) => !left.Equals(right);
 
 		public override bool Equals(object obj) => obj is Versor other && Equals(other);
-		public bool Equals(Versor other) => d.Equals(other.d);
+		public bool Equals(Versor other) => Angle(other).AlmostEquals();
 		public override int GetHashCode() => d.GetHashCode();
 
 #if CODEHELPERS_UNITY
