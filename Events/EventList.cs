@@ -97,40 +97,40 @@ namespace CodeHelpers.Events
 		}
 	}
 
-	public class EventList<T1> : EventListBase<Action<T1>>
+	public class EventList<T0> : EventListBase<Action<T0>>
 	{
 		public EventList(out Invoker invoker) => this.invoker = invoker = new Invoker(this);
 
-		new public class Invoker : EventListBase<Action<T1>>.Invoker
+		new public class Invoker : EventListBase<Action<T0>>.Invoker
 		{
-			public Invoker(EventListBase<Action<T1>> eventList) : base(eventList) { }
+			public Invoker(EventListBase<Action<T0>> eventList) : base(eventList) { }
 
-			T1 item1;
+			T0 item0;
 
-			protected override void InvokeAction(Action<T1> action) => action(item1);
+			protected override void InvokeAction(Action<T0> action) => action(item0);
 
-			public void Invoke(T1 parameter1)
+			public void Invoke(T0 parameter0)
 			{
-				item1 = parameter1;
+				item0 = parameter0;
 				base.Invoke();
 			}
 		}
 	}
 
-	public class EventList<T1, T2> : EventListBase<Action<T1, T2>>
+	public class EventList<T0, T1> : EventListBase<Action<T0, T1>>
 	{
 		public EventList(out Invoker invoker) => this.invoker = invoker = new Invoker(this);
 
-		new public class Invoker : EventListBase<Action<T1, T2>>.Invoker
+		new public class Invoker : EventListBase<Action<T0, T1>>.Invoker
 		{
-			public Invoker(EventListBase<Action<T1, T2>> eventList) : base(eventList) { }
+			public Invoker(EventListBase<Action<T0, T1>> eventList) : base(eventList) { }
 
-			T1 item1;
-			T2 item2;
+			T0 item1;
+			T1 item2;
 
-			protected override void InvokeAction(Action<T1, T2> action) => action(item1, item2);
+			protected override void InvokeAction(Action<T0, T1> action) => action(item1, item2);
 
-			public void Invoke(T1 parameter1, T2 parameter2)
+			public void Invoke(T0 parameter1, T1 parameter2)
 			{
 				item1 = parameter1;
 				item2 = parameter2;
@@ -140,52 +140,52 @@ namespace CodeHelpers.Events
 		}
 	}
 
-	public class EventList<T1, T2, T3> : EventListBase<Action<T1, T2, T3>>
+	public class EventList<T0, T1, T2> : EventListBase<Action<T0, T1, T2>>
 	{
 		public EventList(out Invoker invoker) => this.invoker = invoker = new Invoker(this);
 
-		new public class Invoker : EventListBase<Action<T1, T2, T3>>.Invoker
+		new public class Invoker : EventListBase<Action<T0, T1, T2>>.Invoker
 		{
-			public Invoker(EventListBase<Action<T1, T2, T3>> eventList) : base(eventList) { }
+			public Invoker(EventListBase<Action<T0, T1, T2>> eventList) : base(eventList) { }
 
+			T0 item0;
 			T1 item1;
 			T2 item2;
-			T3 item3;
 
-			protected override void InvokeAction(Action<T1, T2, T3> action) => action(item1, item2, item3);
+			protected override void InvokeAction(Action<T0, T1, T2> action) => action(item0, item1, item2);
 
-			public void Invoke(T1 parameter1, T2 parameter2, T3 parameter3)
+			public void Invoke(T0 parameter0, T1 parameter1, T2 parameter2)
 			{
+				item0 = parameter0;
 				item1 = parameter1;
 				item2 = parameter2;
-				item3 = parameter3;
 
 				base.Invoke();
 			}
 		}
 	}
 
-	public class EventList<T1, T2, T3, T4> : EventListBase<Action<T1, T2, T3, T4>>
+	public class EventList<T0, T1, T2, T3> : EventListBase<Action<T0, T1, T2, T3>>
 	{
 		public EventList(out Invoker invoker) => this.invoker = invoker = new Invoker(this);
 
-		new public class Invoker : EventListBase<Action<T1, T2, T3, T4>>.Invoker
+		new public class Invoker : EventListBase<Action<T0, T1, T2, T3>>.Invoker
 		{
-			public Invoker(EventListBase<Action<T1, T2, T3, T4>> eventList) : base(eventList) { }
+			public Invoker(EventListBase<Action<T0, T1, T2, T3>> eventList) : base(eventList) { }
 
-			T1 item1;
-			T2 item2;
-			T3 item3;
-			T4 item4;
+			T0 item1;
+			T1 item2;
+			T2 item3;
+			T3 item4;
 
-			protected override void InvokeAction(Action<T1, T2, T3, T4> action) => action(item1, item2, item3, item4);
+			protected override void InvokeAction(Action<T0, T1, T2, T3> action) => action(item1, item2, item3, item4);
 
-			public void Invoke(T1 parameter1, T2 parameter2, T3 parameter3, T4 parameter4)
+			public void Invoke(T0 parameter0, T1 parameter1, T2 parameter2, T3 parameter3)
 			{
-				item1 = parameter1;
-				item2 = parameter2;
-				item3 = parameter3;
-				item4 = parameter4;
+				item1 = parameter0;
+				item2 = parameter1;
+				item3 = parameter2;
+				item4 = parameter3;
 
 				base.Invoke();
 			}
