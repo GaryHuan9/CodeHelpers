@@ -10,9 +10,9 @@ namespace CodeHelpers.Unity.DelayedExecute
 	{
 		/// <param name="jobs">Jobs; each separated with a yield return 0. You can return the current job tag and retrieve it with <see cref="ExecutingTag"/>. NOTE: Tags cannot be negative.</param>
 		/// <param name="maxExecutionMillisecond">The maximum time for each execution in milliseconds.</param>
-		public DelayedJob(IEnumerator<int> jobs, float maxExecutionMillisecond = 5f)
+		public DelayedJob(IEnumerable<int> jobs, float maxExecutionMillisecond = 5f)
 		{
-			this.jobs = jobs ?? throw new NullReferenceException(nameof(jobs));
+			this.jobs = jobs.GetEnumerator();
 			MaxExecutionMillisecond = maxExecutionMillisecond;
 		}
 

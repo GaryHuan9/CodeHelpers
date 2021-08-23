@@ -267,7 +267,7 @@ namespace CodeHelpers.Mathematics
 		}
 #endif
 
-		public static float Damp(float current, float target, ref float velocity, float smoothTime, float deltaTime)
+		public static float Damp(this float current, float target, ref float velocity, float smoothTime, float deltaTime)
 		{
 			//Implementation based on Game Programming Gems 4 Chapter 1.10
 			smoothTime = Math.Max(smoothTime, Epsilon);
