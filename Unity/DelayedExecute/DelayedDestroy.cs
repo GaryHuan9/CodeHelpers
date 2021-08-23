@@ -10,7 +10,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 		static readonly List<Object> mustDestroyList = new List<Object>();
 		static readonly Queue<Object> destroyQueue = new Queue<Object>();
 
-		static readonly DelayedJob destroyJob = new DelayedJob(DestroyJobEnumerator(), 0.8f);
+		static readonly DelayedJob destroyJob = new DelayedJob(DestroyJobEnumerable(), 0.8f);
 
 		/// <summary>
 		/// The maximum time allowed to use in one frame to destroy objects.
@@ -85,7 +85,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 		/// </summary>
 		public static void DestroyAllChildren(this GameObject gameObject) => gameObject.transform.DestroyAllChildren();
 
-		static IEnumerator<int> DestroyJobEnumerator()
+		static IEnumerable<int> DestroyJobEnumerable()
 		{
 			while (true)
 			{
