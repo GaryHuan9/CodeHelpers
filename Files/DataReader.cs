@@ -212,7 +212,7 @@ namespace CodeHelpers.Files
 		/// <summary>
 		/// Reads information to create an object of type <typeparamref name="T"/> through <see cref="VersionedReaders"/>.
 		/// </summary>
-		public T Read<T>()
+		public T ReadT<T>()
 		{
 			Type type = typeof(T);
 
@@ -225,7 +225,7 @@ namespace CodeHelpers.Files
 		/// <summary>
 		/// Reads information directly into instanced object <paramref name="value"/> through <see cref="VersionedReaders"/>.
 		/// </summary>
-		public void Read<T>(T value)
+		public void ReadT<T>(T value)
 		{
 			Type type = typeof(T);
 
