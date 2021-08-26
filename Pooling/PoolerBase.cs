@@ -16,12 +16,12 @@ namespace CodeHelpers.ObjectPooling
 
 		public virtual void ReleaseObject(T target)
 		{
-			if (pool.Count >= MaxPoolSize) Clear(target);
-			else
+			if (pool.Count < MaxPoolSize)
 			{
 				Reset(target);
 				pool.Push(target);
 			}
+			else Clear(target);
 		}
 
 		/// <summary>

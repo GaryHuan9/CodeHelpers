@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if !CODEHELPERS_UNITY
+
+using System;
 using System.Collections.Generic;
 using CodeHelpers.Mathematics;
 
@@ -8,9 +10,9 @@ namespace CodeHelpers.Collections
 	/// A radix sorter. NOTE: The thread safe property is like <see cref="System.Random"/>, a single
 	/// instance is not thread safe, however you can create one sorter for each thread to ensure safety.
 	/// </summary>
-	public class RadixSort
+	public class RadixSorter
 	{
-		public RadixSort()
+		public RadixSorter()
 		{
 			buckets = new List<uint>[16];
 			for (int i = 0; i < buckets.Length; i++) buckets[i] = new List<uint>();
@@ -25,15 +27,15 @@ namespace CodeHelpers.Collections
 		/// <summary>
 		/// Sorts the input uint array using radix sort.
 		/// </summary>
-		public void Sort(uint[] array)
+		public void Sort(Span<uint> span)
 		{
 			for (int i = 0; i < 32; i += 4)
 			{
 				bool hasRemain = false;
 
-				for (int j = 0; j < array.Length; j++)
+				for (int j = 0; j < span.Length; j++)
 				{
-					uint number = array[j];
+					uint number = span[j];
 					uint remain = number >> i;
 					uint digit = remain & 0b1111;
 
@@ -41,7 +43,7 @@ namespace CodeHelpers.Collections
 					hasRemain |= remain != 0;
 				}
 
-				Copy(array, uintToUIntConverter);
+				Copy(span, uintToUIntConverter);
 				Clear();
 
 				if (!hasRemain) break;
@@ -51,15 +53,15 @@ namespace CodeHelpers.Collections
 		/// <summary>
 		/// Sorts the input array based on each element's two's complement bitwise representation.
 		/// </summary>
-		public void Sort(int[] array)
+		public void Sort(Span<int> span)
 		{
 			for (int i = 0; i < 32; i += 4)
 			{
 				bool hasRemain = false;
 
-				for (int j = 0; j < array.Length; j++)
+				for (int j = 0; j < span.Length; j++)
 				{
-					uint number = Scalars.Int32ToUInt32Bits(array[j]);
+					uint number = Scalars.Int32ToUInt32Bits(span[j]);
 
 					uint remain = number >> i;
 					uint digit = remain & 0b1111;
@@ -70,7 +72,7 @@ namespace CodeHelpers.Collections
 					hasRemain |= remain != 0;
 				}
 
-				Copy(array, uintToIntConverter);
+				Copy(span, uintToIntConverter);
 				Clear();
 
 				if (!hasRemain) break;
@@ -80,15 +82,15 @@ namespace CodeHelpers.Collections
 		/// <summary>
 		/// Sorts the input float array based on each element's IEEE 754 bit representation.
 		/// </summary>
-		public void Sort(float[] array)
+		public void Sort(Span<float> span)
 		{
 			for (int i = 0; i < 32; i += 4)
 			{
 				bool hasRemain = false;
 
-				for (int j = 0; j < array.Length; j++)
+				for (int j = 0; j < span.Length; j++)
 				{
-					uint number = Scalars.SingleToUInt32Bits(array[j]);
+					uint number = Scalars.SingleToUInt32Bits(span[j]);
 
 					uint remain = number >> i;
 					uint digit = remain & 0b1111;
@@ -108,7 +110,7 @@ namespace CodeHelpers.Collections
 
 						for (int k = bucket.Count - 1; k >= 0; k--)
 						{
-							array[index++] = Scalars.UInt32ToSingleBits(bucket[k]);
+							span[index++] = Scalars.UInt32ToSingleBits(bucket[k]);
 						}
 					}
 
@@ -118,11 +120,11 @@ namespace CodeHelpers.Collections
 
 						for (int k = 0; k < bucket.Count; k++)
 						{
-							array[index++] = Scalars.UInt32ToSingleBits(bucket[k]);
+							span[index++] = Scalars.UInt32ToSingleBits(bucket[k]);
 						}
 					}
 				}
-				else Copy(array, uintToFloatConverter);
+				else Copy(span, uintToFloatConverter);
 
 				Clear();
 
@@ -130,12 +132,12 @@ namespace CodeHelpers.Collections
 			}
 		}
 
-		void Copy<T>(IList<T> array, Func<uint, T> converter) where T : struct
+		void Copy<T>(Span<T> span, Func<uint, T> converter) where T : struct
 		{
 			int bucketIndex = 0;
 			int numberIndex = 0;
 
-			for (int j = 0; j < array.Count; j++)
+			for (int j = 0; j < span.Length; j++)
 			{
 				while (numberIndex == buckets[bucketIndex].Count)
 				{
@@ -143,14 +145,16 @@ namespace CodeHelpers.Collections
 					numberIndex = 0;
 				}
 
-				array[j] = converter(buckets[bucketIndex][numberIndex]);
+				span[j] = converter(buckets[bucketIndex][numberIndex]);
 				numberIndex++;
 			}
 		}
 
 		void Clear()
 		{
-			for (int j = 0; j < buckets.Length; j++) buckets[j].Clear();
+			foreach (var bucket in buckets) bucket.Clear();
 		}
 	}
 }
+
+#endif
