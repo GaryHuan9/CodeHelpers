@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Diagnostics
 {
@@ -38,15 +39,22 @@ namespace CodeHelpers.Diagnostics
 		[Conditional("DEBUG"), Conditional("UNITY_ASSERTIONS")]
 		public static void AreEqual<T>(T target, T other)
 		{
-			if (EqualityComparer<T>.Default.Equals(target, other)) return;
+			if (AreEqualInternal(target, other)) return;
 			throw new Exception("Target and other are not equal!");
 		}
 
 		[Conditional("DEBUG"), Conditional("UNITY_ASSERTIONS")]
 		public static void AreNotEqual<T>(T target, T other)
 		{
-			if (!EqualityComparer<T>.Default.Equals(target, other)) return;
+			if (!AreEqualInternal(target, other)) return;
 			throw new Exception("Target and other are equal!");
 		}
+
+		static bool AreEqualInternal<T>(T target, T other) => target switch
+		{
+			float value => value.AlmostEquals((float)(object)other),
+			double value => value.AlmostEquals((double)(object)other),
+			_ => EqualityComparer<T>.Default.Equals(target, other)
+		};
 	}
 }
