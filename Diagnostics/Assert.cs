@@ -23,14 +23,14 @@ namespace CodeHelpers.Diagnostics
 		}
 
 		[Conditional("DEBUG"), Conditional("UNITY_ASSERTIONS")]
-		public static void IsTrue(bool target)
+		public static void IsTrue([DoesNotReturnIf(false)] bool target)
 		{
 			if (target) return;
 			throw new Exception("Target is not true!");
 		}
 
 		[Conditional("DEBUG"), Conditional("UNITY_ASSERTIONS")]
-		public static void IsFalse(bool target)
+		public static void IsFalse([DoesNotReturnIf(true)] bool target)
 		{
 			if (!target) return;
 			throw new Exception("Target is not false!");
@@ -51,10 +51,10 @@ namespace CodeHelpers.Diagnostics
 		}
 
 		static bool AreEqualInternal<T>(T target, T other) => target switch
-		{
-			float value => value.AlmostEquals((float)(object)other),
-			double value => value.AlmostEquals((double)(object)other),
-			_ => EqualityComparer<T>.Default.Equals(target, other)
-		};
+															  {
+																  float value => value.AlmostEquals((float)(object)other),
+																  double value => value.AlmostEquals((double)(object)other),
+																  _ => EqualityComparer<T>.Default.Equals(target, other)
+															  };
 	}
 }
