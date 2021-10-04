@@ -63,6 +63,14 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
+		/// Invokes <see cref="Add"/> on every item in <paramref name="items"/>.
+		/// </summary>
+		public void AddRange(IEnumerable<T> items)
+		{
+			foreach (T item in items) Add(item);
+		}
+
+		/// <summary>
 		/// Begins allowing invocations to the <see cref="Add"/> method. This method returns a <see cref="AddHandle"/>,
 		/// which allows you to use using statements or expressions to automatically invoke <see cref="EndAdd"/>
 		/// after the scope exits. NOTE: supports nested invocations.
