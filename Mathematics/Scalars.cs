@@ -26,51 +26,50 @@ namespace CodeHelpers.Mathematics
 		public const float GoldenRatio = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
 		public const double GoldenRatioDouble = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890d;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Lerp(float left, float right, float value) => (right - left) * value + left;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Lerp(int left, int right, int value) => (right - left) * value + left;
+		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
+		public static int Lerp(int left, int right, int value) => (right - left) * value + left;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
+		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
+		public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this float value, float min = 0f, float max = 1f) => value < min ? min : value > max ? max : value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int Clamp(this int value, int min = 0, int max = 1) => value < min ? min : value > max ? max : value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float Clamp(this int value, float min, float max = 1f) => value < min ? min : value > max ? max : value;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static double Clamp(this double value, double min = 0d, double max = 1d) => value < min ? min : value > max ? max : value;
+		public static float Clamp(this float value, float min = 0f, float max = 1f) => value < min ? min : value > max ? max : value;
+		public static int Clamp(this int value, int min = 0, int max = 1) => value < min ? min : value > max ? max : value;
+		public static float Clamp(this int value, float min, float max = 1f) => value < min ? min : value > max ? max : value;
+		public static double Clamp(this double value, double min = 0d, double max = 1d) => value < min ? min : value > max ? max : value;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -180f (Exclusive) and 180f (Inclusive) with the same rotational value as input.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float ToSignedAngle(this float value) => -(180f - value).Repeat(360f) + 180f;
+		public static float ToSignedAngle(this float value) => -(180f - value).Repeat(360f) + 180f;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between -179 and 180 with the same rotational value as input.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int ToSignedAngle(this int value) => -(180 - value).Repeat(360) + 180;
+		public static int ToSignedAngle(this int value) => -(180 - value).Repeat(360) + 180;
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between 0f (Inclusive) and 360f (Exclusive) with the same rotational value as input.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float ToUnsignedAngle(this float value) => value.Repeat(360f);
+		public static float ToUnsignedAngle(this float value) => value.Repeat(360f);
 
 		/// <summary>
 		/// Convert <paramref name="value"/> to an angle between 0 and 359 with the same rotational value as input.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static int ToUnsignedAngle(this int value) => value.Repeat(360);
+		public static int ToUnsignedAngle(this int value) => value.Repeat(360);
 
 		/// <summary>
 		/// Converts <paramref name="value"/>, a number from zero to positive one. Into a range from negative one to positive one.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float To1To1(this float value) => value * 2f - 1f;
+		public static float To1To1(this float value) => value * 2f - 1f;
 
 		/// <summary>
 		/// Converts <paramref name="value"/>, a number from negative one to positive one. Into a range from zero to positive one.
 		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static float To0To1(this float value) => (value + 1f) / 2f;
+		public static float To0To1(this float value) => (value + 1f) / 2f;
 
 		public static bool IsPowerOfTwo(this int value) => (value & -value) == value; //NOTE: This returns true for 0, which is not a power of two
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool AlmostEquals(this float value, float other = 0f, float epsilon = 1e-5f)
 		{
 			if (value == other) return true;                 //Handles absolute equals and degenerate cases
@@ -86,7 +85,6 @@ namespace CodeHelpers.Mathematics
 			return difference < epsilon * Math.Min(sum, float.MaxValue);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static bool AlmostEquals(this double value, double other = 0d, double epsilon = 1e-10d)
 		{
 			if (value == other) return true;                   //Handles absolute equals and degenerate cases
