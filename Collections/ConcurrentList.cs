@@ -38,7 +38,7 @@ namespace CodeHelpers.Collections
 		{
 			get
 			{
-				if ((uint)index < Count) return ref arrays[GetArrayIndex(index, out int offset)][offset];
+				if ((uint)index < Count) return ref arrays[GetIndex(index, out int offset)][offset];
 				throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
 			}
 		}
@@ -51,8 +51,8 @@ namespace CodeHelpers.Collections
 		{
 			if (InterlockedHelper.Read(ref adding) <= 0) throw new Exception($"Cannot invoke {nameof(Add)} before invoking {nameof(BeginAdd)}!");
 
-			int index = Interlocked.Increment(ref next) - 1;
-			index = GetArrayIndex(index, out int offset);
+			int target = Interlocked.Increment(ref next) - 1;
+			int index = GetIndex(target, out int offset);
 
 			ref T[] array = ref arrays[index];
 
@@ -99,14 +99,14 @@ namespace CodeHelpers.Collections
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-		static int GetArrayIndex(int index, out int offset)
+		public static int GetIndex(int index, out int offset)
 		{
 			++index;
-#if NET5_0_OR_GREATER || NETCOREAPP3_0_OR_GREATER
+#if !NET5_0 || NETCOREAPP3_0
 			int log = BitOperations.Log2((uint)index);
 #else
-			const double InverseLog2 = 1d / 0.30102999566d;
-			int log = (int)(Math.Log(index) * InverseLog2);
+			const double InverseLn2 = 1d / 0.69314718056d;
+			int log = (int)(Math.Log(index) * InverseLn2);
 #endif
 			offset = index & ~(1 << log);
 			return log;
