@@ -102,11 +102,17 @@ namespace CodeHelpers.Collections
 		public static int GetIndex(int index, out int offset)
 		{
 			++index;
-#if !NET5_0 || NETCOREAPP3_0
+#if NET5_0 || NETCOREAPP3_0
 			int log = BitOperations.Log2((uint)index);
 #else
-			const double InverseLn2 = 1d / 0.69314718056d;
-			int log = (int)(Math.Log(index) * InverseLn2);
+			int log = -1;
+			uint value = (uint)index;
+
+			while (value > 0)
+			{
+				value >>= 1;
+				++log;
+			}
 #endif
 			offset = index & ~(1 << log);
 			return log;
