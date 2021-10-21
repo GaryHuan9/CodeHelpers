@@ -7,9 +7,9 @@ namespace CodeHelpers.Mathematics
 	public static class Scalars
 	{
 		public const float Epsilon = 0.00001f;
-		public const float PI = (float)Math.PI;
-		public const float E = (float)Math.E;
-		public const float TAU = (float)(Math.PI * 2d);
+		public const float PI      = (float)Math.PI;
+		public const float E       = (float)Math.E;
+		public const float TAU     = (float)(Math.PI * 2d);
 
 		public const double RadianToDegreeDouble = 180d / Math.PI;
 		public const double DegreeToRadianDouble = Math.PI / 180d;
@@ -17,24 +17,24 @@ namespace CodeHelpers.Mathematics
 		public const float RadianToDegree = (float)RadianToDegreeDouble;
 		public const float DegreeToRadian = (float)DegreeToRadianDouble;
 
-		public const float Sqrt2 = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621f;
+		public const float  Sqrt2       = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621f;
 		public const double Sqrt2Double = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621d;
 
-		public const float Sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088f;
+		public const float  Sqrt3       = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088f;
 		public const double Sqrt3Double = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088d;
 
-		public const float GoldenRatio = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
+		public const float  GoldenRatio       = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
 		public const double GoldenRatioDouble = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890d;
 
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
-		public static int Lerp(int left, int right, int value) => (right - left) * value + left;
+		public static int   Lerp(int   left, int   right, int   value) => (right - left) * value + left;
 
 		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
-		public static int InverseLerp(int left, int right, int value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
+		public static int   InverseLerp(int   left, int   right, int   value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
 
-		public static float Clamp(this float value, float min = 0f, float max = 1f) => value < min ? min : value > max ? max : value;
-		public static int Clamp(this int value, int min = 0, int max = 1) => value < min ? min : value > max ? max : value;
-		public static float Clamp(this int value, float min, float max = 1f) => value < min ? min : value > max ? max : value;
+		public static float  Clamp(this float  value, float  min = 0f, float  max = 1f) => value < min ? min : value > max ? max : value;
+		public static int    Clamp(this int    value, int    min = 0,  int    max = 1)  => value < min ? min : value > max ? max : value;
+		public static float  Clamp(this int    value, float  min,      float  max = 1f) => value < min ? min : value > max ? max : value;
 		public static double Clamp(this double value, double min = 0d, double max = 1d) => value < min ? min : value > max ? max : value;
 
 		/// <summary>
@@ -67,9 +67,13 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static float To0To1(this float value) => (value + 1f) / 2f;
 
-		public static bool IsPowerOfTwo(this int value) => (value & -value) == value; //NOTE: This returns true for 0, which is not a power of two
+		public static bool IsPowerOfTwo(this int  value) => (value & -value) == value; //NOTE: This returns true for 0, which is not a power of two
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
+		/// <summary>
+		/// Returns whether <paramref name="value"/> and <paramref name="other"/> are almost equal based on <paramref name="epsilon"/>.
+		/// Uses relative comparison to compute the distance. This method is approximately four to five times slower than regular ==.
+		/// </summary>
 		public static bool AlmostEquals(this float value, float other = 0f, float epsilon = 1e-5f)
 		{
 			if (value == other) return true;                 //Handles absolute equals and degenerate cases
@@ -85,6 +89,10 @@ namespace CodeHelpers.Mathematics
 			return difference < epsilon * Math.Min(sum, float.MaxValue);
 		}
 
+		/// <summary>
+		/// Returns whether <paramref name="value"/> and <paramref name="other"/> are almost equal based on <paramref name="epsilon"/>.
+		/// Uses relative comparison to compute the distance. This method is approximately four to five times slower than regular ==.
+		/// </summary>
 		public static bool AlmostEquals(this double value, double other = 0d, double epsilon = 1e-10d)
 		{
 			if (value == other) return true;                   //Handles absolute equals and degenerate cases
@@ -101,7 +109,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 		public static int Sign(this float value) => AlmostEquals(value) ? 0 : Math.Sign(value);
-		public static int Sign(this int value) => Math.Sign(value);
+		public static int Sign(this int   value) => Math.Sign(value);
 
 		/// <summary>
 		/// Wraps <paramref name="value"/> between 0 (inclusive) and <paramref name="length"/> (exclusive).
@@ -168,13 +176,13 @@ namespace CodeHelpers.Mathematics
 		public static long Repeat(this long value, long min, long max) => (value - min).Repeat(max - min) + min;
 
 		public static int Floor(this float value) => (int)Math.Floor(value);
-		public static int Ceil(this float value) => (int)Math.Ceiling(value);
+		public static int Ceil(this  float value) => (int)Math.Ceiling(value);
 		public static int Round(this float value) => (int)Math.Round(value);
 
-		public static int FlooredDivide(this int value, int divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
+		public static int  FlooredDivide(this int  value, int  divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
 		public static long FlooredDivide(this long value, long divisor) => value / divisor - Convert.ToInt64((value < 0) ^ (divisor < 0) && value % divisor != 0);
 
-		public static int CeiledDivide(this int value, int divisor) => value / divisor + Convert.ToInt32((value < 0) ^ (divisor > 0) && value % divisor != 0);
+		public static int  CeiledDivide(this int  value, int  divisor) => value / divisor + Convert.ToInt32((value < 0) ^ (divisor > 0) && value % divisor != 0);
 		public static long CeiledDivide(this long value, long divisor) => value / divisor + Convert.ToInt64((value < 0) ^ (divisor > 0) && value % divisor != 0);
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow = 0f, float toHigh = 1f) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
@@ -273,7 +281,7 @@ namespace CodeHelpers.Mathematics
 			float omega = 2f / smoothTime;  //The smooth coefficient
 			float delta = current - target; //Change in position/value
 
-			float exp = ApproximateExp(omega * deltaTime);
+			float exp   = ApproximateExp(omega * deltaTime);
 			float value = (velocity + omega * delta) * deltaTime;
 
 			velocity = (velocity - omega * value) * exp;
@@ -299,7 +307,7 @@ namespace CodeHelpers.Mathematics
 
 			string Format(int level, char suffix)
 			{
-				int integer = value / level;
+				int integer  = value / level;
 				int floating = value / (level / 1000) - integer * 1000;
 
 				var builder = CommonPooler.stringBuilder.GetObject();

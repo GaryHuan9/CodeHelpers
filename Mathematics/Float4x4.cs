@@ -330,12 +330,16 @@ namespace CodeHelpers.Mathematics
 
 		public Float3 MultiplyPoint(in Float3 point) => new Float3
 		(
-			f00 * point.x + f01 * point.y + f02 * point.z + f03, f10 * point.x + f11 * point.y + f12 * point.z + f13, f20 * point.x + f21 * point.y + f22 * point.z + f23
+			f00 * point.x + f01 * point.y + f02 * point.z + f03,
+			f10 * point.x + f11 * point.y + f12 * point.z + f13,
+			f20 * point.x + f21 * point.y + f22 * point.z + f23
 		);
 
 		public Float3 MultiplyDirection(in Float3 direction) => new Float3
 		(
-			f00 * direction.x + f01 * direction.y + f02 * direction.z, f10 * direction.x + f11 * direction.y + f12 * direction.z, f20 * direction.x + f21 * direction.y + f22 * direction.z
+			f00 * direction.x + f01 * direction.y + f02 * direction.z,
+			f10 * direction.x + f11 * direction.y + f12 * direction.z,
+			f20 * direction.x + f21 * direction.y + f22 * direction.z
 		);
 
 		public void MultiplyBounds(ref Float3 center, ref Float3 extend)
@@ -421,8 +425,8 @@ namespace CodeHelpers.Mathematics
 													  f20 == other.f20 && f21 == other.f21 && f22 == other.f22 && f23 == other.f23 &&
 													  f30 == other.f30 && f31 == other.f31 && f32 == other.f32 && f33 == other.f33;
 
-		public override bool Equals(object obj) => obj is Float4x4 other && EqualsFast(other);
-		public bool Equals(Float4x4 other) => EqualsFast(other);
+		public override bool Equals(object   obj)   => obj is Float4x4 other && EqualsFast(other);
+		public          bool Equals(Float4x4 other) => EqualsFast(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public bool EqualsFast(in Float4x4 other) => f00.AlmostEquals(other.f00) && f01.AlmostEquals(other.f01) && f02.AlmostEquals(other.f02) && f03.AlmostEquals(other.f03) &&
@@ -474,8 +478,8 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override string ToString() => ToString(string.Empty);
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+		public override string ToString()              => ToString(string.Empty);
+		public          string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
 
 		public string ToString(string format, IFormatProvider provider) =>
 			$"{f00.ToString(format, provider)}\t{f01.ToString(format, provider)}\t{f02.ToString(format, provider)}\t{f03.ToString(format, provider)}\n" +
