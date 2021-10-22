@@ -9,17 +9,16 @@ namespace CodeHelpers.Collections
 	/// The class will greatly reduce memory and improve speed since it uses an array instead of a dictionary.
 	/// Also, the produced class can be inherited to further expand its feature.
 	/// NOTE: The magic of this class is that you should store the tokens into static generic classes as a public static int field.
-	/// NOTE: Can reduce invocation time to <see cref="Collection.GetObject{T}()"/> in half.
+	/// This approach allows us to reduce invocation time to <see cref="Collection.GetObject{T}()"/> approximately in half.
 	/// </summary>
-	public abstract class TypeCollectionFactory<TBase> where TBase : class
+	public abstract class TypeCollectionFactory<TBase> : ISealable where TBase : class
 	{
 		readonly List<IGenerator<TBase>> generators = new List<IGenerator<TBase>>(); //Indexed by type token
 
 		public int Count => generators.Count;
-		public bool IsFactorySealed { get; private set; }
 
-		static readonly Exception alreadySealedException = new Exception("Factory already sealed!");
-		static readonly Exception notSealedException = new Exception("Operation cannot be completed with an unsealed factory!");
+		public bool    IsFactorySealed { get; private set; }
+		bool ISealable.IsSealed        => IsFactorySealed;
 
 		public void AddInstantiableType<T>() where T : TBase, new() => AddInstantiableType(() => new T());
 
@@ -28,8 +27,8 @@ namespace CodeHelpers.Collections
 		public void AddInstantiableType<T>(IGenerator<T> generator) where T : TBase
 		{
 			int token = GetToken<T>();
+			this.AssertNotSealed();
 
-			if (IsFactorySealed) throw alreadySealedException;
 			if (token >= 0) throw ExceptionHelper.Invalid(nameof(T), typeof(T), "has already been added!");
 
 			SetToken<T>(Count);
@@ -52,15 +51,15 @@ namespace CodeHelpers.Collections
 
 		public void Seal()
 		{
-			if (!IsFactorySealed) IsFactorySealed = true;
-			else throw alreadySealedException;
+			this.AssertNotSealed();
+			IsFactorySealed = true;
 
 			generators.TrimExcess();
 		}
 
 		public Collection GetNewCollection()
 		{
-			if (!IsFactorySealed) throw notSealedException;
+			this.AssertSealed();
 			return new Collection(this);
 		}
 
@@ -83,11 +82,12 @@ namespace CodeHelpers.Collections
 		{
 			public Collection(TypeCollectionFactory<TBase> factory)
 			{
-				if (!factory.IsFactorySealed) throw notSealedException;
+				factory.AssertSealed();
 				this.factory = factory;
 			}
 
 			readonly TypeCollectionFactory<TBase> factory;
+
 			TBase[] objectsArray; //Initialize as null so no extra allocation
 
 			public int Count => factory.Count;
@@ -141,8 +141,8 @@ namespace CodeHelpers.Collections
 
 			/// <summary>
 			/// Generate and assign all missing objects into the collection.
-			/// NOTE: Only objects with types added through <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}(System.Func{T})"/> or <see cref="TypeCollectionFactory{TBase}.AddInstantiableType{T}()"/>
-			/// will be generated. No modification will be done to other objects.
+			/// NOTE: Only objects with types added through <see cref="AddInstantiableType{T}(System.Func{T})"/>
+			/// or <see cref="AddInstantiableType{T}()"/> will be generated. No modification will be done to other objects.
 			/// </summary>
 			public void InstantiateAll(Action<TBase> action = null)
 			{
