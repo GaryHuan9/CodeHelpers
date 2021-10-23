@@ -30,7 +30,7 @@ namespace CodeHelpers.Mathematics
 		public static int   Lerp(int   left, int   right, int   value) => (right - left) * value + left;
 
 		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
-		public static int   InverseLerp(int   left, int   right, int   value) => AlmostEquals(left, right) ? 0 : (value - left) / (right - left);
+		public static int   InverseLerp(int   left, int   right, int   value) => left == right ? 0 : (value - left) / (right - left);
 
 		public static float  Clamp(this float  value, float  min = 0f, float  max = 1f) => value < min ? min : value > max ? max : value;
 		public static int    Clamp(this int    value, int    min = 0,  int    max = 1)  => value < min ? min : value > max ? max : value;
@@ -281,7 +281,7 @@ namespace CodeHelpers.Mathematics
 			float omega = 2f / smoothTime;  //The smooth coefficient
 			float delta = current - target; //Change in position/value
 
-			float exp   = ApproximateExp(omega * deltaTime);
+			float exp = ApproximateExp(omega * deltaTime);
 			float value = (velocity + omega * delta) * deltaTime;
 
 			velocity = (velocity - omega * value) * exp;
@@ -307,7 +307,7 @@ namespace CodeHelpers.Mathematics
 
 			string Format(int level, char suffix)
 			{
-				int integer  = value / level;
+				int integer = value / level;
 				int floating = value / (level / 1000) - integer * 1000;
 
 				var builder = CommonPooler.stringBuilder.GetObject();

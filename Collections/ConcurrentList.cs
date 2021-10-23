@@ -22,7 +22,7 @@ namespace CodeHelpers.Collections
 		readonly T[][] arrays;
 
 		int adding; //Whether we are currently adding; this value indicates the number of layers of begin add that has been invoked
-		int next;   //The next index to be added, this is updated after begin add is invoked
+		int next;   //The next index to be added, this is only updated after begin add is invoked
 		int count;  //The current count of added items, this is updated after end add is invoked
 
 		/// <summary>
@@ -31,8 +31,13 @@ namespace CodeHelpers.Collections
 		public int Count => InterlockedHelper.Read(ref count);
 
 		/// <summary>
+		/// Returns whether this <see cref="ConcurrentList{T}"/> is prepared for addition.
+		/// </summary>
+		public bool Adding => InterlockedHelper.Read(ref adding) > 0;
+
+		/// <summary>
 		/// Returns a reference to the item at <paramref name="index"/>.
-		/// NOTE that you can modify the item through the reference.
+		/// Note that you can directly modify the item through the reference.
 		/// </summary>
 		public ref T this[int index]
 		{
@@ -71,6 +76,26 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
+		/// Immediately invoke <see cref="Add"/> without worrying
+		/// about invoking <see cref="BeginAdd"/> and <see cref="EndAdd"/>.
+		/// </summary>
+		public void ImmediateAdd(T item)
+		{
+			using var _ = BeginAdd();
+			Add(item);
+		}
+
+		/// <summary>
+		/// Immediately invoke <see cref="AddRange"/> without worrying
+		/// about invoking <see cref="BeginAdd"/> and <see cref="EndAdd"/>.
+		/// </summary>
+		public void ImmediateAddRange(IEnumerable<T> items)
+		{
+			using var _ = BeginAdd();
+			AddRange(items);
+		}
+
+		/// <summary>
 		/// Begins allowing invocations to the <see cref="Add"/> method. This method returns a <see cref="AddHandle"/>,
 		/// which allows you to use using statements or expressions to automatically invoke <see cref="EndAdd"/>
 		/// after the scope exits. NOTE: supports nested invocations.
@@ -97,9 +122,9 @@ namespace CodeHelpers.Collections
 		T IReadOnlyList<T>.this[int index] => this[index];
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator IEnumerable.      GetEnumerator() => GetEnumerator();
 
-		public static int GetIndex(int index, out int offset)
+		static int GetIndex(int index, out int offset)
 		{
 			++index;
 #if NET5_0 || NETCOREAPP3_0
@@ -149,8 +174,9 @@ namespace CodeHelpers.Collections
 			}
 
 			public T Current { get; private set; }
+			int      index;
+
 			readonly ConcurrentList<T> list;
-			int index;
 
 			object IEnumerator.Current => Current;
 
