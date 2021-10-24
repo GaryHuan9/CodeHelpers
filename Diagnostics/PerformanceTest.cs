@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using CodeHelpers.ObjectPooling;
+using CodeHelpers.Pooling;
 
 namespace CodeHelpers.Diagnostics
 {

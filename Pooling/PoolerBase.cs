@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CodeHelpers.ObjectPooling
+namespace CodeHelpers.Pooling
 {
 	public abstract class PoolerBase<T> where T : class
 	{

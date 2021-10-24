@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace CodeHelpers.ObjectPooling
+namespace CodeHelpers.Pooling
 {
 	public static class CommonPooler
 	{

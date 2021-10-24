@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CodeHelpers.ObjectPooling
+namespace CodeHelpers.Pooling
 {
 	public static class CollectionPooler<T>
 	{

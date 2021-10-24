@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using CodeHelpers.ObjectPooling;
+using CodeHelpers.Pooling;
 using CodeHelpers.Unity.Meshes.Collections;
 using CodeHelpers.Unity.Meshes.Combinations;
 using UnityEngine;

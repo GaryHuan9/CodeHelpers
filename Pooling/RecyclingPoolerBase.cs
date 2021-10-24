@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CodeHelpers.ObjectPooling
+namespace CodeHelpers.Pooling
 {
 	/// <summary>
 	/// Objects in this pooler never needs to be manually released. When trying to get a new object and there are
