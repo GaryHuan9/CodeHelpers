@@ -7,9 +7,9 @@ namespace CodeHelpers.Mathematics
 	public static class Scalars
 	{
 		public const float Epsilon = 0.00001f;
-		public const float PI      = (float)Math.PI;
-		public const float E       = (float)Math.E;
-		public const float TAU     = (float)(Math.PI * 2d);
+		public const float PI = (float)Math.PI;
+		public const float E = (float)Math.E;
+		public const float TAU = (float)(Math.PI * 2d);
 
 		public const double RadianToDegreeDouble = 180d / Math.PI;
 		public const double DegreeToRadianDouble = Math.PI / 180d;
@@ -17,13 +17,13 @@ namespace CodeHelpers.Mathematics
 		public const float RadianToDegree = (float)RadianToDegreeDouble;
 		public const float DegreeToRadian = (float)DegreeToRadianDouble;
 
-		public const float  Sqrt2       = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621f;
+		public const float Sqrt2 = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621f;
 		public const double Sqrt2Double = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621d;
 
-		public const float  Sqrt3       = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088f;
+		public const float Sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088f;
 		public const double Sqrt3Double = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088d;
 
-		public const float  GoldenRatio       = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
+		public const float GoldenRatio = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
 		public const double GoldenRatioDouble = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890d;
 
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;

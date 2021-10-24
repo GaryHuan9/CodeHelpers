@@ -314,14 +314,14 @@ namespace CodeHelpers.Mathematics
 				float m32 = f20 * d01_13 - f21 * d00_13 + f23 * d00_11;
 				float m33 = f20 * d01_12 - f21 * d00_12 + f22 * d00_11;
 
-				float oneOver = 1f / determinant;
+				float inverse = 1f / determinant;
 
 				return new Float4x4
 				(
-					m00 * oneOver, -m10 * oneOver, m20 * oneOver, -m30 * oneOver,
-					-m01 * oneOver, m11 * oneOver, -m21 * oneOver, m31 * oneOver,
-					m02 * oneOver, -m12 * oneOver, m22 * oneOver, -m32 * oneOver,
-					-m03 * oneOver, m13 * oneOver, -m23 * oneOver, m33 * oneOver
+					m00 * inverse, -m10 * inverse, m20 * inverse, -m30 * inverse,
+					-m01 * inverse, m11 * inverse, -m21 * inverse, m31 * inverse,
+					m02 * inverse, -m12 * inverse, m22 * inverse, -m32 * inverse,
+					-m03 * inverse, m13 * inverse, -m23 * inverse, m33 * inverse
 				);
 			}
 		}
