@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using CodeHelpers.ObjectPooling;
+using CodeHelpers.Pooling;
 
 namespace CodeHelpers.Mathematics
 {

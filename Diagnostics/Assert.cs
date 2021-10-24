@@ -23,14 +23,14 @@ namespace CodeHelpers.Diagnostics
 		}
 
 		[Conditional("DEBUG"), Conditional("UNITY_ASSERTIONS")]
-		public static void IsTrue([DoesNotReturnIf(false)] bool target)
+		public static void IsTrue(bool target)
 		{
 			if (target) return;
 			throw new Exception("Target is not true!");
 		}
 
 		[Conditional("DEBUG"), Conditional("UNITY_ASSERTIONS")]
-		public static void IsFalse([DoesNotReturnIf(true)] bool target)
+		public static void IsFalse(bool target)
 		{
 			if (!target) return;
 			throw new Exception("Target is not false!");

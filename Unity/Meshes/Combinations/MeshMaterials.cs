@@ -3,7 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using CodeHelpers.ObjectPooling;
+using CodeHelpers.Pooling;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Meshes.Combinations

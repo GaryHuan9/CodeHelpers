@@ -2,7 +2,7 @@
 
 using System.Text;
 using CodeHelpers.Diagnostics;
-using CodeHelpers.ObjectPooling;
+using CodeHelpers.Pooling;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Diagnostics
