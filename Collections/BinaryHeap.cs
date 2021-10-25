@@ -9,18 +9,18 @@ namespace CodeHelpers.Collections
 	/// </summary>
 	public class BinaryHeap<T> : IEnumerable<T>
 	{
-		public BinaryHeap() => EqualityComparer = EqualityComparer<T>.Default;
-
-		public BinaryHeap(int capacity) : this()
+		public BinaryHeap(int capacity)
 		{
 			items = new List<T>(capacity);
 			priorities = new List<int>(capacity);
 		}
 
+		public BinaryHeap() { }
+
 		List<T> items;
 		List<int> priorities;
 
-		public IEqualityComparer<T> EqualityComparer { get; set; }
+		public IEqualityComparer<T> EqualityComparer { get; set; } = EqualityComparer<T>.Default;
 
 		public int Count => items?.Count ?? 0;
 
@@ -107,20 +107,59 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Returns the item with the smallest priority without removing it from the collection.
+		/// <inheritdoc cref="TryPeek(out T)"/>
+		/// Throws an exception if this <see cref="BinaryHeap{T}"/> is empty.
 		/// </summary>
-		public T Peek() => Peek(out int _);
+		public T Peek()
+		{
+			if (Count > 0) return TryPeek(out T item) ? item : default;
+			throw new Exception("Cannot peak the first item because the collection is empty!");
+		}
 
 		/// <summary>
-		/// <inheritdoc cref="Peek()"/>
-		/// <paramref name="priority"/> will be assigned the priority of the peeked item.
+		/// <inheritdoc cref="TryPeek(out T, out int)"/>
+		/// Throws an exception if this <see cref="BinaryHeap{T}"/> is empty.
 		/// </summary>
 		public T Peek(out int priority)
 		{
-			if (Count == 0) throw new Exception("Cannot peak the first item because the collection is empty!");
+			if (Count > 0) return TryPeek(out T item, out priority) ? item : default;
+			throw new Exception("Cannot peak the first item because the collection is empty!");
+		}
 
+		/// <summary>
+		/// Tries to peek at the first item in this <see cref="BinaryHeap{T}"/>, which is the
+		/// item with the smallest assigned priority, and output it to <paramref name="item"/>.
+		/// </summary>
+		public bool TryPeek(out T item)
+		{
+			if (Count == 0)
+			{
+				item = default;
+				return false;
+			}
+
+			item = items[0];
+			return true;
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="TryPeek(out T)"/>
+		/// <paramref name="priority"/> will be assigned the priority of the peeked item.
+		/// </summary>
+		public bool TryPeek(out T item, out int priority)
+		{
+			if (Count == 0)
+			{
+				item = default;
+				priority = default;
+
+				return false;
+			}
+
+			item = items[0];
 			priority = priorities[0];
-			return items[0];
+
+			return true;
 		}
 
 		/// <summary>
@@ -147,27 +186,6 @@ namespace CodeHelpers.Collections
 
 			Remove(index);
 			return true;
-		}
-
-		void Remove(int index)
-		{
-			int count = Count - 1; //Need to cache because Count will change when we modify the lists
-
-			if (count == index)
-			{
-				items.RemoveAt(count);
-				priorities.RemoveAt(count);
-			}
-			else
-			{
-				Swap(index, count);
-
-				items.RemoveAt(count);
-				priorities.RemoveAt(count);
-
-				SortUp(index);
-				SortDown(index);
-			}
 		}
 
 		/// <summary>
@@ -206,6 +224,45 @@ namespace CodeHelpers.Collections
 			Recalculate(index, newPriority);
 		}
 
+		/// <summary>
+		/// Tries to find the first item with <paramref name="priority"/> outputs it to <paramref name="item"/>.
+		/// NOTE: the order of the items are not guaranteed! The first item this method finds is returned.
+		/// </summary>
+		public bool TryFind(int priority, out T item)
+		{
+			int index = GetIndex(priority);
+
+			if (index < 0)
+			{
+				item = default;
+				return false;
+			}
+
+			item = items[index];
+			return true;
+		}
+
+		void Remove(int index)
+		{
+			int count = Count - 1; //Need to cache because Count will change when we modify the lists
+
+			if (count == index)
+			{
+				items.RemoveAt(count);
+				priorities.RemoveAt(count);
+			}
+			else
+			{
+				Swap(index, count);
+
+				items.RemoveAt(count);
+				priorities.RemoveAt(count);
+
+				SortUp(index);
+				SortDown(index);
+			}
+		}
+
 		void Recalculate(int index, int newPriority)
 		{
 			priorities[index] = newPriority;
@@ -214,26 +271,34 @@ namespace CodeHelpers.Collections
 			SortDown(index);
 		}
 
-		//NOTE: Returns negative number if index out of bounds
+		/// <summary>
+		/// Returns the index of the parent of the child at <paramref name="index"/>.
+		/// Returns negative number if the requested parent index is out of bounds.
+		/// </summary>
 		static int GetParentIndex(int index) => index == 0 ? -1 : (index - 1) / 2;
 
-		//NOTE: Returns negative number if index out of bounds
-		int GetChild1Index(int index)
+		/// <summary>
+		/// Returns the index of the left child of the parent at <paramref name="index"/>.
+		/// Returns negative number if the requested child index is out of bounds.
+		/// </summary>
+		int GetChildLeftIndex(int index)
 		{
 			int result = index * 2 + 1;
 			return result >= Count ? -1 : result;
 		}
 
-		//NOTE: Returns negative number if index out of bounds
-		int GetChild2Index(int index)
+		/// <summary>
+		/// Returns the index of the right child of the parent at <paramref name="index"/>.
+		/// Returns negative number if the requested child index is out of bounds.
+		/// </summary>
+		int GetChildRightIndex(int index)
 		{
 			int result = index * 2 + 2;
 			return result >= Count ? -1 : result;
 		}
 
-
 		/// <summary>
-		/// Faster implementation
+		/// Returns the index of <paramref name="item"/> with <paramref name="priority"/> in O(log n) time.
 		/// </summary>
 		int GetIndex(T item, int priority)
 		{
@@ -248,15 +313,38 @@ namespace CodeHelpers.Collections
 				if (compared == 0 && EqualityComparer.Equals(items[index], item)) return index;
 				if (compared > 0) return -1;
 
-				int search = Search(GetChild1Index(index));
+				int search = Search(GetChildLeftIndex(index));
 				if (search >= 0) return search;
 
-				return Search(GetChild2Index(index));
+				return Search(GetChildRightIndex(index));
 			}
 		}
 
 		/// <summary>
-		/// O(n) implementation
+		/// Returns the index of the first <see cref="T"/> with <paramref name="priority"/> in O(log n) time.
+		/// </summary>
+		int GetIndex(int priority)
+		{
+			if (Count == 0) return -1;
+			return Search(0);
+
+			int Search(int index)
+			{
+				if (index < 0) return -1;
+				int compared = priorities[index].CompareTo(priority);
+
+				if (compared == 0) return index;
+				if (compared > 0) return -1;
+
+				int search = Search(GetChildLeftIndex(index));
+				if (search >= 0) return search;
+
+				return Search(GetChildRightIndex(index));
+			}
+		}
+
+		/// <summary>
+		/// Returns the index of the first <paramref name="item"/> in O(n) time.
 		/// </summary>
 		int GetIndex(T item) //The slow version
 		{
@@ -281,8 +369,8 @@ namespace CodeHelpers.Collections
 		{
 			int currentIndex = startingIndex;
 
-			int child1Index = GetChild1Index(startingIndex);
-			int child2Index = GetChild2Index(startingIndex);
+			int child1Index = GetChildLeftIndex(startingIndex);
+			int child2Index = GetChildRightIndex(startingIndex);
 
 			if (child1Index >= 0 && priorities[child1Index].CompareTo(priorities[currentIndex]) < 0) currentIndex = child1Index;
 			if (child2Index >= 0 && priorities[child2Index].CompareTo(priorities[currentIndex]) < 0) currentIndex = child2Index;
@@ -299,7 +387,7 @@ namespace CodeHelpers.Collections
 			priorities.Swap(index1, index2);
 		}
 
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator IEnumerable.      GetEnumerator() => GetEnumerator();
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
 		static readonly List<T>.Enumerator emptyEnumerator = new List<T>().GetEnumerator(); //Because this is a struct, every time accessing it creates a defensive copy
