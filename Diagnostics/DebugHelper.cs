@@ -29,9 +29,9 @@ namespace CodeHelpers.Diagnostics
 		(
 			new Dictionary<DebugLogType, Action<string>>
 			{
-				{DebugLogType.normal, text => Logger.Write(text)},
-				{DebugLogType.warning, text => Logger.WriteWarning(text)},
-				{DebugLogType.error, text => Logger.WriteError(text)}
+				{ DebugLogType.normal, text => Logger.Write(text) },
+				{ DebugLogType.warning, text => Logger.WriteWarning(text) },
+				{ DebugLogType.error, text => Logger.WriteError(text) }
 			}
 		);
 
@@ -85,19 +85,19 @@ namespace CodeHelpers.Diagnostics
 
 		public static void Log(params object[] objects) => Log(DebugLogType.normal, objects);
 
-		public static void Log(object object0) => Log(DebugLogType.normal, object0);
-		public static void Log(object object0, object object1) => Log(DebugLogType.normal, object0, object1);
-		public static void Log(object object0, object object1, object object2) => Log(DebugLogType.normal, object0, object1, object2);
+		public static void Log(object object0)                                                 => Log(DebugLogType.normal, object0);
+		public static void Log(object object0, object object1)                                 => Log(DebugLogType.normal, object0, object1);
+		public static void Log(object object0, object object1, object object2)                 => Log(DebugLogType.normal, object0, object1, object2);
 		public static void Log(object object0, object object1, object object2, object object3) => Log(DebugLogType.normal, object0, object1, object2, object3);
 
-		public static void LogWarning(object object0) => Log(DebugLogType.warning, object0);
-		public static void LogWarning(object object0, object object1) => Log(DebugLogType.warning, object0, object1);
-		public static void LogWarning(object object0, object object1, object object2) => Log(DebugLogType.warning, object0, object1, object2);
+		public static void LogWarning(object object0)                                                 => Log(DebugLogType.warning, object0);
+		public static void LogWarning(object object0, object object1)                                 => Log(DebugLogType.warning, object0, object1);
+		public static void LogWarning(object object0, object object1, object object2)                 => Log(DebugLogType.warning, object0, object1, object2);
 		public static void LogWarning(object object0, object object1, object object2, object object3) => Log(DebugLogType.warning, object0, object1, object2, object3);
 
-		public static void LogError(object object0) => Log(DebugLogType.error, object0);
-		public static void LogError(object object0, object object1) => Log(DebugLogType.error, object0, object1);
-		public static void LogError(object object0, object object1, object object2) => Log(DebugLogType.error, object0, object1, object2);
+		public static void LogError(object object0)                                                 => Log(DebugLogType.error, object0);
+		public static void LogError(object object0, object object1)                                 => Log(DebugLogType.error, object0, object1);
+		public static void LogError(object object0, object object1, object object2)                 => Log(DebugLogType.error, object0, object1, object2);
 		public static void LogError(object object0, object object1, object object2, object object3) => Log(DebugLogType.error, object0, object1, object2, object3);
 
 #endregion
@@ -117,10 +117,12 @@ namespace CodeHelpers.Diagnostics
 			return $"{target} (HCode: {target.GetHashCode()})";
 		}
 
-		public static string ToString(string target) => target;
+		public static string ToString(string target) => target ?? NullString;
 
 		public static string ToString<T>(IEnumerable<T> target)
 		{
+			if (target == null) return NullString;
+
 			string[] array = target.Select(item => ToString(item)).ToArray();
 			return $"{target.GetType()} + Count: {array.Length} [{string.Join(", ", array)}]";
 		}
@@ -171,8 +173,8 @@ namespace CodeHelpers.Diagnostics
 				this.logType = logType;
 			}
 
-			public ObjectsBuffer(int bufferSize, DebugLogType logType) : this(new object[bufferSize], logType) { }
-			public ObjectsBuffer(ObjectsBuffer buffer, DebugLogType logType) : this(buffer.objects, logType) { }
+			public ObjectsBuffer(int           bufferSize, DebugLogType logType) : this(new object[bufferSize], logType) { }
+			public ObjectsBuffer(ObjectsBuffer buffer,     DebugLogType logType) : this(buffer.objects, logType) { }
 
 			readonly object[] objects;
 			public readonly DebugLogType logType;
