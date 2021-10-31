@@ -63,7 +63,7 @@ namespace CodeHelpers.Collections
 
 			if (array == null) Interlocked.CompareExchange(ref array, new T [1 << index], null);
 
-			Assert.IsFalse(array == null);
+			Assert.IsNotNull(array);
 			array[offset] = item;
 		}
 
@@ -115,6 +115,18 @@ namespace CodeHelpers.Collections
 
 			if (value < 0) throw new Exception($"Cannot invoke {nameof(EndAdd)} before invoking {nameof(BeginAdd)}!");
 			if (value == 0) Interlocked.Exchange(ref count, InterlockedHelper.Read(ref next));
+		}
+
+		/// <summary>
+		/// Returns the content of this <see cref="ConcurrentList{T}"/> copied to an <see cref="Array"/>.
+		/// </summary>
+		public T[] ToArray()
+		{
+			T[] array = new T[Count];
+
+			for (int i = 0; i < array.Length; i++) array[i] = this[i];
+
+			return array;
 		}
 
 		public Enumerator GetEnumerator() => new Enumerator(this);
@@ -174,7 +186,7 @@ namespace CodeHelpers.Collections
 			}
 
 			public T Current { get; private set; }
-			int      index;
+			int index;
 
 			readonly ConcurrentList<T> list;
 
