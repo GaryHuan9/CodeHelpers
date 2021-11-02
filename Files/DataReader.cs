@@ -127,6 +127,18 @@ namespace CodeHelpers.Files
 #endif
 		}
 
+		public byte[] ReadByteArray() => ReadByteArray(ReadUInt32Compact());
+
+		public byte[] ReadByteArray(uint length)
+		{
+			byte[] array = new byte[length];
+
+			uint readLength = (uint)Read(array);
+			Assert.AreEqual(readLength, length);
+
+			return array;
+		}
+
 		/// <summary>
 		/// Reads in a compact Int32 encoded with <see cref="DataWriter.WriteCompact(int)"/>
 		/// </summary>

@@ -134,6 +134,16 @@ namespace CodeHelpers.Files
 #endif
 		}
 
+		public void WriteArray(byte[] array)
+		{
+			uint length = (uint)array.Length;
+
+			WriteCompact(length);
+			WriteArray(array, length);
+		}
+
+		public void WriteArray(byte[] array, uint length) => Write(array, 0, (int)length);
+
 		/// <summary>
 		/// Writes <paramref name="value"/> as a variable length quantity with the following rules:
 		/// The first byte: 0bNVVV_VVVS (N: true if have next byte, V: actual value, S: sign)
