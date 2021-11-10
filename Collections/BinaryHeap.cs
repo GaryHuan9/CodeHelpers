@@ -67,13 +67,14 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Returns the item with the smallest priority and remove it from the collection.
+		/// <inheritdoc cref="TryDequeue(out T)"/>
+		/// Throws an exception if this <see cref="BinaryHeap{T}"/> is empty.
 		/// </summary>
-		public T Dequeue() => Dequeue(out int _);
+		public T Dequeue() => Dequeue(out _);
 
 		/// <summary>
-		/// <inheritdoc cref="Dequeue()"/>
-		/// <paramref name="priority"/> will be assigned the priority of the dequeued item.
+		/// <inheritdoc cref="TryDequeue(out T, out int)"/>
+		/// Throws an exception if this <see cref="BinaryHeap{T}"/> is empty.
 		/// </summary>
 		public T Dequeue(out int priority)
 		{
@@ -90,6 +91,39 @@ namespace CodeHelpers.Collections
 
 			SortDown(0);
 			return firstItem;
+		}
+
+		/// <summary>
+		/// Tries to remove the first item in this <see cref="BinaryHeap{T}"/>, which is the
+		/// item with the smallest assigned priority, and output it to <paramref name="item"/>.
+		/// </summary>
+		public bool TryDequeue(out T item) => TryDequeue(out item, out _);
+
+		/// <summary>
+		/// <inheritdoc cref="TryDequeue(out T)"/>
+		/// <paramref name="priority"/> will be assigned the priority of the peeked item.
+		/// </summary>
+		public bool TryDequeue(out T item, out int priority)
+		{
+			if (Count == 0)
+			{
+				item = default;
+				priority = default;
+
+				return false;
+			}
+
+			item = items[0];
+			priority = priorities[0];
+
+			int count = Count - 1; //Need to cache because Count will change when we modify the lists
+			Swap(0, count);
+
+			items.RemoveAt(count);
+			priorities.RemoveAt(count);
+
+			SortDown(0);
+			return true;
 		}
 
 		public void Clear()
@@ -201,6 +235,11 @@ namespace CodeHelpers.Collections
 		public bool Contains(T item) => GetIndex(item) >= 0;
 
 		/// <summary>
+		/// Returns if any item with <paramref name="priority"/> exists in the collection.
+		/// </summary>
+		public bool Contains(int priority) => GetIndex(priority) >= 0;
+
+		/// <summary>
 		/// Reassigns <paramref name="item"/> to a new priority.
 		/// This overload requires more information than <see cref="Recalculate(T,int)"/> but is much faster.
 		/// </summary>
@@ -225,8 +264,8 @@ namespace CodeHelpers.Collections
 		}
 
 		/// <summary>
-		/// Tries to find the first item with <paramref name="priority"/> outputs it to <paramref name="item"/>.
-		/// NOTE: the order of the items are not guaranteed! The first item this method finds is returned.
+		/// Tries to find the first item with <paramref name="priority"/> and outputs it to <paramref name="item"/>.
+		/// NOTE: the order of the items are not guaranteed! The first item this method finds is immediately returned.
 		/// </summary>
 		public bool TryFind(int priority, out T item)
 		{
