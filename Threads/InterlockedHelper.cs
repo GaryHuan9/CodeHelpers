@@ -5,10 +5,11 @@ namespace CodeHelpers.Threads
 {
 	public static class InterlockedHelper
 	{
-		public static int Read(ref int location) => Interlocked.CompareExchange(ref location, default, default);
-		public static T Read<T>(ref T location) where T : class => Interlocked.CompareExchange(ref location, default, default);
+		public static int  Read(ref    int  location)                 => Interlocked.CompareExchange(ref location, default, default);
+		public static uint Read(ref    uint location)                 => Interlocked.CompareExchange(ref location, default, default);
+		public static T    Read<T>(ref T    location) where T : class => Interlocked.CompareExchange(ref location, default, default);
 
-		public static float Read(ref float location) => Interlocked.CompareExchange(ref location, default, default);
+		public static float  Read(ref float  location) => Interlocked.CompareExchange(ref location, default, default);
 		public static double Read(ref double location) => Interlocked.CompareExchange(ref location, default, default);
 
 		public static float Add(ref float location, float value) //NOTE: currently does not correctly handle NaNs
