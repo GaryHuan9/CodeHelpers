@@ -17,14 +17,13 @@ namespace CodeHelpers.Mathematics
 		public const float RadianToDegree = (float)RadianToDegreeDouble;
 		public const float DegreeToRadian = (float)DegreeToRadianDouble;
 
-		public const float Sqrt2 = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621f;
 		public const double Sqrt2Double = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621d;
-
-		public const float Sqrt3 = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088f;
 		public const double Sqrt3Double = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088d;
-
-		public const float GoldenRatio = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890f;
 		public const double GoldenRatioDouble = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890d;
+
+		public const float Sqrt2 = (float)Sqrt2Double;
+		public const float Sqrt3 = (float)Sqrt3Double;
+		public const float GoldenRatio = (float)GoldenRatioDouble;
 
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
 		public static int   Lerp(int   left, int   right, int   value) => (right - left) * value + left;
@@ -190,86 +189,48 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int SingleToInt32Bits(float value)
 		{
-#if !CODEHELPERS_UNITY
-			return Unsafe.As<float, int>(ref value);
+#if NET5_0
+			return BitConverter.SingleToInt32Bits(value);
 #elif UNSAFE_CODE_ENABLED
 			unsafe { return *(int*)&value; }
 #else
-			return new BitsConverter32(value).intValue;
-#endif
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static uint SingleToUInt32Bits(float value)
-		{
-#if !CODEHELPERS_UNITY
-			return Unsafe.As<float, uint>(ref value);
-#elif UNSAFE_CODE_ENABLED
-			unsafe { return *(uint*)&value; }
-#else
-			return new BitsConverter32(value).uintValue;
+			return BitsConverter32(value).intValue;
 #endif
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Int32ToSingleBits(int value)
 		{
-#if !CODEHELPERS_UNITY
-			return Unsafe.As<int, float>(ref value);
+#if NET5_0
+			return BitConverter.Int32BitsToSingle(value);
 #elif UNSAFE_CODE_ENABLED
 			unsafe { return *(float*)&value; }
 #else
-			return new BitsConverter32(value).floatValue;
+			return BitsConverter32(value).floatValue;
 #endif
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static uint Int32ToUInt32Bits(int value)
-		{
-#if !CODEHELPERS_UNITY
-			return Unsafe.As<int, uint>(ref value);
-#elif UNSAFE_CODE_ENABLED
-			unsafe { return *(uint*)&value; }
-#else
-			return new BitsConverter32(value).uintValue;
-#endif
-		}
+		public static uint SingleToUInt32Bits(float value) => Int32ToUInt32Bits(SingleToInt32Bits(value));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static float UInt32ToSingleBits(uint value)
-		{
-#if !CODEHELPERS_UNITY
-			return Unsafe.As<uint, float>(ref value);
-#elif UNSAFE_CODE_ENABLED
-			unsafe { return *(float*)&value; }
-#else
-			return new BitsConverter32(value).floatValue;
-#endif
-		}
+		public static float UInt32ToSingleBits(uint value) => Int32ToSingleBits(UInt32ToInt32Bits(value));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int UInt32ToInt32Bits(uint value)
-		{
-#if !CODEHELPERS_UNITY
-			return Unsafe.As<uint, int>(ref value);
-#elif UNSAFE_CODE_ENABLED
-			unsafe { return *(int*)&value; }
-#else
-			return new BitsConverter32(value).intValue;
-#endif
-		}
+		public static uint Int32ToUInt32Bits(int value) => unchecked((uint)value);
 
-#if CODEHELPERS_UNITY && UNSAFE_CODE_ENABLED
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static int UInt32ToInt32Bits(uint value) => unchecked((int)value);
+
+#if !NET5_0 && !UNSAFE_CODE_ENABLED
 		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
 		readonly struct BitsConverter32
 		{
 			public BitsConverter32(float floatValue) : this() => this.floatValue = floatValue;
 			public BitsConverter32(int intValue) : this() => this.intValue = intValue;
-			public BitsConverter32(uint uintValue) : this() => this.uintValue = uintValue;
 
 			[System.Runtime.InteropServices.FieldOffset(0)] public readonly float floatValue;
 			[System.Runtime.InteropServices.FieldOffset(0)] public readonly int intValue;
-			[System.Runtime.InteropServices.FieldOffset(0)] public readonly uint uintValue;
 		}
 #endif
 
