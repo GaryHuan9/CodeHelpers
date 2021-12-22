@@ -788,9 +788,9 @@ namespace CodeHelpers.Mathematics
 
 			Float3 result = new Float3
 			(
-				Scalars.Damp(x, target.x, ref velocityX, smoothTime.x, deltaTime),
-				Scalars.Damp(y, target.y, ref velocityY, smoothTime.y, deltaTime),
-				Scalars.Damp(z, target.z, ref velocityZ, smoothTime.z, deltaTime)
+				x.Damp(target.x, ref velocityX, smoothTime.x, deltaTime),
+				y.Damp(target.y, ref velocityY, smoothTime.y, deltaTime),
+				z.Damp(target.z, ref velocityZ, smoothTime.z, deltaTime)
 			);
 
 			velocity = new Float3(velocityX, velocityY, velocityZ);

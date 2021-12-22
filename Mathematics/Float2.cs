@@ -478,8 +478,8 @@ namespace CodeHelpers.Mathematics
 
 			Float2 result = new Float2
 			(
-				Scalars.Damp(x, target.x, ref velocityX, smoothTime.x, deltaTime),
-				Scalars.Damp(y, target.y, ref velocityY, smoothTime.y, deltaTime)
+				x.Damp(target.x, ref velocityX, smoothTime.x, deltaTime),
+				y.Damp(target.y, ref velocityY, smoothTime.y, deltaTime)
 			);
 
 			velocity = new Float2(velocityX, velocityY);

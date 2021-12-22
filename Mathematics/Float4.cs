@@ -1316,10 +1316,10 @@ namespace CodeHelpers.Mathematics
 
 			Float4 result = new Float4
 			(
-				Scalars.Damp(x, target.x, ref velocityX, smoothTime.x, deltaTime),
-				Scalars.Damp(y, target.y, ref velocityY, smoothTime.y, deltaTime),
-				Scalars.Damp(z, target.z, ref velocityZ, smoothTime.z, deltaTime),
-				Scalars.Damp(w, target.w, ref velocityW, smoothTime.w, deltaTime)
+				x.Damp(target.x, ref velocityX, smoothTime.x, deltaTime),
+				y.Damp(target.y, ref velocityY, smoothTime.y, deltaTime),
+				z.Damp(target.z, ref velocityZ, smoothTime.z, deltaTime),
+				w.Damp(target.w, ref velocityW, smoothTime.w, deltaTime)
 			);
 
 			velocity = new Float4(velocityX, velocityY, velocityZ, velocityW);
