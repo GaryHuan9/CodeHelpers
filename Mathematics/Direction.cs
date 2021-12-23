@@ -1,243 +1,345 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Mathematics
 {
-	public readonly struct DirectionStruct
+	public readonly struct Direction : IEquatable<Direction>
 	{
-		public DirectionStruct(Int3 vector) => data = (byte)((GetSign(vector.z) << 4) | (GetSign(vector.y) << 2) | GetSign(vector.x));
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		Direction(uint data)
+		{
+			this.data = (byte)data;
+			AssertValidity();
+		}
 
-		DirectionStruct(byte data) => this.data = data;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		Direction(uint axis, int sign) : this((axis & 0b11u) | ((uint)(sign & 0b11) << 2)) { }
+
+		static Direction()
+		{
+			crossCache = new Direction[byte.MaxValue + 1];
+
+			foreach (Direction first in All)
+			foreach (Direction second in All)
+			{
+				int index = CrossIndex(first, second);
+				Int3 cross = Int3.Cross(first, second);
+				crossCache[index] = (Direction)cross;
+			}
+		}
 
 		/// <summary>
-		/// Only 6 bits out of the 8 bits available from a byte is used.
-		/// 00ZZ YYXX, each axis uses two bits to represent -1, 0, and 1
-		/// 00 equals 0, 01 equals 1, and 11 equals -1
+		/// Only five bits of this internal byte data are used; the layout if of the following: 00 0Z SS AA
+		/// The AA part indicates the axis of this direction: 0b00 = X, 0b01 = Y, 0b10 = Z, 0b11 = invalid
+		/// The SS part indicates the sign of the axis: 0b00 = -1, 0b01 = invalid, 0b10 = 1, 0b11 = invalid.
+		/// Z is set to zero if <see cref="IsZero"/>, or one otherwise. Note that the three other bits must always be zero.
 		/// </summary>
 		readonly byte data;
 
-		static int GetSign(int value)
-		{
-			if (value > 0) return 0b01;
-			return value < 0 ? 0b11 : 0b00;
-		}
+		const byte DataPositiveX = 0b1_10_00;
+		const byte DataNegativeX = 0b1_00_00;
+		const byte DataPositiveY = 0b1_10_01;
+		const byte DataNegativeY = 0b1_00_01;
+		const byte DataPositiveZ = 0b1_10_10;
+		const byte DataNegativeZ = 0b1_00_10;
 
-		static int GetSign(float value)
-		{
-			if (value.AlmostEquals()) return 0b00;
-			return value < 0f ? 0b11 : 0b01;
-		}
-	}
+		public static readonly Direction right /*    */ = new(DataPositiveX);
+		public static readonly Direction left /*     */ = new(DataNegativeX);
+		public static readonly Direction up /*       */ = new(DataPositiveY);
+		public static readonly Direction down /*     */ = new(DataNegativeY);
+		public static readonly Direction forward /*  */ = new(DataPositiveZ);
+		public static readonly Direction backward /* */ = new(DataNegativeZ);
 
-	public enum Direction : byte //DO NOT CHANGE THE VALUE OF THESE ENUMS
-	{
-		right = 0,
-		left = 1,
-		up = 2,
-		down = 3,
-		forward = 4,
-		backward = 5
-	}
+		static readonly Direction[] _all = { right, left, up, down, forward, backward };
 
-	public static class DirectionExtensions
-	{
-		static DirectionExtensions() => RefreshCrossCache();
+		static readonly Direction[] crossCache;
+
+		public int X => Axis == 0 ? Sign - 1 : 0;
+		public int Y => Axis == 1 ? Sign - 1 : 0;
+		public int Z => Axis == 2 ? Sign - 1 : 0;
 
 		/// <summary>
-		/// Remaps the sign of Direction (0 or 1) to 1 or -1
+		/// Returns whether this <see cref="Direction"/> is zero. A zero value can only be created using
+		/// the default constructor or through the result of an invalid operation (such as <see cref="Cross"/>).
+		/// NOTE: most operations will not accept <see cref="Direction"/> with <see cref="IsZero"/> marked as true as arguments.
 		/// </summary>
-		static int RemapSign(int sign) => sign * -2 + 1;
+		public bool IsZero => data == default;
 
-		public static Direction ToDirection(this Int3 vector) => ToDirection((Float3)vector);
-		public static Direction ToDirection(this Int2 vector) => ToDirection(vector.XY_);
-
-		public static Direction ToDirection(this Float3 vector)
+		/// <summary>
+		/// Returns whether this <see cref="Direction"/> is negative.
+		/// </summary>
+		public bool IsNegative
 		{
-			if (vector == Float3.zero) throw ExceptionHelper.NotConvertible;
-
-			int maxIndex = vector.Absoluted.MaxIndex;
-			return (Direction)(maxIndex * 2 + (vector[maxIndex] < 0f ? 1 : 0));
-		}
-
-		public static Int3 ToInt3(this Direction direction)
-		{
-			int value = (int)direction;
-			return Int3.Create(value / 2, RemapSign(value % 2));
-		}
-
-		public static Int2 ToInt2(this Direction direction)
-		{
-			switch (direction)
+			get
 			{
-				case Direction.right: return Int2.right;
-				case Direction.left:  return Int2.left;
-				case Direction.up:    return Int2.up;
-				case Direction.down:  return Int2.down;
-
-				case Direction.forward:
-				case Direction.backward: throw ExceptionHelper.NotConvertible;
-			}
-
-			throw ExceptionHelper.NotPossible;
-		}
-
-		/// <summary>
-		/// If this direction is in the y axis, convert it into a direction in the z axis
-		/// </summary>
-		public static Direction FromYToZ(this Direction direction) => direction == Direction.up || direction == Direction.down ? direction + 2 : direction;
-
-		/// <summary>
-		/// If this direction is in the z axis, convert it into a direction in the y axis
-		/// </summary>
-		public static Direction FromZToY(this Direction direction) => direction == Direction.forward || direction == Direction.backward ? direction - 2 : direction;
-
-		/// <summary>
-		/// Returns one of the component of <paramref name="vector"/> times direction.
-		/// A faster way to calculate (direction.ToVector3() * vector).Magnitude
-		/// </summary>
-		public static int ExtractComponent(this Direction direction, Int3 vector)
-		{
-			int value = (int)direction;
-			return vector[value / 2] * RemapSign(value % 2);
-		}
-
-		/// <inheritdoc cref="ExtractComponent(Direction,Int3)"/>
-		public static float ExtractComponent(this Direction direction, Float3 vector)
-		{
-			int value = (int)direction;
-			return vector[value / 2] * RemapSign(value % 2);
-		}
-
-		/// <summary>
-		/// Gets the string version of <paramref name="direction"/>.
-		/// <paramref name="useXYZ"/> if you want strings like "x" "y" or "z" instead of the default ones.
-		/// </summary>
-		public static string ToString(this Direction direction, bool useXYZ)
-		{
-			if (!useXYZ) return direction.ToString();
-
-			switch (direction)
-			{
-				case Direction.right:    return "x";
-				case Direction.left:     return "-x";
-				case Direction.up:       return "y";
-				case Direction.down:     return "-y";
-				case Direction.forward:  return "z";
-				case Direction.backward: return "-z";
-			}
-
-			throw ExceptionHelper.NotPossible;
-		}
-
-		/// <summary>
-		/// Gets the opposite of this <paramref name="direction"/>
-		/// </summary>
-		public static Direction Opposite(this Direction direction)
-		{
-			int value = (int)direction;
-			return (Direction)(value / 2 * 2 + (1 - value % 2));
-		}
-
-		/// <summary>
-		/// Returns this <paramref name="direction"/> but it points in the positive direction
-		/// </summary>
-		public static Direction Absoluted(this Direction direction) => (Direction)((int)direction / 2 * 2);
-
-		/// <summary>
-		/// Returns if the direction is a negative axis (left, down, or backward)
-		/// </summary>
-		public static bool IsNegative(this Direction direction) => (int)direction % 2 == 1;
-
-		/// <summary>
-		/// Gets a direction which is perpendicular to this <paramref name="direction"/>.
-		/// The returned direction is the 2d right/positive x direction if you projected the direction onto 2d (using the <see cref="Project"/> method)
-		/// </summary>
-		public static Direction Perpendicular(this Direction direction) => (Direction)((int)direction - 2).Repeat(EnumHelper<Direction>.enumLength);
-
-		/// <summary>
-		/// Projects <paramref name="point"/> onto the plane located at origin and has this <paramref name="direction"/> as its normal.
-		/// NOTE: this returns a vector2, because it project as an orthographic camera looking down at the plane and the point, where
-		/// the normal is pointing at the camera.
-		/// </summary>
-		public static Float2 Project(this Direction direction, Float3 point)
-		{
-			switch (direction)
-			{
-				case Direction.right:    return new Float2(point.z, point.y);
-				case Direction.left:     return new Float2(-point.z, point.y);
-				case Direction.up:       return new Float2(point.x, point.z);
-				case Direction.down:     return new Float2(-point.x, point.z);
-				case Direction.forward:  return new Float2(point.y, point.x);
-				case Direction.backward: return new Float2(-point.y, point.x);
-			}
-
-			throw ExceptionHelper.NotPossible;
-		}
-
-#region Cross
-
-		static bool _cacheCross = true;
-
-		public static bool CacheCross
-		{
-			get => _cacheCross;
-			set
-			{
-				if (CacheCross == value) return;
-
-				_cacheCross = value;
-				RefreshCrossCache();
+				AssertNotZero();
+				return Sign == 0;
 			}
 		}
 
-		static IReadOnlyList<IReadOnlyList<Direction>> crossCache;
-
-		static void RefreshCrossCache()
+		/// <summary>
+		/// Returns the index of this <see cref="Direction"/> in <see cref="All"/>.
+		/// </summary>
+		public int Index
 		{
-			if (CacheCross) GenerateCrossCache();
-			else RemoveCrossCache();
+			get
+			{
+				AssertNotZero();
+
+				return ((data & 0b11) << 2) + ((data >> 3) & 0b1);
+			}
 		}
 
-		static void GenerateCrossCache()
+		/// <summary>
+		/// If this <see cref="Direction"/> has a Y component, make it the Z component.
+		/// Or similarly if it has a Z component, make it the Y component.
+		/// </summary>
+		public Direction FlipYZ
 		{
-			var crosses = new IReadOnlyList<Direction>[EnumHelper<Direction>.enumLength];
-
-			for (int i = 0; i < crosses.Length; i++)
+			get
 			{
-				var temporaryCrosses = new Direction[EnumHelper<Direction>.enumLength];
+				AssertNotZero();
 
-				for (int j = 0; j < temporaryCrosses.Length; j++)
+				//Nothing happens if this is the X axis
+				if (Axis == 0) return this;
+
+				//Flips Y and Z axes
+				return new Direction(data ^ 0b11u);
+			}
+		}
+
+		/// <summary>
+		/// Returns this <see cref="Direction"/> with negatives turned into positives.
+		/// </summary>
+		public Direction Absoluted
+		{
+			get
+			{
+				AssertNotZero();
+
+				//Sets the sign bit to positive
+				return new Direction(data | 0b1000u);
+			}
+		}
+
+		/// <summary>
+		/// Returns a <see cref="Direction"/> that is perpendicular to this <see cref="Direction"/>.
+		/// The sign stays the same, and the axis decreases from Z to Y or Y to X or X to Z.
+		/// </summary>
+		public Direction Perpendicular
+		{
+			get
+			{
+				bool wrap = Axis == 0;
+				int value = data + (wrap ? -1 : 2);
+				return new Direction((uint)value);
+			}
+		}
+
+		uint Axis => data & 0b11u;
+		int Sign => (data >> 2) & 0b11;
+
+		/// <summary>
+		/// Accesses all the possible <see cref="Direction"/> values.
+		/// </summary>
+		public static ReadOnlySpan<Direction> All => _all;
+
+		/// <summary>
+		/// Calculates and returns the cross product (vector product) of this <see cref="Direction"/> and <paramref name="other"/>.
+		/// </summary>
+		public Direction Cross(Direction other)
+		{
+			AssertNotZero();
+			other.AssertNotZero();
+			return crossCache[CrossIndex(this, other)];
+		}
+
+		/// <summary>
+		/// Projects <paramref name="value"/> onto the plane located at the origin and has this <see cref="Direction"/> as its normal.
+		/// NOTE: this returns a <see cref="Float2"/>, since it project as an orthographic camera looking down at <see cref="value"/>, where
+		/// the plane normal is pointing towards the camera.
+		/// </summary>
+		public Float2 Project(in Float3 value)
+		{
+			AssertNotZero();
+
+			return data switch
+			{
+				DataPositiveX => value.ZY,
+				DataNegativeX => new Float2(-value.z, value.y),
+				DataPositiveY => value.XZ,
+				DataNegativeY => new Float2(-value.x, value.z),
+				DataPositiveZ => value.YX,
+				DataNegativeZ => new Float2(-value.y, value.x),
+				_ => throw ExceptionHelper.NotPossible
+			};
+		}
+
+		/// <inheritdoc cref="Project(in CodeHelpers.Mathematics.Float3)"/>
+		public Int2 Project(in Int3 value)
+		{
+			AssertNotZero();
+
+			return data switch
+			{
+				DataPositiveX => value.ZY,
+				DataNegativeX => new Int2(-value.z, value.y),
+				DataPositiveY => value.XZ,
+				DataNegativeY => new Int2(-value.x, value.z),
+				DataPositiveZ => value.YX,
+				DataNegativeZ => new Int2(-value.y, value.x),
+				_ => throw ExceptionHelper.NotPossible
+			};
+		}
+
+		/// <summary>
+		/// Multiplies this <see cref="Direction"/> with <paramref name="value"/> as a scalar result.
+		/// </summary>
+		public float ExtractComponent(in Float3 value)
+		{
+			int index = (int)Axis;
+			float part = value[index];
+			return IsNegative ? -part : part;
+		}
+
+		/// <inheritdoc cref="ExtractComponent(in CodeHelpers.Mathematics.Float3)"/>
+		public int ExtractComponent(in Int3 value)
+		{
+			int index = (int)Axis;
+			int part = value[index];
+			return IsNegative ? -part : part;
+		}
+
+		public bool Equals(Direction other) => data == other.data;
+
+		public override bool Equals(object obj) => obj is Direction other && Equals(other);
+
+		public override int GetHashCode() => data.GetHashCode();
+
+		public override string ToString() => ToString(false);
+
+		public string ToString(bool useNames)
+		{
+			AssertNotZero();
+			AssertValidity();
+
+			if (useNames)
+			{
+				switch (data)
 				{
-					if (i != j && ((Direction)i).Opposite() != (Direction)j) //If the cross is available
-					{
-						temporaryCrosses[j] = GetCross((Direction)i, (Direction)j);
-					}
+					case DataPositiveX: return "right";
+					case DataNegativeX: return "left";
+					case DataPositiveY: return "up";
+					case DataNegativeY: return "down";
+					case DataPositiveZ: return "forward";
+					case DataNegativeZ: return "backward";
 				}
-
-				crosses[i] = Array.AsReadOnly(temporaryCrosses); //NOTE: This only creats a wrapper! It still keeps the reference to the array, but NOT a deep copy of the array!
+			}
+			else
+			{
+				switch (data)
+				{
+					case DataPositiveX: return "x";
+					case DataNegativeX: return "-x";
+					case DataPositiveY: return "y";
+					case DataNegativeY: return "-y";
+					case DataPositiveZ: return "z";
+					case DataNegativeZ: return "-z";
+				}
 			}
 
-			crossCache = Array.AsReadOnly(crosses);
+			throw ExceptionHelper.NotPossible;
 		}
 
-		static void RemoveCrossCache()
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		void AssertValidity()
 		{
-			crossCache = null;
+			AssertNotZero();
+			Assert.AreEqual(data >> 4, 0);
+
+			Assert.AreNotEqual(data & 0b11, 0b00);
+			Assert.AreNotEqual((data >> 2) & 0b11, 0b01);
+			Assert.AreNotEqual((data >> 2) & 0b11, 0b11);
 		}
 
-		//Why write your own when you can use the library?
-		static Direction GetCross(Direction from, Direction to) => from.ToInt3().Cross(to.ToInt3()).ToDirection();
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		void AssertNotZero() => Assert.IsFalse(IsZero);
 
-		/// <summary>
-		/// Gets the cross value of <paramref name="from"/> and <paramref name="to"/>.
-		/// </summary>
-		public static Direction Cross(this Direction from, Direction to)
+		public static Direction operator +(Direction direction)
 		{
-			if (from == to || from.Opposite() == to) throw new Exception($"Cross from {from} to {to} unavailable!");
-			return CacheCross ? crossCache[(int)from][(int)to] : GetCross(from, to);
+			direction.AssertNotZero();
+			return direction;
 		}
 
-#endregion
+		public static Direction operator -(Direction direction)
+		{
+			direction.AssertNotZero();
 
+			//Toggle the sign bit
+			return new Direction(direction.data ^ 0b1000u);
+		}
+
+		public static Float3 operator *(Direction direction, in Float3 value)
+		{
+			int index = (int)direction.Axis;
+			float part = value[index];
+			if (direction.IsNegative) part = -part;
+			return Float3.Create(index, part);
+		}
+
+		public static Int3 operator *(Direction direction, in Int3 value)
+		{
+			int index = (int)direction.Axis;
+			int part = value[index];
+			if (direction.IsNegative) part = -part;
+			return Int3.Create(index, part);
+		}
+
+		public static explicit operator Direction(in Float3 value)
+		{
+			int axis = value.Absoluted.MaxIndex;
+			int sign = value[axis] < 0f ? 0 : 1;
+
+			return new Direction((uint)axis, sign);
+		}
+
+		public static explicit operator Direction(in Float2 value) => (Direction)value.XY_;
+
+		public static explicit operator Direction(in Int3 value) => (Direction)(Float3)value;
+		public static explicit operator Direction(in Int2 value) => (Direction)(Float2)value;
+
+		public static implicit operator Int3(Direction direction)
+		{
+			direction.AssertNotZero();
+
+			int index = (int)direction.Axis;
+			int value = direction.Sign - 1;
+
+			return Int3.Create(index, value);
+		}
+
+		public static implicit operator Int2(Direction direction)
+		{
+			direction.AssertNotZero();
+
+			Int3 full = direction;
+			if (full.z == 0) return full.XY;
+			throw new InvalidCastException();
+		}
+
+		public static implicit operator Float3(Direction direction) => (Int3)direction;
+		public static implicit operator Float2(Direction direction) => (Int2)direction;
+
+		public static bool operator ==(Direction first, Direction second) => first.Equals(second);
+		public static bool operator !=(Direction first, Direction second) => !first.Equals(second);
+
+		static int CrossIndex(Direction first, Direction second)
+		{
+			int data0 = first.data & 0b1111;
+			int data1 = second.data & 0b1111;
+
+			return (data0 << 4) | data1;
+		}
 	}
 }

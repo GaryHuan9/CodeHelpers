@@ -1,28 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CodeHelpers.Mathematics.Enumerables
+namespace CodeHelpers.Mathematics.Enumerable
 {
+	/// <summary>
+	/// A foreach-loop compatible <see cref="IEnumerable{T}"/> which yields positions in a spiral centered at the origin.
+	/// </summary>
 	public readonly struct EnumerableSpiral2D : IEnumerable<Int2>
 	{
-		/// <summary>
-		/// Creates a foreach-loop compatible IEnumerable which yields positions in a spiral.
-		/// The positions form a square centered at (0, 0), meaning the first position will be (0, 0)
-		/// </summary>
-		/// <param name="radius">The radius (half size) of the position square returned. Radius of 1 returns square of size 3x3.</param>
+		/// <param name="radius">The radius (half size) of the position square returned. Radius of 1 returns a square of size 3x3.</param>
+		public EnumerableSpiral2D(int radius) : this(radius, Direction.right) { }
+
+		/// <param name="radius">The radius (half size) of the position square returned. Radius of 1 returns a square of size 3x3.</param>
 		/// <param name="initial">The starting direction of the spiral, defaults to right.</param>
-		public EnumerableSpiral2D(int radius, Direction initial = Direction.right) => enumerator = new Enumerator(radius, initial);
+		public EnumerableSpiral2D(int radius, Direction initial) => enumerator = new Enumerator(radius, initial);
 
 		readonly Enumerator enumerator;
 
 		public Enumerator GetEnumerator() => enumerator;
 
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator IEnumerable.            GetEnumerator() => GetEnumerator();
 		IEnumerator<Int2> IEnumerable<Int2>.GetEnumerator() => GetEnumerator();
 
 		public struct Enumerator : IEnumerator<Int2>
 		{
-			public Enumerator(int radius, Direction initial = Direction.right) : this()
+			public Enumerator(int radius, Direction initial) : this()
 			{
 				size = radius * 2 + 1;
 				this.initial = initial;
@@ -67,7 +69,7 @@ namespace CodeHelpers.Mathematics.Enumerables
 
 			public void Reset()
 			{
-				direction = initial.ToInt2();
+				direction = initial;
 				Current = -direction;
 
 				step = -1;

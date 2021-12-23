@@ -22,8 +22,8 @@ namespace CodeHelpers.Mathematics
 		public LimitedRotation(Int3 angles) : this(angles.x, angles.y, angles.z) { }
 		public LimitedRotation(Float3 angles) : this(angles.x, angles.y, angles.z) { }
 
-		public LimitedRotation(Direction direction, int angle) : this(direction.ToInt3() * angle) { }
-		public LimitedRotation(Direction direction, float angle) : this(direction.ToInt3() * angle) { }
+		public LimitedRotation(Direction direction, int angle) : this((Int3)direction * angle) { }
+		public LimitedRotation(Direction direction, float angle) : this((Float3)direction * angle) { }
 
 		public LimitedRotation(Versor rotation) : this(rotation.Angles) { }
 
@@ -102,13 +102,13 @@ namespace CodeHelpers.Mathematics
 		{
 			//These two to avoid exceptions from the cross method
 			if (from == to) return new LimitedRotation(); //No rotation
-			if (from.Opposite() == to)
+			if (from == -to)
 			{
-				//Returns a rotation with 180 degrees
-				return from == Direction.up || from == Direction.down ? new LimitedRotation(0b000010) /*180, 0, 0*/ : new LimitedRotation(0b001000) /*0, 180, 0*/;
+				//Returns a rotation with 180 degrees, making sure that the axis is not the same as our two directions
+				return from.Y != 0 ? new LimitedRotation(0b000010) /*180, 0, 0*/ : new LimitedRotation(0b001000) /*0, 180, 0*/;
 			}
 
-			return new LimitedRotation(from.Cross(to).ToInt3() * 90);
+			return new LimitedRotation((Int3)from.Cross(to) * 90);
 		}
 
 		public static bool operator ==(LimitedRotation first, LimitedRotation second) => first.Equals(second);
@@ -124,8 +124,8 @@ namespace CodeHelpers.Mathematics
 		public static Int3 operator *(LimitedRotation rotation, Int3 value) => (rotation.Versor * value).Rounded;
 		public static Int3 operator /(LimitedRotation rotation, Int3 value) => (rotation.Versor / value).Rounded;
 
-		public static Direction operator *(LimitedRotation rotation, Direction direction) => (rotation * direction.ToInt3()).ToDirection();
-		public static Direction operator /(LimitedRotation rotation, Direction direction) => (rotation / direction.ToInt3()).ToDirection();
+		public static Direction operator *(LimitedRotation rotation, Direction direction) => (Direction)(rotation * (Int3)direction);
+		public static Direction operator /(LimitedRotation rotation, Direction direction) => (Direction)(rotation / (Int3)direction);
 
 		public static LimitedRotation operator -(LimitedRotation rotation) => rotation.Inverted;
 

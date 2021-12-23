@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace CodeHelpers.Mathematics.Enumerables
+namespace CodeHelpers.Mathematics.Enumerable
 {
 	public readonly struct EnumerableSphere3D : IEnumerable<Int3> //Not the most performant implementation, but fine for now
 	{
