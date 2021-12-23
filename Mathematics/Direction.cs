@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Mathematics
 {
 	public readonly struct Direction : IEquatable<Direction>
 	{
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		Direction(uint data)
+		internal Direction(byte data)
 		{
-			this.data = (byte)data;
+			this.data = data;
 			AssertValidity();
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		Direction(uint data) : this((byte)data) { }
+
 		Direction(uint axis, int sign) : this((axis & 0b11u) | ((uint)(sign & 0b11) << 2)) { }
 
 		static Direction()
@@ -35,7 +34,7 @@ namespace CodeHelpers.Mathematics
 		/// The SS part indicates the sign of the axis: 0b00 = -1, 0b01 = invalid, 0b10 = 1, 0b11 = invalid.
 		/// Z is set to zero if <see cref="IsZero"/>, or one otherwise. Note that the three other bits must always be zero.
 		/// </summary>
-		readonly byte data;
+		internal readonly byte data;
 
 		const byte DataPositiveX = 0b1_10_00;
 		const byte DataNegativeX = 0b1_00_00;
@@ -252,7 +251,6 @@ namespace CodeHelpers.Mathematics
 			throw ExceptionHelper.NotPossible;
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		void AssertValidity()
 		{
 			AssertNotZero();
@@ -263,7 +261,6 @@ namespace CodeHelpers.Mathematics
 			Assert.AreNotEqual((data >> 2) & 0b11, 0b11);
 		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		void AssertNotZero() => Assert.IsFalse(IsZero);
 
 		public static Direction operator +(Direction direction)

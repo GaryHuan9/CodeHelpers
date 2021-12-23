@@ -10,127 +10,131 @@ namespace CodeHelpers.Files
 
 		public TypeMapper TypeMapper { get; set; }
 
-		public void Write(BitVector8 bitVector8) => Write(bitVector8.Data);
+		public void Write(BitVector8 value) => Write(value.Data);
 
-		public void Write(Color32 color32)
+		public void Write(Color32 value)
 		{
-			Write(color32.r);
-			Write(color32.g);
-			Write(color32.b);
-			Write(color32.a);
+			Write(value.r);
+			Write(value.g);
+			Write(value.b);
+			Write(value.a);
 		}
 
-		public void Write(Color64 color64)
+		public void Write(Color64 value)
 		{
-			Write(color64.r);
-			Write(color64.g);
-			Write(color64.b);
-			Write(color64.a);
+			Write(value.r);
+			Write(value.g);
+			Write(value.b);
+			Write(value.a);
 		}
 
-		public void Write(Float2 float2)
+		public void Write(Direction value) => Write(value.data);
+
+		public void Write(Float2 value)
 		{
-			Write(float2.x);
-			Write(float2.y);
+			Write(value.x);
+			Write(value.y);
 		}
 
-		public void Write(in Float3 float3)
+		public void Write(in Float3 value)
 		{
-			Write(float3.x);
-			Write(float3.y);
-			Write(float3.z);
+			Write(value.x);
+			Write(value.y);
+			Write(value.z);
 		}
 
-		public void Write(in Float4 float4)
+		public void Write(in Float4 value)
 		{
-			Write(float4.x);
-			Write(float4.y);
-			Write(float4.z);
-			Write(float4.w);
+			Write(value.x);
+			Write(value.y);
+			Write(value.z);
+			Write(value.w);
 		}
 
-		public void Write(in Float4x4 float4x4)
+		public void Write(in Float4x4 value)
 		{
-			Write(float4x4.f00);
-			Write(float4x4.f01);
-			Write(float4x4.f02);
-			Write(float4x4.f03);
+			Write(value.f00);
+			Write(value.f01);
+			Write(value.f02);
+			Write(value.f03);
 
-			Write(float4x4.f10);
-			Write(float4x4.f11);
-			Write(float4x4.f12);
-			Write(float4x4.f13);
+			Write(value.f10);
+			Write(value.f11);
+			Write(value.f12);
+			Write(value.f13);
 
-			Write(float4x4.f20);
-			Write(float4x4.f21);
-			Write(float4x4.f22);
-			Write(float4x4.f23);
+			Write(value.f20);
+			Write(value.f21);
+			Write(value.f22);
+			Write(value.f23);
 
-			Write(float4x4.f30);
-			Write(float4x4.f31);
-			Write(float4x4.f32);
-			Write(float4x4.f33);
+			Write(value.f30);
+			Write(value.f31);
+			Write(value.f32);
+			Write(value.f33);
 		}
 
-		public void Write(Int2 int2)
+		public void Write(Int2 value)
 		{
-			Write(int2.x);
-			Write(int2.y);
+			Write(value.x);
+			Write(value.y);
 		}
 
-		public void Write(in Int3 int3)
+		public void Write(in Int3 value)
 		{
-			Write(int3.x);
-			Write(int3.y);
-			Write(int3.z);
+			Write(value.x);
+			Write(value.y);
+			Write(value.z);
 		}
 
-		public void Write(in Int4 int4)
+		public void Write(in Int4 value)
 		{
-			Write(int4.x);
-			Write(int4.y);
-			Write(int4.z);
-			Write(int4.w);
+			Write(value.x);
+			Write(value.y);
+			Write(value.z);
+			Write(value.w);
 		}
 
-		public void Write(LimitedRotation limitedRotation) => Write(limitedRotation.data);
+		public void Write(LimitedRotation value) => Write(value.data);
 
-		public void Write(MinMax minMax)
+		public void Write(MinMax value)
 		{
-			Write(minMax.min);
-			Write(minMax.max);
+			Write(value.min);
+			Write(value.max);
 		}
 
-		public void Write(MinMaxInt minMax)
+		public void Write(MinMaxInt value)
 		{
-			Write(minMax.min);
-			Write(minMax.max);
+			Write(value.min);
+			Write(value.max);
 		}
 
-		public void Write(in Segment2 segment2)
+		public void Write(in Segment2 value)
 		{
-			Write(segment2.point0);
-			Write(segment2.point1);
+			Write(value.point0);
+			Write(value.point1);
 		}
 
-		public void Write(in Segment3 segment3)
+		public void Write(in Segment3 value)
 		{
-			Write(segment3.point0);
-			Write(segment3.point1);
+			Write(value.point0);
+			Write(value.point1);
 		}
 
-		public void Write(in Guid guid)
+		public void Write(in Versor value) => Write(value.d);
+
+		public void Write(in Guid value)
 		{
 #if UNSAFE_CODE_ENABLED
 			unsafe
 			{
-				Guid copy = guid;
+				Guid copy = value;
 				byte* pointer = (byte*)&copy;
 
 				for (int i = 0; i < 16; i++) Write(pointer[i]);
 			}
 #else
-			Write(guid.ToByteArray());
+			Write(value.ToByteArray());
 #endif
 		}
 

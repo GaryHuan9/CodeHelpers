@@ -7,8 +7,6 @@ namespace CodeHelpers.Mathematics
 	/// </summary>
 	public readonly struct LimitedRotation : IEquatable<LimitedRotation>
 	{
-		//NOTE: We maybe should remove some of the implementation using unity's quaternion
-
 		public LimitedRotation(int x, int y, int z)
 		{
 			data = (byte)((Transform(x) << 0) | (Transform(y) << 2) | (Transform(z) << 4));

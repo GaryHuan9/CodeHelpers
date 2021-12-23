@@ -80,6 +80,8 @@ namespace CodeHelpers.Files
 			return new Color64(r, g, b, a);
 		}
 
+		public Direction ReadDirection() => new Direction(ReadByte());
+
 		public Float2 ReadFloat2() => new Float2(ReadSingle(), ReadSingle());
 		public Float3 ReadFloat3() => new Float3(ReadSingle(), ReadSingle(), ReadSingle());
 		public Float4 ReadFloat4() => new Float4(ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
@@ -109,6 +111,8 @@ namespace CodeHelpers.Files
 
 		public Segment2 ReadSegment2() => new Segment2(ReadFloat2(), ReadFloat2());
 		public Segment3 ReadSegment3() => new Segment3(ReadFloat3(), ReadFloat3());
+
+		public Versor ReadVersor() => new Versor(ReadFloat4());
 
 		public Guid ReadGuid()
 		{
