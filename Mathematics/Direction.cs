@@ -13,8 +13,6 @@ namespace CodeHelpers.Mathematics
 
 		Direction(uint data) : this((byte)data) { }
 
-		Direction(uint axis, int sign) : this((axis & 0b11u) | ((uint)(sign & 0b11) << 2)) { }
-
 		static Direction()
 		{
 			crossCache = new Direction[byte.MaxValue + 1];
@@ -86,7 +84,7 @@ namespace CodeHelpers.Mathematics
 			{
 				AssertNotZero();
 
-				return ((data & 0b11) << 2) + ((data >> 3) & 0b1);
+				return ((data & 0b11) << 1) + (((data >> 3) ^ 0b1) & 0b1);
 			}
 		}
 
@@ -131,7 +129,7 @@ namespace CodeHelpers.Mathematics
 			get
 			{
 				bool wrap = Axis == 0;
-				int value = data + (wrap ? -1 : 2);
+				int value = data + (wrap ? 2 : -1);
 				return new Direction((uint)value);
 			}
 		}
@@ -220,9 +218,6 @@ namespace CodeHelpers.Mathematics
 
 		public string ToString(bool useNames)
 		{
-			AssertNotZero();
-			AssertValidity();
-
 			if (useNames)
 			{
 				switch (data)
@@ -248,15 +243,16 @@ namespace CodeHelpers.Mathematics
 				}
 			}
 
-			throw ExceptionHelper.NotPossible;
+			Assert.IsTrue(IsZero);
+			return "zero";
 		}
 
 		void AssertValidity()
 		{
 			AssertNotZero();
-			Assert.AreEqual(data >> 4, 0);
+			Assert.AreEqual(data >> 4, 1);
 
-			Assert.AreNotEqual(data & 0b11, 0b00);
+			Assert.AreNotEqual(data & 0b11, 0b11);
 			Assert.AreNotEqual((data >> 2) & 0b11, 0b01);
 			Assert.AreNotEqual((data >> 2) & 0b11, 0b11);
 		}
@@ -295,10 +291,12 @@ namespace CodeHelpers.Mathematics
 
 		public static explicit operator Direction(in Float3 value)
 		{
+			if (value.SquaredMagnitude.AlmostEquals()) return default;
+
 			int axis = value.Absoluted.MaxIndex;
 			int sign = value[axis] < 0f ? 0 : 1;
 
-			return new Direction((uint)axis, sign);
+			return new Direction((uint)axis | (uint)(sign << 3) | 0b10000);
 		}
 
 		public static explicit operator Direction(in Float2 value) => (Direction)value.XY_;
