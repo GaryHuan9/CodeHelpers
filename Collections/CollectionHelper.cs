@@ -18,22 +18,22 @@ namespace CodeHelpers.Collections
 		{
 			if (list.Count == 0) return ~0;
 
-			int minIndex = 0;
-			int maxIndex = list.Count - 1;
+			int min = 0;
+			int max = list.Count - 1;
 
-			int index = maxIndex / 2;
-			var current = list[index];
+			int index = max >> 1;
+			TItem current = list[index];
 
 			while (true)
 			{
 				int compared = comparer.CompareTo(current, key);
 				if (compared == 0) return index;
 
-				if (compared > 0) maxIndex = index - 1;
-				else minIndex = index + 1;
+				if (compared > 0) max = index - 1;
+				else min = index + 1;
 
-				index = (minIndex + maxIndex) / 2;
-				if (minIndex > maxIndex) return ~minIndex;
+				index = (min + max) >> 1;
+				if (min > max) return ~min;
 
 				current = list[index];
 			}
@@ -126,10 +126,10 @@ namespace CodeHelpers.Collections
 			return null;
 		}
 
-		public static ReadOnlyCollection<T> AsReadonly<T>(IList<T> list) => new ReadOnlyCollection<T>(list);
+		public static ReadOnlyCollection<T>            AsReadonly<T>(IList<T>                             list)       => new ReadOnlyCollection<T>(list);
 		public static ReadOnlyDictionary<TKey, TValue> AsReadonly<TKey, TValue>(IDictionary<TKey, TValue> dictionary) => new ReadOnlyDictionary<TKey, TValue>(dictionary);
 
-		public static Int2 Size<T>(this T[,] array) => new Int2(array.GetLength(0), array.GetLength(1));
+		public static Int2 Size<T>(this T[,]  array) => new Int2(array.GetLength(0), array.GetLength(1));
 		public static Int3 Size<T>(this T[,,] array) => new Int3(array.GetLength(0), array.GetLength(1), array.GetLength(2));
 
 		public static float[,] CombineFloatArrays(float[,] array1, float[,] array2, float chance1, float chance2)
@@ -192,8 +192,8 @@ namespace CodeHelpers.Collections
 			return false;
 		}
 
-		public static int Clamp<T>(this IReadOnlyCollection<T> collection, int index) => index.Clamp(0, collection.Count - 1);
-		public static T ClampedGet<T>(this IReadOnlyList<T> list, int index) => list[list.Clamp(index)];
+		public static int Clamp<T>(this      IReadOnlyCollection<T> collection, int index) => index.Clamp(0, collection.Count - 1);
+		public static T   ClampedGet<T>(this IReadOnlyList<T>       list,       int index) => list[list.Clamp(index)];
 
 		public static void Shuffle<T>(this IList<T> list)
 		{
@@ -241,7 +241,7 @@ namespace CodeHelpers.Collections
 		public T Current => state == 0 ? value : default;
 		object IEnumerator.Current => Current;
 
-		public void Reset() => state = -1;
+		public void Reset()   => state = -1;
 		public void Dispose() { }
 	}
 }

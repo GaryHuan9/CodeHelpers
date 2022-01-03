@@ -28,7 +28,7 @@ namespace CodeHelpers.Mathematics
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
 		public static int   Lerp(int   left, int   right, int   value) => (right - left) * value + left;
 
-		public static float InverseLerp(float left, float right, float value) => AlmostEquals(left, right) ? 0f : (value - left) / (right - left);
+		public static float InverseLerp(float left, float right, float value) => left.Equals(right) ? 0f : (value - left) / (right - left);
 		public static int   InverseLerp(int   left, int   right, int   value) => left == right ? 0 : (value - left) / (right - left);
 
 		public static float  Clamp(this float  value, float  min = 0f, float  max = 1f) => value < min ? min : value > max ? max : value;

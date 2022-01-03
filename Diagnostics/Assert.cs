@@ -27,6 +27,7 @@ namespace CodeHelpers.Diagnostics
 			if (target) return;
 			throw new Exception("Target is not true!");
 		}
+
 		[Conditional("DEBUG")]
 		public static void IsFalse(bool target)
 		{
