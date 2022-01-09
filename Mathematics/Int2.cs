@@ -23,7 +23,59 @@ namespace CodeHelpers.Mathematics
 		[FieldOffset(0)] public readonly int x;
 		[FieldOffset(4)] public readonly int y;
 
-#region Swizzled4
+#region Properties
+
+#region Static
+
+		public static readonly Int2 right = new Int2(1, 0);
+		public static readonly Int2 left = new Int2(-1, 0);
+
+		public static readonly Int2 up = new Int2(0, 1);
+		public static readonly Int2 down = new Int2(0, -1);
+
+		public static readonly Int2 one = new Int2(1, 1);
+		public static readonly Int2 zero = new Int2(0, 0);
+		public static readonly Int2 negativeOne = new Int2(-1, -1);
+
+		public static readonly Int2 maxValue = new Int2(int.MaxValue, int.MaxValue);
+		public static readonly Int2 minValue = new Int2(int.MinValue, int.MinValue);
+
+		public static readonly ReadOnlyCollection<Int2> units4 = new ReadOnlyCollection<Int2>
+		(
+			new[]
+			{
+				new Int2(0, 0), new Int2(1, 0),
+				new Int2(0, 1), new Int2(1, 1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int2> edges4 = new ReadOnlyCollection<Int2>
+		(
+			new[]
+			{
+				new Int2(1, 0), new Int2(0, 1),
+				new Int2(-1, 0), new Int2(0, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int2> vertices4 = new ReadOnlyCollection<Int2>
+		(
+			new[]
+			{
+				new Int2(1, 1), new Int2(-1, 1),
+				new Int2(-1, -1), new Int2(1, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int2> edgesVertices8 = new ReadOnlyCollection<Int2>(edges4.Concat(vertices4).ToArray());
+
+#endregion
+
+#region Instance
+
+#region Swizzled
+
+#region Four
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXX => new Int4(x, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXY => new Int4(x, x, x, y);
@@ -135,7 +187,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled3
+#region Three
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXX => new Int3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXY => new Int3(x, x, y);
@@ -175,7 +227,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled2
+#region Two
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XX => new Int2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XY => new Int2(x, y);
@@ -191,53 +243,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Static Properties
-
-		public static readonly Int2 right = new Int2(1, 0);
-		public static readonly Int2 left = new Int2(-1, 0);
-
-		public static readonly Int2 up = new Int2(0, 1);
-		public static readonly Int2 down = new Int2(0, -1);
-
-		public static readonly Int2 one = new Int2(1, 1);
-		public static readonly Int2 zero = new Int2(0, 0);
-		public static readonly Int2 negativeOne = new Int2(-1, -1);
-
-		public static readonly Int2 maxValue = new Int2(int.MaxValue, int.MaxValue);
-		public static readonly Int2 minValue = new Int2(int.MinValue, int.MinValue);
-
-		public static readonly ReadOnlyCollection<Int2> units4 = new ReadOnlyCollection<Int2>
-		(
-			new[]
-			{
-				new Int2(0, 0), new Int2(1, 0),
-				new Int2(0, 1), new Int2(1, 1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int2> edges4 = new ReadOnlyCollection<Int2>
-		(
-			new[]
-			{
-				new Int2(1, 0), new Int2(0, 1),
-				new Int2(-1, 0), new Int2(0, -1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int2> vertices4 = new ReadOnlyCollection<Int2>
-		(
-			new[]
-			{
-				new Int2(1, 1), new Int2(-1, 1),
-				new Int2(-1, -1), new Int2(1, -1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int2> edgesVertices8 = new ReadOnlyCollection<Int2>(edges4.Concat(vertices4).ToArray());
-
 #endregion
-
-#region Instance Properties
 
 #region Scalar Returns
 
@@ -392,6 +398,8 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
+#endregion
+
 #region Methods
 
 #region Instance
@@ -484,6 +492,22 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int2 Reflect(Int2 normal) => -2 * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Project(Float2 normal) => normal * (normal.Dot(this) / normal.SquaredMagnitude);
+
+		public override string ToString() => ToString(string.Empty);
+
+		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)})";
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int2 other && Equals(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => x == other.x && y == other.y;
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (x.GetHashCode() * 397) ^ y.GetHashCode();
+			}
+		}
 
 #endregion
 
@@ -668,8 +692,6 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#endregion
-
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int2 operator +(Int2 first, Int2 second) => new Int2(first.x + second.x, first.y + second.y);
@@ -709,17 +731,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Int2 first, Int2 second) => first.x <= second.x && first.y <= second.y;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Int2 first, Int2 second) => first.x >= second.x && first.y >= second.y;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int2 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => x == other.x && y == other.y;
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				return (x.GetHashCode() * 397) ^ y.GetHashCode();
-			}
-		}
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(int value) => new Int2(value, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Int2 value) => value.XY_;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(Int2 value) => new Int4(value.x, value.y, 0, 0);
@@ -736,10 +747,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override string ToString() => $"({x}, {y})";
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)})";
+#endregion
 
 #region Enumerations
 

@@ -25,7 +25,77 @@ namespace CodeHelpers.Mathematics
 		[FieldOffset(4)] public readonly int y;
 		[FieldOffset(8)] public readonly int z;
 
-#region Swizzled4
+#region Properties
+
+#region Static
+
+		public static readonly Int3 right = new Int3(1, 0, 0);
+		public static readonly Int3 left = new Int3(-1, 0, 0);
+
+		public static readonly Int3 up = new Int3(0, 1, 0);
+		public static readonly Int3 down = new Int3(0, -1, 0);
+
+		public static readonly Int3 forward = new Int3(0, 0, 1);
+		public static readonly Int3 backward = new Int3(0, 0, -1);
+
+		public static readonly Int3 one = new Int3(1, 1, 1);
+		public static readonly Int3 zero = new Int3(0, 0, 0);
+		public static readonly Int3 negativeOne = new Int3(-1, -1, -1);
+
+		public static readonly Int3 maxValue = new Int3(int.MaxValue, int.MaxValue, int.MaxValue);
+		public static readonly Int3 minValue = new Int3(int.MinValue, int.MinValue, int.MinValue);
+
+		public static readonly ReadOnlyCollection<Int3> units8 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(0, 0, 0), new Int3(1, 0, 0), new Int3(0, 0, 1), new Int3(1, 0, 1),
+				new Int3(0, 1, 0), new Int3(1, 1, 0), new Int3(0, 1, 1), new Int3(1, 1, 1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> faces6 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(1, 0, 0), new Int3(-1, 0, 0),
+				new Int3(0, 1, 0), new Int3(0, -1, 0),
+				new Int3(0, 0, 1), new Int3(0, 0, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> vertices8 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(1, 1, 1), new Int3(-1, 1, 1), new Int3(1, 1, -1), new Int3(-1, 1, -1),
+				new Int3(1, -1, 1), new Int3(-1, -1, 1), new Int3(1, -1, -1), new Int3(-1, -1, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> edges12 = new ReadOnlyCollection<Int3>
+		(
+			new[]
+			{
+				new Int3(1, 1, 0), new Int3(0, 1, 1), new Int3(-1, 1, 0), new Int3(0, 1, -1),
+				new Int3(1, 0, 1), new Int3(-1, 0, 1), new Int3(-1, 0, -1), new Int3(1, 0, -1),
+				new Int3(1, -1, 0), new Int3(0, -1, 1), new Int3(-1, -1, 0), new Int3(0, -1, -1)
+			}
+		);
+
+		public static readonly ReadOnlyCollection<Int3> facesVertices14 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).ToArray());
+		public static readonly ReadOnlyCollection<Int3> facesEdges18 = new ReadOnlyCollection<Int3>(faces6.Concat(edges12).ToArray());
+		public static readonly ReadOnlyCollection<Int3> verticesEdges20 = new ReadOnlyCollection<Int3>(vertices8.Concat(edges12).ToArray());
+
+		public static readonly ReadOnlyCollection<Int3> facesVerticesEdges26 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).Concat(edges12).ToArray());
+
+#endregion
+
+#region Instance
+
+#region Swizzled
+
+#region Four
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXX => new Int4(x, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXY => new Int4(x, x, x, y);
@@ -349,7 +419,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled3
+#region Three
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXX => new Int3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXY => new Int3(x, x, y);
@@ -433,7 +503,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled2
+#region Two
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XX => new Int2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XY => new Int2(x, y);
@@ -449,71 +519,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Static Properties
-
-		public static readonly Int3 right = new Int3(1, 0, 0);
-		public static readonly Int3 left = new Int3(-1, 0, 0);
-
-		public static readonly Int3 up = new Int3(0, 1, 0);
-		public static readonly Int3 down = new Int3(0, -1, 0);
-
-		public static readonly Int3 forward = new Int3(0, 0, 1);
-		public static readonly Int3 backward = new Int3(0, 0, -1);
-
-		public static readonly Int3 one = new Int3(1, 1, 1);
-		public static readonly Int3 zero = new Int3(0, 0, 0);
-		public static readonly Int3 negativeOne = new Int3(-1, -1, -1);
-
-		public static readonly Int3 maxValue = new Int3(int.MaxValue, int.MaxValue, int.MaxValue);
-		public static readonly Int3 minValue = new Int3(int.MinValue, int.MinValue, int.MinValue);
-
-		public static readonly ReadOnlyCollection<Int3> units8 = new ReadOnlyCollection<Int3>
-		(
-			new[]
-			{
-				new Int3(0, 0, 0), new Int3(1, 0, 0), new Int3(0, 0, 1), new Int3(1, 0, 1),
-				new Int3(0, 1, 0), new Int3(1, 1, 0), new Int3(0, 1, 1), new Int3(1, 1, 1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int3> faces6 = new ReadOnlyCollection<Int3>
-		(
-			new[]
-			{
-				new Int3(1, 0, 0), new Int3(-1, 0, 0),
-				new Int3(0, 1, 0), new Int3(0, -1, 0),
-				new Int3(0, 0, 1), new Int3(0, 0, -1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int3> vertices8 = new ReadOnlyCollection<Int3>
-		(
-			new[]
-			{
-				new Int3(1, 1, 1), new Int3(-1, 1, 1), new Int3(1, 1, -1), new Int3(-1, 1, -1),
-				new Int3(1, -1, 1), new Int3(-1, -1, 1), new Int3(1, -1, -1), new Int3(-1, -1, -1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int3> edges12 = new ReadOnlyCollection<Int3>
-		(
-			new[]
-			{
-				new Int3(1, 1, 0), new Int3(0, 1, 1), new Int3(-1, 1, 0), new Int3(0, 1, -1),
-				new Int3(1, 0, 1), new Int3(-1, 0, 1), new Int3(-1, 0, -1), new Int3(1, 0, -1),
-				new Int3(1, -1, 0), new Int3(0, -1, 1), new Int3(-1, -1, 0), new Int3(0, -1, -1)
-			}
-		);
-
-		public static readonly ReadOnlyCollection<Int3> facesVertices14 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).ToArray());
-		public static readonly ReadOnlyCollection<Int3> facesEdges18 = new ReadOnlyCollection<Int3>(faces6.Concat(edges12).ToArray());
-		public static readonly ReadOnlyCollection<Int3> verticesEdges20 = new ReadOnlyCollection<Int3>(vertices8.Concat(edges12).ToArray());
-
-		public static readonly ReadOnlyCollection<Int3> facesVerticesEdges26 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).Concat(edges12).ToArray());
-
 #endregion
-
-#region Instance Properties
 
 #region Scalar Returns
 
@@ -708,6 +714,8 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
+#endregion
+
 #region Methods
 
 #region Instance
@@ -805,6 +813,27 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Reflect(in Int3 normal) => -2 * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Project(in Float3 normal) => normal * (normal.Dot(this) / normal.SquaredMagnitude);
+
+		public override string ToString() => ToString(string.Empty);
+
+		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)})";
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int3 other && Equals(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int3 other) => EqualsFast(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsFast(in Int3 other) => x == other.x && y == other.y && z == other.z;
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = x.GetHashCode();
+				hashCode = (hashCode * 397) ^ y.GetHashCode();
+				hashCode = (hashCode * 397) ^ z.GetHashCode();
+				return hashCode;
+			}
+		}
 
 #endregion
 
@@ -1010,8 +1039,6 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#endregion
-
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int3 operator +(in Int3 first, in Int3 second) => new Int3(first.x + second.x, first.y + second.y, first.z + second.z);
@@ -1051,22 +1078,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(in Int3 first, in Int3 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(in Int3 first, in Int3 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int3 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int3 other) => EqualsFast(other);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsFast(in Int3 other) => x == other.x && y == other.y && z == other.z;
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = x.GetHashCode();
-				hashCode = (hashCode * 397) ^ y.GetHashCode();
-				hashCode = (hashCode * 397) ^ z.GetHashCode();
-				return hashCode;
-			}
-		}
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Int3 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(int value) => new Int3(value, value, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Int3 value) => new Int4(value.x, value.y, value.z, 0);
@@ -1083,10 +1094,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override string ToString() => $"({x}, {y}, {z})";
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)})";
+#endregion
 
 #region Enumerations
 

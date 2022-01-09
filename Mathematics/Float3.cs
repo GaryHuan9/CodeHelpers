@@ -23,7 +23,43 @@ namespace CodeHelpers.Mathematics
 		[FieldOffset(4)] public readonly float y;
 		[FieldOffset(8)] public readonly float z;
 
-#region Swizzled4
+#region Properties
+
+#region Static
+
+		public static readonly Float3 right = new Float3(1f, 0f, 0f);
+		public static readonly Float3 left = new Float3(-1f, 0f, 0f);
+
+		public static readonly Float3 up = new Float3(0f, 1f, 0f);
+		public static readonly Float3 down = new Float3(0f, -1f, 0f);
+
+		public static readonly Float3 forward = new Float3(0f, 0f, 1f);
+		public static readonly Float3 backward = new Float3(0f, 0f, -1f);
+
+		public static readonly Float3 zero = new Float3(0f, 0f, 0f);
+
+		public static readonly Float3 one = new Float3(1f, 1f, 1f);
+		public static readonly Float3 negativeOne = new Float3(-1f, -1f, -1f);
+
+		public static readonly Float3 half = new Float3(0.5f, 0.5f, 0.5f);
+		public static readonly Float3 negativeHalf = new Float3(-0.5f, -0.5f, -0.5f);
+
+		public static readonly Float3 maxValue = new Float3(float.MaxValue, float.MaxValue, float.MaxValue);
+		public static readonly Float3 minValue = new Float3(float.MinValue, float.MinValue, float.MinValue);
+
+		public static readonly Float3 positiveInfinity = new Float3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+		public static readonly Float3 negativeInfinity = new Float3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
+
+		public static readonly Float3 epsilon = new Float3(Scalars.Epsilon, Scalars.Epsilon, Scalars.Epsilon);
+		public static readonly Float3 NaN = new Float3(float.NaN, float.NaN, float.NaN);
+
+#endregion
+
+#region Instance
+
+#region Swizzled
+
+#region Four
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXX => new Float4(x, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXY => new Float4(x, x, x, y);
@@ -347,7 +383,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled3
+#region Three
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXX => new Float3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXY => new Float3(x, x, y);
@@ -431,7 +467,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled2
+#region Two
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XX => new Float2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XY => new Float2(x, y);
@@ -447,37 +483,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Static Properties
-
-		public static readonly Float3 right = new Float3(1f, 0f, 0f);
-		public static readonly Float3 left = new Float3(-1f, 0f, 0f);
-
-		public static readonly Float3 up = new Float3(0f, 1f, 0f);
-		public static readonly Float3 down = new Float3(0f, -1f, 0f);
-
-		public static readonly Float3 forward = new Float3(0f, 0f, 1f);
-		public static readonly Float3 backward = new Float3(0f, 0f, -1f);
-
-		public static readonly Float3 zero = new Float3(0f, 0f, 0f);
-
-		public static readonly Float3 one = new Float3(1f, 1f, 1f);
-		public static readonly Float3 negativeOne = new Float3(-1f, -1f, -1f);
-
-		public static readonly Float3 half = new Float3(0.5f, 0.5f, 0.5f);
-		public static readonly Float3 negativeHalf = new Float3(-0.5f, -0.5f, -0.5f);
-
-		public static readonly Float3 maxValue = new Float3(float.MaxValue, float.MaxValue, float.MaxValue);
-		public static readonly Float3 minValue = new Float3(float.MinValue, float.MinValue, float.MinValue);
-
-		public static readonly Float3 positiveInfinity = new Float3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
-		public static readonly Float3 negativeInfinity = new Float3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
-
-		public static readonly Float3 epsilon = new Float3(Scalars.Epsilon, Scalars.Epsilon, Scalars.Epsilon);
-		public static readonly Float3 NaN = new Float3(float.NaN, float.NaN, float.NaN);
-
 #endregion
-
-#region Instance Properties
 
 #region Scalar Returns
 
@@ -702,6 +708,8 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
+#endregion
+
 #region Methods
 
 #region Instance
@@ -802,6 +810,32 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Reflect(in Float3 normal) => -2f * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Project(in Float3 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
+
+		public override string ToString() => ToString(string.Empty);
+
+		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)})";
+
+		// ReSharper disable CompareOfFloatsByEqualityOperator
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(in Float3 other) => x == other.x && y == other.y && z == other.z;
+		// ReSharper restore CompareOfFloatsByEqualityOperator
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => EqualsFast(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public bool EqualsFast(in Float3 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y) && z.AlmostEquals(other.z);
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = x.GetHashCode();
+				hashCode = (hashCode * 397) ^ y.GetHashCode();
+				hashCode = (hashCode * 397) ^ z.GetHashCode();
+				return hashCode;
+			}
+		}
 
 #endregion
 
@@ -957,8 +991,6 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#endregion
-
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 operator +(in Float3 first, in Float3 second) => new Float3(first.x + second.x, first.y + second.y, first.z + second.z);
@@ -989,25 +1021,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(in Float3 first, in Float3 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(in Float3 first, in Float3 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(in Float3 other) => x == other.x && y == other.y && z == other.z;
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float3 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float3 other) => EqualsFast(other);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool EqualsFast(in Float3 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y) && z.AlmostEquals(other.z);
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = x.GetHashCode();
-				hashCode = (hashCode * 397) ^ y.GetHashCode();
-				hashCode = (hashCode * 397) ^ z.GetHashCode();
-				return hashCode;
-			}
-		}
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float3 value) => new Int2((int)value.x, (int)value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float3 value) => new Int3((int)value.x, (int)value.y, (int)value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(in Float3 value) => new Int4((int)value.x, (int)value.y, (int)value.z, 0);
@@ -1023,10 +1036,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override string ToString() => $"({x}, {y}, {z})";
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)})";
+#endregion
 
 #region Enumerations
 

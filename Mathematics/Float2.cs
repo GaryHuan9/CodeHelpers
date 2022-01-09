@@ -21,7 +21,40 @@ namespace CodeHelpers.Mathematics
 		[FieldOffset(0)] public readonly float x;
 		[FieldOffset(4)] public readonly float y;
 
-#region Swizzled4
+#region Properties
+
+#region Static
+
+		public static readonly Float2 right = new Float2(1f, 0f);
+		public static readonly Float2 left = new Float2(-1f, 0f);
+
+		public static readonly Float2 up = new Float2(0f, 1f);
+		public static readonly Float2 down = new Float2(0f, -1f);
+
+		public static readonly Float2 zero = new Float2(0f, 0f);
+
+		public static readonly Float2 one = new Float2(1f, 1f);
+		public static readonly Float2 negativeOne = new Float2(-1f, -1f);
+
+		public static readonly Float2 half = new Float2(0.5f, 0.5f);
+		public static readonly Float2 negativeHalf = new Float2(-0.5f, -0.5f);
+
+		public static readonly Float2 maxValue = new Float2(float.MaxValue, float.MaxValue);
+		public static readonly Float2 minValue = new Float2(float.MinValue, float.MinValue);
+
+		public static readonly Float2 positiveInfinity = new Float2(float.PositiveInfinity, float.PositiveInfinity);
+		public static readonly Float2 negativeInfinity = new Float2(float.NegativeInfinity, float.NegativeInfinity);
+
+		public static readonly Float2 epsilon = new Float2(Scalars.Epsilon, Scalars.Epsilon);
+		public static readonly Float2 NaN = new Float2(float.NaN, float.NaN);
+
+#endregion
+
+#region Instance
+
+#region Swizzled
+
+#region Four
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXX => new Float4(x, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXY => new Float4(x, x, x, y);
@@ -133,7 +166,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled3
+#region Three
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXX => new Float3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXY => new Float3(x, x, y);
@@ -173,7 +206,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled2
+#region Two
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XX => new Float2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XY => new Float2(x, y);
@@ -189,34 +222,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Static Properties
-
-		public static readonly Float2 right = new Float2(1f, 0f);
-		public static readonly Float2 left = new Float2(-1f, 0f);
-
-		public static readonly Float2 up = new Float2(0f, 1f);
-		public static readonly Float2 down = new Float2(0f, -1f);
-
-		public static readonly Float2 zero = new Float2(0f, 0f);
-
-		public static readonly Float2 one = new Float2(1f, 1f);
-		public static readonly Float2 negativeOne = new Float2(-1f, -1f);
-
-		public static readonly Float2 half = new Float2(0.5f, 0.5f);
-		public static readonly Float2 negativeHalf = new Float2(-0.5f, -0.5f);
-
-		public static readonly Float2 maxValue = new Float2(float.MaxValue, float.MaxValue);
-		public static readonly Float2 minValue = new Float2(float.MinValue, float.MinValue);
-
-		public static readonly Float2 positiveInfinity = new Float2(float.PositiveInfinity, float.PositiveInfinity);
-		public static readonly Float2 negativeInfinity = new Float2(float.NegativeInfinity, float.NegativeInfinity);
-
-		public static readonly Float2 epsilon = new Float2(Scalars.Epsilon, Scalars.Epsilon);
-		public static readonly Float2 NaN = new Float2(float.NaN, float.NaN);
-
 #endregion
-
-#region Instance Properties
 
 #region Scalar Returns
 
@@ -401,6 +407,8 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
+#endregion
+
 #region Methods
 
 #region Instance
@@ -491,6 +499,26 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Reflect(Float2 normal) => -2f * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Project(Float2 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
+
+		public override string ToString() => ToString(string.Empty);
+
+		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)})";
+
+		// ReSharper disable CompareOfFloatsByEqualityOperator
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => x == other.x && y == other.y;
+		// ReSharper restore CompareOfFloatsByEqualityOperator
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y);
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (x.GetHashCode() * 397) ^ y.GetHashCode();
+			}
+		}
 
 #endregion
 
@@ -626,8 +654,6 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#endregion
-
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 operator +(Float2 first, Float2 second) => new Float2(first.x + second.x, first.y + second.y);
@@ -658,20 +684,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Float2 first, Float2 second) => first.x <= second.x && first.y <= second.y;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Float2 first, Float2 second) => first.x >= second.x && first.y >= second.y;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => x == other.x && y == other.y;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool Equals(Float2 other) => x.AlmostEquals(other.x) && y.AlmostEquals(other.y);
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				return (x.GetHashCode() * 397) ^ y.GetHashCode();
-			}
-		}
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float2 value) => new Int2((int)value.x, (int)value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float2 value) => new Int3((int)value.x, (int)value.y, 0);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(Float2 value) => new Int4((int)value.x, (int)value.y, 0, 0);
@@ -680,7 +692,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(Float2 value) => value.XY_;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(Float2 value) => new Float4(value.x, value.y, 0f, 0f);
 
-
 #if CODEHELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float2(UnityEngine.Vector2 value) => new Float2(value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector2(Float2 value) => new UnityEngine.Vector2(value.x, value.y);
@@ -688,10 +699,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override string ToString() => $"({x}, {y})";
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)})";
+#endregion
 
 #region Enumerations
 

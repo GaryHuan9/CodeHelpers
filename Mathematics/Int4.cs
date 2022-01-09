@@ -25,7 +25,37 @@ namespace CodeHelpers.Mathematics
 		[FieldOffset(08)] public readonly int z;
 		[FieldOffset(12)] public readonly int w;
 
-#region Swizzled4
+#region Properties
+
+#region Static
+
+		public static readonly Int4 right = new Int4(1, 0, 0, 0);
+		public static readonly Int4 left = new Int4(-1, 0, 0, 0);
+
+		public static readonly Int4 up = new Int4(0, 1, 0, 0);
+		public static readonly Int4 down = new Int4(0, -1, 0, 0);
+
+		public static readonly Int4 forward = new Int4(0, 0, 1, 0);
+		public static readonly Int4 backward = new Int4(0, 0, -1, 0);
+
+		public static readonly Int4 ana = new Int4(0, 0, 0, 1);
+		public static readonly Int4 kata = new Int4(0, 0, 0, -1);
+
+		public static readonly Int4 zero = new Int4(0, 0, 0, 0);
+
+		public static readonly Int4 one = new Int4(1, 1, 1, 1);
+		public static readonly Int4 negativeOne = new Int4(-1, -1, -1, 1);
+
+		public static readonly Int4 maxValue = new Int4(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
+		public static readonly Int4 minValue = new Int4(int.MinValue, int.MinValue, int.MinValue, int.MinValue);
+
+#endregion
+
+#region Instance
+
+#region Swizzled
+
+#region Four
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXX => new Int4(x, x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int4 XXXY => new Int4(x, x, x, y);
@@ -779,7 +809,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled3
+#region Three
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXX => new Int3(x, x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int3 XXY => new Int3(x, x, y);
@@ -863,7 +893,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Swizzled2
+#region Two
 
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XX => new Int2(x, x);
 		[EditorBrowsable(EditorBrowsableState.Never)] public Int2 XY => new Int2(x, y);
@@ -887,31 +917,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#region Static Properties
-
-		public static readonly Int4 right = new Int4(1, 0, 0, 0);
-		public static readonly Int4 left = new Int4(-1, 0, 0, 0);
-
-		public static readonly Int4 up = new Int4(0, 1, 0, 0);
-		public static readonly Int4 down = new Int4(0, -1, 0, 0);
-
-		public static readonly Int4 forward = new Int4(0, 0, 1, 0);
-		public static readonly Int4 backward = new Int4(0, 0, -1, 0);
-
-		public static readonly Int4 ana = new Int4(0, 0, 0, 1);
-		public static readonly Int4 kata = new Int4(0, 0, 0, -1);
-
-		public static readonly Int4 zero = new Int4(0, 0, 0, 0);
-
-		public static readonly Int4 one = new Int4(1, 1, 1, 1);
-		public static readonly Int4 negativeOne = new Int4(-1, -1, -1, 1);
-
-		public static readonly Int4 maxValue = new Int4(int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
-		public static readonly Int4 minValue = new Int4(int.MinValue, int.MinValue, int.MinValue, int.MinValue);
-
 #endregion
-
-#region Instance Properties
 
 #region Scalar Returns
 
@@ -1215,6 +1221,8 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
+#endregion
+
 #region Methods
 
 #region Instance
@@ -1287,6 +1295,28 @@ namespace CodeHelpers.Mathematics
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int4 Reflect(in Int4 normal) => -2 * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Project(in Float4 normal) => normal * (normal.Dot(this) / normal.SquaredMagnitude);
+
+		public override string ToString() => ToString(string.Empty);
+
+		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)}, {w.ToString(format, provider)})";
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int4 other && Equals(other);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int4 other) => EqualsFast(other);
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsFast(in Int4 other) => x == other.x && y == other.y && z == other.z && w == other.w;
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				int hashCode = x.GetHashCode();
+				hashCode = (hashCode * 397) ^ y.GetHashCode();
+				hashCode = (hashCode * 397) ^ z.GetHashCode();
+				hashCode = (hashCode * 397) ^ w.GetHashCode();
+				return hashCode;
+			}
+		}
 
 #endregion
 
@@ -1428,8 +1458,6 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-#endregion
-
 #region Operators
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Int4 operator +(in Int4 first, in Int4 second) => new Int4(first.x + second.x, first.y + second.y, first.z + second.z, first.w + second.w);
@@ -1469,23 +1497,6 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(in Int4 first, in Int4 second) => first.x <= second.x && first.y <= second.y && first.z <= second.z && first.w <= second.w;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(in Int4 first, in Int4 second) => first.x >= second.x && first.y >= second.y && first.z >= second.z && first.w >= second.w;
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int4 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int4 other) => EqualsFast(other);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsFast(in Int4 other) => x == other.x && y == other.y && z == other.z && w == other.w;
-
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				int hashCode = x.GetHashCode();
-				hashCode = (hashCode * 397) ^ y.GetHashCode();
-				hashCode = (hashCode * 397) ^ z.GetHashCode();
-				hashCode = (hashCode * 397) ^ w.GetHashCode();
-				return hashCode;
-			}
-		}
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Int4 value) => value.XY;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Int4 value) => value.XYZ;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(int value) => new Int4(value, value, value, value);
@@ -1501,10 +1512,7 @@ namespace CodeHelpers.Mathematics
 
 #endregion
 
-		public override string ToString() => $"({x}, {y}, {z}, {w})";
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({x.ToString(format, provider)}, {y.ToString(format, provider)}, {z.ToString(format, provider)}, {w.ToString(format, provider)})";
+#endregion
 
 #region Enumerations
 
