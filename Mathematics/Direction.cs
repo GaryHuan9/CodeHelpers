@@ -306,8 +306,6 @@ namespace CodeHelpers.Mathematics
 
 		public static implicit operator Int3(Direction direction)
 		{
-			direction.AssertNotZero();
-
 			int index = (int)direction.Axis;
 			int value = direction.Sign - 1;
 
@@ -316,8 +314,6 @@ namespace CodeHelpers.Mathematics
 
 		public static implicit operator Int2(Direction direction)
 		{
-			direction.AssertNotZero();
-
 			Int3 full = direction;
 			if (full.z == 0) return full.XY;
 			throw new InvalidCastException();

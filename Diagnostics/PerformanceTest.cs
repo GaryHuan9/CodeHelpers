@@ -40,12 +40,12 @@ namespace CodeHelpers.Diagnostics
 		}
 
 		public override string ToString() => state switch
-											 {
-												 State.waiting => "Unstarted test waiting for measurement",
-												 State.testing => "Running test collecting time measurements",
-												 State.tested => $"Completed test measuring {ElapsedMilliseconds}ms",
-												 _ => throw ExceptionHelper.Invalid(nameof(state), state, InvalidType.unexpected)
-											 };
+		{
+			State.waiting => "Unstarted test waiting for measurement",
+			State.testing => "Running test collecting time measurements",
+			State.tested => $"Completed test measuring {ElapsedMilliseconds}ms",
+			_ => throw ExceptionHelper.Invalid(nameof(state), state, InvalidType.unexpected)
+		};
 
 		public readonly struct Interval : IDisposable
 		{

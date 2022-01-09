@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Pooling
 {
@@ -69,23 +70,25 @@ namespace CodeHelpers.Pooling
 		{
 			this.pooler = pooler;
 			target = pooler.GetObject();
-
-			disposed = false;
+			Assert.IsNotNull(target);
 		}
 
 		readonly PoolerBase<T> pooler;
-		readonly T target;
+		T target; //Target is null if released
 
-		bool disposed;
+		/// <summary>
+		/// Retrieves the pooled object.
+		/// </summary>
+		public T Target => target ?? throw new Exception("Pooled object already released!");
 
-		public T Target => !disposed ? target : throw new Exception("Pooled object already released!");
-
+		/// <summary>
+		/// Releases the pooled object
+		/// </summary>
 		public void Dispose()
 		{
-			if (disposed) return;
-
+			if (target == null) return;
 			pooler.ReleaseObject(target);
-			disposed = true;
+			target = null;
 		}
 
 		public static implicit operator T(ReleaseHandle<T> handle) => handle.Target;

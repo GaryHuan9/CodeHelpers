@@ -9,7 +9,9 @@ namespace CodeHelpers
 
 		readonly T storage;
 
+		public T Value => storage ?? throw ExceptionHelper.Invalid(nameof(storage), InvalidType.isNull);
+
 		public static implicit operator NotNull<T>(T target) => new(target);
-		public static implicit operator T(NotNull<T> target) => target.storage ?? throw ExceptionHelper.Invalid(nameof(storage), InvalidType.isNull);
+		public static implicit operator T(NotNull<T> target) => target.Value;
 	}
 }

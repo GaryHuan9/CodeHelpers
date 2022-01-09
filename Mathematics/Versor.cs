@@ -27,12 +27,12 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal Versor(in Float3 sin, in Float3 cos) => d = new Float4
-														 (
-															 sin.x * cos.y * cos.z + cos.x * sin.y * sin.z,
-															 cos.x * sin.y * cos.z - sin.x * cos.y * sin.z,
-															 cos.x * cos.y * sin.z - sin.x * sin.y * cos.z,
-															 cos.x * cos.y * cos.z + sin.x * sin.y * sin.z
-														 );
+		(
+			sin.x * cos.y * cos.z + cos.x * sin.y * sin.z,
+			cos.x * sin.y * cos.z - sin.x * cos.y * sin.z,
+			cos.x * cos.y * sin.z - sin.x * sin.y * cos.z,
+			cos.x * cos.y * cos.z + sin.x * sin.y * sin.z
+		);
 
 		/// <summary>
 		/// Creates a <see cref="Versor"/> from an <paramref name="axis"/> and an <paramref name="angle"/>.
@@ -56,6 +56,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 		Versor(float x, float y, float z, float w) : this(new Float4(x, y, z, w)) { }
+
 		internal Versor(in Float4 d) => this.d = d;
 
 		internal readonly Float4 d;
@@ -101,7 +102,7 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
-		public float Dot(in Versor other) => d.Dot(other.d);
+		public float  Dot(in       Versor other) => d.Dot(other.d);
 		public double DotDouble(in Versor other) => d.DotDouble(other.d);
 
 		/// <summary>
@@ -122,7 +123,7 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static float Angle(in Versor value, in Versor other) => value.Angle(other);
 
-		public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
+		public static float  Dot(in       Float4 value, in Float4 other) => value.Dot(other);
 		public static double DotDouble(in Float4 value, in Float4 other) => value.DotDouble(other);
 
 		public static Versor Damp(in Versor current, in Versor target, ref Float4 velocity, float smoothTime, float deltaTime)
@@ -188,25 +189,25 @@ namespace CodeHelpers.Mathematics
 
 			return new Float3
 			(
-				dd.w * second.x + dw.y * second.z - dw.z * second.y + dd.x * second.x + dy_x * second.y + dz.x * second.z - dd.z * second.x - dd.y * second.x,
-				dy_x * second.x + dd.y * second.y + dz.y * second.z + dw.z * second.x - dd.z * second.y + dd.w * second.y - dw.x * second.z - dd.x * second.y,
-				dz.x * second.x + dz.y * second.y + dd.z * second.z - dw.y * second.x - dd.y * second.z + dw.x * second.y - dd.x * second.z + dd.w * second.z
+				dd.w * second.x + dd.x * second.x - dw.z * second.y + dy_x * second.y + dw.y * second.z + dz.x * second.z - dd.z * second.x - dd.y * second.x,
+				dy_x * second.x + dw.z * second.x + dd.y * second.y - dd.z * second.y + dz.y * second.z - dw.x * second.z + dd.w * second.y - dd.x * second.y,
+				dz.x * second.x - dw.y * second.x + dz.y * second.y + dw.x * second.y + dd.z * second.z - dd.y * second.z - dd.x * second.z + dd.w * second.z
 			);
 		}
 
 		public static bool operator ==(Versor left, Versor right) => left.Equals(right);
 		public static bool operator !=(Versor left, Versor right) => !left.Equals(right);
 
-		public override bool Equals(object obj) => obj is Versor other && Equals(other);
-		public bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
-		public override int GetHashCode() => d.GetHashCode();
+		public override bool Equals(object obj)   => obj is Versor other && Equals(other);
+		public          bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
+		public override int  GetHashCode()        => d.GetHashCode();
 
 #if CODEHELPERS_UNITY
 		public static implicit operator Versor(UnityEngine.Quaternion value) => new Versor(value.x, value.y, value.z, value.w);
 		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.x, value.d.y, value.d.z, value.d.w);
 #endif
 
-		public static implicit operator Float4x4(in Versor value)
+		public static implicit operator Float3x3(in Versor value)
 		{
 			ref readonly Float4 d = ref value.d;
 
@@ -220,18 +221,18 @@ namespace CodeHelpers.Mathematics
 			float zz = d2.z * d.z;
 			float zw = d2.z * d.w;
 
-			return new Float4x4
+			return new Float3x3
 			(
-				1f - yy - zz, xs.y - zw, xs.z + yw, 0f,
-				xs.y + zw, 1f - xs.x - zz, yz - xs.w, 0f,
-				xs.z - yw, yz + xs.w, 1f - xs.x - yy, 0f,
-				0f, 0f, 0f, 1f
+				1.0f - yy - zz, xs.y - zw, xs.z + yw,
+				xs.y + zw, 1f - xs.x - zz, yz - xs.w,
+				xs.z - yw, yz + xs.w, 1f - xs.x - yy
 			);
 		}
 
 		public override string ToString() => d.ToString();
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
+
 		public string ToString(string format, IFormatProvider provider) => d.ToString(format, provider);
 	}
 }
