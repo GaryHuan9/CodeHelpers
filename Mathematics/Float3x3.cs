@@ -56,51 +56,6 @@ namespace CodeHelpers.Mathematics
 		public readonly float f21;
 		public readonly float f22;
 
-		public Float3 GetRow(int row)
-		{
-#if UNSAFE_CODE_ENABLED
-			unsafe
-			{
-				if (row < 0 || 2 < row) throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
-				fixed (Float3x3* pointer = &this) return ((Float3*)pointer)[row];
-			}
-#else
-			switch (row)
-			{
-				case 0: return new Float3(f00, f01, f02);
-				case 1: return new Float3(f10, f11, f12);
-				case 2: return new Float3(f20, f21, f22);
-			}
-
-			throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
-#endif
-		}
-
-		public Float3 GetColumn(int column)
-		{
-#if !UNSAFE_CODE_ENABLED
-			unsafe
-			{
-				if (column < 0 || 2 < column) throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
-
-				fixed (Float3x3* pointer = &this)
-				{
-					float* p = (float*)pointer;
-					return new Float3(p[column], p[column + 3], p[column + 6]);
-				}
-			}
-#else
-			switch (column)
-			{
-				case 0: return new Float3(f00, f10, f20);
-				case 1: return new Float3(f01, f11, f21);
-				case 2: return new Float3(f02, f12, f22);
-			}
-
-			throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
-#endif
-		}
-
 #region Properties
 
 #region Instance
@@ -258,6 +213,51 @@ namespace CodeHelpers.Mathematics
 
 #region Instance
 
+		public Float3 GetRow(int row)
+		{
+#if UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (row < 0 || 2 < row) throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
+				fixed (Float3x3* pointer = &this) return ((Float3*)pointer)[row];
+			}
+#else
+			switch (row)
+			{
+				case 0: return new Float3(f00, f01, f02);
+				case 1: return new Float3(f10, f11, f12);
+				case 2: return new Float3(f20, f21, f22);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
+#endif
+		}
+
+		public Float3 GetColumn(int column)
+		{
+#if !UNSAFE_CODE_ENABLED
+			unsafe
+			{
+				if (column < 0 || 2 < column) throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
+
+				fixed (Float3x3* pointer = &this)
+				{
+					float* p = (float*)pointer;
+					return new Float3(p[column], p[column + 3], p[column + 6]);
+				}
+			}
+#else
+			switch (column)
+			{
+				case 0: return new Float3(f00, f10, f20);
+				case 1: return new Float3(f01, f11, f21);
+				case 2: return new Float3(f02, f12, f22);
+			}
+
+			throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
+#endif
+		}
+
 		public override string ToString() => ToString(string.Empty);
 
 		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
@@ -321,12 +321,11 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Returns random matrix for debug purposes; will be removed.
 		/// </summary>
-		public static Float4x4 GetRandom(float min = -1000f, float max = 1000f) => new Float4x4
+		public static Float3x3 GetRandom(float min = -1000f, float max = 1000f) => new Float3x3
 		(
-			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
-			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
-			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
-			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max)
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max),
+			RandomHelper.Range(min, max), RandomHelper.Range(min, max), RandomHelper.Range(min, max)
 		);
 
 #endregion

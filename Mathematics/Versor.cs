@@ -10,12 +10,12 @@ namespace CodeHelpers.Mathematics
 	public readonly struct Versor : IEquatable<Versor>, IFormattable
 	{
 		/// <summary>
-		/// Creates a <see cref="Versor"/> in the ZXY rotation order.
+		/// Creates a <see cref="Versor"/> from three angles (degrees) in the ZXY rotation order.
 		/// </summary>
 		public Versor(float angleX, float angleY, float angleZ) : this(new Float3(angleX, angleY, angleZ)) { }
 
 		/// <summary>
-		/// Creates a <see cref="Versor"/> in the ZXY rotation order.
+		/// Creates a <see cref="Versor"/> from three angles (degrees) in the ZXY rotation order.
 		/// </summary>
 		public Versor(Float3 angles) : this(CreateSin(angles *= Scalars.DegreeToRadian / 2f), CreateCos(angles)) { }
 
@@ -35,7 +35,7 @@ namespace CodeHelpers.Mathematics
 		);
 
 		/// <summary>
-		/// Creates a <see cref="Versor"/> from an <paramref name="axis"/> and an <paramref name="angle"/>.
+		/// Creates a <see cref="Versor"/> from an <paramref name="axis"/> and an <paramref name="angle"/> (degrees).
 		/// </summary>
 		public Versor(Float3 axis, float angle)
 		{
@@ -102,7 +102,7 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
-		public float  Dot(in       Versor other) => d.Dot(other.d);
+		public float Dot(in Versor other) => d.Dot(other.d);
 		public double DotDouble(in Versor other) => d.DotDouble(other.d);
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static float Angle(in Versor value, in Versor other) => value.Angle(other);
 
-		public static float  Dot(in       Float4 value, in Float4 other) => value.Dot(other);
+		public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
 		public static double DotDouble(in Float4 value, in Float4 other) => value.DotDouble(other);
 
 		public static Versor Damp(in Versor current, in Versor target, ref Float4 velocity, float smoothTime, float deltaTime)
@@ -198,9 +198,9 @@ namespace CodeHelpers.Mathematics
 		public static bool operator ==(Versor left, Versor right) => left.Equals(right);
 		public static bool operator !=(Versor left, Versor right) => !left.Equals(right);
 
-		public override bool Equals(object obj)   => obj is Versor other && Equals(other);
-		public          bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
-		public override int  GetHashCode()        => d.GetHashCode();
+		public override bool Equals(object obj) => obj is Versor other && Equals(other);
+		public bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
+		public override int GetHashCode() => d.GetHashCode();
 
 #if CODEHELPERS_UNITY
 		public static implicit operator Versor(UnityEngine.Quaternion value) => new Versor(value.x, value.y, value.z, value.w);
