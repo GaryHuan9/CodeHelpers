@@ -26,14 +26,14 @@ namespace CodeHelpers.Mathematics
 		public const float GoldenRatio = (float)GoldenRatioDouble;
 
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
-		public static int   Lerp(int   left, int   right, int   value) => (right - left) * value + left;
+		public static int Lerp(int left, int right, int value) => (right - left) * value + left;
 
 		public static float InverseLerp(float left, float right, float value) => left.Equals(right) ? 0f : (value - left) / (right - left);
-		public static int   InverseLerp(int   left, int   right, int   value) => left == right ? 0 : (value - left) / (right - left);
+		public static int InverseLerp(int left, int right, int value) => left == right ? 0 : (value - left) / (right - left);
 
-		public static float  Clamp(this float  value, float  min = 0f, float  max = 1f) => value < min ? min : value > max ? max : value;
-		public static int    Clamp(this int    value, int    min = 0,  int    max = 1)  => value < min ? min : value > max ? max : value;
-		public static float  Clamp(this int    value, float  min,      float  max = 1f) => value < min ? min : value > max ? max : value;
+		public static float Clamp(this float value, float min = 0f, float max = 1f) => value < min ? min : value > max ? max : value;
+		public static int Clamp(this int value, int min = 0, int max = 1) => value < min ? min : value > max ? max : value;
+		public static float Clamp(this int value, float min, float max = 1f) => value < min ? min : value > max ? max : value;
 		public static double Clamp(this double value, double min = 0d, double max = 1d) => value < min ? min : value > max ? max : value;
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static float To0To1(this float value) => (value + 1f) / 2f;
 
-		public static bool IsPowerOfTwo(this int  value) => (value & -value) == value; //NOTE: This returns true for 0, which is not a power of two
+		public static bool IsPowerOfTwo(this int value) => (value & -value) == value; //NOTE: This returns true for 0, which is not a power of two
 		public static bool IsPowerOfTwo(this long value) => (value & -value) == value;
 
 		/// <summary>
@@ -108,7 +108,7 @@ namespace CodeHelpers.Mathematics
 		}
 
 		public static int Sign(this float value) => AlmostEquals(value) ? 0 : Math.Sign(value);
-		public static int Sign(this int   value) => Math.Sign(value);
+		public static int Sign(this int value) => Math.Sign(value);
 
 		/// <summary>
 		/// Wraps <paramref name="value"/> between 0 (inclusive) and <paramref name="length"/> (exclusive).
@@ -175,13 +175,13 @@ namespace CodeHelpers.Mathematics
 		public static long Repeat(this long value, long min, long max) => (value - min).Repeat(max - min) + min;
 
 		public static int Floor(this float value) => (int)Math.Floor(value);
-		public static int Ceil(this  float value) => (int)Math.Ceiling(value);
+		public static int Ceil(this float value) => (int)Math.Ceiling(value);
 		public static int Round(this float value) => (int)Math.Round(value);
 
-		public static int  FlooredDivide(this int  value, int  divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
+		public static int FlooredDivide(this int value, int divisor) => value / divisor - Convert.ToInt32((value < 0) ^ (divisor < 0) && value % divisor != 0);
 		public static long FlooredDivide(this long value, long divisor) => value / divisor - Convert.ToInt64((value < 0) ^ (divisor < 0) && value % divisor != 0);
 
-		public static int  CeiledDivide(this int  value, int  divisor) => value / divisor + Convert.ToInt32((value < 0) ^ (divisor > 0) && value % divisor != 0);
+		public static int CeiledDivide(this int value, int divisor) => value / divisor + Convert.ToInt32((value < 0) ^ (divisor > 0) && value % divisor != 0);
 		public static long CeiledDivide(this long value, long divisor) => value / divisor + Convert.ToInt64((value < 0) ^ (divisor > 0) && value % divisor != 0);
 
 		public static float Remap(this float value, float fromLow, float fromHigh, float toLow = 0f, float toHigh = 1f) => (value - fromLow) * (toHigh - toLow) / (fromHigh - fromLow) + toLow;
@@ -194,7 +194,7 @@ namespace CodeHelpers.Mathematics
 #elif CODE_HELPERS_UNSAFE
 			unsafe { return *(int*)&value; }
 #else
-			return BitsConverter32(value).intValue;
+			return new BitsConverter32(value).intValue;
 #endif
 		}
 
@@ -206,7 +206,7 @@ namespace CodeHelpers.Mathematics
 #elif CODE_HELPERS_UNSAFE
 			unsafe { return *(float*)&value; }
 #else
-			return BitsConverter32(value).floatValue;
+			return new BitsConverter32(value).floatValue;
 #endif
 		}
 

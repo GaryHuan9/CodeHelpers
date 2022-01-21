@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Diagnostics
@@ -22,14 +23,14 @@ namespace CodeHelpers.Diagnostics
 		}
 
 		[Conditional("DEBUG")]
-		public static void IsTrue(bool target)
+		public static void IsTrue([DoesNotReturnIf(false)] bool target)
 		{
 			if (target) return;
 			throw new Exception("Target is not true!");
 		}
 
 		[Conditional("DEBUG")]
-		public static void IsFalse(bool target)
+		public static void IsFalse([DoesNotReturnIf(true)] bool target)
 		{
 			if (!target) return;
 			throw new Exception("Target is not false!");

@@ -57,6 +57,32 @@ namespace CodeHelpers.Mathematics
 		public int Z => Axis == 2 ? Sign - 1 : 0;
 
 		/// <summary>
+		/// Returns the axis of this <see cref="Direction"/>, with 0 meaning x, 1 meaning y, and 2 meaning z.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
+		/// </summary>
+		public int Axis
+		{
+			get
+			{
+				AssertNotZero();
+				return data & 0b11;
+			}
+		}
+
+		/// <summary>
+		/// Returns the sign of this <see cref="Direction"/>, either 1 or -1.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
+		/// </summary>
+		public int Sign
+		{
+			get
+			{
+				AssertNotZero();
+				return (data >> 2) & 0b11;
+			}
+		}
+
+		/// <summary>
 		/// Returns whether this <see cref="Direction"/> is zero. A zero value can only be created using
 		/// the default constructor or through the result of an invalid operation (such as <see cref="Cross"/>).
 		/// NOTE: most operations will not accept <see cref="Direction"/> with <see cref="IsZero"/> marked as true as arguments.
@@ -65,6 +91,7 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Returns whether this <see cref="Direction"/> is negative.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public bool IsNegative
 		{
@@ -77,6 +104,7 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Returns the index of this <see cref="Direction"/> in <see cref="All"/>.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public int Index
 		{
@@ -84,6 +112,7 @@ namespace CodeHelpers.Mathematics
 			{
 				AssertNotZero();
 
+				//TODO: we can optimize this by caching it into the three bits that we are not using
 				return ((data & 0b11) << 1) + (((data >> 3) ^ 0b1) & 0b1);
 			}
 		}
@@ -91,6 +120,7 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// If this <see cref="Direction"/> has a Y component, make it the Z component.
 		/// Or similarly if it has a Z component, make it the Y component.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public Direction FlipYZ
 		{
@@ -108,6 +138,7 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Returns this <see cref="Direction"/> with negatives turned into positives.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public Direction Absoluted
 		{
@@ -123,6 +154,7 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Returns a <see cref="Direction"/> that is perpendicular to this <see cref="Direction"/>.
 		/// The sign stays the same, and the axis decreases from Z to Y or Y to X or X to Z.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public Direction Perpendicular
 		{
@@ -134,9 +166,6 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
-		uint Axis => data & 0b11u;
-		int Sign => (data >> 2) & 0b11;
-
 		/// <summary>
 		/// Accesses all the possible <see cref="Direction"/> values.
 		/// </summary>
@@ -144,6 +173,7 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Calculates and returns the cross product (vector product) of this <see cref="Direction"/> and <paramref name="other"/>.
+		/// NOTE: undefined behavior if <see cref="IsZero"/> for either this or <paramref name="other"/>.
 		/// </summary>
 		public Direction Cross(Direction other)
 		{
@@ -154,8 +184,9 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Projects <paramref name="value"/> onto the plane located at the origin and has this <see cref="Direction"/> as its normal.
-		/// NOTE: this returns a <see cref="Float2"/>, since it project as an orthographic camera looking down at <see cref="value"/>, where
-		/// the plane normal is pointing towards the camera.
+		/// NOTE: this returns a <see cref="Float2"/>, since it project as an orthographic camera looking down at <see cref="value"/>,
+		/// where the plane normal is pointing towards the camera.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public Float2 Project(in Float3 value)
 		{
@@ -192,10 +223,11 @@ namespace CodeHelpers.Mathematics
 
 		/// <summary>
 		/// Multiplies this <see cref="Direction"/> with <paramref name="value"/> as a scalar result.
+		/// NOTE: undefined behavior if <see cref="IsZero"/>.
 		/// </summary>
 		public float ExtractComponent(in Float3 value)
 		{
-			int index = (int)Axis;
+			int index = Axis;
 			float part = value[index];
 			return IsNegative ? -part : part;
 		}
@@ -203,7 +235,7 @@ namespace CodeHelpers.Mathematics
 		/// <inheritdoc cref="ExtractComponent(in CodeHelpers.Mathematics.Float3)"/>
 		public int ExtractComponent(in Int3 value)
 		{
-			int index = (int)Axis;
+			int index = Axis;
 			int part = value[index];
 			return IsNegative ? -part : part;
 		}
@@ -275,7 +307,7 @@ namespace CodeHelpers.Mathematics
 
 		public static Float3 operator *(Direction direction, in Float3 value)
 		{
-			int index = (int)direction.Axis;
+			int index = direction.Axis;
 			float part = value[index];
 			if (direction.IsNegative) part = -part;
 			return Float3.Create(index, part);
@@ -283,7 +315,7 @@ namespace CodeHelpers.Mathematics
 
 		public static Int3 operator *(Direction direction, in Int3 value)
 		{
-			int index = (int)direction.Axis;
+			int index = direction.Axis;
 			int part = value[index];
 			if (direction.IsNegative) part = -part;
 			return Int3.Create(index, part);
@@ -306,7 +338,7 @@ namespace CodeHelpers.Mathematics
 
 		public static implicit operator Int3(Direction direction)
 		{
-			int index = (int)direction.Axis;
+			int index = direction.Axis;
 			int value = direction.Sign - 1;
 
 			return Int3.Create(index, value);

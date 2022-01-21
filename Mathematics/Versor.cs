@@ -195,11 +195,14 @@ namespace CodeHelpers.Mathematics
 			);
 		}
 
-		public static bool operator ==(Versor left, Versor right) => left.Equals(right);
-		public static bool operator !=(Versor left, Versor right) => !left.Equals(right);
+		public static bool operator ==(in Versor left, in Versor right) => left.Equals(right);
+		public static bool operator !=(in Versor left, in Versor right) => !left.Equals(right);
 
+		public bool Equals(in Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
 		public override bool Equals(object obj) => obj is Versor other && Equals(other);
-		public bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
+
+		bool IEquatable<Versor>.Equals(Versor other) => Equals(other);
+
 		public override int GetHashCode() => d.GetHashCode();
 
 #if CODE_HELPERS_UNITY

@@ -19,7 +19,7 @@ namespace CodeHelpers.Unity.Editors
 			window.minSize = new Float2(100f, 100f);
 		}
 
-		readonly Texture2D[] textures = new Texture2D[EnumHelper<Direction>.enumLength];
+		readonly Texture2D[] textures = new Texture2D[Direction.All.Length];
 		Texture2D FirstTexture => textures.FirstOrDefault(texture => texture != null);
 
 		TextureType extension = TextureType.exrHalf;
@@ -172,25 +172,25 @@ namespace CodeHelpers.Unity.Editors
 			Parallel.ForEach
 			(
 				resolution.Loop(), pixel =>
-								   {
-									   int regionIndex = GetPixelTextureIndex(pixel, singleSize);
-									   Color color;
+				{
+					Direction direction = GetPixelTextureDirection(pixel, singleSize);
+					Color color;
 
-									   if (regionIndex >= 0)
-									   {
-										   Color[] source = sourceColors[regionIndex];
+					if (!direction.IsZero)
+					{
+						Color[] source = sourceColors[direction.Index];
 
-										   if (source == null) color = Color.black; //Black for missing texture
-										   else
-										   {
-											   Int2 region = GetPixelTextureOffset(pixel, singleSize);
-											   color = source[region.y * singleSize.x + region.x];
-										   }
-									   }
-									   else color = Color.clear;
+						if (source == null) color = Color.black; //Black for missing texture
+						else
+						{
+							Int2 region = GetPixelTextureOffset(pixel, singleSize);
+							color = source[region.y * singleSize.x + region.x];
+						}
+					}
+					else color = Color.clear;
 
-									   colors[pixel.y * resolution.x + pixel.x] = color;
-								   }
+					colors[pixel.y * resolution.x + pixel.x] = color;
+				}
 			);
 
 			Release(ref sourceColors);
@@ -240,20 +240,20 @@ namespace CodeHelpers.Unity.Editors
 		/// <summary>
 		/// Returns the region local direction index for the global <paramref name="pixel"/>.
 		/// </summary>
-		static int GetPixelTextureIndex(Int2 pixel, Int2 singleSize)
+		static Direction GetPixelTextureDirection(Int2 pixel, Int2 singleSize)
 		{
 			Int2 region = pixel / singleSize;
 
-			switch (region.x * 3 + region.y)
+			return (region.x * 3 + region.y) switch
 			{
-				case 1:  return (int)Direction.left;
-				case 3:  return (int)Direction.down;
-				case 4:  return (int)Direction.forward;
-				case 5:  return (int)Direction.up;
-				case 7:  return (int)Direction.right;
-				case 10: return (int)Direction.backward;
-				default: return -1;
-			}
+				1 => Direction.left,
+				3 => Direction.down,
+				4 => Direction.forward,
+				5 => Direction.up,
+				7 => Direction.right,
+				10 => Direction.backward,
+				_ => default
+			};
 		}
 
 		/// <summary>
@@ -263,7 +263,7 @@ namespace CodeHelpers.Unity.Editors
 
 		static Int2 GetCubemapSize(Int2 sourceSize) => sourceSize * new Int2(4, 3);
 
-		static string GetName(int index) => ((Direction)index).ToString().ToUpperInvariant();
+		static string GetName(int index) => Direction.All[index].ToString().ToUpperInvariant();
 
 		enum TextureType
 		{
