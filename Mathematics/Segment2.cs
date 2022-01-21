@@ -35,12 +35,25 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public float InverseLerp(Float2 point)
 		{
-			float inverse = 1f / Length;
-			return Float2.Dot(point - point0, LengthVector * inverse) * inverse;
+			Float2 length = LengthVector;
+			float lengthR = 1f / length.Magnitude;
+			return Float2.Dot(point - point0, length * lengthR) * lengthR;
 		}
 
-		public          bool Equals(Segment2 other) => point0.Equals(other.point0) && point1.Equals(other.point1);
-		public override bool Equals(object   obj)   => obj is Segment2 other && Equals(other);
+		/// <summary>
+		/// Get the unclamped inverse lerp to the point on this <see cref="Segment3"/> that is the closest to <paramref name="point"/>.
+		/// </summary>
+		public float ClosestInverseLerp(Float2 point)
+		{
+			Float2 length = LengthVector;
+			float lengthR = 1f / length.Magnitude;
+			return Float2.Dot(point - point0, length * lengthR) * lengthR;
+		}
+
+		public bool Equals(in Segment2 other) => point0 == other.point0 && point1 == other.point1;
+		public override bool Equals(object obj) => obj is Segment2 other && Equals(other);
+
+		bool IEquatable<Segment2>.Equals(Segment2 other) => Equals(other);
 
 		public override int GetHashCode()
 		{
