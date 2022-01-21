@@ -39,66 +39,68 @@ namespace CodeHelpers.Diagnostics
 
 #region Log Overloads
 
-		public static void Log(DebugLogType type, params object[] objects) => LogInternal(new ObjectsBuffer(objects, type), objects.Length);
-
-		public static void Log(DebugLogType type, object object0)
+		public static void Log<T0>(DebugLogType type, T0 t0)
 		{
 			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
-						 {
-							 [0] = object0
-						 };
+			{
+				[0] = t0
+			};
 			LogInternal(buffer, 1);
 		}
 
-		public static void Log(DebugLogType type, object object0, object object1)
+		public static void Log<T0, T1>(DebugLogType type, T0 t0, T1 t1)
 		{
 			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
-						 {
-							 [0] = object0,
-							 [1] = object1
-						 };
+			{
+				[0] = t0,
+				[1] = t1
+			};
 			LogInternal(buffer, 2);
 		}
 
-		public static void Log(DebugLogType type, object object0, object object1, object object2)
+		public static void Log<T0, T1, T2>(DebugLogType type, T0 t0, T1 t1, T2 t2)
 		{
 			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
-						 {
-							 [0] = object0,
-							 [1] = object1,
-							 [2] = object2
-						 };
+			{
+				[0] = t0,
+				[1] = t1,
+				[2] = t2
+			};
 			LogInternal(buffer, 3);
 		}
 
-		public static void Log(DebugLogType type, object object0, object object1, object object2, object object3)
+		public static void Log<T0, T1, T2, T3>(DebugLogType type, T0 t0, T1 t1, T2 t2, T3 t3)
 		{
 			var buffer = new ObjectsBuffer(objectsBufferLocal.Value, type)
-						 {
-							 [0] = object0,
-							 [1] = object1,
-							 [2] = object2,
-							 [3] = object3
-						 };
+			{
+				[0] = t0,
+				[1] = t1,
+				[2] = t2,
+				[3] = t3
+			};
 			LogInternal(buffer, 4);
 		}
 
+		public static void Log<T0>(T0 t0) => Log(DebugLogType.normal, t0);
+		public static void Log<T0, T1>(T0 t0, T1 t1) => Log(DebugLogType.normal, t0, t1);
+		public static void Log<T0, T1, T2>(T0 t0, T1 t1, T2 t2) => Log(DebugLogType.normal, t0, t1, t2);
+		public static void Log<T0, T1, T2, T3>(T0 t0, T1 t1, T2 t2, T3 t3) => Log(DebugLogType.normal, t0, t1, t2, t3);
+
+		public static void LogWarning<T0>(T0 t0) => Log(DebugLogType.warning, t0);
+		public static void LogWarning<T0, T1>(T0 t0, T1 t1) => Log(DebugLogType.warning, t0, t1);
+		public static void LogWarning<T0, T1, T2>(T0 t0, T1 t1, T2 t2) => Log(DebugLogType.warning, t0, t1, t2);
+		public static void LogWarning<T0, T1, T2, T3>(T0 t0, T1 t1, T2 t2, T3 t3) => Log(DebugLogType.warning, t0, t1, t2, t3);
+
+		public static void LogError<T0>(T0 t0) => Log(DebugLogType.error, t0);
+		public static void LogError<T0, T1>(T0 t0, T1 t1) => Log(DebugLogType.error, t0, t1);
+		public static void LogError<T0, T1, T2>(T0 t0, T1 t1, T2 t2) => Log(DebugLogType.error, t0, t1, t2);
+		public static void LogError<T0, T1, T2, T3>(T0 t0, T1 t1, T2 t2, T3 t3) => Log(DebugLogType.error, t0, t1, t2, t3);
+
+		public static void Log(DebugLogType type, params object[] objects) => LogInternal(new ObjectsBuffer(objects, type), objects.Length);
+
 		public static void Log(params object[] objects) => Log(DebugLogType.normal, objects);
-
-		public static void Log(object object0)                                                 => Log(DebugLogType.normal, object0);
-		public static void Log(object object0, object object1)                                 => Log(DebugLogType.normal, object0, object1);
-		public static void Log(object object0, object object1, object object2)                 => Log(DebugLogType.normal, object0, object1, object2);
-		public static void Log(object object0, object object1, object object2, object object3) => Log(DebugLogType.normal, object0, object1, object2, object3);
-
-		public static void LogWarning(object object0)                                                 => Log(DebugLogType.warning, object0);
-		public static void LogWarning(object object0, object object1)                                 => Log(DebugLogType.warning, object0, object1);
-		public static void LogWarning(object object0, object object1, object object2)                 => Log(DebugLogType.warning, object0, object1, object2);
-		public static void LogWarning(object object0, object object1, object object2, object object3) => Log(DebugLogType.warning, object0, object1, object2, object3);
-
-		public static void LogError(object object0)                                                 => Log(DebugLogType.error, object0);
-		public static void LogError(object object0, object object1)                                 => Log(DebugLogType.error, object0, object1);
-		public static void LogError(object object0, object object1, object object2)                 => Log(DebugLogType.error, object0, object1, object2);
-		public static void LogError(object object0, object object1, object object2, object object3) => Log(DebugLogType.error, object0, object1, object2, object3);
+		public static void LogWarning(params object[] objects) => Log(DebugLogType.warning, objects);
+		public static void LogError(params object[] objects) => Log(DebugLogType.error, objects);
 
 #endregion
 
@@ -173,8 +175,8 @@ namespace CodeHelpers.Diagnostics
 				this.logType = logType;
 			}
 
-			public ObjectsBuffer(int           bufferSize, DebugLogType logType) : this(new object[bufferSize], logType) { }
-			public ObjectsBuffer(ObjectsBuffer buffer,     DebugLogType logType) : this(buffer.objects, logType) { }
+			public ObjectsBuffer(int bufferSize, DebugLogType logType) : this(new object[bufferSize], logType) { }
+			public ObjectsBuffer(ObjectsBuffer buffer, DebugLogType logType) : this(buffer.objects, logType) { }
 
 			readonly object[] objects;
 			public readonly DebugLogType logType;
