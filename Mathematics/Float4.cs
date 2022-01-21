@@ -1054,7 +1054,7 @@ namespace CodeHelpers.Mathematics
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 				unsafe
 				{
 					if (index < 0 || 3 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -1416,7 +1416,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Float4 Create(int index, float value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 3 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -1441,7 +1441,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Float4 Create(int index, float value, float other)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 3 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -1466,7 +1466,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float4 Replace(int index, float value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 3 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -1488,7 +1488,7 @@ namespace CodeHelpers.Mathematics
 #endif
 		}
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public UnityEngine.Vector4 U() => this;
 #endif
 
@@ -1532,7 +1532,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(in Float4 value) => value.XYZ;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(float value) => new Float4(value, value, value, value);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4(UnityEngine.Vector4 value) => new Float4(value.x, value.y, value.z, value.w);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector4(in Float4 value) => new UnityEngine.Vector4(value.x, value.y, value.z, value.w);
 #endif

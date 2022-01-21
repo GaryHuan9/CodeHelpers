@@ -116,7 +116,7 @@ namespace CodeHelpers.Files
 
 		public Guid ReadGuid()
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				Guid guid = default;

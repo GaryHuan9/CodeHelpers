@@ -623,7 +623,7 @@ namespace CodeHelpers.Mathematics
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 				unsafe
 				{
 					if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -916,7 +916,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int3 Create(int index, int value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -940,7 +940,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int3 Create(int index, int value, int other)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -972,7 +972,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int3 Replace(int index, int value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -996,7 +996,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float3 Replace(int index, float value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 2 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -1033,7 +1033,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceYZ(Float2 value) => new Float3(x, value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float3 ReplaceXZ(Float2 value) => new Float3(value.x, y, value.y);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public UnityEngine.Vector3Int U() => this;
 #endif
 
@@ -1086,7 +1086,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float3(in Int3 value) => new Float3(value.x, value.y, value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(in Int3 value) => new Float4(value.x, value.y, value.z, 0f);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Int3(UnityEngine.Vector3Int value) => new Int3(value.x, value.y, value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3Int(in Int3 value) => new UnityEngine.Vector3Int(value.x, value.y, value.z);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector3(in Int3 value) => new UnityEngine.Vector3(value.x, value.y, value.z);

@@ -310,7 +310,7 @@ namespace CodeHelpers.Mathematics
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
 			{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 				unsafe
 				{
 					if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -572,7 +572,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Float2 Create(int index, float value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -595,7 +595,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Float2 Create(int index, float value, float other)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -625,7 +625,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float2 Replace(int index, float value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (index < 0 || 1 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -648,7 +648,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceX(float value) => new Float2(value, y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining), EditorBrowsable(EditorBrowsableState.Never)] public Float2 ReplaceY(float value) => new Float2(x, value);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public UnityEngine.Vector2 U() => this;
 #endif
 
@@ -692,7 +692,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(Float2 value) => value.XY_;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(Float2 value) => new Float4(value.x, value.y, 0f, 0f);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float2(UnityEngine.Vector2 value) => new Float2(value.x, value.y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector2(Float2 value) => new UnityEngine.Vector2(value.x, value.y);
 #endif

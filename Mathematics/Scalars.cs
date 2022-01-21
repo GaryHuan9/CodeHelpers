@@ -191,7 +191,7 @@ namespace CodeHelpers.Mathematics
 		{
 #if NET5_0
 			return BitConverter.SingleToInt32Bits(value);
-#elif UNSAFE_CODE_ENABLED
+#elif CODE_HELPERS_UNSAFE
 			unsafe { return *(int*)&value; }
 #else
 			return BitsConverter32(value).intValue;
@@ -203,7 +203,7 @@ namespace CodeHelpers.Mathematics
 		{
 #if NET5_0
 			return BitConverter.Int32BitsToSingle(value);
-#elif UNSAFE_CODE_ENABLED
+#elif CODE_HELPERS_UNSAFE
 			unsafe { return *(float*)&value; }
 #else
 			return BitsConverter32(value).floatValue;
@@ -222,7 +222,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int UInt32ToInt32Bits(uint value) => unchecked((int)value);
 
-#if !NET5_0 && !UNSAFE_CODE_ENABLED
+#if !NET5_0 && !CODE_HELPERS_UNSAFE
 		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
 		readonly struct BitsConverter32
 		{

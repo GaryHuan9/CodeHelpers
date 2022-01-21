@@ -83,7 +83,7 @@ namespace CodeHelpers.Mathematics
 		{
 			get
 			{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 				unsafe
 				{
 					if (row < 0 || 3 < row || column < 0 || 3 < column) throw ExceptionHelper.Invalid($"{nameof(row)} or {nameof(column)}", new Int2(row, column), InvalidType.outOfBounds);
@@ -291,7 +291,7 @@ namespace CodeHelpers.Mathematics
 
 		public Float4 GetRow(int row)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (row < 0 || 3 < row) throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
@@ -312,7 +312,7 @@ namespace CodeHelpers.Mathematics
 
 		public Float4 GetColumn(int column)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (column < 0 || 3 < column) throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);
@@ -476,7 +476,7 @@ namespace CodeHelpers.Mathematics
 			0.000000f, 0.000000f, 0.000000f, 1f
 		);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float4x4(in UnityEngine.Matrix4x4 value) => new Float4x4
 		(
 			value.m00, value.m01, value.m02, value.m03,

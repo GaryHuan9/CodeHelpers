@@ -1,4 +1,4 @@
-#if CODEHELPERS_UNITY && UNITY_EDITOR
+#if CODE_HELPERS_UNITY && UNITY_EDITOR
 
 using System.Collections.ObjectModel;
 using System.Reflection;

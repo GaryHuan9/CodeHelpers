@@ -125,7 +125,7 @@ namespace CodeHelpers.Files
 
 		public void Write(in Guid value)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				Guid copy = value;

@@ -64,7 +64,7 @@ namespace CodeHelpers.Mathematics
 		{
 			get
 			{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 				unsafe
 				{
 					if (row < 0 || 2 < row || column < 0 || 2 < column) throw ExceptionHelper.Invalid($"{nameof(row)} or {nameof(column)}", new Int2(row, column), InvalidType.outOfBounds);
@@ -101,7 +101,7 @@ namespace CodeHelpers.Mathematics
 						{
 							case 0: return f20;
 							case 1: return f21;
-							case 2: return f22
+							case 2: return f22;
 						}
 
 						break;
@@ -215,7 +215,7 @@ namespace CodeHelpers.Mathematics
 
 		public Float3 GetRow(int row)
 		{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (row < 0 || 2 < row) throw ExceptionHelper.Invalid(nameof(row), row, InvalidType.outOfBounds);
@@ -235,7 +235,7 @@ namespace CodeHelpers.Mathematics
 
 		public Float3 GetColumn(int column)
 		{
-#if !UNSAFE_CODE_ENABLED
+#if !CODE_HELPERS_UNSAFE
 			unsafe
 			{
 				if (column < 0 || 2 < column) throw ExceptionHelper.Invalid(nameof(column), column, InvalidType.outOfBounds);

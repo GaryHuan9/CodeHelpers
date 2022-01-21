@@ -14,7 +14,7 @@
  *          don't get back to you just go ahead and use it anyway!
  */
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 
 using System.Collections.Generic;
 using UnityEngine;

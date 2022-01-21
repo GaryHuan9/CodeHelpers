@@ -30,7 +30,7 @@ namespace CodeHelpers.Mathematics
 		{
 			get
 			{
-#if UNSAFE_CODE_ENABLED
+#if CODE_HELPERS_UNSAFE
 				unsafe
 				{
 					if (index < 0 || 3 < index) throw ExceptionHelper.Invalid(nameof(index), index, InvalidType.outOfBounds);
@@ -67,7 +67,7 @@ namespace CodeHelpers.Mathematics
 		public static explicit operator Float4(Color32 value) => new Float4(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
 		public static explicit operator Color64(Color32 value) => new Color64(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public static implicit operator UnityEngine.Color32(Color32 value) => new UnityEngine.Color32(value.r, value.g, value.b, value.a);
 		public static implicit operator UnityEngine.Color(Color32 value) => new UnityEngine.Color(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
 

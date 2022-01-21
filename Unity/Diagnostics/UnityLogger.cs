@@ -1,4 +1,4 @@
-﻿#if CODEHELPERS_UNITY
+﻿#if CODE_HELPERS_UNITY
 
 using UnityEngine;
 using ILogger = CodeHelpers.Diagnostics.ILogger;

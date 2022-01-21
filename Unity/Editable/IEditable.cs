@@ -1,4 +1,4 @@
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 
 namespace CodeHelpers.Unity.Editable
 {

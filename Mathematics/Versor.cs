@@ -143,7 +143,7 @@ namespace CodeHelpers.Mathematics
 			return new Versor(result);
 		}
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public UnityEngine.Quaternion U() => this;
 #endif
 
@@ -202,7 +202,7 @@ namespace CodeHelpers.Mathematics
 		public bool Equals(Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
 		public override int GetHashCode() => d.GetHashCode();
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public static implicit operator Versor(UnityEngine.Quaternion value) => new Versor(value.x, value.y, value.z, value.w);
 		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.x, value.d.y, value.d.z, value.d.w);
 #endif

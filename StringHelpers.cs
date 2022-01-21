@@ -43,7 +43,7 @@ namespace CodeHelpers
 			//Total allocated: bits length + bits length / 4 - 1 division characters
 			int total = byteLength * 8 + byteLength * 8 / 4 - 1;
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 			char[] chars = new char[total];
 #else
 			Span<char> chars = stackalloc char[total];
@@ -68,7 +68,7 @@ namespace CodeHelpers
 				}
 			}
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 			return new string(chars, total - index, index);
 #else
 			return new string(chars[^index..]);

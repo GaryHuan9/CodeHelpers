@@ -13,7 +13,7 @@ namespace CodeHelpers.Diagnostics
 	{
 		static DebugHelper()
 		{
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 			Logger = new CodeHelpers.Unity.Diagnostics.UnityLogger();
 #else
 			Logger = new ConsoleLogger();

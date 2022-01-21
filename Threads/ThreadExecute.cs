@@ -11,7 +11,7 @@ namespace CodeHelpers.Threads
 		{
 			ExecutionThread = ThreadHelper.NewThread(ExecuteQueueingExecutions);
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 			Unity.CodeHelperMonoBehavior.OnApplicationQuitMethods += Dispose;
 #endif
 		}

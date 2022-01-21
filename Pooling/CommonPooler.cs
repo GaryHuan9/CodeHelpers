@@ -8,7 +8,7 @@ namespace CodeHelpers.Pooling
 		public static readonly StringBuilderPooler stringBuilder = new StringBuilderPooler();
 		public static readonly StopwatchPooler stopwatch = new StopwatchPooler();
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 		public static readonly MeshPooler mesh = new MeshPooler();
 #endif
 	}
@@ -33,7 +33,7 @@ namespace CodeHelpers.Pooling
 		protected override void Reset(Stopwatch target) => target.Reset();
 	}
 
-#if CODEHELPERS_UNITY
+#if CODE_HELPERS_UNITY
 	public class MeshPooler : PoolerBase<UnityEngine.Mesh>
 	{
 		protected override int MaxPoolSize => 6;
