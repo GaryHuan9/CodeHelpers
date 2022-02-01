@@ -1,5 +1,4 @@
 using System;
-using CodeHelpers.Diagnostics;
 
 namespace CodeHelpers.Mathematics
 {

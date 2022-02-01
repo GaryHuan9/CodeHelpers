@@ -1,7 +1,6 @@
-﻿using System.Threading;
+﻿using System;
 using System.Collections.Concurrent;
-using System;
-using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace CodeHelpers.Threads
 {

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Reflection;
-using CodeHelpers.Mathematics;
 
 namespace CodeHelpers
 {

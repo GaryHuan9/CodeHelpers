@@ -13,7 +13,7 @@ namespace CodeHelpers.AI.BehaviorTrees
 		public readonly BehaviorTreeBlueprint<T> blueprint;
 		public readonly T context;
 
-		BehaviorTreeBlueprint<T>.Node runningNode; //The node that was cached as running
+		BehaviorTreeBlueprint<T>.Node runningNode;         //The node that was cached as running
 		BehaviorTreeBlueprint<T>.StatusToken runningToken; //The token that was used to enter the running node
 
 		public Result Tick()
