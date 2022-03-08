@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace CodeHelpers.Diagnostics
 {
@@ -20,7 +19,7 @@ namespace CodeHelpers.Diagnostics
 		public readonly void AssertNotApplied()
 		{
 #if DEBUG
-			if (applied) throw new Exception($"Invalid operation after the {nameof(Seal)} has been applied.");
+			if (applied) throw new System.Exception($"Invalid operation after the {nameof(Seal)} has been applied.");
 #endif
 		}
 
@@ -31,7 +30,7 @@ namespace CodeHelpers.Diagnostics
 		public readonly void AssertApplied()
 		{
 #if DEBUG
-			if (!applied) throw new Exception($"Invalid operation before the {nameof(Seal)} has been applied.");
+			if (!applied) throw new System.Exception($"Invalid operation before the {nameof(Seal)} has been applied.");
 #endif
 		}
 	}
