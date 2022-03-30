@@ -5,9 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using CodeHelpers.AI.BehaviorTrees;
-using CodeHelpers.Diagnostics;
 using CodeHelpers.Collections;
-using CodeHelpers.Unity.Diagnostics;
+using CodeHelpers.Diagnostics;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 

@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using CodeHelpers.Collections;
-using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEngine;
 
 namespace CodeHelpers.Unity

@@ -208,7 +208,7 @@ namespace CodeHelpers.Mathematics
 
 #if CODE_HELPERS_UNITY
 		public static implicit operator Versor(UnityEngine.Quaternion value) => new Versor(value.x, value.y, value.z, value.w);
-		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.x, value.d.y, value.d.z, value.d.w);
+		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.X, value.d.Y, value.d.Z, value.d.W);
 #endif
 
 		public static implicit operator Float3x3(in Versor value)

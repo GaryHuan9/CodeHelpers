@@ -6,7 +6,6 @@ using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Edge = UnityEditor.Experimental.GraphView.Edge;
 
 namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 {

@@ -1,10 +1,10 @@
 ﻿#if CODE_HELPERS_UNITY
 
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
 using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
+using UnityEngine;
 
 namespace CodeHelpers.Unity
 {
@@ -72,7 +72,7 @@ namespace CodeHelpers.Unity
 			if (thisSource.isPlaying) thisSource.Stop();
 
 			thisSource.pitch = thisSound.pitch.RandomValue;
-			thisSource.clip = CodeHelpers.RandomHelper.GetRandomFromCollection(thisSound.clips);
+			thisSource.clip = RandomHelper.GetRandomFromCollection(thisSound.clips);
 
 			thisSource.Play();
 		}

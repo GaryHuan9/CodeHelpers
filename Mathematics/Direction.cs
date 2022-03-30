@@ -205,7 +205,7 @@ namespace CodeHelpers.Mathematics
 			};
 		}
 
-		/// <inheritdoc cref="Project(in CodeHelpers.Mathematics.Float3)"/>
+		/// <inheritdoc cref="Project(in CodeHelpers.Packed.Float3)"/>
 		public Int2 Project(in Int3 value)
 		{
 			AssertNotZero();
@@ -233,7 +233,7 @@ namespace CodeHelpers.Mathematics
 			return IsNegative ? -part : part;
 		}
 
-		/// <inheritdoc cref="ExtractComponent(in CodeHelpers.Mathematics.Float3)"/>
+		/// <inheritdoc cref="ExtractComponent(in CodeHelpers.Packed.Float3)"/>
 		public int ExtractComponent(in Int3 value)
 		{
 			int index = Axis;

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Unity.DelayedExecute
@@ -19,7 +20,7 @@ namespace CodeHelpers.Unity.DelayedExecute
 		readonly IEnumerator<int> jobs;
 		float _maxExecutionMillisecond;
 
-		readonly System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+		readonly Stopwatch stopwatch = new Stopwatch();
 		public bool Finished { get; private set; }
 
 		/// <summary>

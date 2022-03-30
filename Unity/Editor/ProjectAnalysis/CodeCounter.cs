@@ -1,11 +1,11 @@
 #if CODE_HELPERS_UNITY
 
-using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System;
 using System.Text;
+using UnityEngine;
 
 namespace CodeHelpers.Unity.ProjectAnalysis
 {
@@ -13,8 +13,6 @@ namespace CodeHelpers.Unity.ProjectAnalysis
 #if UNITY_EDITOR
 
 	using UnityEditor;
-	using UnityEditor.Callbacks;
-
 	public class CodeCounter : EditorWindow
 	{
 		[MenuItem("Window/CodeHelpers/Code Counter")]

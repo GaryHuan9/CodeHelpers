@@ -1,9 +1,8 @@
 #if CODE_HELPERS_UNITY && UNITY_EDITOR
 
 using System.Collections.ObjectModel;
-using System.Reflection;
+using CodeHelpers.Packed;
 using CodeHelpers.Unity.Mathematics;
-using CodeHelpers.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,7 +24,7 @@ namespace CodeHelpers.Unity.Editors
 			int count = components.Count;
 
 			Float2 size = new Float2((rect.width - count * Gap + Gap) / count, rect.height);
-			Float2 interval = new Float2(size.x + Gap, 0f);
+			Float2 interval = new Float2(size.X + Gap, 0f);
 
 			for (int i = 0; i < count; i++)
 			{

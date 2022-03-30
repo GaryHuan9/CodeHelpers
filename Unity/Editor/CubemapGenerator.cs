@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEditor;
 using UnityEngine;
 
@@ -61,7 +62,7 @@ namespace CodeHelpers.Unity.Editors
 
 					Int2 size = new Int2(texture.width, texture.height);
 
-					if (size.x != size.y)
+					if (size.X != size.Y)
 					{
 						invalidMessage = $"Texture \"{GetName(i)}\" is not a square! Size: {size}";
 						break;
@@ -184,18 +185,18 @@ namespace CodeHelpers.Unity.Editors
 						else
 						{
 							Int2 region = GetPixelTextureOffset(pixel, singleSize);
-							color = source[region.y * singleSize.x + region.x];
+							color = source[region.Y * singleSize.X + region.X];
 						}
 					}
 					else color = Color.clear;
 
-					colors[pixel.y * resolution.x + pixel.x] = color;
+					colors[pixel.Y * resolution.X + pixel.X] = color;
 				}
 			);
 
 			Release(ref sourceColors);
 
-			Texture2D result = new Texture2D(resolution.x, resolution.y, format, false);
+			Texture2D result = new Texture2D(resolution.X, resolution.Y, format, false);
 
 			result.SetPixels(colors);
 			result.Apply();
@@ -244,7 +245,7 @@ namespace CodeHelpers.Unity.Editors
 		{
 			Int2 region = pixel / singleSize;
 
-			return (region.x * 3 + region.y) switch
+			return (region.X * 3 + region.Y) switch
 			{
 				1 => Direction.left,
 				3 => Direction.down,

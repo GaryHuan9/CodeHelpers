@@ -1,6 +1,6 @@
 #if CODE_HELPERS_UNITY
 
-using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Diagnostics
@@ -13,19 +13,19 @@ namespace CodeHelpers.Unity.Diagnostics
 		{
 			Gizmos.DrawLine(origin, end);
 
-			var rotation = Quaternion.FromToRotation(Float3.up, origin - end);
+			var rotation = Quaternion.FromToRotation(Float3.Up, origin - end);
 
-			DrawPiece(Float3.right);
-			DrawPiece(Float3.forward);
-			DrawPiece(Float3.left);
-			DrawPiece(Float3.backward);
+			DrawPiece(Float3.Right);
+			DrawPiece(Float3.Forward);
+			DrawPiece(Float3.Left);
+			DrawPiece(Float3.Backward);
 
 			void DrawPiece(Float3 perpendicular)
 			{
 				const float Angle = 30f;
 
-				var localRotation = Quaternion.AngleAxis(Angle, Float3.Cross(Float3.up, perpendicular));
-				Gizmos.DrawLine(end, (Vector3)end + rotation * localRotation * Float3.up * length);
+				var localRotation = Quaternion.AngleAxis(Angle, Float3.Cross(Float3.Up, perpendicular));
+				Gizmos.DrawLine(end, (Vector3)end + rotation * localRotation * Float3.Up * length);
 			}
 		}
 

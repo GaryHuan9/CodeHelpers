@@ -1,7 +1,7 @@
 ﻿#if CODE_HELPERS_UNITY
 
 using System;
-using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Mathematics
@@ -20,9 +20,9 @@ namespace CodeHelpers.Unity.Mathematics
 			get => new Float3(x, y, z);
 			set
 			{
-				x = value.x;
-				y = value.y;
-				z = value.z;
+				x = value.X;
+				y = value.Y;
+				z = value.Z;
 			}
 		}
 
@@ -50,9 +50,9 @@ namespace CodeHelpers.Unity.Mathematics
 			get => new Int3(x, y, z);
 			set
 			{
-				x = value.x;
-				y = value.y;
-				z = value.z;
+				x = value.X;
+				y = value.Y;
+				z = value.Z;
 			}
 		}
 
@@ -79,8 +79,8 @@ namespace CodeHelpers.Unity.Mathematics
 			get => new Float2(x, y);
 			set
 			{
-				x = value.x;
-				y = value.y;
+				x = value.X;
+				y = value.Y;
 			}
 		}
 
@@ -107,8 +107,8 @@ namespace CodeHelpers.Unity.Mathematics
 			get => new Int2(x, y);
 			set
 			{
-				x = value.x;
-				y = value.y;
+				x = value.X;
+				y = value.Y;
 			}
 		}
 

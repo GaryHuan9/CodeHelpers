@@ -1,8 +1,6 @@
 #if CODE_HELPERS_UNITY
 
 using System;
-using System.Linq;
-using CodeHelpers;
 using CodeHelpers.AI.BehaviorTrees;
 
 namespace CodeHelpers.Unity.BehaviorTreeUIEditor

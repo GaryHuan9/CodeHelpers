@@ -1,6 +1,7 @@
 ﻿#if CODE_HELPERS_UNITY
 
-using CodeHelpers.Mathematics;
+using System;
+using CodeHelpers.Packed;
 using UnityEngine;
 
 namespace CodeHelpers.Unity
@@ -17,7 +18,7 @@ namespace CodeHelpers.Unity
 
 		public static float[,] NoiseToArray(NoiseInfo info, Vector2 position, Int2 size, int seed)
 		{
-			var results = new float[size.x, size.y];
+			var results = new float[size.X, size.Y];
 			NoiseToArray(info, seed, position, results);
 
 			return results;
@@ -40,9 +41,9 @@ namespace CodeHelpers.Unity
 
 			for (int i = 0; i < info.layerCount; i++)
 			{
-				for (int x = 0; x < size.x; x++)
+				for (int x = 0; x < size.X; x++)
 				{
-					for (int y = 0; y < size.y; y++)
+					for (int y = 0; y < size.Y; y++)
 					{
 						Vector2 position = (new Vector2(x, y) + positionOffset) / info.spread * frequency + Vector2.one * (seed + i);
 
@@ -130,7 +131,7 @@ namespace CodeHelpers.Unity
 
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public readonly struct NoiseInfo
 	{
 		public NoiseInfo(float spread, int layerCount, float persistence = 0.5f, float lacunarity = 2f)

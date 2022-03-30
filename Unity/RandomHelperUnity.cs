@@ -1,6 +1,7 @@
 ﻿#if CODE_HELPERS_UNITY
 
 using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEngine;
 
 namespace CodeHelpers.Unity
@@ -16,7 +17,7 @@ namespace CodeHelpers.Unity
 		{
 			if (angle.AlmostEquals()) return direction;
 
-			var axis = Quaternion.FromToRotation(Float3.forward, direction) * Float2.right.Rotate(RandomHelper.Range(360f)).U();
+			var axis = Quaternion.FromToRotation(Float3.Forward, direction) * Float2.Right.Rotate(RandomHelper.Range(360f)).U();
 			return Quaternion.AngleAxis(angle, axis) * direction;
 		}
 	}

@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Threading;
 using CodeHelpers.Events;
 using CodeHelpers.Threads;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace CodeHelpers.Unity
 
 			DontDestroyOnLoad(this);
 
-			ThreadHelper.MainThread = System.Threading.Thread.CurrentThread;
+			ThreadHelper.MainThread = Thread.CurrentThread;
 		}
 
 		/// <summary>

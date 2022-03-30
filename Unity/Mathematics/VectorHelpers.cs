@@ -1,8 +1,8 @@
 #if CODE_HELPERS_UNITY
 
-using System;
 using System.Runtime.CompilerServices;
 using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEngine;
 
 namespace CodeHelpers.Unity.Mathematics

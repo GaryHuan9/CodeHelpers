@@ -1,8 +1,5 @@
 #if CODE_HELPERS_UNITY
 
-using UnityEditor;
-using UnityEngine;
-
 namespace CodeHelpers.Unity.Editable
 {
 	//NOTE: This causes NaughtAttributes to malfunction!

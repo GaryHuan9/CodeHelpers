@@ -1,7 +1,7 @@
 ﻿#if CODE_HELPERS_UNITY && UNITY_EDITOR
 
 using System.IO;
-using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,10 +23,10 @@ namespace CodeHelpers.Unity.Editors
 		{
 			gradient = EditorGUILayout.GradientField(gradient);
 
-			int width = EditorGUILayout.IntField("Width", resolution.x);
-			int height = EditorGUILayout.IntField("Height", resolution.y);
+			int width = EditorGUILayout.IntField("Width", resolution.X);
+			int height = EditorGUILayout.IntField("Height", resolution.Y);
 
-			resolution = Int2.Max(Int2.one, new Int2(width, height));
+			resolution = Int2.Max(Int2.One, new Int2(width, height));
 
 			if (GUILayout.Button("Generate"))
 			{
@@ -38,12 +38,12 @@ namespace CodeHelpers.Unity.Editors
 		void SaveGradient(string path)
 		{
 			Color[] colors = new Color[resolution.ProductAbsoluted];
-			Texture2D texture = new Texture2D(resolution.x, resolution.y);
+			Texture2D texture = new Texture2D(resolution.X, resolution.Y);
 
 			foreach (Int2 pixel in resolution.Loop())
 			{
-				int index = pixel.y * resolution.x + pixel.x;
-				colors[index] = gradient.Evaluate(pixel.x / (resolution.x - 1f));
+				int index = pixel.Y * resolution.X + pixel.X;
+				colors[index] = gradient.Evaluate(pixel.X / (resolution.X - 1f));
 			}
 
 			texture.SetPixels(colors);

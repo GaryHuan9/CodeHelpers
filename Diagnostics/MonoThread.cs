@@ -11,7 +11,7 @@ namespace CodeHelpers.Diagnostics
 	{
 
 #if DEBUG
-		internal ulong threadId;
+		internal long threadId;
 #endif
 
 	}
@@ -28,14 +28,16 @@ namespace CodeHelpers.Diagnostics
 		public static void Ensure(ref this MonoThread monoThread)
 		{
 #if DEBUG
-			ref ulong reference = ref monoThread.threadId;
+			ref long reference = ref monoThread.threadId;
 
-			ulong threadId = (uint)Environment.CurrentManagedThreadId + 1uL;
-			ulong original = Interlocked.Exchange(ref reference, threadId);
+			long threadId = (uint)Environment.CurrentManagedThreadId + 1L;
+			long original = Interlocked.Exchange(ref reference, threadId);
 
 			if (original == default || original == threadId) return;
 
-			throw new Exception($"Multiple threads (id {original - 1} and {threadId - 1}) attempting to use {nameof(MonoThread)}!");
+			throw new Exception($"Multiple threads (id {ToId(original)} and {ToId(threadId)}) attempting to use {nameof(MonoThread)}!");
+
+			static int ToId(long value) => (int)(value - 1);
 #endif
 		}
 
