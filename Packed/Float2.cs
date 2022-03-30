@@ -10,7 +10,7 @@ using CodeHelpers.Mathematics;
 namespace CodeHelpers.Packed
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public readonly struct Float2 : IEquatable<Float2>, IFormattable
+	public readonly partial struct Float2 : IEquatable<Float2>, IFormattable
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float2(float x, float y)
@@ -23,207 +23,6 @@ namespace CodeHelpers.Packed
 		public float Y { get; }
 
 #region Properties
-
-#region Static
-
-		public static Float2 Right => new Float2(1f, 0f);
-		public static Float2 Left => new Float2(-1f, 0f);
-
-		public static Float2 Up => new Float2(0f, 1f);
-		public static Float2 Down => new Float2(0f, -1f);
-
-		public static Float2 Zero => new Float2(0f, 0f);
-
-		public static Float2 One => new Float2(1f, 1f);
-		public static Float2 NegativeOne => new Float2(-1f, -1f);
-
-		public static Float2 Half => new Float2(0.5f, 0.5f);
-		public static Float2 NegativeHalf => new Float2(-0.5f, -0.5f);
-
-		public static Float2 MaxValue => new Float2(float.MaxValue, float.MaxValue);
-		public static Float2 MinValue => new Float2(float.MinValue, float.MinValue);
-
-		public static Float2 PositiveInfinity => new Float2(float.PositiveInfinity, float.PositiveInfinity);
-		public static Float2 NegativeInfinity => new Float2(float.NegativeInfinity, float.NegativeInfinity);
-
-		public static Float2 Epsilon => new Float2(Scalars.Epsilon, Scalars.Epsilon);
-		public static Float2 NaN => new Float2(float.NaN, float.NaN);
-
-#endregion
-
-#region Instance
-
-#region Swizzled
-
-#region Four
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXX => new Float4(X, X, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXXY => new Float4(X, X, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXX_ => new Float4(X, X, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXYX => new Float4(X, X, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXYY => new Float4(X, X, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XXY_ => new Float4(X, X, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX_X => new Float4(X, X, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX_Y => new Float4(X, X, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XX__ => new Float4(X, X, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYXX => new Float4(X, Y, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYXY => new Float4(X, Y, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYX_ => new Float4(X, Y, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYYX => new Float4(X, Y, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYYY => new Float4(X, Y, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XYY_ => new Float4(X, Y, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY_X => new Float4(X, Y, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY_Y => new Float4(X, Y, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 XY__ => new Float4(X, Y, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_XX => new Float4(X, 0f, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_XY => new Float4(X, 0f, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_X_ => new Float4(X, 0f, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_YX => new Float4(X, 0f, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_YY => new Float4(X, 0f, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X_Y_ => new Float4(X, 0f, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X__X => new Float4(X, 0f, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X__Y => new Float4(X, 0f, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 X___ => new Float4(X, 0f, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXXX => new Float4(Y, X, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXXY => new Float4(Y, X, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXX_ => new Float4(Y, X, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXYX => new Float4(Y, X, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXYY => new Float4(Y, X, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YXY_ => new Float4(Y, X, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX_X => new Float4(Y, X, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX_Y => new Float4(Y, X, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YX__ => new Float4(Y, X, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYXX => new Float4(Y, Y, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYXY => new Float4(Y, Y, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYX_ => new Float4(Y, Y, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYYX => new Float4(Y, Y, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYYY => new Float4(Y, Y, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YYY_ => new Float4(Y, Y, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY_X => new Float4(Y, Y, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY_Y => new Float4(Y, Y, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 YY__ => new Float4(Y, Y, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_XX => new Float4(Y, 0f, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_XY => new Float4(Y, 0f, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_X_ => new Float4(Y, 0f, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_YX => new Float4(Y, 0f, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_YY => new Float4(Y, 0f, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y_Y_ => new Float4(Y, 0f, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y__X => new Float4(Y, 0f, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y__Y => new Float4(Y, 0f, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 Y___ => new Float4(Y, 0f, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XXX => new Float4(0f, X, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XXY => new Float4(0f, X, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XX_ => new Float4(0f, X, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XYX => new Float4(0f, X, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XYY => new Float4(0f, X, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _XY_ => new Float4(0f, X, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X_X => new Float4(0f, X, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X_Y => new Float4(0f, X, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _X__ => new Float4(0f, X, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YXX => new Float4(0f, Y, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YXY => new Float4(0f, Y, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YX_ => new Float4(0f, Y, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YYX => new Float4(0f, Y, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YYY => new Float4(0f, Y, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _YY_ => new Float4(0f, Y, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y_X => new Float4(0f, Y, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y_Y => new Float4(0f, Y, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 _Y__ => new Float4(0f, Y, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __XX => new Float4(0f, 0f, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __XY => new Float4(0f, 0f, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __X_ => new Float4(0f, 0f, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __YX => new Float4(0f, 0f, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __YY => new Float4(0f, 0f, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 __Y_ => new Float4(0f, 0f, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ___X => new Float4(0f, 0f, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ___Y => new Float4(0f, 0f, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float4 ____ => new Float4(0f, 0f, 0f, 0f);
-
-#endregion
-
-#region Three
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXX => new Float3(X, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XXY => new Float3(X, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XX_ => new Float3(X, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYX => new Float3(X, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XYY => new Float3(X, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 XY_ => new Float3(X, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X_X => new Float3(X, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X_Y => new Float3(X, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 X__ => new Float3(X, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXX => new Float3(Y, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YXY => new Float3(Y, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YX_ => new Float3(Y, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYX => new Float3(Y, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YYY => new Float3(Y, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 YY_ => new Float3(Y, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y_X => new Float3(Y, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y_Y => new Float3(Y, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 Y__ => new Float3(Y, 0f, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _XX => new Float3(0f, X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _XY => new Float3(0f, X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _X_ => new Float3(0f, X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _YX => new Float3(0f, Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _YY => new Float3(0f, Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 _Y_ => new Float3(0f, Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 __X => new Float3(0f, 0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 __Y => new Float3(0f, 0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float3 ___ => new Float3(0f, 0f, 0f);
-
-#endregion
-
-#region Two
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XX => new Float2(X, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 XY => new Float2(X, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 X_ => new Float2(X, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YX => new Float2(Y, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 YY => new Float2(Y, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 Y_ => new Float2(Y, 0f);
-
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 _X => new Float2(0f, X);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 _Y => new Float2(0f, Y);
-		[EditorBrowsable(EditorBrowsableState.Never)] public Float2 __ => new Float2(0f, 0f);
-
-#endregion
-
-#endregion
 
 #region Scalar Returns
 
@@ -403,8 +202,6 @@ namespace CodeHelpers.Packed
 		{
 			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Float2((float)Math.Round(X), (float)Math.Round(Y));
 		}
-
-#endregion
 
 #endregion
 
@@ -684,19 +481,6 @@ namespace CodeHelpers.Packed
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <=(Float2 first, Float2 second) => first.X <= second.X && first.Y <= second.Y;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >=(Float2 first, Float2 second) => first.X >= second.X && first.Y >= second.Y;
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float2 value) => new Int2((int)value.X, (int)value.Y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float2 value) => new Int3((int)value.X, (int)value.Y, 0);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int4(Float2 value) => new Int4((int)value.X, (int)value.Y, 0, 0);
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float2(float value) => new Float2(value, value);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float3(Float2 value) => value.XY_;
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Float4(Float2 value) => new Float4(value.X, value.Y, 0f, 0f);
-
-#if CODE_HELPERS_UNITY
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator Float2(UnityEngine.Vector2 value) => new Float2(value.x, value.y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static implicit operator UnityEngine.Vector2(Float2 value) => new UnityEngine.Vector2(value.X, value.Y);
-#endif
 
 #endregion
 

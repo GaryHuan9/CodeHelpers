@@ -139,7 +139,7 @@ namespace CodeHelpers.Collections
 		{
 			++index;
 #if NET5_0 || NETCOREAPP3_0
-			int log = BitOperations.Log2((uint)index);
+			int log = System.Numerics.BitOperations.Log2((uint)index);
 #else
 			int log = -1;
 			uint value = (uint)index;

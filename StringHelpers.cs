@@ -43,7 +43,7 @@ namespace CodeHelpers
 #if CODE_HELPERS_UNITY
 			char[] chars = new char[total];
 #else
-			Span<char> chars = stackalloc char[total];
+			System.Span<char> chars = stackalloc char[total];
 #endif
 
 			int index = 0;
