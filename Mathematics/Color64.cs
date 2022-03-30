@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -57,8 +58,8 @@ namespace CodeHelpers.Mathematics
 		static float ToDecimal(ushort value) => (float)value / ushort.MaxValue;
 		static ushort ToInteger(float value) => (ushort)(value.Clamp() * ushort.MaxValue);
 
-		public static explicit operator Color64(Float3 value) => new Color64(value.x, value.y, value.z);
-		public static explicit operator Color64(Int3 value) => new Color64(value.x, value.y, value.z);
+		public static explicit operator Color64(Float3 value) => new Color64(value.X, value.Y, value.Z);
+		public static explicit operator Color64(Int3 value) => new Color64(value.X, value.Y, value.Z);
 
 		public static explicit operator Float3(Color64 value) => new Float3(value.RFloat, value.GFloat, value.BFloat);
 		public static explicit operator Int3(Color64 value) => new Int3(value.r, value.g, value.b);

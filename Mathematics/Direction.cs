@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeHelpers.Diagnostics;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -195,11 +196,11 @@ namespace CodeHelpers.Mathematics
 			return data switch
 			{
 				DataPositiveX => value.ZY,
-				DataNegativeX => new Float2(-value.z, value.y),
+				DataNegativeX => new Float2(-value.Z, value.Y),
 				DataPositiveY => value.XZ,
-				DataNegativeY => new Float2(-value.x, value.z),
+				DataNegativeY => new Float2(-value.X, value.Z),
 				DataPositiveZ => value.YX,
-				DataNegativeZ => new Float2(-value.y, value.x),
+				DataNegativeZ => new Float2(-value.Y, value.X),
 				_ => throw ExceptionHelper.NotPossible
 			};
 		}
@@ -212,11 +213,11 @@ namespace CodeHelpers.Mathematics
 			return data switch
 			{
 				DataPositiveX => value.ZY,
-				DataNegativeX => new Int2(-value.z, value.y),
+				DataNegativeX => new Int2(-value.Z, value.Y),
 				DataPositiveY => value.XZ,
-				DataNegativeY => new Int2(-value.x, value.z),
+				DataNegativeY => new Int2(-value.X, value.Z),
 				DataPositiveZ => value.YX,
-				DataNegativeZ => new Int2(-value.y, value.x),
+				DataNegativeZ => new Int2(-value.Y, value.X),
 				_ => throw ExceptionHelper.NotPossible
 			};
 		}
@@ -347,7 +348,7 @@ namespace CodeHelpers.Mathematics
 		public static implicit operator Int2(Direction direction)
 		{
 			Int3 full = direction;
-			if (full.z == 0) return full.XY;
+			if (full.Z == 0) return full.XY;
 			throw new InvalidCastException();
 		}
 

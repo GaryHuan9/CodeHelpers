@@ -1,4 +1,5 @@
 using System;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -17,8 +18,8 @@ namespace CodeHelpers.Mathematics
 
 		public LimitedRotation(float x, float y, float z) : this((int)x.ToUnsignedAngle(), (int)y.ToUnsignedAngle(), (int)z.ToUnsignedAngle()) { }
 
-		public LimitedRotation(Int3 angles) : this(angles.x, angles.y, angles.z) { }
-		public LimitedRotation(Float3 angles) : this(angles.x, angles.y, angles.z) { }
+		public LimitedRotation(Int3 angles) : this(angles.X, angles.Y, angles.Z) { }
+		public LimitedRotation(Float3 angles) : this(angles.X, angles.Y, angles.Z) { }
 
 		public LimitedRotation(Direction direction, int angle) : this((Int3)direction * angle) { }
 		public LimitedRotation(Direction direction, float angle) : this((Float3)direction * angle) { }
@@ -59,8 +60,8 @@ namespace CodeHelpers.Mathematics
 
 				return new Versor
 				(
-					new Float3(GetSin(raw.x), GetSin(raw.y), GetSin(raw.z)),
-					new Float3(GetCos(raw.x), GetCos(raw.y), GetCos(raw.z))
+					new Float3(GetSin(raw.X), GetSin(raw.Y), GetSin(raw.Z)),
+					new Float3(GetCos(raw.X), GetCos(raw.Y), GetCos(raw.Z))
 				);
 
 				static float GetSin(int raw) => sinValues[raw];

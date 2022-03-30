@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -19,8 +20,8 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public Versor(Float3 angles) : this(CreateSin(angles *= Scalars.DegreeToRadian / 2f), CreateCos(angles)) { }
 
-		static Float3 CreateSin(in Float3 radians) => new Float3((float)Math.Sin(radians.x), (float)Math.Sin(radians.y), (float)Math.Sin(radians.z));
-		static Float3 CreateCos(in Float3 radians) => new Float3((float)Math.Cos(radians.x), (float)Math.Cos(radians.y), (float)Math.Cos(radians.z));
+		static Float3 CreateSin(in Float3 radians) => new Float3((float)Math.Sin(radians.X), (float)Math.Sin(radians.Y), (float)Math.Sin(radians.Z));
+		static Float3 CreateCos(in Float3 radians) => new Float3((float)Math.Cos(radians.X), (float)Math.Cos(radians.Y), (float)Math.Cos(radians.Z));
 
 		/// <summary>
 		/// Creates a <see cref="Versor"/> in the ZXY rotation order based on XYZ sin and cos values.
@@ -28,10 +29,10 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal Versor(in Float3 sin, in Float3 cos) => d = new Float4
 		(
-			sin.x * cos.y * cos.z + cos.x * sin.y * sin.z,
-			cos.x * sin.y * cos.z - sin.x * cos.y * sin.z,
-			cos.x * cos.y * sin.z - sin.x * sin.y * cos.z,
-			cos.x * cos.y * cos.z + sin.x * sin.y * sin.z
+			sin.X * cos.Y * cos.Z + cos.X * sin.Y * sin.Z,
+			cos.X * sin.Y * cos.Z - sin.X * cos.Y * sin.Z,
+			cos.X * cos.Y * sin.Z - sin.X * sin.Y * cos.Z,
+			cos.X * cos.Y * cos.Z + sin.X * sin.Y * sin.Z
 		);
 
 		/// <summary>
@@ -48,9 +49,9 @@ namespace CodeHelpers.Mathematics
 
 			d = new Float4
 			(
-				axis.x * sin,
-				axis.y * sin,
-				axis.z * sin,
+				axis.X * sin,
+				axis.Y * sin,
+				axis.Z * sin,
 				cos
 			);
 		}
@@ -61,9 +62,9 @@ namespace CodeHelpers.Mathematics
 
 		internal readonly Float4 d;
 
-		public static readonly Versor identity = new Versor(Float4.ana);
+		public static readonly Versor identity = new Versor(Float4.Ana);
 
-		public Versor Conjugate => new Versor(-d.x, -d.y, -d.z, d.w);
+		public Versor Conjugate => new Versor(-d.X, -d.Y, -d.Z, d.W);
 		public Versor Inverse => Conjugate;
 
 		public Float3 Angles
@@ -71,16 +72,16 @@ namespace CodeHelpers.Mathematics
 			get
 			{
 				Float3 d2 = d.XYZ * 2f;
-				Float4 xs = d2.x * d;
+				Float4 xs = d2.X * d;
 
-				float yy = d2.y * d.y;
-				float yz = d2.y * d.z;
-				float yw = d2.y * d.w;
+				float yy = d2.Y * d.Y;
+				float yz = d2.Y * d.Z;
+				float yw = d2.Y * d.W;
 
-				float zz = d2.z * d.z;
-				float zw = d2.z * d.w;
+				float zz = d2.Z * d.Z;
+				float zw = d2.Z * d.W;
 
-				float xw_yz = xs.w - yz;
+				float xw_yz = xs.W - yz;
 				float abs = Math.Abs(xw_yz);
 
 				float x = abs >= 1f ? 90f * Math.Sign(xw_yz) : (float)Math.Asin(xw_yz) * Scalars.RadianToDegree;
@@ -88,14 +89,14 @@ namespace CodeHelpers.Mathematics
 				if (abs.AlmostEquals(1f))
 				{
 					//Singularity
-					float y = (float)Math.Atan2(yw - xs.z, 1f - yy - zz);
+					float y = (float)Math.Atan2(yw - xs.Z, 1f - yy - zz);
 					return new Float3(x, y * Scalars.RadianToDegree, 0f);
 				}
 				else
 				{
 					//General cases
-					float y = (float)Math.Atan2(xs.z + yw, 1f - xs.x - yy) * Scalars.RadianToDegree;
-					float z = (float)Math.Atan2(xs.y + zw, 1f - xs.x - zz) * Scalars.RadianToDegree;
+					float y = (float)Math.Atan2(xs.Z + yw, 1f - xs.X - yy) * Scalars.RadianToDegree;
+					float z = (float)Math.Atan2(xs.Y + zw, 1f - xs.X - zz) * Scalars.RadianToDegree;
 
 					return new Float3(x, y, z);
 				}
@@ -161,16 +162,16 @@ namespace CodeHelpers.Mathematics
 
 			if (conjugate) xyz1 = -xyz1;
 
-			float w0 = first.d.w;
-			float w1 = second.d.w;
+			float w0 = first.d.W;
+			float w1 = second.d.W;
 
 			Float3 cross = xyz0.Cross(xyz1);
 
 			return new Versor
 			(
-				w0 * xyz1.x + w1 * xyz0.x + cross.x,
-				w0 * xyz1.y + w1 * xyz0.y + cross.y,
-				w0 * xyz1.z + w1 * xyz0.z + cross.z,
+				w0 * xyz1.X + w1 * xyz0.X + cross.X,
+				w0 * xyz1.Y + w1 * xyz0.Y + cross.Y,
+				w0 * xyz1.Z + w1 * xyz0.Z + cross.Z,
 				w0 * w1 - xyz0.Dot(xyz1)
 			);
 		}
@@ -181,17 +182,17 @@ namespace CodeHelpers.Mathematics
 			ref readonly Float4 d = ref first.d;
 
 			Float4 dd = d.Squared;
-			Float3 dw = d.w * 2f * d.XYZ;
-			Float2 dz = d.z * 2f * d.XY;
-			float dy_x = d.y * 2f * d.x;
+			Float3 dw = d.W * 2f * d.XYZ;
+			Float2 dz = d.Z * 2f * d.XY;
+			float dy_x = d.Y * 2f * d.X;
 
 			if (conjugate) dw = -dw;
 
 			return new Float3
 			(
-				dd.w * second.x + dd.x * second.x - dw.z * second.y + dy_x * second.y + dw.y * second.z + dz.x * second.z - dd.z * second.x - dd.y * second.x,
-				dy_x * second.x + dw.z * second.x + dd.y * second.y - dd.z * second.y + dz.y * second.z - dw.x * second.z + dd.w * second.y - dd.x * second.y,
-				dz.x * second.x - dw.y * second.x + dz.y * second.y + dw.x * second.y + dd.z * second.z - dd.y * second.z - dd.x * second.z + dd.w * second.z
+				dd.W * second.X + dd.X * second.X - dw.Z * second.Y + dy_x * second.Y + dw.Y * second.Z + dz.X * second.Z - dd.Z * second.X - dd.Y * second.X,
+				dy_x * second.X + dw.Z * second.X + dd.Y * second.Y - dd.Z * second.Y + dz.Y * second.Z - dw.X * second.Z + dd.W * second.Y - dd.X * second.Y,
+				dz.X * second.X - dw.Y * second.X + dz.Y * second.Y + dw.X * second.Y + dd.Z * second.Z - dd.Y * second.Z - dd.X * second.Z + dd.W * second.Z
 			);
 		}
 
@@ -215,20 +216,20 @@ namespace CodeHelpers.Mathematics
 			ref readonly Float4 d = ref value.d;
 
 			Float3 d2 = d.XYZ * 2f;
-			Float4 xs = d2.x * d;
+			Float4 xs = d2.X * d;
 
-			float yy = d2.y * d.y;
-			float yz = d2.y * d.z;
-			float yw = d2.y * d.w;
+			float yy = d2.Y * d.Y;
+			float yz = d2.Y * d.Z;
+			float yw = d2.Y * d.W;
 
-			float zz = d2.z * d.z;
-			float zw = d2.z * d.w;
+			float zz = d2.Z * d.Z;
+			float zw = d2.Z * d.W;
 
 			return new Float3x3
 			(
-				1.0f - yy - zz, xs.y - zw, xs.z + yw,
-				xs.y + zw, 1f - xs.x - zz, yz - xs.w,
-				xs.z - yw, yz + xs.w, 1f - xs.x - yy
+				1.0f - yy - zz, xs.Y - zw, xs.Z + yw,
+				xs.Y + zw, 1f - xs.X - zz, yz - xs.W,
+				xs.Z - yw, yz + xs.W, 1f - xs.X - yy
 			);
 		}
 

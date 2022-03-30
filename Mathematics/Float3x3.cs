@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -35,9 +36,9 @@ namespace CodeHelpers.Mathematics
 
 		public Float3x3(in Float3 row0, in Float3 row1, in Float3 row2) : this
 		(
-			row0.x, row0.y, row0.z,
-			row1.x, row1.y, row1.z,
-			row2.x, row2.y, row2.z
+			row0.X, row0.Y, row0.Z,
+			row1.X, row1.Y, row1.Z,
+			row2.X, row2.Y, row2.Z
 		) { }
 
 		// 00 01 02
@@ -313,9 +314,9 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static Float3x3 Scale(in Float3 scale) => new Float3x3
 		(
-			scale.x, 0f, 0f,
-			0f, scale.y, 0f,
-			0f, 0f, scale.z
+			scale.X, 0f, 0f,
+			0f, scale.Y, 0f,
+			0f, 0f, scale.Z
 		);
 
 		/// <summary>
@@ -343,9 +344,9 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Float3 operator *(in Float3x3 first, in Float3 second) => new Float3
 		(
-			first.f00 * second.x + first.f01 * second.y + first.f02 * second.z,
-			first.f10 * second.x + first.f11 * second.y + first.f12 * second.z,
-			first.f20 * second.x + first.f21 * second.y + first.f22 * second.z
+			first.f00 * second.X + first.f01 * second.Y + first.f02 * second.Z,
+			first.f10 * second.X + first.f11 * second.Y + first.f12 * second.Z,
+			first.f20 * second.X + first.f21 * second.Y + first.f22 * second.Z
 		);
 
 		public static bool operator ==(in Float3x3 first, in Float3x3 second) => first.EqualsFast(second);

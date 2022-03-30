@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Files
 {
@@ -32,23 +33,23 @@ namespace CodeHelpers.Files
 
 		public void Write(Float2 value)
 		{
-			Write(value.x);
-			Write(value.y);
+			Write(value.X);
+			Write(value.Y);
 		}
 
 		public void Write(in Float3 value)
 		{
-			Write(value.x);
-			Write(value.y);
-			Write(value.z);
+			Write(value.X);
+			Write(value.Y);
+			Write(value.Z);
 		}
 
 		public void Write(in Float4 value)
 		{
-			Write(value.x);
-			Write(value.y);
-			Write(value.z);
-			Write(value.w);
+			Write(value.X);
+			Write(value.Y);
+			Write(value.Z);
+			Write(value.W);
 		}
 
 		public void Write(in Float4x4 value)
@@ -76,23 +77,23 @@ namespace CodeHelpers.Files
 
 		public void Write(Int2 value)
 		{
-			Write(value.x);
-			Write(value.y);
+			Write(value.X);
+			Write(value.Y);
 		}
 
 		public void Write(in Int3 value)
 		{
-			Write(value.x);
-			Write(value.y);
-			Write(value.z);
+			Write(value.X);
+			Write(value.Y);
+			Write(value.Z);
 		}
 
 		public void Write(in Int4 value)
 		{
-			Write(value.x);
-			Write(value.y);
-			Write(value.z);
-			Write(value.w);
+			Write(value.X);
+			Write(value.Y);
+			Write(value.Z);
+			Write(value.W);
 		}
 
 		public void Write(LimitedRotation value) => Write(value.data);
@@ -204,23 +205,23 @@ namespace CodeHelpers.Files
 
 		public void WriteCompact(Int2 int2)
 		{
-			WriteCompact(int2.x);
-			WriteCompact(int2.y);
+			WriteCompact(int2.X);
+			WriteCompact(int2.Y);
 		}
 
 		public void WriteCompact(in Int3 int3)
 		{
-			WriteCompact(int3.x);
-			WriteCompact(int3.y);
-			WriteCompact(int3.z);
+			WriteCompact(int3.X);
+			WriteCompact(int3.Y);
+			WriteCompact(int3.Z);
 		}
 
 		public void WriteCompact(in Int4 int4)
 		{
-			WriteCompact(int4.x);
-			WriteCompact(int4.y);
-			WriteCompact(int4.z);
-			WriteCompact(int4.w);
+			WriteCompact(int4.X);
+			WriteCompact(int4.Y);
+			WriteCompact(int4.Z);
+			WriteCompact(int4.W);
 		}
 
 		public void WriteCompact(MinMaxInt minMax)

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics.Enumerable
 {
@@ -37,7 +38,7 @@ namespace CodeHelpers.Mathematics.Enumerable
 				Int3 max = (center + (Float3)radius).Ceiled;
 
 				enumerator = new EnumerableSpace3D.Enumerator(min, max);
-				Current = Int3.minValue;
+				Current = Int3.MinValue;
 			}
 
 			readonly Float3 center;
@@ -65,7 +66,7 @@ namespace CodeHelpers.Mathematics.Enumerable
 			public void Reset()
 			{
 				enumerator.Reset();
-				Current = Int3.minValue;
+				Current = Int3.MinValue;
 			}
 
 			public void Dispose() { }
@@ -106,7 +107,7 @@ namespace CodeHelpers.Mathematics.Enumerable
 				Int2 max = (center + (Float2)radius).Ceiled;
 
 				enumerator = new EnumerableSpace2D.Enumerator(min, max);
-				Current = Int2.minValue;
+				Current = Int2.MinValue;
 			}
 
 			readonly Float2 center;
@@ -134,7 +135,7 @@ namespace CodeHelpers.Mathematics.Enumerable
 			public void Reset()
 			{
 				enumerator.Reset();
-				Current = Int2.minValue;
+				Current = Int2.MinValue;
 			}
 
 			public void Dispose() { }

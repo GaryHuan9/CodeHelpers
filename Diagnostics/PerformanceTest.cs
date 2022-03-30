@@ -15,17 +15,17 @@ namespace CodeHelpers.Diagnostics
 		public double ElapsedMilliseconds => span.TotalMilliseconds;
 		public double ElapsedMinutes => span.TotalMinutes;
 
-		public Interval Start()
+		public ReleaseHandle Start()
 		{
 			if (state != State.waiting) throw new Exception($"{nameof(PerformanceTest)} already started!");
 
-			Interval interval = new Interval(this);
+			ReleaseHandle handle = new ReleaseHandle(this);
 			watch = CommonPooler.stopwatch.GetObject();
 
 			state = State.testing;
 			watch.Start();
 
-			return interval;
+			return handle;
 		}
 
 		void Stop()
@@ -41,19 +41,30 @@ namespace CodeHelpers.Diagnostics
 
 		public override string ToString() => state switch
 		{
-			State.waiting => "Unstarted test waiting for measurement",
+			State.waiting => "Awaiting test ready for measurement",
 			State.testing => "Running test collecting time measurements",
 			State.tested => $"Completed test measuring {ElapsedMilliseconds}ms",
 			_ => throw ExceptionHelper.Invalid(nameof(state), state, InvalidType.unexpected)
 		};
 
-		public readonly struct Interval : IDisposable
+		public struct ReleaseHandle : IDisposable
 		{
-			public Interval(PerformanceTest test) => this.test = test;
+			public ReleaseHandle(PerformanceTest test)
+			{
+				this.test = test;
+				stopped = false;
+			}
 
 			readonly PerformanceTest test;
+			bool stopped;
 
-			public void Dispose() => test.Stop();
+			public void Dispose()
+			{
+				if (stopped) return;
+
+				test.Stop();
+				stopped = true;
+			}
 		}
 
 		enum State : byte

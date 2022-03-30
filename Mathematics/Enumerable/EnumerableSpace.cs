@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics.Enumerable
 {

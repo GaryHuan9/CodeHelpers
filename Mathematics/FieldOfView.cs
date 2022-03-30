@@ -1,4 +1,5 @@
 ﻿using System;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -7,10 +8,10 @@ namespace CodeHelpers.Mathematics
 	/// </summary>
 	public readonly struct FieldOfView
 	{
-		public FieldOfView(Float2 fieldOfView) : this(fieldOfView.x, fieldOfView.y, 0f)
+		public FieldOfView(Float2 fieldOfView) : this(fieldOfView.X, fieldOfView.Y, 0f)
 		{
 			Float2 radians = fieldOfView * 0.5f * Scalars.DegreeToRadian;
-			aspect = (float)(Math.Tan(radians.x) / Math.Tan(radians.y));
+			aspect = (float)(Math.Tan(radians.X) / Math.Tan(radians.Y));
 		}
 
 		FieldOfView(float x, float y, float aspect)

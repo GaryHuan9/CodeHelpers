@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Collections
 {
@@ -68,13 +69,13 @@ namespace CodeHelpers.Collections
 			array.Count > index && index >= 0;
 
 		public static bool IsIndexValid<T>(this T[,] array, Int2 index) =>
-			array.GetLength(0) > index.x && index.x >= 0 &&
-			array.GetLength(1) > index.y && index.y >= 0;
+			array.GetLength(0) > index.X && index.X >= 0 &&
+			array.GetLength(1) > index.Y && index.Y >= 0;
 
 		public static bool IsIndexValid<T>(this T[,,] array, Int3 index) =>
-			array.GetLength(0) > index.x && index.x >= 0 &&
-			array.GetLength(1) > index.y && index.y >= 0 &&
-			array.GetLength(2) > index.z && index.z >= 0;
+			array.GetLength(0) > index.X && index.X >= 0 &&
+			array.GetLength(1) > index.Y && index.Y >= 0 &&
+			array.GetLength(2) > index.Z && index.Z >= 0;
 
 		public static int IndexOf<T>(this IList<T> list, T item) => list.IndexOf(item);
 
@@ -96,9 +97,9 @@ namespace CodeHelpers.Collections
 		{
 			Int2 size = array.Size();
 
-			for (int x = 0; x < size.x; x++)
+			for (int x = 0; x < size.X; x++)
 			{
-				for (int y = 0; y < size.y; y++)
+				for (int y = 0; y < size.Y; y++)
 				{
 					if (array[x, y].Equals(item)) return new Int2(x, y);
 				}
@@ -111,11 +112,11 @@ namespace CodeHelpers.Collections
 		{
 			Int3 size = array.Size();
 
-			for (int x = 0; x < size.x; x++)
+			for (int x = 0; x < size.X; x++)
 			{
-				for (int y = 0; y < size.y; y++)
+				for (int y = 0; y < size.Y; y++)
 				{
-					for (int z = 0; z < size.z; z++)
+					for (int z = 0; z < size.Z; z++)
 					{
 						if (array[x, y, z].Equals(item)) return new Int3(x, y, z);
 					}

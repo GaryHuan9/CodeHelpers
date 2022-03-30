@@ -23,25 +23,22 @@ namespace CodeHelpers.Threads
 		/// <summary>This returns a new thread that will make sure to print out exceptions.</summary>
 		public static Thread NewThread(Action action, bool throwThreadAbortException = false, Action abortAction = null)
 		{
-			return new Thread
-			(
-				() =>
+			return new Thread(() =>
+			{
+				try
 				{
-					try
-					{
-						action();
-					}
-					catch (ThreadAbortException exception)
-					{
-						if (throwThreadAbortException) LogException(exception);
-						abortAction?.Invoke();
-					}
-					catch (Exception exception)
-					{
-						LogException(exception);
-					}
+					action();
 				}
-			);
+				catch (ThreadAbortException exception)
+				{
+					if (throwThreadAbortException) LogException(exception);
+					abortAction?.Invoke();
+				}
+				catch (Exception exception)
+				{
+					LogException(exception);
+				}
+			});
 
 			static void LogException(Exception exception) => DebugHelper.LogError($"Exception thrown in thread! {exception.Message}\n{exception.StackTrace}");
 		}

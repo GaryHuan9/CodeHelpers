@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics.Noises
 {
@@ -23,7 +24,7 @@ namespace CodeHelpers.Mathematics.Noises
 			for (int i = 0; i < directionCount; i++)
 			{
 				float angle = (float)random.NextDouble() * 360f;
-				directions[i] = Float2.right.Rotate(angle);
+				directions[i] = Float2.Right.Rotate(angle);
 			}
 		}
 
@@ -46,8 +47,8 @@ namespace CodeHelpers.Mathematics.Noises
 			Int2 cell = skewed.Floored;
 			Float2 part = skewed - cell;
 
-			float value = SamplePoint(position, cell) + SamplePoint(position, cell + Int2.one);
-			value += SamplePoint(position, cell + (part.x >= part.y ? Int2.right : Int2.up));
+			float value = SamplePoint(position, cell) + SamplePoint(position, cell + Int2.One);
+			value += SamplePoint(position, cell + (part.X >= part.Y ? Int2.Right : Int2.Up));
 
 			return value * SimplexScale / 2f + 0.5f;
 		}

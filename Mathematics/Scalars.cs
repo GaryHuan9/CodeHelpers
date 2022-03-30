@@ -28,7 +28,8 @@ namespace CodeHelpers.Mathematics
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
 		public static int Lerp(int left, int right, int value) => (right - left) * value + left;
 
-		public static float InverseLerp(float left, float right, float value) => left.Equals(right) ? 0f : (value - left) / (right - left);
+		// ReSharper disable once CompareOfFloatsByEqualityOperator
+		public static float InverseLerp(float left, float right, float value) => left == right ? 0f : (value - left) / (right - left);
 		public static int InverseLerp(int left, int right, int value) => left == right ? 0 : (value - left) / (right - left);
 
 		public static float Clamp(this float value, float min = 0f, float max = 1f) => value < min ? min : value > max ? max : value;
@@ -253,39 +254,38 @@ namespace CodeHelpers.Mathematics
 		}
 
 		/// <summary>
-		/// Format the integer to their abbreviations using metric suffixes
-		/// The returned string will always be shorter or equals to 4 characters
+		/// Formats <paramref name="value"/> to its abbreviations using metric suffixes.
+		/// The returned string will always be shorter or equals to 4 characters.
 		/// </summary>
-		public static string ToKiloFormatString(this int value)
+		public static string ToStringMetric(this uint value)
 		{
-			if (value < 0) throw ExceptionHelper.Invalid(nameof(value), value, "cannot be negative.");
+			const uint L3 = (uint)1E9;
+			const uint L2 = (uint)1E6;
+			const uint L1 = (uint)1E3;
 
-			if (value >= 1000000000) return Format(1000000000, 'B');
-			if (value >= 1000000) return Format(1000000, 'M');
-			if (value >= 1000) return Format(1000, 'K');
-
-			return value.ToString();
-
-			string Format(int level, char suffix)
+			return value switch
 			{
-				int integer = value / level;
-				int floating = value / (level / 1000) - integer * 1000;
+				>= L3 => Format(value, L3, 'B'),
+				>= L2 => Format(value, L2, 'M'),
+				>= L1 => Format(value, L1, 'K'),
+				_ => value.ToString()
+			};
 
-				var builder = CommonPooler.stringBuilder.GetObject();
+			static string Format(uint value, in uint level, char suffix)
+			{
+				uint integer = value / level;
+				uint floating = value / (level / 1000) - integer * 1000;
 
-				builder.Append(integer);
-				builder.Append('.');
+				using var _ = CommonPooler.stringBuilder.Fetch(out var builder);
+
+				builder.Append(integer).Append('.');
 				builder.Append(floating.ToString("D3"));
 
-				if (builder.Length > 3) builder.Remove(3, builder.Length - 3);
-				if (builder[builder.Length - 1] == '.') builder.Remove(builder.Length - 1, 1);
+				builder.Length = Math.Min(builder.Length, 3);
+				if (builder[^1] == '.') --builder.Length;
 
 				builder.Append(suffix);
-
-				string result = builder.ToString();
-				CommonPooler.stringBuilder.ReleaseObject(builder);
-
-				return result;
+				return builder.ToString();
 			}
 		}
 

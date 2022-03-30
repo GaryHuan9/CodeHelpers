@@ -1,4 +1,6 @@
-﻿namespace CodeHelpers.Mathematics.Noises
+﻿using CodeHelpers.Packed;
+
+namespace CodeHelpers.Mathematics.Noises
 {
 	public class FractionalBrownianMotion
 	{

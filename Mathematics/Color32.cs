@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -56,13 +57,13 @@ namespace CodeHelpers.Mathematics
 		static float ToDecimal(byte value) => (float)value / byte.MaxValue;
 		static byte ToInteger(float value) => (byte)(value.Clamp() * byte.MaxValue);
 
-		public static explicit operator Color32(Float3 value) => new Color32(value.x, value.y, value.z);
-		public static explicit operator Color32(Int3 value) => new Color32(value.x, value.y, value.z);
+		public static explicit operator Color32(Float3 value) => new Color32(value.X, value.Y, value.Z);
+		public static explicit operator Color32(Int3 value) => new Color32(value.X, value.Y, value.Z);
 
 		public static explicit operator Float3(Color32 value) => new Float3(value.RFloat, value.GFloat, value.BFloat);
 		public static explicit operator Int3(Color32 value) => new Int3(value.r, value.g, value.b);
 
-		public static explicit operator Color32(Float4 value) => new Color32(value.x, value.y, value.z, value.w);
+		public static explicit operator Color32(Float4 value) => new Color32(value.X, value.Y, value.Z, value.W);
 
 		public static explicit operator Float4(Color32 value) => new Float4(value.RFloat, value.GFloat, value.BFloat, value.AFloat);
 		public static explicit operator Color64(Color32 value) => new Color64(value.RFloat, value.GFloat, value.BFloat, value.AFloat);

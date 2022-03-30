@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using CodeHelpers.Diagnostics;
 using CodeHelpers.Mathematics;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Files
 {

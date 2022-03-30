@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics.Enumerable
 {
@@ -51,7 +52,7 @@ namespace CodeHelpers.Mathematics.Enumerable
 				{
 					Rotate();
 
-					if (length == size) direction = Int2.zero;
+					if (length == size) direction = Int2.Zero;
 				}
 
 				if (step == length * 2)
@@ -62,7 +63,7 @@ namespace CodeHelpers.Mathematics.Enumerable
 					step = 0;
 				}
 
-				return direction != Int2.zero;
+				return direction != Int2.Zero;
 			}
 
 			void Rotate() => direction = direction.Perpendicular;

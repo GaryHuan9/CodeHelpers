@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using CodeHelpers.Packed;
 
 namespace CodeHelpers.Mathematics
 {
@@ -44,10 +45,10 @@ namespace CodeHelpers.Mathematics
 
 		public Float4x4(in Float4 row0, in Float4 row1, in Float4 row2, in Float4 row3) : this
 		(
-			row0.x, row0.y, row0.z, row0.w,
-			row1.x, row1.y, row1.z, row1.w,
-			row2.x, row2.y, row2.z, row2.w,
-			row3.x, row3.y, row3.z, row3.w
+			row0.X, row0.Y, row0.Z, row0.W,
+			row1.X, row1.Y, row1.Z, row1.W,
+			row2.X, row2.Y, row2.Z, row2.W,
+			row3.X, row3.Y, row3.Z, row3.W
 		) { }
 
 		// 00 01 02 03
@@ -338,16 +339,16 @@ namespace CodeHelpers.Mathematics
 
 		public Float3 MultiplyPoint(in Float3 point) => new Float3
 		(
-			f00 * point.x + f01 * point.y + f02 * point.z + f03,
-			f10 * point.x + f11 * point.y + f12 * point.z + f13,
-			f20 * point.x + f21 * point.y + f22 * point.z + f23
+			f00 * point.X + f01 * point.Y + f02 * point.Z + f03,
+			f10 * point.X + f11 * point.Y + f12 * point.Z + f13,
+			f20 * point.X + f21 * point.Y + f22 * point.Z + f23
 		);
 
 		public Float3 MultiplyDirection(in Float3 direction) => new Float3
 		(
-			f00 * direction.x + f01 * direction.y + f02 * direction.z,
-			f10 * direction.x + f11 * direction.y + f12 * direction.z,
-			f20 * direction.x + f21 * direction.y + f22 * direction.z
+			f00 * direction.X + f01 * direction.Y + f02 * direction.Z,
+			f10 * direction.X + f11 * direction.Y + f12 * direction.Z,
+			f20 * direction.X + f21 * direction.Y + f22 * direction.Z
 		);
 
 		public void MultiplyBounds(ref Float3 center, ref Float3 extend)
@@ -416,9 +417,9 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static Float4x4 Position(in Float3 position) => new Float4x4
 		(
-			1f, 0f, 0f, position.x,
-			0f, 1f, 0f, position.y,
-			0f, 0f, 1f, position.z,
+			1f, 0f, 0f, position.X,
+			0f, 1f, 0f, position.Y,
+			0f, 0f, 1f, position.Z,
 			0f, 0f, 0f, 1f
 		);
 
@@ -459,10 +460,10 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Float4 operator *(in Float4x4 first, in Float4 second) => new Float4
 		(
-			first.f00 * second.x + first.f01 * second.y + first.f02 * second.z + first.f03 * second.w,
-			first.f10 * second.x + first.f11 * second.y + first.f12 * second.z + first.f13 * second.w,
-			first.f20 * second.x + first.f21 * second.y + first.f22 * second.z + first.f23 * second.w,
-			first.f30 * second.x + first.f31 * second.y + first.f32 * second.z + first.f33 * second.w
+			first.f00 * second.X + first.f01 * second.Y + first.f02 * second.Z + first.f03 * second.W,
+			first.f10 * second.X + first.f11 * second.Y + first.f12 * second.Z + first.f13 * second.W,
+			first.f20 * second.X + first.f21 * second.Y + first.f22 * second.Z + first.f23 * second.W,
+			first.f30 * second.X + first.f31 * second.Y + first.f32 * second.Z + first.f33 * second.W
 		);
 
 		public static bool operator ==(in Float4x4 first, in Float4x4 second) => first.EqualsFast(second);
