@@ -31,10 +31,10 @@ namespace CodeHelpers.Mathematics.Noises
 		readonly Float2[] directions;
 		readonly int directionCount;
 
-		const float SimplexScale = 2916f * Scalars.Sqrt2 / 125f;
+		const float SimplexScale = 2916f * Scalars.Root2 / 125f;
 
-		const float SquareToTriangle = (3f - Scalars.Sqrt3) / 6f;
-		const float TriangleToSquare = (Scalars.Sqrt3 - 1f) / 2f;
+		const float SquareToTriangle = (3f - Scalars.Root3) / 6f;
+		const float TriangleToSquare = (Scalars.Root3 - 1f) / 2f;
 
 		/// <summary>
 		/// Retrieves the value of the noise at <paramref name="position"/>.

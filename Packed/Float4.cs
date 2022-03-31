@@ -374,7 +374,7 @@ namespace CodeHelpers.Packed
 			double magnitude = Math.Sqrt(squared);
 			if (magnitude.AlmostEquals()) return 0f;
 
-			return (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
+			return Scalars.ToDegrees((float)Math.Acos(DotDouble(other) / magnitude));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(in Float4 other) => (other - this).Magnitude;

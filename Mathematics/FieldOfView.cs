@@ -10,7 +10,7 @@ namespace CodeHelpers.Mathematics
 	{
 		public FieldOfView(Float2 fieldOfView) : this(fieldOfView.X, fieldOfView.Y, 0f)
 		{
-			Float2 radians = fieldOfView * 0.5f * Scalars.DegreeToRadian;
+			Float2 radians = fieldOfView * Scalars.ToRadians(0.5f);
 			aspect = (float)(Math.Tan(radians.X) / Math.Tan(radians.Y));
 		}
 
@@ -58,8 +58,8 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static FieldOfView SetHorizontal(float horizontal, float aspect)
 		{
-			float width = (float)Math.Tan(horizontal * Scalars.DegreeToRadian * 0.5f);
-			float y = Scalars.RadianToDegree * 2f * (float)Math.Atan(width / aspect);
+			float width = (float)Math.Tan(horizontal * Scalars.ToRadians(0.5f));
+			float y = Scalars.ToDegrees(2f) * (float)Math.Atan(width / aspect);
 
 			return new FieldOfView(horizontal, y, aspect);
 		}
@@ -70,8 +70,8 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static FieldOfView SetVertical(float vertical, float aspect)
 		{
-			float height = (float)Math.Tan(vertical * Scalars.DegreeToRadian * 0.5f);
-			float x = Scalars.RadianToDegree * 2f * (float)Math.Atan(height * aspect);
+			float height = (float)Math.Tan(vertical * Scalars.ToRadians(0.5f));
+			float x = Scalars.ToDegrees(2f) * (float)Math.Atan(height * aspect);
 
 			return new FieldOfView(x, vertical, aspect);
 		}

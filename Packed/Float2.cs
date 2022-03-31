@@ -215,7 +215,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DotDouble(Float2 other) => (double)X * other.X + (double)Y * other.Y;
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Angle(Float2 other) => Math.Abs(SignedAngle(other));
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Float2 other) => (float)Math.Atan2((double)X * other.Y - (double)Y * other.X, DotDouble(other)) * Scalars.RadianToDegree;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(Float2 other) => Scalars.ToDegrees((float)Math.Atan2((double)X * other.Y - (double)Y * other.X, DotDouble(other)));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(Float2 other) => (other - this).Magnitude;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public double DistanceDouble(Float2 other) => (other - this).MagnitudeDouble;
@@ -252,23 +252,23 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Repeat(float length) => new Float2(X.Repeat(length), Y.Repeat(length));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Float2 Rotate(float degree)
+		public Float2 Rotate(float degrees)
 		{
-			float angle = degree * Scalars.DegreeToRadian;
+			float radians = Scalars.ToRadians(degrees);
 
-			float sin = (float)Math.Sin(angle);
-			float cos = (float)Math.Cos(angle);
+			float sin = (float)Math.Sin(radians);
+			float cos = (float)Math.Cos(radians);
 
 			return new Float2(cos * X - sin * Y, sin * X + cos * Y);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Float2 Rotate(float degree, Float2 pivot)
+		public Float2 Rotate(float degrees, Float2 pivot)
 		{
-			float angle = degree * Scalars.DegreeToRadian;
+			float radians = Scalars.ToRadians(degrees);
 
-			float sin = (float)Math.Sin(angle);
-			float cos = (float)Math.Cos(angle);
+			float sin = (float)Math.Sin(radians);
+			float cos = (float)Math.Cos(radians);
 
 			float offsetX = X - pivot.X;
 			float offsetY = Y - pivot.Y;
@@ -354,8 +354,8 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Repeat(Float2 value, Float2 length) => value.Repeat(length);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Repeat(Float2 value, float length) => value.Repeat(length);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Float2 value, float degree) => value.Rotate(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Float2 value, float degree, Float2 pivot) => value.Rotate(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Float2 value, float degrees) => value.Rotate(degrees);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Rotate(Float2 value, float degrees, Float2 pivot) => value.Rotate(degrees, pivot);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, Float2 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float2 Damp(Float2 current, Float2 target, ref Float2 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);

@@ -341,7 +341,7 @@ namespace CodeHelpers.Packed
 			long squared = SquaredMagnitudeLong * other.SquaredMagnitudeLong;
 			if (squared == 0) return 0f;
 
-			return (float)Math.Acos(DotLong(other) / Math.Sqrt(squared)) * Scalars.RadianToDegree;
+			return Scalars.ToDegrees((float)Math.Acos(DotLong(other) / Math.Sqrt(squared)));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float Distance(in Int4 other) => (other - this).Magnitude;

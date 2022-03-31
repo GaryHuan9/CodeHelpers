@@ -18,7 +18,7 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Creates a <see cref="Versor"/> from three angles (degrees) in the ZXY rotation order.
 		/// </summary>
-		public Versor(Float3 angles) : this(CreateSin(angles *= Scalars.DegreeToRadian / 2f), CreateCos(angles)) { }
+		public Versor(Float3 angles) : this(CreateSin(angles *= Scalars.ToRadians(0.5f)), CreateCos(angles)) { }
 
 		static Float3 CreateSin(in Float3 radians) => new Float3((float)Math.Sin(radians.X), (float)Math.Sin(radians.Y), (float)Math.Sin(radians.Z));
 		static Float3 CreateCos(in Float3 radians) => new Float3((float)Math.Cos(radians.X), (float)Math.Cos(radians.Y), (float)Math.Cos(radians.Z));
@@ -40,7 +40,7 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public Versor(Float3 axis, float angle)
 		{
-			float radians = Scalars.DegreeToRadian / 2f * angle;
+			float radians = Scalars.ToRadians(angle / 2f);
 
 			float sin = (float)Math.Sin(radians);
 			float cos = (float)Math.Cos(radians);
@@ -84,19 +84,19 @@ namespace CodeHelpers.Mathematics
 				float xw_yz = xs.W - yz;
 				float abs = Math.Abs(xw_yz);
 
-				float x = abs >= 1f ? 90f * Math.Sign(xw_yz) : (float)Math.Asin(xw_yz) * Scalars.RadianToDegree;
+				float x = abs >= 1f ? 90f * Math.Sign(xw_yz) : Scalars.ToDegrees((float)Math.Asin(xw_yz));
 
 				if (abs.AlmostEquals(1f))
 				{
 					//Singularity
 					float y = (float)Math.Atan2(yw - xs.Z, 1f - yy - zz);
-					return new Float3(x, y * Scalars.RadianToDegree, 0f);
+					return new Float3(x, Scalars.ToDegrees(y), 0f);
 				}
 				else
 				{
 					//General cases
-					float y = (float)Math.Atan2(xs.Z + yw, 1f - xs.X - yy) * Scalars.RadianToDegree;
-					float z = (float)Math.Atan2(xs.Y + zw, 1f - xs.X - zz) * Scalars.RadianToDegree;
+					float y = Scalars.ToDegrees((float)Math.Atan2(xs.Z + yw, 1f - xs.X - yy));
+					float z = Scalars.ToDegrees((float)Math.Atan2(xs.Y + zw, 1f - xs.X - zz));
 
 					return new Float3(x, y, z);
 				}
@@ -114,7 +114,7 @@ namespace CodeHelpers.Mathematics
 			float dot = Math.Abs(Dot(other));
 			if (dot.AlmostEquals()) return 0f;
 
-			return (float)Math.Acos(dot) * 2f * Scalars.RadianToDegree;
+			return Scalars.ToDegrees((float)Math.Acos(dot) * 2f);
 		}
 
 		public Versor Damp(in Versor target, ref Float4 velocity, float smoothTime, float deltaTime) => Damp(this, target, ref velocity, smoothTime, deltaTime);

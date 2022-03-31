@@ -49,8 +49,8 @@ namespace CodeHelpers.Mathematics
 
 		public static readonly LimitedRotation identity = default;
 
-		static readonly float[] sinValues = {0f, Scalars.Sqrt2 / 2f, 1f, Scalars.Sqrt2 / 2f};
-		static readonly float[] cosValues = {1f, Scalars.Sqrt2 / 2f, 0f, Scalars.Sqrt2 / -2f};
+		static readonly float[] sinValues = {0f, Scalars.Root2 / 2f, 1f, Scalars.Root2 / 2f};
+		static readonly float[] cosValues = {1f, Scalars.Root2 / 2f, 0f, Scalars.Root2 / -2f};
 
 		public Versor Versor
 		{

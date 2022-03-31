@@ -6,24 +6,102 @@ namespace CodeHelpers.Mathematics
 {
 	public static class Scalars
 	{
-		public const float Epsilon = 0.00001f;
-		public const float PI = (float)Math.PI;
-		public const float E = (float)Math.E;
-		public const float TAU = (float)(Math.PI * 2d);
+		/// <summary>
+		/// A positive number that is really close to zero (1E-5 or 0.00001).
+		/// </summary>
+		public const float Epsilon = 1E-5f;
 
-		public const double RadianToDegreeDouble = 180d / Math.PI;
-		public const double DegreeToRadianDouble = Math.PI / 180d;
+		/// <summary>
+		/// The mathematical constant <see cref="Pi"/> (float32).
+		/// </summary>
+		public const float Pi = (float)SourcePi;
 
-		public const float RadianToDegree = (float)RadianToDegreeDouble;
-		public const float DegreeToRadian = (float)DegreeToRadianDouble;
+		/// <summary>
+		/// The reciprocal of <see cref="Pi"/> (float32).
+		/// </summary>
+		public const float PiR = (float)(1m / SourcePi);
 
-		public const double Sqrt2Double = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621d;
-		public const double Sqrt3Double = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088d;
-		public const double GoldenRatioDouble = 1.61803398874989484820458683436563811772030917980576286213544862270526046281890d;
+		/// <summary>
+		/// The mathematical constant <see cref="Tau"/>, identical to 2 * Pi (float32).
+		/// </summary>
+		public const float Tau = (float)(SourcePi * 2m);
 
-		public const float Sqrt2 = (float)Sqrt2Double;
-		public const float Sqrt3 = (float)Sqrt3Double;
-		public const float GoldenRatio = (float)GoldenRatioDouble;
+		/// <summary>
+		/// The reciprocal of <see cref="Tau"/> (float32).
+		/// </summary>
+		public const float TauR = (float)(0.5m / SourcePi);
+
+		/// <summary>
+		/// Euler's number (float32).
+		/// </summary>
+		public const float E = (float)SourceE;
+
+		/// <summary>
+		/// The golden ratio (float32).
+		/// </summary>
+		public const float Phi = (float)SourcePhi;
+
+		/// <summary>
+		/// The square root of constant 2 (float32).
+		/// </summary>
+		public const float Root2 = (float)SourceRoot2;
+
+		/// <summary>
+		/// The square root of constant 3 (float32).
+		/// </summary>
+		public const float Root3 = (float)SourceRoot3;
+
+		/// <summary>
+		/// The mathematical constant <see cref="PiF64"/> (float64).
+		/// </summary>
+		public const double PiF64 = (double)SourcePi;
+
+		/// <summary>
+		/// The reciprocal of <see cref="PiF64"/> (float64).
+		/// </summary>
+		public const double PiRF64 = (double)(1m / SourcePi);
+
+		/// <summary>
+		/// The mathematical constant <see cref="TauF64"/>, identical to 2 * Pi (float64).
+		/// </summary>
+		public const double TauF64 = (double)(SourcePi * 2m);
+
+		/// <summary>
+		/// The reciprocal of <see cref="TauF64"/> (float64).
+		/// </summary>
+		public const double TauRF64 = (double)(0.5m / SourcePi);
+
+		/// <summary>
+		/// Euler's number (float64).
+		/// </summary>
+		public const double EF64 = (double)SourceE;
+
+		/// <summary>
+		/// The golden ratio (float64).
+		/// </summary>
+		public const double PhiF64 = (double)SourcePhi;
+
+		/// <summary>
+		/// The square root of constant 2 (float64).
+		/// </summary>
+		public const double Root2F64 = (double)SourceRoot2;
+
+		/// <summary>
+		/// The square root of constant 3 (float64).
+		/// </summary>
+		public const double Root3F64 = (double)SourceRoot3;
+
+		const decimal SourcePi /*    */ = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862m;
+		const decimal SourceE /*     */ = 2.7182818284590452353602874713526624977572470936999595749669676277240766303535m;
+		const decimal SourcePhi /*   */ = 1.6180339887498948482045868343656381177203091798057628621354486227052604628189m;
+		const decimal SourceRoot2 /* */ = 1.4142135623730950488016887242096980785696718753769480731766797379907324784621m;
+		const decimal SourceRoot3 /* */ = 1.7320508075688772935274463415058723669428052538103806280558069794519330169088m;
+
+		public static float ToDegrees(float radians) => radians * (float)(180m / SourcePi);
+		public static float ToRadians(float degrees) => degrees * (float)(SourcePi / 180m);
+
+		public static double ToDegrees(double radians) => radians * (double)(180m / SourcePi);
+		public static double ToRadians(double degrees) => degrees * (double)(SourcePi / 180m);
 
 		public static float Lerp(float left, float right, float value) => (right - left) * value + left;
 		public static int Lerp(int left, int right, int value) => (right - left) * value + left;

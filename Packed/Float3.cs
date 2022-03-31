@@ -271,7 +271,7 @@ namespace CodeHelpers.Packed
 			double magnitude = Math.Sqrt(squared);
 			if (magnitude.AlmostEquals()) return 0f;
 
-			return (float)Math.Acos(DotDouble(other) / magnitude) * Scalars.RadianToDegree;
+			return Scalars.ToDegrees((float)Math.Acos(DotDouble(other) / magnitude));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public float SignedAngle(in Float3 other, in Float3 normal)
@@ -314,17 +314,17 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(in Float3 length) => new Float3(X.Repeat(length.X), Y.Repeat(length.Y), Z.Repeat(length.Z));
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Repeat(float length) => new Float3(X.Repeat(length), Y.Repeat(length), Z.Repeat(length));
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree) => CreateXY(XY.Rotate(degree), Z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, Float2 pivot) => CreateXY(XY.Rotate(degree, pivot), Z);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degree, in Float3 pivot) => CreateXY(XY.Rotate(degree, pivot.XY), Z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degrees) => CreateXY(XY.Rotate(degrees), Z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degrees, Float2 pivot) => CreateXY(XY.Rotate(degrees, pivot), Z);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXY(float degrees, in Float3 pivot) => CreateXY(XY.Rotate(degrees, pivot.XY), Z);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree) => CreateXZ(XZ.Rotate(degree), Y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, Float2 pivot) => CreateXZ(XZ.Rotate(degree, pivot), Y);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degree, in Float3 pivot) => CreateXZ(XZ.Rotate(degree, pivot.XZ), Y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degrees) => CreateXZ(XZ.Rotate(degrees), Y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degrees, Float2 pivot) => CreateXZ(XZ.Rotate(degrees, pivot), Y);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateXZ(float degrees, in Float3 pivot) => CreateXZ(XZ.Rotate(degrees, pivot.XZ), Y);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree) => CreateYZ(YZ.Rotate(degree), X);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, Float2 pivot) => CreateYZ(YZ.Rotate(degree, pivot), X);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degree, in Float3 pivot) => CreateYZ(YZ.Rotate(degree, pivot.YZ), X);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degrees) => CreateYZ(YZ.Rotate(degrees), X);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degrees, Float2 pivot) => CreateYZ(YZ.Rotate(degrees, pivot), X);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 RotateYZ(float degrees, in Float3 pivot) => CreateYZ(YZ.Rotate(degrees, pivot.YZ), X);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float3 Damp(in Float3 target, ref Float3 velocity, in Float3 smoothTime, float deltaTime)
@@ -414,17 +414,17 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(in Float3 value, in Float3 length) => value.Repeat(length);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Repeat(in Float3 value, float length) => value.Repeat(length);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degree) => value.RotateXY(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degree, Float2 pivot) => value.RotateXY(degree, pivot);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degree, in Float3 pivot) => value.RotateXY(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degrees) => value.RotateXY(degrees);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degrees, Float2 pivot) => value.RotateXY(degrees, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXY(in Float3 value, float degrees, in Float3 pivot) => value.RotateXY(degrees, pivot);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degree) => value.RotateXZ(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degree, Float2 pivot) => value.RotateXZ(degree, pivot);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degree, in Float3 pivot) => value.RotateXZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degrees) => value.RotateXZ(degrees);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degrees, Float2 pivot) => value.RotateXZ(degrees, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateXZ(in Float3 value, float degrees, in Float3 pivot) => value.RotateXZ(degrees, pivot);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degree) => value.RotateYZ(degree);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degree, Float2 pivot) => value.RotateYZ(degree, pivot);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degree, in Float3 pivot) => value.RotateYZ(degree, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degrees) => value.RotateYZ(degrees);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degrees, Float2 pivot) => value.RotateYZ(degrees, pivot);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 RotateYZ(in Float3 value, float degrees, in Float3 pivot) => value.RotateYZ(degrees, pivot);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(in Float3 current, in Float3 target, ref Float3 velocity, in Float3 smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float3 Damp(in Float3 current, in Float3 target, ref Float3 velocity, float smoothTime, float deltaTime) => current.Damp(target, ref velocity, smoothTime, deltaTime);
