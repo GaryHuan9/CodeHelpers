@@ -371,16 +371,7 @@ namespace CodeHelpers.Unity.BehaviorTreeUIEditor
 			);
 			typeLabel = new Label("None");
 
-			{
-				// Because the choices property in PopupField is internal, which according to https://forum.unity.com/threads/maskfield-choices-internal.672670/
-				// is a bug. So we will use reflection to set it for now
-
-				var property = contextSelector.GetType().GetProperty("choices", BindingFlags.Instance | BindingFlags.NonPublic);
-				if (property == null) throw new Exception("Reflection not working!!!");
-
-				//Should be contextSelector.choices = representativeActions
-				property.SetValue(contextSelector, representativeMethods);
-			}
+			contextSelector.choices = representativeMethods;
 
 			VisualElement parameterContainer = TryGetParameterContainer();
 			var labelStyle = contextSelector.Q<Label>().style;
