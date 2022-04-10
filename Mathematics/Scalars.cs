@@ -195,8 +195,9 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static float Repeat(this float value, float length)
 		{
-			float result = value % length;
-			return result < 0f ? result + length : result;
+			if ((0f <= value) & (value < length)) return value;
+			float mod = value % length;
+			return mod < 0f ? mod + length : mod;
 		}
 
 		/// <summary>
@@ -205,8 +206,9 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static int Repeat(this int value, int length)
 		{
-			int result = value % length;
-			return result < 0 ? result + length : result;
+			if ((0 <= value) & (value < length)) return value;
+			int mod = value % length;
+			return mod < 0 ? mod + length : mod;
 		}
 
 		/// <summary>
@@ -215,8 +217,9 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static double Repeat(this double value, double length)
 		{
-			double result = value % length;
-			return result < 0d ? result + length : result;
+			if ((0d <= value) & (value < length)) return value;
+			double mod = value % length;
+			return mod < 0d ? mod + length : mod;
 		}
 
 		/// <summary>
@@ -225,8 +228,9 @@ namespace CodeHelpers.Mathematics
 		/// </summary>
 		public static long Repeat(this long value, long length)
 		{
-			long result = value % length;
-			return result < 0L ? result + length : result;
+			if ((0L <= value) & (value < length)) return value;
+			long mod = value % length;
+			return mod < 0L ? mod + length : mod;
 		}
 
 		/// <summary>

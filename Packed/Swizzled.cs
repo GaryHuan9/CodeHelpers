@@ -604,6 +604,7 @@ namespace CodeHelpers.Packed
 
 	}
 
+	//OPTIMIZE
 	public partial struct Float4
 	{
 
