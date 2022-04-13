@@ -2,7 +2,7 @@
 
 namespace CodeHelpers.Mathematics
 {
-	public static class CurveHelper //https://www.desmos.com/calculator/tsrynhfbtr
+	public static class CurveHelper //https://www.desmos.com/calculator/46uoiq2bdh
 	{
 		public static InputCheckMode CheckMode { get; set; } = InputCheckMode.clamp;
 
@@ -12,7 +12,7 @@ namespace CodeHelpers.Mathematics
 			{
 				case InputCheckMode.exception:
 				{
-					if (input < 0f || input > 1f) throw ExceptionHelper.Invalid(nameof(input), input, InvalidType.outOfBounds);
+					if ((input < 0f) | (input > 1f)) throw ExceptionHelper.Invalid(nameof(input), input, InvalidType.outOfBounds);
 					break;
 				}
 				case InputCheckMode.clamp:
@@ -39,7 +39,8 @@ namespace CodeHelpers.Mathematics
 		public static float Sigmoid(float input)
 		{
 			CheckRange(ref input);
-			return 0.5f + 0.5f * (float)Math.Sin(input * Math.PI - Math.PI * 0.5d);
+			float input2 = input * input;
+			return 3f * input2 - 2f * input2 * input;
 		}
 
 		public static float EaseIn(float input)
