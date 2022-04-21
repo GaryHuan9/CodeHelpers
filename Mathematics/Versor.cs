@@ -104,7 +104,6 @@ namespace CodeHelpers.Mathematics
 		}
 
 		public float Dot(in Versor other) => d.Dot(other.d);
-		public double DotDouble(in Versor other) => d.DotDouble(other.d);
 
 		/// <summary>
 		/// Returns the smallest angle between this <see cref="Versor"/> and <paramref name="other"/>.
@@ -119,13 +118,12 @@ namespace CodeHelpers.Mathematics
 
 		public Versor Damp(in Versor target, ref Float4 velocity, float smoothTime, float deltaTime) => Damp(this, target, ref velocity, smoothTime, deltaTime);
 
+		public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
+
 		/// <summary>
 		/// Returns the smallest angle between this <see cref="Versor"/> and <paramref name="other"/>.
 		/// </summary>
 		public static float Angle(in Versor value, in Versor other) => value.Angle(other);
-
-		public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
-		public static double DotDouble(in Float4 value, in Float4 other) => value.DotDouble(other);
 
 		public static Versor Damp(in Versor current, in Versor target, ref Float4 velocity, float smoothTime, float deltaTime)
 		{
@@ -181,7 +179,7 @@ namespace CodeHelpers.Mathematics
 		{
 			ref readonly Float4 d = ref first.d;
 
-			Float4 dd = d.Squared;
+			Float4 dd = d * d;
 			Float3 dw = d.W * 2f * d.XYZ;
 			Float2 dz = d.Z * 2f * d.XY;
 			float dy_x = d.Y * 2f * d.X;

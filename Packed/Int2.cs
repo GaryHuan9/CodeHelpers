@@ -29,87 +29,104 @@ namespace CodeHelpers.Packed
 
 		public float Magnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)MagnitudeDouble;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => (float)MagnitudeDouble;
 		}
 
 		public double MagnitudeDouble
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Sqrt(SquaredMagnitudeLong);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => Math.Sqrt(SquaredMagnitudeLong);
 		}
 
 		public int SquaredMagnitude
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X * X + Y * Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X * X + Y * Y;
 		}
 
 		public long SquaredMagnitudeLong
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)X * X + (long)Y * Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => (long)X * X + (long)Y * Y;
 		}
 
 		public int Product
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X * Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X * Y;
 		}
 
 		public long ProductLong
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)X * Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => (long)X * Y;
 		}
 
 		public int ProductAbsoluted
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs(X * Y);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => Math.Abs(X * Y);
 		}
 
 		public long ProductAbsolutedLong
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => Math.Abs((long)X * Y);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => Math.Abs((long)X * Y);
 		}
 
 		public int Sum
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X + Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X + Y;
 		}
 
 		public long SumLong
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (long)X + Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => (long)X + Y;
 		}
 
 		public float Average
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => (float)AverageDouble;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => (float)AverageDouble;
 		}
 
 		public double AverageDouble
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => ((double)X + Y) / 3d;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => ((double)X + Y) / 3d;
 		}
 
 		public int MinComponent
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X < Y ? X : Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X < Y ? X : Y;
 		}
 
 		public int MinIndex
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X < Y ? 0 : 1;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X < Y ? 0 : 1;
 		}
 
 		public int MaxComponent
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X > Y ? X : Y;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X > Y ? X : Y;
 		}
 
 		public int MaxIndex
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X > Y ? 0 : 1;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X > Y ? 0 : 1;
 		}
 
 		public int this[int index]
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
 			{
 #if CODE_HELPERS_UNSAFE
 				unsafe
@@ -135,17 +152,20 @@ namespace CodeHelpers.Packed
 
 		public Int2 Absoluted
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(Math.Abs(X), Math.Abs(Y));
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => new Int2(Math.Abs(X), Math.Abs(Y));
 		}
 
 		public Int2 Signed
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(X.Sign(), Y.Sign());
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => new Int2(X.Sign(), Y.Sign());
 		}
 
 		public Float2 Normalized
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get
 			{
 				long squared = SquaredMagnitudeLong;
 				if (squared == 0) return Float2.Zero;
@@ -154,24 +174,22 @@ namespace CodeHelpers.Packed
 			}
 		}
 
-		public Int2 Squared
-		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(X * X, Y * Y);
-		}
-
 		public Int2 Perpendicular
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => new Int2(-Y, X);
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => new Int2(-Y, X);
 		}
 
 		public Int2 Sorted
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X < Y ? XY : YX;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X < Y ? XY : YX;
 		}
 
 		public Int2 SortedReversed
 		{
-			[MethodImpl(MethodImplOptions.AggressiveInlining)] get => X > Y ? XY : YX;
+			[MethodImpl(MethodImplOptions.AggressiveInlining)]
+			get => X > Y ? XY : YX;
 		}
 
 #endregion
