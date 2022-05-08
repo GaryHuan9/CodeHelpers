@@ -449,15 +449,12 @@ namespace CodeHelpers.Packed
 
 		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)}, {W.ToString(format, provider)})";
 
-		// ReSharper disable CompareOfFloatsByEqualityOperator
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(in Float4 other) => v.Equals(other.v);
-		// ReSharper restore CompareOfFloatsByEqualityOperator
-
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float4 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float4 other) => EqualsFast(other);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public bool EqualsFast(in Float4 other) => X.AlmostEquals(other.X) && Y.AlmostEquals(other.Y) && Z.AlmostEquals(other.Z) && W.AlmostEquals(other.W);
+		public bool Equals(in Float4 other) => X.AlmostEquals(other.X) && Y.AlmostEquals(other.Y) &&
+											   Z.AlmostEquals(other.Z) && W.AlmostEquals(other.W);
 
 		public override int GetHashCode()
 		{
@@ -470,6 +467,8 @@ namespace CodeHelpers.Packed
 				return hashCode;
 			}
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] bool IEquatable<Float4>.Equals(Float4 other) => Equals(other);
 
 #endregion
 
@@ -613,8 +612,8 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator %(in Float4 first, float second) => new Float4(first.X % second, first.Y % second, first.Z % second, first.W % second);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static Float4 operator %(float first, in Float4 second) => new Float4(first % second.X, first % second.Y, first % second.Z, first % second.W);
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float4 first, in Float4 second) => first.EqualsFast(second);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float4 first, in Float4 second) => !first.EqualsFast(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator ==(in Float4 first, in Float4 second) => first.Equals(second);
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator !=(in Float4 first, in Float4 second) => !first.Equals(second);
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator <(in Float4 first, in Float4 second) => first.X < second.X && first.Y < second.Y && first.Z < second.Z && first.W < second.W;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static bool operator >(in Float4 first, in Float4 second) => first.X > second.X && first.Y > second.Y && first.Z > second.Z && first.W > second.W;

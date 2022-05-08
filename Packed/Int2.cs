@@ -295,15 +295,9 @@ namespace CodeHelpers.Packed
 		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)})";
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int2 other && Equals(other);
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => X == other.X && Y == other.Y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Int2 other) => (X == other.X) & (Y == other.Y);
 
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				return (X.GetHashCode() * 397) ^ Y.GetHashCode();
-			}
-		}
+		public override int GetHashCode() => unchecked((X.GetHashCode() * 397) ^ Y.GetHashCode());
 
 #endregion
 

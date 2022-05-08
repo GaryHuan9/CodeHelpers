@@ -195,9 +195,9 @@ namespace CodeHelpers.Collections
 		public static int Clamp<T>(this IReadOnlyCollection<T> collection, int index) => index.Clamp(0, collection.Count - 1);
 		public static T ClampedGet<T>(this IReadOnlyList<T> list, int index) => list[list.Clamp(index)];
 
-		public static void Shuffle<T>(this IList<T> list)
+		public static void Shuffle<T>(this IList<T> list, Random random = null)
 		{
-			Random random = RandomHelper.CurrentRandom;
+			random ??= RandomHelper.CurrentRandom;
 			for (int i = list.Count - 1; i > 0; i--) list.Swap(i, random.Next(i + 1));
 		}
 

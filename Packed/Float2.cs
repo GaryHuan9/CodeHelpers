@@ -328,19 +328,13 @@ namespace CodeHelpers.Packed
 		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)})";
 
 		// ReSharper disable CompareOfFloatsByEqualityOperator
-		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => X == other.X && Y == other.Y;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => (X == other.X) & Y == other.Y;
 		// ReSharper restore CompareOfFloatsByEqualityOperator
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float2 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(Float2 other) => X.AlmostEquals(other.X) && Y.AlmostEquals(other.Y);
 
-		public override int GetHashCode()
-		{
-			unchecked
-			{
-				return (X.GetHashCode() * 397) ^ Y.GetHashCode();
-			}
-		}
+		public override int GetHashCode() => unchecked((X.GetHashCode() * 397) ^ Y.GetHashCode());
 
 #endregion
 

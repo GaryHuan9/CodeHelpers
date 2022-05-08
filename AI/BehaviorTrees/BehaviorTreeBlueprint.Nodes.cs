@@ -2,7 +2,7 @@ using System;
 
 namespace CodeHelpers.AI.BehaviorTrees
 {
-	public partial class BehaviorTreeBlueprint<T>
+	partial class BehaviorTreeBlueprint<T>
 	{
 		internal class Root : Node
 		{

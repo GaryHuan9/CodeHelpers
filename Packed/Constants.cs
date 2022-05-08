@@ -4,7 +4,7 @@ using CodeHelpers.Mathematics;
 
 namespace CodeHelpers.Packed
 {
-	public partial struct Float2
+	partial struct Float2
 	{
 		public static Float2 Right => new Float2(1f, 0f);
 		public static Float2 Left => new Float2(-1f, 0f);
@@ -29,7 +29,7 @@ namespace CodeHelpers.Packed
 		public static Float2 NaN => (Float2)float.NaN;
 	}
 
-	public partial struct Float3
+	partial struct Float3
 	{
 		public static Float3 Right => new Float3(1f, 0f, 0f);
 		public static Float3 Left => new Float3(-1f, 0f, 0f);
@@ -57,7 +57,7 @@ namespace CodeHelpers.Packed
 		public static Float3 NaN => (Float3)float.NaN;
 	}
 
-	public partial struct Float4
+	partial struct Float4
 	{
 		public static Float4 Right => new Float4(1f, 0f, 0f, 0f);
 		public static Float4 Left => new Float4(-1f, 0f, 0f, 0f);
@@ -88,7 +88,7 @@ namespace CodeHelpers.Packed
 		public static Float4 NaN => (Float4)float.NaN;
 	}
 
-	public partial struct Int2
+	partial struct Int2
 	{
 		public static Int2 Right => new Int2(1, 0);
 		public static Int2 Left => new Int2(-1, 0);
@@ -133,7 +133,7 @@ namespace CodeHelpers.Packed
 		public static readonly ReadOnlyCollection<Int2> edgesVertices8 = new ReadOnlyCollection<Int2>(edges4.Concat(vertices4).ToArray());
 	}
 
-	public partial struct Int3
+	partial struct Int3
 	{
 		public static Int3 Right => new Int3(1, 0, 0);
 		public static Int3 Left => new Int3(-1, 0, 0);
@@ -196,7 +196,7 @@ namespace CodeHelpers.Packed
 		public static readonly ReadOnlyCollection<Int3> facesVerticesEdges26 = new ReadOnlyCollection<Int3>(faces6.Concat(vertices8).Concat(edges12).ToArray());
 	}
 
-	public partial struct Int4
+	partial struct Int4
 	{
 		public static Int4 Right { get; } = new Int4(1, 0, 0, 0);
 		public static Int4 Left { get; } = new Int4(-1, 0, 0, 0);

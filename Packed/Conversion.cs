@@ -3,7 +3,7 @@ using System.Runtime.Intrinsics;
 
 namespace CodeHelpers.Packed
 {
-	public partial struct Float2
+	partial struct Float2
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(Float2 value) => new Int2((int)value.X, (int)value.Y);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Float2 value) => (Int3)(Int2)value;
@@ -19,7 +19,7 @@ namespace CodeHelpers.Packed
 #endif
 	}
 
-	public partial struct Float3
+	partial struct Float3
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float3 value) => (Int2)(Int3)value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float3 value) => new Int3((int)value.X, (int)value.Y, (int)value.Z);
@@ -44,7 +44,7 @@ namespace CodeHelpers.Packed
 #endif
 	}
 
-	public partial struct Float4
+	partial struct Float4
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(in Float4 value) => (Int2)(Int4)value;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(in Float4 value) => (Int3)(Int4)value;
@@ -78,7 +78,7 @@ namespace CodeHelpers.Packed
 #endif
 	}
 
-	public partial struct Int2
+	partial struct Int2
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int2(int value) => new Int2(value, value);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public static explicit operator Int3(Int2 value) => new Int3(value.X, value.Y, 0);
@@ -95,7 +95,7 @@ namespace CodeHelpers.Packed
 #endif
 	}
 
-	public partial struct Int3
+	partial struct Int3
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Int2(in Int3 value)
@@ -121,7 +121,7 @@ namespace CodeHelpers.Packed
 #endif
 	}
 
-	public partial struct Int4
+	partial struct Int4
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Int2(in Int4 value)

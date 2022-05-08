@@ -71,17 +71,12 @@ namespace CodeHelpers.Mathematics
 		{
 			get
 			{
-				Float3 d2 = d.XYZ * 2f;
+				Float4 d2 = d * 2f;
 				Float4 xs = d2.X * d;
+				Float4 ys = d2.Y * d;
+				Float4 zs = d2.Z * d;
 
-				float yy = d2.Y * d.Y;
-				float yz = d2.Y * d.Z;
-				float yw = d2.Y * d.W;
-
-				float zz = d2.Z * d.Z;
-				float zw = d2.Z * d.W;
-
-				float xw_yz = xs.W - yz;
+				float xw_yz = xs.W - ys.Z;
 				float abs = Math.Abs(xw_yz);
 
 				float x = abs >= 1f ? 90f * Math.Sign(xw_yz) : Scalars.ToDegrees((float)Math.Asin(xw_yz));
@@ -89,14 +84,14 @@ namespace CodeHelpers.Mathematics
 				if (abs.AlmostEquals(1f))
 				{
 					//Singularity
-					float y = (float)Math.Atan2(yw - xs.Z, 1f - yy - zz);
+					float y = (float)Math.Atan2(ys.W - xs.Z, 1f - ys.Y - zs.Z);
 					return new Float3(x, Scalars.ToDegrees(y), 0f);
 				}
 				else
 				{
 					//General cases
-					float y = Scalars.ToDegrees((float)Math.Atan2(xs.Z + yw, 1f - xs.X - yy));
-					float z = Scalars.ToDegrees((float)Math.Atan2(xs.Y + zw, 1f - xs.X - zz));
+					float y = Scalars.ToDegrees((float)Math.Atan2(xs.Z + ys.W, 1f - xs.X - ys.Y));
+					float z = Scalars.ToDegrees((float)Math.Atan2(xs.Y + zs.W, 1f - xs.X - zs.Z));
 
 					return new Float3(x, y, z);
 				}

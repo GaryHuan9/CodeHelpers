@@ -21,7 +21,7 @@ namespace CodeHelpers.Packed
 	using I3 = Int3;
 	using I4 = Int4;
 
-	public partial struct Float2
+	partial struct Float2
 	{
 
 #region Four
@@ -194,7 +194,7 @@ namespace CodeHelpers.Packed
 
 	}
 
-	public partial struct Float3
+	partial struct Float3
 	{
 
 #region Four
@@ -624,7 +624,7 @@ namespace CodeHelpers.Packed
 	}
 
 	//OPTIMIZE
-	public partial struct Float4
+	partial struct Float4
 	{
 
 #region Four
@@ -1503,7 +1503,7 @@ namespace CodeHelpers.Packed
 
 	}
 
-	public partial struct Int2
+	partial struct Int2
 	{
 
 #region Four
@@ -1676,7 +1676,7 @@ namespace CodeHelpers.Packed
 
 	}
 
-	public partial struct Int3
+	partial struct Int3
 	{
 
 #region Four
@@ -2105,7 +2105,7 @@ namespace CodeHelpers.Packed
 
 	}
 
-	public partial struct Int4
+	partial struct Int4
 	{
 
 #region Four
