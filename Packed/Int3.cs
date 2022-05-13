@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CodeHelpers.Mathematics;
@@ -10,7 +9,12 @@ using CodeHelpers.Mathematics;
 namespace CodeHelpers.Packed
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public readonly partial struct Int3 : IEquatable<Int3>, IFormattable
+	public readonly partial struct Int3 : IEquatable<Int3>,
+#if NET6_0
+										  ISpanFormattable
+#else
+											IFormattable
+#endif
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int3(int x, int y, int z)
@@ -336,11 +340,6 @@ namespace CodeHelpers.Packed
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int3 Reflect(in Int3 normal) => -2 * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float3 Project(in Float3 normal) => normal * (normal.Dot(this) / normal.SquaredMagnitude);
-
-		public override string ToString() => ToString(string.Empty);
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)})";
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int3 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(in Int3 other) => (X == other.X) & (Y == other.Y) & (Z == other.Z);

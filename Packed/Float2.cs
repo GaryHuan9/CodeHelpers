@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CodeHelpers.Mathematics;
@@ -10,7 +9,12 @@ using CodeHelpers.Mathematics;
 namespace CodeHelpers.Packed
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public readonly partial struct Float2 : IEquatable<Float2>, IFormattable
+	public readonly partial struct Float2 : IEquatable<Float2>,
+#if NET6_0
+											ISpanFormattable
+#else
+											IFormattable
+#endif
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float2(float x, float y)
@@ -321,11 +325,6 @@ namespace CodeHelpers.Packed
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Reflect(Float2 normal) => -2f * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float2 Project(Float2 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
-
-		public override string ToString() => ToString(string.Empty);
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)})";
 
 		// ReSharper disable CompareOfFloatsByEqualityOperator
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(Float2 other) => (X == other.X) & Y == other.Y;

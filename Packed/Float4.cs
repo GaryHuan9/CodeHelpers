@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
@@ -11,7 +10,12 @@ using CodeHelpers.Mathematics;
 namespace CodeHelpers.Packed
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public readonly partial struct Float4 : IEquatable<Float4>, IFormattable
+	public readonly partial struct Float4 : IEquatable<Float4>,
+#if NET6_0
+											ISpanFormattable
+#else
+											IFormattable
+#endif
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float4(float x, float y, float z, float w) : this(Vector128.Create(x, y, z, w)) { }
@@ -442,12 +446,6 @@ namespace CodeHelpers.Packed
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Reflect(in Float4 normal) => -2f * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Project(in Float4 normal) => normal * (Dot(normal) / normal.SquaredMagnitude);
-
-		public override string ToString() => ToString(string.Empty);
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-
-		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)}, {W.ToString(format, provider)})";
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool EqualsExact(in Float4 other) => v.Equals(other.v);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Float4 other && Equals(other);

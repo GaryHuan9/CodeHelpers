@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using CodeHelpers.Mathematics;
@@ -9,7 +8,12 @@ using CodeHelpers.Mathematics;
 namespace CodeHelpers.Packed
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public readonly partial struct Int4 : IEquatable<Int4>, IFormattable
+	public readonly partial struct Int4 : IEquatable<Int4>,
+#if NET6_0
+										  ISpanFormattable
+#else
+											IFormattable
+#endif
 	{
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Int4(int x, int y, int z, int w)
@@ -419,11 +423,6 @@ namespace CodeHelpers.Packed
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Int4 Reflect(in Int4 normal) => -2 * Dot(normal) * normal + this;
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Project(in Float4 normal) => normal * (normal.Dot(this) / normal.SquaredMagnitude);
-
-		public override string ToString() => ToString(string.Empty);
-
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-		public string ToString(string format, IFormatProvider provider) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)}, {W.ToString(format, provider)})";
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public override bool Equals(object obj) => obj is Int4 other && Equals(other);
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public bool Equals(in Int4 other) => (X == other.X) & (Y == other.Y) & (Z == other.Z) & (W == other.W);
