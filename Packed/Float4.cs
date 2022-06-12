@@ -400,8 +400,10 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public Float4 Lerp(in Float4 other, in Float4 value)
 		{
-			Vector128<float> length = (other - this).v;
-			return new Float4(Fma.MultiplyAdd(length, value.v, v));
+			Float4 length = other - this;
+
+			if (!Fma.IsSupported) return length * value + this;
+			return new Float4(Fma.MultiplyAdd(length.v, value.v, v));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)] public Float4 Lerp(in Float4 other, float value) => Lerp(other, (Float4)value);
