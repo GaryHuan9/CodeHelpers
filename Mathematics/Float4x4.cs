@@ -357,11 +357,9 @@ namespace CodeHelpers.Mathematics
 			extend = Absoluted.MultiplyDirection(extend);
 		}
 
-		public override string ToString() => ToString(string.Empty);
+		public override string ToString() => ToString(default);
 
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-
-		public string ToString(string format, IFormatProvider provider) =>
+		public string ToString(string format, IFormatProvider provider = null) =>
 			$"{f00.ToString(format, provider)}\t{f01.ToString(format, provider)}\t{f02.ToString(format, provider)}\t{f03.ToString(format, provider)}\n" +
 			$"{f10.ToString(format, provider)}\t{f11.ToString(format, provider)}\t{f12.ToString(format, provider)}\t{f13.ToString(format, provider)}\n" +
 			$"{f20.ToString(format, provider)}\t{f21.ToString(format, provider)}\t{f22.ToString(format, provider)}\t{f23.ToString(format, provider)}\n" +

@@ -133,12 +133,12 @@ namespace CodeHelpers.Collections
 		T IReadOnlyList<T>.this[int index] => this[index];
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
-		IEnumerator IEnumerable.      GetEnumerator() => GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 		static int GetIndex(int index, out int offset)
 		{
 			++index;
-#if NET5_0 || NETCOREAPP3_0
+#if NETCOREAPP3_0_OR_GREATER
 			int log = System.Numerics.BitOperations.Log2((uint)index);
 #else
 			int log = -1;

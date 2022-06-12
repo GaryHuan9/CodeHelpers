@@ -226,10 +226,8 @@ namespace CodeHelpers.Mathematics
 			);
 		}
 
-		public override string ToString() => d.ToString();
+		public override string ToString() => ToString(default);
 
-		public string ToString(string format) => ToString(format, CultureInfo.InvariantCulture);
-
-		public string ToString(string format, IFormatProvider provider) => d.ToString(format, provider);
+		public string ToString(string format, IFormatProvider provider = null) => d.ToString(format, provider);
 	}
 }

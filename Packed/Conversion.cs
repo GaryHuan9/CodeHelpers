@@ -28,7 +28,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Float2(in Float3 value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return Unsafe.As<Float3, Float2>(ref Unsafe.AsRef(in value));
 #else
 			return new Float2(value.X, value.Y);
@@ -53,7 +53,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Float2(in Float4 value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return Unsafe.As<Float4, Float2>(ref Unsafe.AsRef(in value));
 #else
 			return new Float2(value.X, value.Y);
@@ -63,7 +63,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Float3(in Float4 value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return Unsafe.As<Float4, Float3>(ref Unsafe.AsRef(in value));
 #else
 			return new Float3(value.X, value.Y, value.Z);
@@ -100,7 +100,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Int2(in Int3 value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return Unsafe.As<Int3, Int2>(ref Unsafe.AsRef(in value));
 #else
 			return new Int2(value.X, value.Y);
@@ -126,7 +126,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Int2(in Int4 value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return Unsafe.As<Int4, Int2>(ref Unsafe.AsRef(in value));
 #else
 			return new Int2(value.X, value.Y);
@@ -136,7 +136,7 @@ namespace CodeHelpers.Packed
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static explicit operator Int3(in Int4 value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return Unsafe.As<Int4, Int3>(ref Unsafe.AsRef(in value));
 #else
 			return new Int3(value.X, value.Y, value.Z);

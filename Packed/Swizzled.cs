@@ -4,8 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 
-// ReSharper disable ShiftExpressionZeroLeftOperand
-
 namespace CodeHelpers.Packed
 {
 	using EB = EditorBrowsableAttribute;
@@ -623,11 +621,12 @@ namespace CodeHelpers.Packed
 
 	}
 
-	//OPTIMIZE
 	partial struct Float4
 	{
 
 #region Four
+
+		// ReSharper disable ShiftExpressionZeroLeftOperand
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 		F4 Shuffle(byte shuffle) => new F4(Sse.Shuffle(v, v, shuffle));
@@ -1390,6 +1389,8 @@ namespace CodeHelpers.Packed
 		[EB(EBS.Never), DB(DBS.Never)] public F4 ___Z => ShuffleBlend((0 << 0) | (1 << 2) | (2 << 4) | (2 << 6), 0b0111);
 		[EB(EBS.Never), DB(DBS.Never)] public F4 ___W => Blend(0b0111);
 		[EB(EBS.Never), DB(DBS.Never)] public F4 ____ => Blend(0b1111);
+
+		// ReSharper restore ShiftExpressionZeroLeftOperand
 
 #endregion
 

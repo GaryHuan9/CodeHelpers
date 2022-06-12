@@ -53,7 +53,7 @@ namespace CodeHelpers.Packed
 
 	partial struct Float2
 	{
-		public override string ToString() => ToString(null);
+		public override string ToString() => ToString(default);
 		public string ToString(string format, IFormatProvider provider = null) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)})";
 
 #if NET6_0
@@ -66,7 +66,7 @@ namespace CodeHelpers.Packed
 
 	partial struct Float3
 	{
-		public override string ToString() => ToString(null);
+		public override string ToString() => ToString(default);
 		public string ToString(string format, IFormatProvider provider = null) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)})";
 
 #if NET6_0
@@ -80,7 +80,7 @@ namespace CodeHelpers.Packed
 
 	partial struct Float4
 	{
-		public override string ToString() => ToString(null);
+		public override string ToString() => ToString(default);
 		public string ToString(string format, IFormatProvider provider = null) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)}, {W.ToString(format, provider)})";
 
 #if NET6_0
@@ -95,7 +95,7 @@ namespace CodeHelpers.Packed
 
 	partial struct Int2
 	{
-		public override string ToString() => ToString(null);
+		public override string ToString() => ToString(default);
 		public string ToString(string format, IFormatProvider provider = null) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)})";
 
 #if NET6_0
@@ -108,7 +108,7 @@ namespace CodeHelpers.Packed
 
 	partial struct Int3
 	{
-		public override string ToString() => ToString(null);
+		public override string ToString() => ToString(default);
 		public string ToString(string format, IFormatProvider provider = null) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)})";
 
 #if NET6_0
@@ -122,7 +122,7 @@ namespace CodeHelpers.Packed
 
 	partial struct Int4
 	{
-		public override string ToString() => ToString(null);
+		public override string ToString() => ToString(default);
 		public string ToString(string format, IFormatProvider provider = null) => $"({X.ToString(format, provider)}, {Y.ToString(format, provider)}, {Z.ToString(format, provider)}, {W.ToString(format, provider)})";
 
 #if NET6_0

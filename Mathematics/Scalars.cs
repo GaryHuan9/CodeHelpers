@@ -272,7 +272,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int SingleToInt32Bits(float value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return BitConverter.SingleToInt32Bits(value);
 #elif CODE_HELPERS_UNSAFE
 			unsafe { return *(int*)&value; }
@@ -284,7 +284,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float Int32ToSingleBits(int value)
 		{
-#if NET5_0
+#if NET5_0_OR_GREATER
 			return BitConverter.Int32BitsToSingle(value);
 #elif CODE_HELPERS_UNSAFE
 			unsafe { return *(float*)&value; }
@@ -305,7 +305,7 @@ namespace CodeHelpers.Mathematics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static int UInt32ToInt32Bits(uint value) => unchecked((int)value);
 
-#if !NET5_0 && !CODE_HELPERS_UNSAFE
+#if !NET5_0_OR_GREATER && !CODE_HELPERS_UNSAFE
 		[System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit)]
 		readonly struct BitsConverter32
 		{
@@ -336,8 +336,8 @@ namespace CodeHelpers.Mathematics
 		}
 
 		/// <summary>
-		/// Formats <paramref name="value"/> to its abbreviations using metric suffixes.
-		/// The returned string will always be shorter or equals to 4 characters.
+		/// Formats <paramref name="value"/> to its abbreviations using metric prefixes.
+		/// The returned string will always be shorter than or equals to 4 characters.
 		/// </summary>
 		public static string ToStringMetric(this uint value)
 		{
