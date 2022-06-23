@@ -18,22 +18,7 @@ namespace CodeHelpers.Mathematics
 		/// <summary>
 		/// Creates a <see cref="Versor"/> from three angles (degrees) in the ZXY rotation order.
 		/// </summary>
-		public Versor(Float3 angles) : this(CreateSin(angles *= Scalars.ToRadians(0.5f)), CreateCos(angles)) { }
-
-		static Float3 CreateSin(in Float3 radians) => new Float3((float)Math.Sin(radians.X), (float)Math.Sin(radians.Y), (float)Math.Sin(radians.Z));
-		static Float3 CreateCos(in Float3 radians) => new Float3((float)Math.Cos(radians.X), (float)Math.Cos(radians.Y), (float)Math.Cos(radians.Z));
-
-		/// <summary>
-		/// Creates a <see cref="Versor"/> in the ZXY rotation order based on XYZ sin and cos values.
-		/// </summary>
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		internal Versor(in Float3 sin, in Float3 cos) => d = new Float4
-		(
-			sin.X * cos.Y * cos.Z + cos.X * sin.Y * sin.Z,
-			cos.X * sin.Y * cos.Z - sin.X * cos.Y * sin.Z,
-			cos.X * cos.Y * sin.Z - sin.X * sin.Y * cos.Z,
-			cos.X * cos.Y * cos.Z + sin.X * sin.Y * sin.Z
-		);
+		public Versor(Float3 angles) : this(Sin(angles *= Scalars.ToRadians(0.5f)), Cos(angles)) { }
 
 		/// <summary>
 		/// Creates a <see cref="Versor"/> from an <paramref name="axis"/> and an <paramref name="angle"/> (degrees).
@@ -56,13 +41,25 @@ namespace CodeHelpers.Mathematics
 			);
 		}
 
-		Versor(float x, float y, float z, float w) : this(new Float4(x, y, z, w)) { }
+		/// <summary>
+		/// Creates a <see cref="Versor"/> in the ZXY rotation order based on XYZ sin and cos values.
+		/// </summary>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		internal Versor(in Float3 sin, in Float3 cos) : this
+		(
+			sin.X * cos.Y * cos.Z + cos.X * sin.Y * sin.Z,
+			cos.X * sin.Y * cos.Z - sin.X * cos.Y * sin.Z,
+			cos.X * cos.Y * sin.Z - sin.X * sin.Y * cos.Z,
+			cos.X * cos.Y * cos.Z + sin.X * sin.Y * sin.Z
+		) { }
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		internal Versor(in Float4 d) => this.d = d;
 
-		internal readonly Float4 d;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		Versor(float x, float y, float z, float w) : this(new Float4(x, y, z, w)) { }
 
-		public static readonly Versor identity = new Versor(Float4.Ana);
+		internal readonly Float4 d;
 
 		public Versor Conjugate => new Versor(-d.X, -d.Y, -d.Z, d.W);
 		public Versor Inverse => Conjugate;
@@ -98,6 +95,8 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
+		public static Versor Identity = new Versor(Float4.Ana);
+
 		public float Dot(in Versor other) => d.Dot(other.d);
 
 		/// <summary>
@@ -112,6 +111,20 @@ namespace CodeHelpers.Mathematics
 		}
 
 		public Versor Damp(in Versor target, ref Float4 velocity, float smoothTime, float deltaTime) => Damp(this, target, ref velocity, smoothTime, deltaTime);
+
+		public bool Equals(in Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
+		public override bool Equals(object obj) => obj is Versor other && Equals(other);
+
+		public override int GetHashCode() => d.GetHashCode();
+		public override string ToString() => ToString(default);
+
+#if CODE_HELPERS_UNITY
+		public UnityEngine.Quaternion U() => this;
+#endif
+
+		bool IEquatable<Versor>.Equals(Versor other) => Equals(other);
+
+		public string ToString(string format, IFormatProvider provider = null) => d.ToString(format, provider);
 
 		public static float Dot(in Float4 value, in Float4 other) => value.Dot(other);
 
@@ -137,15 +150,44 @@ namespace CodeHelpers.Mathematics
 			return new Versor(result);
 		}
 
-#if CODE_HELPERS_UNITY
-		public UnityEngine.Quaternion U() => this;
-#endif
-
 		public static Versor operator *(in Versor first, in Versor second) => Apply(first, second, false);
 		public static Versor operator /(in Versor first, in Versor second) => Apply(first, second, true);
 
 		public static Float3 operator *(in Versor first, in Float3 second) => Apply(first, second, false);
 		public static Float3 operator /(in Versor first, in Float3 second) => Apply(first, second, true);
+
+		public static bool operator ==(in Versor left, in Versor right) => left.Equals(right);
+		public static bool operator !=(in Versor left, in Versor right) => !left.Equals(right);
+
+#if CODE_HELPERS_UNITY
+		public static implicit operator Versor(UnityEngine.Quaternion value) => new Versor(value.x, value.y, value.z, value.w);
+		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.X, value.d.Y, value.d.Z, value.d.W);
+#endif
+
+		public static implicit operator Float3x3(in Versor value)
+		{
+			ref readonly Float4 d = ref value.d;
+
+			Float3 d2 = d.XYZ * 2f;
+			Float4 xs = d2.X * d;
+
+			float yy = d2.Y * d.Y;
+			float yz = d2.Y * d.Z;
+			float yw = d2.Y * d.W;
+
+			float zz = d2.Z * d.Z;
+			float zw = d2.Z * d.W;
+
+			return new Float3x3
+			(
+				1.0f - yy - zz, xs.Y - zw, xs.Z + yw,
+				xs.Y + zw, 1f - xs.X - zz, yz - xs.W,
+				xs.Z - yw, yz + xs.W, 1f - xs.X - yy
+			);
+		}
+
+		static Float3 Sin(in Float3 radians) => new Float3((float)Math.Sin(radians.X), (float)Math.Sin(radians.Y), (float)Math.Sin(radians.Z));
+		static Float3 Cos(in Float3 radians) => new Float3((float)Math.Cos(radians.X), (float)Math.Cos(radians.Y), (float)Math.Cos(radians.Z));
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static Versor Apply(in Versor first, in Versor second, bool conjugate)
@@ -188,46 +230,5 @@ namespace CodeHelpers.Mathematics
 				dz.X * second.X - dw.Y * second.X + dz.Y * second.Y + dw.X * second.Y + dd.Z * second.Z - dd.Y * second.Z - dd.X * second.Z + dd.W * second.Z
 			);
 		}
-
-		public static bool operator ==(in Versor left, in Versor right) => left.Equals(right);
-		public static bool operator !=(in Versor left, in Versor right) => !left.Equals(right);
-
-		public bool Equals(in Versor other) => Math.Abs(Dot(other)).AlmostEquals(1f);
-		public override bool Equals(object obj) => obj is Versor other && Equals(other);
-
-		bool IEquatable<Versor>.Equals(Versor other) => Equals(other);
-
-		public override int GetHashCode() => d.GetHashCode();
-
-#if CODE_HELPERS_UNITY
-		public static implicit operator Versor(UnityEngine.Quaternion value) => new Versor(value.x, value.y, value.z, value.w);
-		public static implicit operator UnityEngine.Quaternion(in Versor value) => new UnityEngine.Quaternion(value.d.X, value.d.Y, value.d.Z, value.d.W);
-#endif
-
-		public static implicit operator Float3x3(in Versor value)
-		{
-			ref readonly Float4 d = ref value.d;
-
-			Float3 d2 = d.XYZ * 2f;
-			Float4 xs = d2.X * d;
-
-			float yy = d2.Y * d.Y;
-			float yz = d2.Y * d.Z;
-			float yw = d2.Y * d.W;
-
-			float zz = d2.Z * d.Z;
-			float zw = d2.Z * d.W;
-
-			return new Float3x3
-			(
-				1.0f - yy - zz, xs.Y - zw, xs.Z + yw,
-				xs.Y + zw, 1f - xs.X - zz, yz - xs.W,
-				xs.Z - yw, yz + xs.W, 1f - xs.X - yy
-			);
-		}
-
-		public override string ToString() => ToString(default);
-
-		public string ToString(string format, IFormatProvider provider = null) => d.ToString(format, provider);
 	}
 }
