@@ -176,7 +176,7 @@ namespace CodeHelpers.Mathematics
 			}
 		}
 
-		public Float4x4 Inversed
+		public Float4x4 Inverse
 		{
 			get
 			{
